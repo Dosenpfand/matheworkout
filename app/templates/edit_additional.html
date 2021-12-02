@@ -1,0 +1,14 @@
+
+
+{% extends "appbuilder/general/model/edit.html" %}
+
+{% block edit_form %}
+    <div id="Home" class="tab-pane active">
+        <h2>{{question['title']}}</h1>
+        <div class="well well-sm"><strong>{{question['description']}}</strong></div>
+
+        {{ widgets.get('edit')(form_action=form_action)|safe }}
+    </div>
+{% endblock %}
+
+
