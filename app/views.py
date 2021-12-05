@@ -4,14 +4,85 @@ from flask_appbuilder.charts.views import GroupByChartView
 from flask_appbuilder.models.group import aggregate_count
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from flask_babel import lazy_gettext as _
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, flash, redirect, url_for, Markup
 from . import appbuilder, db
-from .forms import Question2of5Form
-from .models import Question2of5
-
+from .forms import Question2of5Form, TopicForm, QuestionSelfAssessedForm
+from .models import Question2of5, Topic, QuestionSelfAssessed
+from flask_appbuilder.security.views import UserDBModelView
+from flask_babel import lazy_gettext
 
 class Question2of5ModelView(ModelView):
     datamodel = SQLAInterface(Question2of5)
+
+    label_columns = {'description_image':'Description Image'}
+    # list_columns = ['photo_img_thumbnail', 'name']
+    show_columns = ['description_image_img','title']
+
+class QuestionSelfAssessedModelView(ModelView):
+    datamodel = SQLAInterface(QuestionSelfAssessed)
+
+    label_columns = {'description_image':'Description Image', 'solution_image':'Solution Image'}
+    # list_columns = ['photo_img_thumbnail', 'name']
+    show_columns = ['description_image_img','solution_image_img']
+
+class TopicModelView(ModelView):
+    datamodel = SQLAInterface(Topic)
+
+class TopicFormView(SimpleFormView):
+    form = TopicForm
+
+    def form_get(self, form):
+        self.update_redirect()
+        result = db.session.query(Topic)
+        choices = []
+        for element in result:
+            choices += [(element.id, element.name)]
+        form.topic.choices = choices
+
+    def form_post(self, form):
+        self.update_redirect()
+        result = db.session.query(Topic)
+        choices = []
+        for element in result:
+            choices += [(element.id, element.name)]
+        form.topic.choices = choices
+        flash('test', 'info')
+
+        # form.topic.label = str(form.topic.data)
+
+class QuestionSelfAssessedFormView(SimpleFormView):
+    form = QuestionSelfAssessedForm
+    form_title = 'Self Assessed Test'
+    form_template = 'edit_additional.html'
+
+    def form_get(self, form):
+        self.update_redirect()
+        # Get random question
+        # TODO: no gaps in ID allowed!
+        count = db.session.query(QuestionSelfAssessed).count()
+        id = randrange(1, count + 1)
+        result = db.session.query(QuestionSelfAssessed).filter_by(id=id).first()
+
+        form.id.data = id
+
+        self.extra_args = {'question': {'description': result.description_image_img()}}
+
+    def form_post(self, form):
+        self.update_redirect()
+        id = form.id.data
+        result = db.session.query(QuestionSelfAssessed).filter_by(id=id).first()
+
+        self.extra_args = {'question': {'description': result.solution_image_img() + Markup('<a href="/correct">CORRECT</a> <a href="/correct">INCORRECT</a>')}}
+
+        # TODO: why necessary? should happen automatically but redirect is wrong?!
+        widgets = self._get_edit_widget(form=form)
+        return self.render_template(
+                    self.form_template,
+                    title=self.form_title,
+                    widgets=widgets,
+                    appbuilder=self.appbuilder,
+                )
+        # return redirect(url_for('Question2of5EvaluateView.evaluate'))  # , id=DBTable.id))
 
 
 class Question2of5FormView(SimpleFormView):
@@ -28,14 +99,13 @@ class Question2of5FormView(SimpleFormView):
         result = db.session.query(Question2of5).filter_by(id=id).first()
 
         form.id.data = id
-        form.checkbox1.label.text = result.option1_description
-        form.checkbox2.label.text = result.option2_description
-        form.checkbox3.label.text = result.option3_description
-        form.checkbox4.label.text = result.option4_description
-        form.checkbox5.label.text = result.option5_description
+        form.checkbox1.label.text = result.get_option_image(result.option1_image)
+        form.checkbox2.label.text = result.get_option_image(result.option2_image)
+        form.checkbox3.label.text = result.get_option_image(result.option3_image)
+        form.checkbox4.label.text = result.get_option_image(result.option4_image)
+        form.checkbox5.label.text = result.get_option_image(result.option5_image)
 
-        self.extra_args = {'question': {'title': result.title,
-                                        'description': result.description}}
+        self.extra_args = {'question': {'description': result.description_image_img()}}
 
     def form_post(self, form):
         self.update_redirect()
@@ -78,8 +148,7 @@ class Question2of5FormView(SimpleFormView):
             message = 'INCORRECT!'
         flash(message, 'info')
 
-        self.extra_args = {'question': {'title': result.title,
-                                        'description': result.description}}
+        self.extra_args = {'question': {'description': result.description}}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
         widgets = self._get_edit_widget(form=form)
@@ -90,8 +159,6 @@ class Question2of5FormView(SimpleFormView):
                     appbuilder=self.appbuilder,
                 )
         # return redirect(url_for('Question2of5EvaluateView.evaluate'))  # , id=DBTable.id))
-        # result = db.session.query(Question2of5).filter_by(id=1).first()
-
 
 class Question2of5EvaluateView(BaseView):
     route_base = "/question2of5evaluateview"
@@ -117,9 +184,37 @@ appbuilder.add_view(
     category_icon="fa-question",
 )
 appbuilder.add_view(
+    QuestionSelfAssessedModelView,
+    "List self assessed questions",
+    icon="fa-question-circle",
+    category="Questions",
+    category_icon="fa-question",
+)
+appbuilder.add_view(
+    TopicModelView,
+    "List Topics",
+    icon="fa-question-circle",
+    category="Questions",
+    category_icon="fa-question",
+)
+appbuilder.add_view(
+    TopicFormView,
+    "Choose Topic",
+    icon="fa-group",
+    label=_("Choose Topic"),
+    category="Tests",
+    category_icon="fa-cogs")
+appbuilder.add_view(
     Question2of5FormView,
     "2 of 5 Test",
     icon="fa-group",
     label=_("2 of 5 Test"),
+    category="Tests",
+    category_icon="fa-cogs")
+appbuilder.add_view(
+    QuestionSelfAssessedFormView,
+    "Self Assessed Test",
+    icon="fa-group",
+    label=_("Self Assessed Test"),
     category="Tests",
     category_icon="fa-cogs")

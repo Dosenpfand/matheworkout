@@ -10,6 +10,8 @@ flask run
 ```
 
 ## TODO
-- [ ] User Statisiken (Anzahl Fragen gesamt (inklusive Gruppen), Anzahl richtig, Reset)
+- [ ] User Statisiken (Anzahl Fragen gesamt (inklusive Gruppen), Anzahl richtig, Reset, oder: extra Tabelle tries mit ref zu user und question?)
 - [ ] User Gruppen (Klassen), Überblick über Ergebnisse für Lehrer
 - [ ] Schüler: Typ (2 aus 5, etc.) Random, Inhaltsgebiet (Algebra 1, Algebra 2, etc.) auswählbar (z.B. Schüler wählt aus Inhaltsgebiet "Wahrscheinlichkeitsrechnung" und Typ)
+- [ ] User Registierung: Rechte-Vergabe, Views, etc.
+- [ ] DB migration

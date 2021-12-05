@@ -150,3 +150,6 @@ cython_debug/
 
 # App database
 app.db
+
+# Uploads
+app/static/uploads/**
