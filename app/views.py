@@ -111,11 +111,12 @@ class Question2of5FormView(SimpleFormView):
         self.update_redirect()
         id = form.id.data
         result = db.session.query(Question2of5).filter_by(id=id).first()
-        form.checkbox1.label.text = result.option1_description
-        form.checkbox2.label.text = result.option2_description
-        form.checkbox3.label.text = result.option3_description
-        form.checkbox4.label.text = result.option4_description
-        form.checkbox5.label.text = result.option5_description
+        form.checkbox1.label.text = result.get_option_image(result.option1_image)
+        form.checkbox2.label.text = result.get_option_image(result.option2_image)
+        form.checkbox3.label.text = result.get_option_image(result.option3_image)
+        form.checkbox4.label.text = result.get_option_image(result.option4_image)
+        form.checkbox5.label.text = result.get_option_image(result.option5_image)
+
 
         if form.checkbox1.data == result.option1_is_correct:
             form.checkbox1.description = 'correct'
@@ -148,7 +149,7 @@ class Question2of5FormView(SimpleFormView):
             message = 'INCORRECT!'
         flash(message, 'info')
 
-        self.extra_args = {'question': {'description': result.description}}
+        self.extra_args = {'question': {'description': 'TEST'}}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
         widgets = self._get_edit_widget(form=form)
