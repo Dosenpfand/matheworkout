@@ -1,3 +1,4 @@
 Flask-AppBuilder==3.4.0
 flask-mail==0.9.1
 Pillow==8.4.0
+markupsafe==2.0.1
