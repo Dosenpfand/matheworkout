@@ -1,11 +1,20 @@
 import datetime
 
 from flask_appbuilder import Model
-from sqlalchemy import Column, Date, ForeignKey, Integer, String, Boolean, Float
+from sqlalchemy import Column, Date, ForeignKey, Integer, String, Boolean, Float, Enum
 from sqlalchemy.orm import relationship
 from flask_appbuilder.models.mixins import ImageColumn
 from flask_appbuilder.filemanager import ImageManager
 from flask import Markup, url_for
+import enum
+
+class Select4Enum(enum.Enum):
+    A = 'A'
+    B = 'B'
+    C = 'C'
+    D = 'D'
+    E = 'E'
+    F = 'F'
 
 class Topic(Model):
     id = Column(Integer, primary_key=True)
@@ -186,6 +195,62 @@ class Question2Decimals(Model):
               '" alt="Photo" class="img-rounded img-responsive"></a>')
         else:
             return Markup('<a href="' + url_for('Question2DecimalsModelView.show',pk=str(self.id)) +\
+             '" class="thumbnail"><img src="//:0" alt="Photo" class="img-responsive"></a>')
+
+
+
+    def __repr__(self):
+        return self.title
+
+
+class QuestionSelect4(Model):
+    id = Column(Integer, primary_key=True)
+    topic_id = Column(Integer, ForeignKey("topic.id"), nullable=False)
+    topic = relationship("Topic")
+    description_image = Column(ImageColumn(size=(10000, 10000, True)))
+    selection1_image = Column(ImageColumn(size=(10000, 10000, True)))
+    selection1_solution = Column(Enum(Select4Enum))
+    selection2_image = Column(ImageColumn(size=(10000, 10000, True)))
+    selection2_solution = Column(Enum(Select4Enum))
+    selection3_image = Column(ImageColumn(size=(10000, 10000, True)))
+    selection3_solution = Column(Enum(Select4Enum))
+    selection4_image = Column(ImageColumn(size=(10000, 10000, True)))
+    selection4_solution = Column(Enum(Select4Enum))
+    option1_image = Column(ImageColumn(size=(10000, 10000, True)))
+    option2_image = Column(ImageColumn(size=(10000, 10000, True)))
+    option3_image = Column(ImageColumn(size=(10000, 10000, True)))
+    option4_image = Column(ImageColumn(size=(10000, 10000, True)))
+    option5_image = Column(ImageColumn(size=(10000, 10000, True)))
+    option6_image = Column(ImageColumn(size=(10000, 10000, True)))
+
+    def get_selection_image(self, selection):
+        im = ImageManager()
+        if selection:
+            return Markup('<a href="' + url_for('QuestionSelect4ModelView.show',pk=str(self.id)) +\
+             '" class="thumbnail"><img src="' + im.get_url(selection) +\
+              '" alt="Photo" class="img-rounded img-responsive"></a>')
+        else:
+            return Markup('<a href="' + url_for('QuestionSelect4ModelView.show',pk=str(self.id)) +\
+             '" class="thumbnail"><img src="//:0" alt="Photo" class="img-responsive"></a>')
+
+    def get_option_image(self, option):
+        im = ImageManager()
+        if option:
+            return Markup('<a href="' + url_for('QuestionSelect4ModelView.show',pk=str(self.id)) +\
+             '" class="thumbnail"><img src="' + im.get_url(option) +\
+              '" alt="Photo" class="img-rounded img-responsive"></a>')
+        else:
+            return Markup('<a href="' + url_for('QuestionSelect4ModelView.show',pk=str(self.id)) +\
+             '" class="thumbnail"><img src="//:0" alt="Photo" class="img-responsive"></a>')
+
+    def description_image_img(self):
+        im = ImageManager()
+        if self.description_image:
+            return Markup('<a href="' + url_for('Question3to3ModelView.show',pk=str(self.id)) +\
+             '" class="thumbnail"><img src="' + im.get_url(self.description_image) +\
+              '" alt="Photo" class="img-rounded img-responsive"></a>')
+        else:
+            return Markup('<a href="' + url_for('Question3to3ModelView.show',pk=str(self.id)) +\
              '" class="thumbnail"><img src="//:0" alt="Photo" class="img-responsive"></a>')
 
 
