@@ -572,7 +572,8 @@ class QuestionSelect4FormView(SimpleFormView):
                                   'C': result.get_option_image(result.option3_image),
                                   'D': result.get_option_image(result.option4_image),
                                   'E': result.get_option_image(result.option5_image),
-                                  'F': result.get_option_image(result.option6_image)}}}
+                                  'F': result.get_option_image(result.option6_image)},
+                                  'external_id': result.external_id}}
 
     def form_post(self, form):
         self.update_redirect()
