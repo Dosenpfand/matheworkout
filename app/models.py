@@ -81,3 +81,46 @@ class Question2of5(Model):
 
     def __repr__(self):
         return self.title
+
+class Question1of6(Model):
+    id = Column(Integer, primary_key=True)
+    topic_id = Column(Integer, ForeignKey("topic.id"), nullable=False)
+    topic = relationship("Topic")
+    description_image = Column(ImageColumn(size=(10000, 10000, True)))
+    option1_image = Column(ImageColumn(size=(10000, 10000, True)))
+    option1_is_correct = Column(Boolean())
+    option2_image = Column(ImageColumn(size=(10000, 10000, True)))
+    option2_is_correct = Column(Boolean())
+    option3_image = Column(ImageColumn(size=(10000, 10000, True)))
+    option3_is_correct = Column(Boolean())
+    option4_image = Column(ImageColumn(size=(10000, 10000, True)))
+    option4_is_correct = Column(Boolean())
+    option5_image = Column(ImageColumn(size=(10000, 10000, True)))
+    option5_is_correct = Column(Boolean())
+    option6_image = Column(ImageColumn(size=(10000, 10000, True)))
+    option6_is_correct = Column(Boolean())
+
+    def get_option_image(self, option):
+        im = ImageManager()
+        if option:
+            return Markup('<a href="' + url_for('Question1of6ModelView.show',pk=str(self.id)) +\
+             '" class="thumbnail"><img src="' + im.get_url(option) +\
+              '" alt="Photo" class="img-rounded img-responsive"></a>')
+        else:
+            return Markup('<a href="' + url_for('Question1of6ModelView.show',pk=str(self.id)) +\
+             '" class="thumbnail"><img src="//:0" alt="Photo" class="img-responsive"></a>')
+
+    def description_image_img(self):
+        im = ImageManager()
+        if self.description_image:
+            return Markup('<a href="' + url_for('Question1of6ModelView.show',pk=str(self.id)) +\
+             '" class="thumbnail"><img src="' + im.get_url(self.description_image) +\
+              '" alt="Photo" class="img-rounded img-responsive"></a>')
+        else:
+            return Markup('<a href="' + url_for('Question1of6ModelView.show',pk=str(self.id)) +\
+             '" class="thumbnail"><img src="//:0" alt="Photo" class="img-responsive"></a>')
+
+
+
+    def __repr__(self):
+        return self.title
