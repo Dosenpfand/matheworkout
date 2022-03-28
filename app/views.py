@@ -6,8 +6,8 @@ from flask_appbuilder.models.sqla.interface import SQLAInterface
 from flask_babel import lazy_gettext as _
 from flask import render_template, flash, redirect, url_for, Markup
 from . import appbuilder, db
-from .forms import Question2of5Form, Question1of6Form, TopicForm, QuestionSelfAssessedForm
-from .models import Question2of5, Question1of6, Topic, QuestionSelfAssessed
+from .forms import Question2of5Form, Question1of6Form, Question3to3Form, TopicForm, QuestionSelfAssessedForm
+from .models import Question2of5, Question1of6, Question3to3, Topic, QuestionSelfAssessed
 from flask_appbuilder.security.views import UserDBModelView
 from flask_babel import lazy_gettext
 
@@ -20,6 +20,14 @@ class Question2of5ModelView(ModelView):
 
 class Question1of6ModelView(ModelView):
     datamodel = SQLAInterface(Question1of6)
+
+    label_columns = {'description_image':'Description Image'}
+    # list_columns = ['photo_img_thumbnail', 'name']
+    show_columns = ['description_image_img','title']
+
+
+class Question3to3ModelView(ModelView):
+    datamodel = SQLAInterface(Question3to3)
 
     label_columns = {'description_image':'Description Image'}
     # list_columns = ['photo_img_thumbnail', 'name']
@@ -251,6 +259,100 @@ class Question1of6FormView(SimpleFormView):
                 )
         # return redirect(url_for('Question2of5EvaluateView.evaluate'))  # , id=DBTable.id))
 
+class Question3to3FormView(SimpleFormView):
+    form = Question3to3Form
+    form_title = '3 to 3 Test'
+    form_template = 'edit_additional.html'
+
+    form_fieldsets = [
+            (
+                '1',
+                {'fields': ['checkbox1a', 'checkbox1b', 'checkbox1c']}
+            ),
+            (
+                '2',
+                {'fields': ['checkbox2a', 'checkbox2b', 'checkbox2c']}
+            ),
+        ]
+
+    def form_get(self, form):
+        self.update_redirect()
+        # Get random question
+        # TODO: no gaps in ID allowed!
+        count = db.session.query(Question3to3).count()
+        id = randrange(1, count + 1)
+        result = db.session.query(Question3to3).filter_by(id=id).first()
+
+        form.id.data = id
+        form.checkbox1a.label.text = result.get_option_image(result.option1a_image)
+        form.checkbox1b.label.text = result.get_option_image(result.option1b_image)
+        form.checkbox1c.label.text = result.get_option_image(result.option1c_image)
+        form.checkbox2a.label.text = result.get_option_image(result.option2a_image)
+        form.checkbox2b.label.text = result.get_option_image(result.option2b_image)
+        form.checkbox2c.label.text = result.get_option_image(result.option2c_image)
+        self.extra_args = {'question': {'description': result.description_image_img()}}
+
+    def form_post(self, form):
+        self.update_redirect()
+        id = form.id.data
+        result = db.session.query(Question3to3).filter_by(id=id).first()
+        form.checkbox1a.label.text = result.get_option_image(result.option1a_image)
+        form.checkbox1b.label.text = result.get_option_image(result.option1b_image)
+        form.checkbox1c.label.text = result.get_option_image(result.option1c_image)
+        form.checkbox2a.label.text = result.get_option_image(result.option2a_image)
+        form.checkbox2b.label.text = result.get_option_image(result.option2b_image)
+        form.checkbox2c.label.text = result.get_option_image(result.option2c_image)
+
+
+        if form.checkbox1a.data == result.option1a_is_correct:
+            form.checkbox1a.description = 'correct'
+        else:
+            form.checkbox1a.description = 'incorrect'
+        if form.checkbox1b.data == result.option1b_is_correct:
+            form.checkbox1b.description = 'correct'
+        else:
+            form.checkbox1b.description = 'incorrect'
+        if form.checkbox1c.data == result.option1c_is_correct:
+            form.checkbox1c.description = 'correct'
+        else:
+            form.checkbox1c.description = 'incorrect'
+        if form.checkbox2a.data == result.option2a_is_correct:
+            form.checkbox2a.description = 'correct'
+        else:
+            form.checkbox2a.description = 'incorrect'
+        if form.checkbox2b.data == result.option2b_is_correct:
+            form.checkbox2b.description = 'correct'
+        else:
+            form.checkbox2b.description = 'incorrect'
+        if form.checkbox2c.data == result.option2c_is_correct:
+            form.checkbox2c.description = 'correct'
+        else:
+            form.checkbox2c.description = 'incorrect'
+
+
+        if (form.checkbox1a.data == result.option1a_is_correct) and \
+            (form.checkbox1b.data == result.option1b_is_correct) and \
+                (form.checkbox1c.data == result.option1c_is_correct) and \
+            (form.checkbox2a.data == result.option2a_is_correct) and \
+                (form.checkbox2b.data == result.option2b_is_correct) and \
+            (form.checkbox2c.data == result.option2c_is_correct):
+            message = 'CORRECT!'
+        else:
+            message = 'INCORRECT!'
+        flash(message, 'info')
+
+        self.extra_args = {'question': {'description': 'TEST'}}
+
+        # TODO: why necessary? should happen automatically but redirect is wrong?!
+        widgets = self._get_edit_widget(form=form)
+        return self.render_template(
+                    self.form_template,
+                    title=self.form_title,
+                    widgets=widgets,
+                    appbuilder=self.appbuilder,
+                )
+        # return redirect(url_for('Question2of5EvaluateView.evaluate'))  # , id=DBTable.id))
+
 db.create_all()
 appbuilder.add_view(
     Question2of5ModelView,
@@ -262,6 +364,13 @@ appbuilder.add_view(
 appbuilder.add_view(
     Question1of6ModelView,
     "List 1 out of 6 questions",
+    icon="fa-question-circle",
+    category="Questions",
+    category_icon="fa-question",
+)
+appbuilder.add_view(
+    Question3to3ModelView,
+    "List 3 to 3 questions",
     icon="fa-question-circle",
     category="Questions",
     category_icon="fa-question",
@@ -299,6 +408,13 @@ appbuilder.add_view(
     "1 of 6 Test",
     icon="fa-group",
     label=_("1 of 6 Test"),
+    category="Tests",
+    category_icon="fa-cogs")
+appbuilder.add_view(
+    Question3to3FormView(),
+    "3 to 3 Test",
+    icon="fa-group",
+    label=_("3 to 3 Test"),
     category="Tests",
     category_icon="fa-cogs")
 appbuilder.add_view(

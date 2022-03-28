@@ -23,6 +23,15 @@ class Question1of6Form(DynamicForm):
     checkbox5 = BooleanField()
     checkbox6 = BooleanField()
 
+class Question3to3Form(DynamicForm):
+    id = HiddenField()
+    checkbox1a = BooleanField()
+    checkbox1b = BooleanField()
+    checkbox1c = BooleanField()
+    checkbox2a = BooleanField()
+    checkbox2b = BooleanField()
+    checkbox2c = BooleanField()
+
 class QuestionSelfAssessedForm(DynamicForm):
     id = HiddenField()
 
