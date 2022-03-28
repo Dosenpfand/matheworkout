@@ -52,6 +52,10 @@ class Question2DecimalsForm(DynamicForm):
     value1 = FlexibleDecimalField()
     value2 = FlexibleDecimalField()
 
+class Question1DecimalForm(DynamicForm):
+    id = HiddenField()
+    value = FlexibleDecimalField()
+
 class QuestionSelect4Form(DynamicForm):
     id = HiddenField()
     selection1 = SelectField(choices=[el.value for el in Select4Enum])

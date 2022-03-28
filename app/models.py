@@ -25,6 +25,7 @@ class Topic(Model):
 
 class QuestionSelfAssessed(Model):
     id = Column(Integer, primary_key=True)
+    external_id = Column(Integer)
     topic_id = Column(Integer, ForeignKey("topic.id"), nullable=False)
     topic = relationship("Topic")
     description_image = Column(ImageColumn(size=(10000, 10000, True)))
@@ -52,6 +53,7 @@ class QuestionSelfAssessed(Model):
 
 class Question2of5(Model):
     id = Column(Integer, primary_key=True)
+    external_id = Column(Integer)
     topic_id = Column(Integer, ForeignKey("topic.id"), nullable=False)
     topic = relationship("Topic")
     description_image = Column(ImageColumn(size=(10000, 10000, True)))
@@ -93,6 +95,7 @@ class Question2of5(Model):
 
 class Question1of6(Model):
     id = Column(Integer, primary_key=True)
+    external_id = Column(Integer)
     topic_id = Column(Integer, ForeignKey("topic.id"), nullable=False)
     topic = relationship("Topic")
     description_image = Column(ImageColumn(size=(10000, 10000, True)))
@@ -136,6 +139,7 @@ class Question1of6(Model):
 
 class Question3to3(Model):
     id = Column(Integer, primary_key=True)
+    external_id = Column(Integer)
     topic_id = Column(Integer, ForeignKey("topic.id"), nullable=False)
     topic = relationship("Topic")
     description_image = Column(ImageColumn(size=(10000, 10000, True)))
@@ -179,6 +183,7 @@ class Question3to3(Model):
 
 class Question2Decimals(Model):
     id = Column(Integer, primary_key=True)
+    external_id = Column(Integer)
     topic_id = Column(Integer, ForeignKey("topic.id"), nullable=False)
     topic = relationship("Topic")
     description_image = Column(ImageColumn(size=(10000, 10000, True)))
@@ -202,9 +207,34 @@ class Question2Decimals(Model):
     def __repr__(self):
         return self.title
 
+class Question1Decimal(Model):
+    id = Column(Integer, primary_key=True)
+    external_id = Column(Integer)
+    topic_id = Column(Integer, ForeignKey("topic.id"), nullable=False)
+    topic = relationship("Topic")
+    description_image = Column(ImageColumn(size=(10000, 10000, True)))
+    value_upper_limit = Column(Float())
+    value_lower_limit = Column(Float())
+
+    def description_image_img(self):
+        im = ImageManager()
+        if self.description_image:
+            return Markup('<a href="' + url_for('Question1DecimalModelView.show',pk=str(self.id)) +\
+             '" class="thumbnail"><img src="' + im.get_url(self.description_image) +\
+              '" alt="Photo" class="img-rounded img-responsive"></a>')
+        else:
+            return Markup('<a href="' + url_for('Question1DecimalModelView.show',pk=str(self.id)) +\
+             '" class="thumbnail"><img src="//:0" alt="Photo" class="img-responsive"></a>')
+
+
+
+    def __repr__(self):
+        return self.title
+
 
 class QuestionSelect4(Model):
     id = Column(Integer, primary_key=True)
+    external_id = Column(Integer)
     topic_id = Column(Integer, ForeignKey("topic.id"), nullable=False)
     topic = relationship("Topic")
     description_image = Column(ImageColumn(size=(10000, 10000, True)))

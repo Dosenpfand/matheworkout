@@ -6,8 +6,8 @@ from flask_appbuilder.models.sqla.interface import SQLAInterface
 from flask_babel import lazy_gettext as _
 from flask import render_template, flash, redirect, url_for, Markup
 from . import appbuilder, db
-from .forms import Question2of5Form, Question1of6Form, Question3to3Form, TopicForm, QuestionSelfAssessedForm, Question2DecimalsForm, QuestionSelect4Form
-from .models import Question2of5, Question1of6, Question3to3, Topic, QuestionSelfAssessed, Question2Decimals, QuestionSelect4
+from .forms import Question2of5Form, Question1of6Form, Question3to3Form, TopicForm, QuestionSelfAssessedForm, Question2DecimalsForm, Question1DecimalForm, QuestionSelect4Form
+from .models import Question2of5, Question1of6, Question3to3, Topic, QuestionSelfAssessed, Question2Decimals, Question1Decimal, QuestionSelect4
 from flask_appbuilder.security.views import UserDBModelView
 from flask_babel import lazy_gettext
 
@@ -43,6 +43,13 @@ class Question2DecimalsModelView(ModelView):
     # list_columns = ['photo_img_thumbnail', 'name']
     show_columns = ['description_image_img', 'title']
 
+
+class Question1DecimalModelView(ModelView):
+    datamodel = SQLAInterface(Question1Decimal)
+
+    label_columns = {'description_image': 'Description Image'}
+    # list_columns = ['photo_img_thumbnail', 'name']
+    show_columns = ['description_image_img', 'title']
 
 class QuestionSelfAssessedModelView(ModelView):
     datamodel = SQLAInterface(QuestionSelfAssessed)
@@ -106,7 +113,8 @@ class QuestionSelfAssessedFormView(SimpleFormView):
         form.id.data = id
 
         self.extra_args = {'question': {
-            'description': result.description_image_img()}}
+            'description': result.description_image_img(),
+            'external_id': result.external_id}}
 
     def form_post(self, form):
         self.update_redirect()
@@ -115,7 +123,8 @@ class QuestionSelfAssessedFormView(SimpleFormView):
             QuestionSelfAssessed).filter_by(id=id).first()
 
         self.extra_args = {'question': {'description': result.solution_image_img(
-        ) + Markup('<a href="/correct">CORRECT</a> <a href="/correct">INCORRECT</a>')}}
+        ) + Markup('<a href="/correct">CORRECT</a> <a href="/correct">INCORRECT</a>'),
+            'external_id': result.external_id}}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
         widgets = self._get_edit_widget(form=form)
@@ -154,7 +163,8 @@ class Question2of5FormView(SimpleFormView):
             result.option5_image)
 
         self.extra_args = {'question': {
-            'description': result.description_image_img()}}
+            'description': result.description_image_img(),
+            'external_id': result.external_id}}
 
     def form_post(self, form):
         self.update_redirect()
@@ -202,7 +212,8 @@ class Question2of5FormView(SimpleFormView):
             message = 'INCORRECT!'
         flash(message, 'info')
 
-        self.extra_args = {'question': {'description': 'TEST'}}
+        self.extra_args = {'question': {'description': 'TEST',
+            'external_id': result.external_id}}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
         widgets = self._get_edit_widget(form=form)
@@ -243,7 +254,8 @@ class Question1of6FormView(SimpleFormView):
             result.option6_image)
 
         self.extra_args = {'question': {
-            'description': result.description_image_img()}}
+            'description': result.description_image_img(),
+            'external_id': result.external_id}}
 
     def form_post(self, form):
         self.update_redirect()
@@ -298,7 +310,8 @@ class Question1of6FormView(SimpleFormView):
             message = 'INCORRECT!'
         flash(message, 'info')
 
-        self.extra_args = {'question': {'description': 'TEST'}}
+        self.extra_args = {'question': {'description': 'TEST'},
+            'external_id': result.external_id}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
         widgets = self._get_edit_widget(form=form)
@@ -349,7 +362,8 @@ class Question3to3FormView(SimpleFormView):
         form.checkbox2c.label.text = result.get_option_image(
             result.option2c_image)
         self.extra_args = {'question': {
-            'description': result.description_image_img()}}
+            'description': result.description_image_img(),
+            'external_id': result.external_id}}
 
     def form_post(self, form):
         self.update_redirect()
@@ -404,7 +418,8 @@ class Question3to3FormView(SimpleFormView):
             message = 'INCORRECT!'
         flash(message, 'info')
 
-        self.extra_args = {'question': {'description': 'TEST'}}
+        self.extra_args = {'question': {'description': 'TEST',
+            'external_id': result.external_id}}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
         widgets = self._get_edit_widget(form=form)
@@ -435,7 +450,8 @@ class Question2DecimalsFormView(SimpleFormView):
         form.value2.label.text = 'Ergebnis 2'
 
         self.extra_args = {'question': {
-            'description': result.description_image_img()}}
+            'description': result.description_image_img(),
+            'external_id': result.external_id}}
 
     def form_post(self, form):
         self.update_redirect()
@@ -464,7 +480,8 @@ class Question2DecimalsFormView(SimpleFormView):
             message = 'INCORRECT!'
         flash(message, 'info')
 
-        self.extra_args = {'question': {'description': 'TEST'}}
+        self.extra_args = {'question': {'description': 'TEST',
+            'external_id': result.external_id}}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
         widgets = self._get_edit_widget(form=form)
@@ -476,6 +493,54 @@ class Question2DecimalsFormView(SimpleFormView):
         )
         # return redirect(url_for('Question2of5EvaluateView.evaluate'))  # , id=DBTable.id))
 
+
+class Question1DecimalFormView(SimpleFormView):
+    form = Question1DecimalForm
+    form_title = '1 Decimal Test'
+    form_template = 'edit_additional.html'
+
+    def form_get(self, form):
+        self.update_redirect()
+        # Get random question
+        # TODO: no gaps in ID allowed!
+        count = db.session.query(Question1Decimal).count()
+        id = randrange(1, count + 1)
+        result = db.session.query(Question1Decimal).filter_by(id=id).first()
+
+        form.id.data = id
+        form.value.label.text = 'Ergebnis 1'
+
+        self.extra_args = {'question': {
+            'description': result.description_image_img(),
+            'external_id': result.external_id}}
+
+    def form_post(self, form):
+        self.update_redirect()
+        id = form.id.data
+        result = db.session.query(Question1Decimal).filter_by(id=id).first()
+        form.value.label.text = 'Ergebnis 1'
+        message = 'INCORRECT!'
+
+        if (form.value.data <= result.value_upper_limit) and (form.value.data >= result.value_lower_limit):
+            form.value.description = 'correct'
+            message = 'CORRECT!'
+        else:
+            form.value.description = 'incorrect'
+
+        flash(message, 'info')
+
+        self.extra_args = {'question': {'description': 'TEST',
+            'external_id': result.external_id}}
+
+        # TODO: why necessary? should happen automatically but redirect is wrong?!
+        widgets = self._get_edit_widget(form=form)
+        return self.render_template(
+            self.form_template,
+            title=self.form_title,
+            widgets=widgets,
+            appbuilder=self.appbuilder,
+        )
+        # return redirect(url_for('Question2of5EvaluateView.evaluate'))  # , id=DBTable.id))
 
 class QuestionSelect4FormView(SimpleFormView):
     form = QuestionSelect4Form
@@ -548,7 +613,8 @@ class QuestionSelect4FormView(SimpleFormView):
             message = 'INCORRECT!'
         flash(message, 'info')
 
-        self.extra_args = {'question': {'description': 'TEST'}}
+        self.extra_args = {'question': {'description': 'TEST',
+            'external_id': result.external_id}}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
         widgets = self._get_edit_widget(form=form)
@@ -586,6 +652,13 @@ appbuilder.add_view(
 appbuilder.add_view(
     Question2DecimalsModelView,
     "List 2 decimals questions",
+    icon="fa-question-circle",
+    category="Questions",
+    category_icon="fa-question",
+)
+appbuilder.add_view(
+    Question1DecimalModelView,
+    "List 1 decimal questions",
     icon="fa-question-circle",
     category="Questions",
     category_icon="fa-question",
@@ -644,6 +717,13 @@ appbuilder.add_view(
     "2 Decimals Test",
     icon="fa-group",
     label=_("2 Decimals Test"),
+    category="Tests",
+    category_icon="fa-cogs")
+appbuilder.add_view(
+    Question1DecimalFormView(),
+    "1 Decimal Test",
+    icon="fa-group",
+    label=_("1 Decimal Test"),
     category="Tests",
     category_icon="fa-cogs")
 appbuilder.add_view(
