@@ -1,7 +1,7 @@
 import datetime
 
 from flask_appbuilder import Model
-from sqlalchemy import Column, Date, ForeignKey, Integer, String, Boolean
+from sqlalchemy import Column, Date, ForeignKey, Integer, String, Boolean, Float
 from sqlalchemy.orm import relationship
 from flask_appbuilder.models.mixins import ImageColumn
 from flask_appbuilder.filemanager import ImageManager
@@ -161,6 +161,31 @@ class Question3to3(Model):
               '" alt="Photo" class="img-rounded img-responsive"></a>')
         else:
             return Markup('<a href="' + url_for('Question3to3ModelView.show',pk=str(self.id)) +\
+             '" class="thumbnail"><img src="//:0" alt="Photo" class="img-responsive"></a>')
+
+
+
+    def __repr__(self):
+        return self.title
+
+class Question2Decimals(Model):
+    id = Column(Integer, primary_key=True)
+    topic_id = Column(Integer, ForeignKey("topic.id"), nullable=False)
+    topic = relationship("Topic")
+    description_image = Column(ImageColumn(size=(10000, 10000, True)))
+    value1_upper_limit = Column(Float())
+    value1_lower_limit = Column(Float())
+    value2_upper_limit = Column(Float())
+    value2_lower_limit = Column(Float())
+
+    def description_image_img(self):
+        im = ImageManager()
+        if self.description_image:
+            return Markup('<a href="' + url_for('Question2DecimalsModelView.show',pk=str(self.id)) +\
+             '" class="thumbnail"><img src="' + im.get_url(self.description_image) +\
+              '" alt="Photo" class="img-rounded img-responsive"></a>')
+        else:
+            return Markup('<a href="' + url_for('Question2DecimalsModelView.show',pk=str(self.id)) +\
              '" class="thumbnail"><img src="//:0" alt="Photo" class="img-responsive"></a>')
 
 

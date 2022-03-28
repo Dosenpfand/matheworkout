@@ -1,6 +1,6 @@
 from flask_appbuilder.fieldwidgets import BS3TextFieldWidget
 from flask_appbuilder.forms import DynamicForm
-from wtforms import StringField, SelectMultipleField, BooleanField, HiddenField
+from wtforms import StringField, SelectMultipleField, BooleanField, HiddenField, DecimalField
 from wtforms.validators import DataRequired
 from .models import Topic
 from . import db
@@ -31,6 +31,11 @@ class Question3to3Form(DynamicForm):
     checkbox2a = BooleanField()
     checkbox2b = BooleanField()
     checkbox2c = BooleanField()
+
+class Question2DecimalsForm(DynamicForm):
+    id = HiddenField()
+    value1 = DecimalField()
+    value2 = DecimalField()
 
 class QuestionSelfAssessedForm(DynamicForm):
     id = HiddenField()

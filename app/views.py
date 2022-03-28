@@ -6,8 +6,8 @@ from flask_appbuilder.models.sqla.interface import SQLAInterface
 from flask_babel import lazy_gettext as _
 from flask import render_template, flash, redirect, url_for, Markup
 from . import appbuilder, db
-from .forms import Question2of5Form, Question1of6Form, Question3to3Form, TopicForm, QuestionSelfAssessedForm
-from .models import Question2of5, Question1of6, Question3to3, Topic, QuestionSelfAssessed
+from .forms import Question2of5Form, Question1of6Form, Question3to3Form, TopicForm, QuestionSelfAssessedForm, Question2DecimalsForm
+from .models import Question2of5, Question1of6, Question3to3, Topic, QuestionSelfAssessed, Question2Decimals
 from flask_appbuilder.security.views import UserDBModelView
 from flask_babel import lazy_gettext
 
@@ -28,6 +28,13 @@ class Question1of6ModelView(ModelView):
 
 class Question3to3ModelView(ModelView):
     datamodel = SQLAInterface(Question3to3)
+
+    label_columns = {'description_image':'Description Image'}
+    # list_columns = ['photo_img_thumbnail', 'name']
+    show_columns = ['description_image_img','title']
+
+class Question2DecimalsModelView(ModelView):
+    datamodel = SQLAInterface(Question2Decimals)
 
     label_columns = {'description_image':'Description Image'}
     # list_columns = ['photo_img_thumbnail', 'name']
@@ -353,6 +360,64 @@ class Question3to3FormView(SimpleFormView):
                 )
         # return redirect(url_for('Question2of5EvaluateView.evaluate'))  # , id=DBTable.id))
 
+class Question2DecimalsFormView(SimpleFormView):
+    form = Question2DecimalsForm
+    form_title = '2 Decimals Test'
+    form_template = 'edit_additional.html'
+
+    def form_get(self, form):
+        self.update_redirect()
+        # Get random question
+        # TODO: no gaps in ID allowed!
+        count = db.session.query(Question2Decimals).count()
+        id = randrange(1, count + 1)
+        result = db.session.query(Question2Decimals).filter_by(id=id).first()
+
+        form.id.data = id
+        form.value1.label.text = 'Ergebnis 1'
+        form.value2.label.text = 'Ergebnis 2'
+
+        self.extra_args = {'question': {'description': result.description_image_img()}}
+
+    def form_post(self, form):
+        self.update_redirect()
+        id = form.id.data
+        result = db.session.query(Question2Decimals).filter_by(id=id).first()
+        form.value1.label.text = 'Ergebnis 1'
+        form.value2.label.text = 'Ergebnis 2'
+        value1_correct = False
+        value2_correct = False
+
+        if (form.value1.data <= result.value1_upper_limit) and (form.value1.data >= result.value1_lower_limit):
+            form.value1.description = 'correct'
+            value1_correct = True
+        else:
+            form.value1.description = 'incorrect'
+
+        if (form.value2.data <= result.value2_upper_limit) and (form.value2.data >= result.value2_lower_limit):
+            form.value2.description = 'correct'
+            value2_correct = True
+        else:
+            form.value2.description = 'incorrect'
+
+        if value1_correct and value2_correct:
+            message = 'CORRECT!'
+        else:
+            message = 'INCORRECT!'
+        flash(message, 'info')
+
+        self.extra_args = {'question': {'description': 'TEST'}}
+
+        # TODO: why necessary? should happen automatically but redirect is wrong?!
+        widgets = self._get_edit_widget(form=form)
+        return self.render_template(
+                    self.form_template,
+                    title=self.form_title,
+                    widgets=widgets,
+                    appbuilder=self.appbuilder,
+                )
+        # return redirect(url_for('Question2of5EvaluateView.evaluate'))  # , id=DBTable.id))
+
 db.create_all()
 appbuilder.add_view(
     Question2of5ModelView,
@@ -371,6 +436,13 @@ appbuilder.add_view(
 appbuilder.add_view(
     Question3to3ModelView,
     "List 3 to 3 questions",
+    icon="fa-question-circle",
+    category="Questions",
+    category_icon="fa-question",
+)
+appbuilder.add_view(
+    Question2DecimalsModelView,
+    "List 2 decimals questions",
     icon="fa-question-circle",
     category="Questions",
     category_icon="fa-question",
@@ -415,6 +487,13 @@ appbuilder.add_view(
     "3 to 3 Test",
     icon="fa-group",
     label=_("3 to 3 Test"),
+    category="Tests",
+    category_icon="fa-cogs")
+appbuilder.add_view(
+    Question2DecimalsFormView(),
+    "2 Decimals Test",
+    icon="fa-group",
+    label=_("2 Decimals Test"),
     category="Tests",
     category_icon="fa-cogs")
 appbuilder.add_view(
