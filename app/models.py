@@ -33,23 +33,13 @@ class QuestionSelfAssessed(Model):
 
     def description_image_img(self):
         im = ImageManager()
-        if self.description_image:
-            return Markup('<a href="' + url_for('QuestionSelfAssessedModelView.show',pk=str(self.id)) +\
-             '" class="thumbnail"><img src="' + im.get_url(self.description_image) +\
-              '" alt="Photo" class="img-rounded img-responsive"></a>')
-        else:
-            return Markup('<a href="' + url_for('QuestionSelfAssessedModelView.show',pk=str(self.id)) +\
-             '" class="thumbnail"><img src="//:0" alt="Photo" class="img-responsive"></a>')
+        return Markup('<img src="' + im.get_url(self.description_image) +\
+            '" alt="Photo" class="img-rounded img-responsive">')
 
     def solution_image_img(self):
         im = ImageManager()
-        if self.solution_image:
-            return Markup('<a href="' + url_for('QuestionSelfAssessedModelView.show',pk=str(self.id)) +\
-             '" class="thumbnail"><img src="' + im.get_url(self.solution_image) +\
-              '" alt="Photo" class="img-rounded img-responsive"></a>')
-        else:
-            return Markup('<a href="' + url_for('QuestionSelfAssessedModelView.show',pk=str(self.id)) +\
-             '" class="thumbnail"><img src="//:0" alt="Photo" class="img-responsive"></a>')
+        return Markup('<img src="' + im.get_url(self.solution_image) +\
+            '" alt="Photo" class="img-rounded img-responsive">')
 
 class Question2of5(Model):
     id = Column(Integer, primary_key=True)
@@ -70,23 +60,13 @@ class Question2of5(Model):
 
     def get_option_image(self, option):
         im = ImageManager()
-        if option:
-            return Markup('<a href="' + url_for('Question2of5ModelView.show',pk=str(self.id)) +\
-             '" class="thumbnail"><img src="' + im.get_url(option) +\
-              '" alt="Photo" class="img-rounded img-responsive"></a>')
-        else:
-            return Markup('<a href="' + url_for('Question2of5ModelView.show',pk=str(self.id)) +\
-             '" class="thumbnail"><img src="//:0" alt="Photo" class="img-responsive"></a>')
+        return Markup('<img src="' + im.get_url(option) +\
+            '" alt="Photo" class="img-rounded img-responsive" style="min-width:400px;">')
 
     def description_image_img(self):
         im = ImageManager()
-        if self.description_image:
-            return Markup('<a href="' + url_for('Question2of5ModelView.show',pk=str(self.id)) +\
-             '" class="thumbnail"><img src="' + im.get_url(self.description_image) +\
-              '" alt="Photo" class="img-rounded img-responsive"></a>')
-        else:
-            return Markup('<a href="' + url_for('Question2of5ModelView.show',pk=str(self.id)) +\
-             '" class="thumbnail"><img src="//:0" alt="Photo" class="img-responsive"></a>')
+        return Markup('<img src="' + im.get_url(self.description_image) +\
+            '" alt="Photo" class="img-rounded img-responsive">')
 
 
 
@@ -119,13 +99,8 @@ class Question1of6(Model):
 
     def description_image_img(self):
         im = ImageManager()
-        if self.description_image:
-            return Markup('<a href="' + url_for('Question1of6ModelView.show',pk=str(self.id)) +\
-             '" class="thumbnail"><img src="' + im.get_url(self.description_image) +\
-              '" alt="Photo" class="img-rounded img-responsive"></a>')
-        else:
-            return Markup('<a href="' + url_for('Question1of6ModelView.show',pk=str(self.id)) +\
-             '" class="thumbnail"><img src="//:0" alt="Photo" class="img-responsive"></a>')
+        return Markup('<img src="' + im.get_url(self.description_image) +\
+            '" alt="Photo" class="img-rounded img-responsive">')
 
 
 
@@ -153,23 +128,13 @@ class Question3to3(Model):
 
     def get_option_image(self, option):
         im = ImageManager()
-        if option:
-            return Markup('<a href="' + url_for('Question3to3ModelView.show',pk=str(self.id)) +\
-             '" class="thumbnail"><img src="' + im.get_url(option) +\
-              '" alt="Photo" class="img-rounded img-responsive"></a>')
-        else:
-            return Markup('<a href="' + url_for('Question3to3ModelView.show',pk=str(self.id)) +\
-             '" class="thumbnail"><img src="//:0" alt="Photo" class="img-responsive"></a>')
+        return Markup('<img src="' + im.get_url(option) +\
+            '" alt="Photo" class="img-rounded img-responsive" style="min-width:400px;">')
 
     def description_image_img(self):
         im = ImageManager()
-        if self.description_image:
-            return Markup('<a href="' + url_for('Question3to3ModelView.show',pk=str(self.id)) +\
-             '" class="thumbnail"><img src="' + im.get_url(self.description_image) +\
-              '" alt="Photo" class="img-rounded img-responsive"></a>')
-        else:
-            return Markup('<a href="' + url_for('Question3to3ModelView.show',pk=str(self.id)) +\
-             '" class="thumbnail"><img src="//:0" alt="Photo" class="img-responsive"></a>')
+        return Markup('<img src="' + im.get_url(self.description_image) +\
+            '" alt="Photo" class="img-rounded img-responsive">')
 
 
 
@@ -189,13 +154,8 @@ class Question2Decimals(Model):
 
     def description_image_img(self):
         im = ImageManager()
-        if self.description_image:
-            return Markup('<a href="' + url_for('Question2DecimalsModelView.show',pk=str(self.id)) +\
-             '" class="thumbnail"><img src="' + im.get_url(self.description_image) +\
-              '" alt="Photo" class="img-rounded img-responsive"></a>')
-        else:
-            return Markup('<a href="' + url_for('Question2DecimalsModelView.show',pk=str(self.id)) +\
-             '" class="thumbnail"><img src="//:0" alt="Photo" class="img-responsive"></a>')
+        return Markup('<img src="' + im.get_url(self.description_image) +\
+            '" alt="Photo" class="img-rounded img-responsive">')
 
 
 
@@ -213,13 +173,8 @@ class Question1Decimal(Model):
 
     def description_image_img(self):
         im = ImageManager()
-        if self.description_image:
-            return Markup('<a href="' + url_for('Question1DecimalModelView.show',pk=str(self.id)) +\
-             '" class="thumbnail"><img src="' + im.get_url(self.description_image) +\
-              '" alt="Photo" class="img-rounded img-responsive"></a>')
-        else:
-            return Markup('<a href="' + url_for('Question1DecimalModelView.show',pk=str(self.id)) +\
-             '" class="thumbnail"><img src="//:0" alt="Photo" class="img-responsive"></a>')
+        return Markup('<img src="' + im.get_url(self.description_image) +\
+            '" alt="Photo" class="img-rounded img-responsive">')
 
 
 
@@ -248,35 +203,22 @@ class QuestionSelect4(Model):
     option5_image = Column(ImageColumn(size=(10000, 10000, True)))
     option6_image = Column(ImageColumn(size=(10000, 10000, True)))
 
-    def get_selection_image(self, selection):
-        im = ImageManager()
-        if selection:
-            return Markup('<a href="' + url_for('QuestionSelect4ModelView.show',pk=str(self.id)) +\
-             '" class="thumbnail"><img src="' + im.get_url(selection) +\
-              '" alt="Photo" class="img-rounded img-responsive"></a>')
-        else:
-            return Markup('<a href="' + url_for('QuestionSelect4ModelView.show',pk=str(self.id)) +\
-             '" class="thumbnail"><img src="//:0" alt="Photo" class="img-responsive"></a>')
 
     def get_option_image(self, option):
         im = ImageManager()
-        if option:
-            return Markup('<a href="' + url_for('QuestionSelect4ModelView.show',pk=str(self.id)) +\
-             '" class="thumbnail"><img src="' + im.get_url(option) +\
-              '" alt="Photo" class="img-rounded img-responsive"></a>')
-        else:
-            return Markup('<a href="' + url_for('QuestionSelect4ModelView.show',pk=str(self.id)) +\
-             '" class="thumbnail"><img src="//:0" alt="Photo" class="img-responsive"></a>')
+        return Markup('<img src="' + im.get_url(option) +\
+            '" alt="Photo" class="img-rounded img-responsive" style="min-width:400px;">')
+
+    def get_selection_image(self, selection):
+        im = ImageManager()
+        return Markup('<img src="' + im.get_url(selection) +\
+            '" alt="Photo" class="img-rounded img-responsive" style="min-width:400px;">')
+
 
     def description_image_img(self):
         im = ImageManager()
-        if self.description_image:
-            return Markup('<a href="' + url_for('Question3to3ModelView.show',pk=str(self.id)) +\
-             '" class="thumbnail"><img src="' + im.get_url(self.description_image) +\
-              '" alt="Photo" class="img-rounded img-responsive"></a>')
-        else:
-            return Markup('<a href="' + url_for('Question3to3ModelView.show',pk=str(self.id)) +\
-             '" class="thumbnail"><img src="//:0" alt="Photo" class="img-responsive"></a>')
+        return Markup('<img src="' + im.get_url(self.description_image) +\
+            '" alt="Photo" class="img-rounded img-responsive">')
 
 
 
