@@ -7,6 +7,7 @@
         <h2>{{question['title']}}</h1>
         <div class="well well-sm"><strong>Frage Nr.: {{question['external_id']}}</strong></div>
         <div class="well well-sm"><strong>{{question['description']}}</strong></div>
+        {{ widgets.get('edit')(form_action=form_action)|safe }}
         {% if question['options'] %}
             <div class="well well-sm"><strong>A: {{question['options']['A']}}</strong></div>
             <div class="well well-sm"><strong>B: {{question['options']['B']}}</strong></div>
@@ -15,8 +16,6 @@
             <div class="well well-sm"><strong>E: {{question['options']['E']}}</strong></div>
             <div class="well well-sm"><strong>F: {{question['options']['F']}}</strong></div>
         {% endif %}
-
-        {{ widgets.get('edit')(form_action=form_action)|safe }}
     </div>
 {% endblock %}
 
