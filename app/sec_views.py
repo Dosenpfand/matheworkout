@@ -10,7 +10,7 @@ class ExtendedUserDBModelView(UserDBModelView):
 
     show_fieldsets = [
         (lazy_gettext('User info'),
-         {'fields': ['username', 'active', 'roles', 'login_count', 'extra']}),
+         {'fields': ['username', 'active', 'roles', 'login_count', 'tried_questions', 'correct_questions', 'extra']}),
         (lazy_gettext('Personal Info'),
          {'fields': ['first_name', 'last_name', 'email'], 'expanded': True}),
         (lazy_gettext('Audit Info'),

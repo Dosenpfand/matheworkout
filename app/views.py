@@ -4,7 +4,7 @@ from flask_appbuilder.charts.views import GroupByChartView
 from flask_appbuilder.models.group import aggregate_count
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from flask_babel import lazy_gettext as _
-from flask import render_template, flash, redirect, url_for, Markup, g, request
+from flask import render_template, flash, redirect, url_for, Markup, g, request, Markup
 from . import appbuilder, db
 from .forms import Question2of5Form, Question1of6Form, Question3to3Form, TopicForm, QuestionSelfAssessedForm, Question2DecimalsForm, Question1DecimalForm, QuestionSelect4Form
 from .models import Question2of5, Question1of6, Question3to3, Topic, QuestionSelfAssessed, Question2Decimals, Question1Decimal, QuestionSelect4
@@ -56,6 +56,9 @@ class Question1DecimalModelView(ModelView):
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
 
+def link_formatter(value):
+    return Markup('<a href="' + url_for('QuestionSelfAssessedFormView.this_form_get') + '?ext_id=' + str(value) + '">' + str(value) + '</a>')
+
 class QuestionSelfAssessedModelView(ModelView):
     datamodel = SQLAInterface(QuestionSelfAssessed)
 
@@ -63,6 +66,7 @@ class QuestionSelfAssessedModelView(ModelView):
                      'solution_image': 'Solution Image'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'solution_image_img']
+    formatters_columns = {'external_id': link_formatter }
 
 
 class QuestionSelect4ModelView(ModelView):
@@ -108,7 +112,12 @@ class QuestionSelfAssessedFormView(SimpleFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        result = db.session.query(QuestionSelfAssessed).order_by(func.random()).first()
+        request_id = request.args.get('ext_id')
+        if request_id:
+            result = db.session.query(QuestionSelfAssessed).filter_by(external_id=request_id).first()
+        else:
+            result = db.session.query(QuestionSelfAssessed).order_by(func.random()).first()
+
         form.id.data = result.id
 
         answer_value = request.args.get('answer')
