@@ -4,13 +4,17 @@ from flask_appbuilder.charts.views import GroupByChartView
 from flask_appbuilder.models.group import aggregate_count
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from flask_babel import lazy_gettext as _
-from flask import render_template, flash, redirect, url_for, Markup
+from flask import render_template, flash, redirect, url_for, Markup, g, request
 from . import appbuilder, db
 from .forms import Question2of5Form, Question1of6Form, Question3to3Form, TopicForm, QuestionSelfAssessedForm, Question2DecimalsForm, Question1DecimalForm, QuestionSelect4Form
 from .models import Question2of5, Question1of6, Question3to3, Topic, QuestionSelfAssessed, Question2Decimals, Question1Decimal, QuestionSelect4
+from .sec_models import ExtendedUser
 from flask_appbuilder.security.views import UserDBModelView
 from flask_babel import lazy_gettext
 from sqlalchemy.sql.expression import func, select
+
+def get_user():
+    return g.user
 
 
 class Question2of5ModelView(ModelView):
@@ -107,6 +111,14 @@ class QuestionSelfAssessedFormView(SimpleFormView):
         result = db.session.query(QuestionSelfAssessed).order_by(func.random()).first()
         form.id.data = result.id
 
+        answer_value = request.args.get('answer')
+        if answer_value:
+            user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update({'tried_questions': ExtendedUser.tried_questions + 1})
+            db.session.commit()
+        if answer_value == 'CORRECT':
+            user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update({'correct_questions': ExtendedUser.correct_questions + 1})
+            db.session.commit()
+
         self.extra_args = {'question': {
             'description': result.description_image_img(),
             'external_id': result.external_id}}
@@ -118,7 +130,7 @@ class QuestionSelfAssessedFormView(SimpleFormView):
             QuestionSelfAssessed).filter_by(id=id).first()
 
         self.extra_args = {'question': {'description': result.solution_image_img(
-        ) + Markup('<a href="/correct">CORRECT</a> <a href="/correct">INCORRECT</a>'),
+        ) + Markup('<a href="' + url_for('QuestionSelfAssessedFormView.this_form_get') + '?answer=CORRECT">CORRECT</a> <a href="' + url_for('QuestionSelfAssessedFormView.this_form_get') + '?answer=INCORRECT">INCORRECT</a>'),
             'external_id': result.external_id}}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
@@ -129,7 +141,7 @@ class QuestionSelfAssessedFormView(SimpleFormView):
             widgets=widgets,
             appbuilder=self.appbuilder,
         )
-        # return redirect(url_for('Question2of5EvaluateView.evaluate'))  # , id=DBTable.id))
+
 
 
 class Question2of5FormView(SimpleFormView):
@@ -200,8 +212,14 @@ class Question2of5FormView(SimpleFormView):
             (form.checkbox4.data == result.option4_is_correct) and \
                 (form.checkbox5.data == result.option5_is_correct):
             message = 'CORRECT!'
+            user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update({'correct_questions': ExtendedUser.correct_questions + 1})
+            db.session.commit()
         else:
             message = 'INCORRECT!'
+
+        user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update({'tried_questions': ExtendedUser.tried_questions + 1})
+        db.session.commit()
+
         flash(message, 'info')
 
         self.extra_args = {'question': {'description': 'TEST',
@@ -215,7 +233,7 @@ class Question2of5FormView(SimpleFormView):
             widgets=widgets,
             appbuilder=self.appbuilder,
         )
-        # return redirect(url_for('Question2of5EvaluateView.evaluate'))  # , id=DBTable.id))
+
 
 
 class Question1of6FormView(SimpleFormView):
@@ -295,8 +313,14 @@ class Question1of6FormView(SimpleFormView):
                 (form.checkbox5.data == result.option5_is_correct) and \
                 (form.checkbox6.data == result.option6_is_correct):
             message = 'CORRECT!'
+            user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update({'correct_questions': ExtendedUser.correct_questions + 1})
+            db.session.commit()
         else:
             message = 'INCORRECT!'
+
+        user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update({'tried_questions': ExtendedUser.tried_questions + 1})
+        db.session.commit()
+
         flash(message, 'info')
 
         self.extra_args = {'question': {'description': 'TEST'},
@@ -310,7 +334,7 @@ class Question1of6FormView(SimpleFormView):
             widgets=widgets,
             appbuilder=self.appbuilder,
         )
-        # return redirect(url_for('Question2of5EvaluateView.evaluate'))  # , id=DBTable.id))
+
 
 
 class Question3to3FormView(SimpleFormView):
@@ -400,8 +424,14 @@ class Question3to3FormView(SimpleFormView):
                 (form.checkbox2b.data == result.option2b_is_correct) and \
                 (form.checkbox2c.data == result.option2c_is_correct):
             message = 'CORRECT!'
+            user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update({'correct_questions': ExtendedUser.correct_questions + 1})
+            db.session.commit()
         else:
             message = 'INCORRECT!'
+
+        user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update({'tried_questions': ExtendedUser.tried_questions + 1})
+        db.session.commit()
+
         flash(message, 'info')
 
         self.extra_args = {'question': {'description': 'TEST',
@@ -415,7 +445,7 @@ class Question3to3FormView(SimpleFormView):
             widgets=widgets,
             appbuilder=self.appbuilder,
         )
-        # return redirect(url_for('Question2of5EvaluateView.evaluate'))  # , id=DBTable.id))
+
 
 
 class Question2DecimalsFormView(SimpleFormView):
@@ -459,8 +489,14 @@ class Question2DecimalsFormView(SimpleFormView):
 
         if value1_correct and value2_correct:
             message = 'CORRECT!'
+            user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update({'correct_questions': ExtendedUser.correct_questions + 1})
+            db.session.commit()
         else:
             message = 'INCORRECT!'
+
+        user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update({'tried_questions': ExtendedUser.tried_questions + 1})
+        db.session.commit()
+
         flash(message, 'info')
 
         self.extra_args = {'question': {'description': 'TEST',
@@ -474,7 +510,7 @@ class Question2DecimalsFormView(SimpleFormView):
             widgets=widgets,
             appbuilder=self.appbuilder,
         )
-        # return redirect(url_for('Question2of5EvaluateView.evaluate'))  # , id=DBTable.id))
+
 
 
 class Question1DecimalFormView(SimpleFormView):
@@ -504,8 +540,13 @@ class Question1DecimalFormView(SimpleFormView):
         if (form.value.data <= result.value_upper_limit) and (form.value.data >= result.value_lower_limit):
             form.value.description = 'correct'
             message = 'CORRECT!'
+            user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update({'correct_questions': ExtendedUser.correct_questions + 1})
+            db.session.commit()
         else:
-            form.value.description = 'incorrect'
+            message = 'INCORRECT!'
+
+        user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update({'tried_questions': ExtendedUser.tried_questions + 1})
+        db.session.commit()
 
         flash(message, 'info')
 
@@ -520,7 +561,7 @@ class Question1DecimalFormView(SimpleFormView):
             widgets=widgets,
             appbuilder=self.appbuilder,
         )
-        # return redirect(url_for('Question2of5EvaluateView.evaluate'))  # , id=DBTable.id))
+
 
 class QuestionSelect4FormView(SimpleFormView):
     form = QuestionSelect4Form
@@ -587,8 +628,14 @@ class QuestionSelect4FormView(SimpleFormView):
             (form.selection3.data == result.selection3_solution.value) and \
                 (form.selection4.data == result.selection4_solution.value):
             message = 'CORRECT!'
+            user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update({'correct_questions': ExtendedUser.correct_questions + 1})
+            db.session.commit()
         else:
             message = 'INCORRECT!'
+
+        user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update({'tried_questions': ExtendedUser.tried_questions + 1})
+        db.session.commit()
+
         flash(message, 'info')
 
         self.extra_args = {'question': {'description': 'TEST',
@@ -602,7 +649,7 @@ class QuestionSelect4FormView(SimpleFormView):
             widgets=widgets,
             appbuilder=self.appbuilder,
         )
-        # return redirect(url_for('Question2of5EvaluateView.evaluate'))  # , id=DBTable.id))
+
 
 
 db.create_all()

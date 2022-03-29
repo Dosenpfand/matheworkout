@@ -5,4 +5,5 @@ from flask_appbuilder import Model
 
 class ExtendedUser(User):
     __tablename__ = 'ab_user'
-    tried_questions = Column(Integer)
+    tried_questions = Column(Integer, default=0)
+    correct_questions = Column(Integer, default=0)

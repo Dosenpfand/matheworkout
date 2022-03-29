@@ -20,7 +20,7 @@ class ExtendedUserDBModelView(UserDBModelView):
 
     user_show_fieldsets = [
         (lazy_gettext('User info'),
-         {'fields': ['username', 'active', 'roles', 'login_count', 'tried_questions']}),
+         {'fields': ['username', 'active', 'roles', 'login_count', 'tried_questions', 'correct_questions']}),
         (lazy_gettext('Personal Info'),
          {'fields': ['first_name', 'last_name', 'email'], 'expanded': True}),
     ]
@@ -33,6 +33,7 @@ class ExtendedUserDBModelView(UserDBModelView):
         'email',
         'roles',
         'tried_questions',
+        'correct_questions',
         'password',
         'conf_password'
     ]
@@ -51,5 +52,6 @@ class ExtendedUserDBModelView(UserDBModelView):
         'active',
         'email',
         'roles',
-        'tried_questions'
+        'tried_questions',
+        'correct_questions'
     ]
