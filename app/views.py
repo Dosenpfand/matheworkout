@@ -16,7 +16,7 @@ class Question2of5ModelView(ModelView):
     datamodel = SQLAInterface(Question2of5)
 
     label_columns = {'description_image': 'Description Image'}
-    # list_columns = ['photo_img_thumbnail', 'name']
+    list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
 
 
@@ -24,7 +24,7 @@ class Question1of6ModelView(ModelView):
     datamodel = SQLAInterface(Question1of6)
 
     label_columns = {'description_image': 'Description Image'}
-    # list_columns = ['photo_img_thumbnail', 'name']
+    list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
 
 
@@ -32,7 +32,7 @@ class Question3to3ModelView(ModelView):
     datamodel = SQLAInterface(Question3to3)
 
     label_columns = {'description_image': 'Description Image'}
-    # list_columns = ['photo_img_thumbnail', 'name']
+    list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
 
 
@@ -40,7 +40,7 @@ class Question2DecimalsModelView(ModelView):
     datamodel = SQLAInterface(Question2Decimals)
 
     label_columns = {'description_image': 'Description Image'}
-    # list_columns = ['photo_img_thumbnail', 'name']
+    list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
 
 
@@ -48,7 +48,7 @@ class Question1DecimalModelView(ModelView):
     datamodel = SQLAInterface(Question1Decimal)
 
     label_columns = {'description_image': 'Description Image'}
-    # list_columns = ['photo_img_thumbnail', 'name']
+    list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
 
 class QuestionSelfAssessedModelView(ModelView):
@@ -56,7 +56,7 @@ class QuestionSelfAssessedModelView(ModelView):
 
     label_columns = {'description_image': 'Description Image',
                      'solution_image': 'Solution Image'}
-    # list_columns = ['photo_img_thumbnail', 'name']
+    list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'solution_image_img']
 
 
@@ -65,7 +65,7 @@ class QuestionSelect4ModelView(ModelView):
 
     label_columns = {'description_image': 'Description Image',
                      'solution_image': 'Solution Image'}
-    # list_columns = ['photo_img_thumbnail', 'name']
+    list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'solution_image_img']
 
 
