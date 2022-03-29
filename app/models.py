@@ -61,7 +61,7 @@ class Question2of5(Model):
     def get_option_image(self, option):
         im = ImageManager()
         return Markup('<img src="' + im.get_url(option) +\
-            '" alt="Photo" class="img-rounded img-responsive" style="min-width:400px;">')
+            '" alt="Photo" class="img-rounded img-responsive" style="min-width:100%;">')
 
     def description_image_img(self):
         im = ImageManager()
@@ -95,7 +95,7 @@ class Question1of6(Model):
     def get_option_image(self, option):
         im = ImageManager()
         return Markup('<img src="' + im.get_url(option) +\
-            '" alt="Photo" class="img-rounded img-responsive" style="min-width:400px;">')
+            '" alt="Photo" class="img-rounded img-responsive" style="min-width:100%;">')
 
     def description_image_img(self):
         im = ImageManager()
@@ -129,7 +129,7 @@ class Question3to3(Model):
     def get_option_image(self, option):
         im = ImageManager()
         return Markup('<img src="' + im.get_url(option) +\
-            '" alt="Photo" class="img-rounded img-responsive" style="min-width:400px;">')
+            '" alt="Photo" class="img-rounded img-responsive" style="min-width:100%;">')
 
     def description_image_img(self):
         im = ImageManager()
@@ -207,12 +207,12 @@ class QuestionSelect4(Model):
     def get_option_image(self, option):
         im = ImageManager()
         return Markup('<img src="' + im.get_url(option) +\
-            '" alt="Photo" class="img-rounded img-responsive" style="min-width:400px;">')
+            '" alt="Photo" class="img-rounded img-responsive" style="min-width:100%;">')
 
     def get_selection_image(self, selection):
         im = ImageManager()
         return Markup('<img src="' + im.get_url(selection) +\
-            '" alt="Photo" class="img-rounded img-responsive" style="min-width:400px;">')
+            '" alt="Photo" class="img-rounded img-responsive" style="min-width:100%;">')
 
 
     def description_image_img(self):
