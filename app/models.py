@@ -114,13 +114,8 @@ class Question1of6(Model):
 
     def get_option_image(self, option):
         im = ImageManager()
-        if option:
-            return Markup('<a href="' + url_for('Question1of6ModelView.show',pk=str(self.id)) +\
-             '" class="thumbnail"><img src="' + im.get_url(option) +\
-              '" alt="Photo" class="img-rounded img-responsive"></a>')
-        else:
-            return Markup('<a href="' + url_for('Question1of6ModelView.show',pk=str(self.id)) +\
-             '" class="thumbnail"><img src="//:0" alt="Photo" class="img-responsive"></a>')
+        return Markup('<img src="' + im.get_url(option) +\
+            '" alt="Photo" class="img-rounded img-responsive" style="min-width:400px;">')
 
     def description_image_img(self):
         im = ImageManager()
