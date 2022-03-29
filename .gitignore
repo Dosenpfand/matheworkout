@@ -153,3 +153,6 @@ app.db
 
 # Uploads
 app/static/uploads/**
+
+# VSCode
+.vscode/settings.json
