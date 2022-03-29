@@ -16,6 +16,8 @@ from sqlalchemy.sql.expression import func, select
 def get_user():
     return g.user
 
+def link_formatter_2_of_5(value):
+    return Markup('<a href="' + url_for('Question2of5FormView.this_form_get') + '?ext_id=' + str(value) + '">' + str(value) + '</a>')
 
 class Question2of5ModelView(ModelView):
     datamodel = SQLAInterface(Question2of5)
@@ -23,7 +25,10 @@ class Question2of5ModelView(ModelView):
     label_columns = {'description_image': 'Description Image'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
+    formatters_columns = {'external_id': link_formatter_2_of_5}
 
+def link_formatter_1_of_6(value):
+    return Markup('<a href="' + url_for('Question1of6FormView.this_form_get') + '?ext_id=' + str(value) + '">' + str(value) + '</a>')
 
 class Question1of6ModelView(ModelView):
     datamodel = SQLAInterface(Question1of6)
@@ -31,7 +36,10 @@ class Question1of6ModelView(ModelView):
     label_columns = {'description_image': 'Description Image'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
+    formatters_columns = {'external_id': link_formatter_1_of_6 }
 
+def link_formatter_3_to_3(value):
+    return Markup('<a href="' + url_for('Question3to3FormView.this_form_get') + '?ext_id=' + str(value) + '">' + str(value) + '</a>')
 
 class Question3to3ModelView(ModelView):
     datamodel = SQLAInterface(Question3to3)
@@ -39,7 +47,10 @@ class Question3to3ModelView(ModelView):
     label_columns = {'description_image': 'Description Image'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
+    formatters_columns = {'external_id': link_formatter_3_to_3 }
 
+def link_formatter_2_decimals(value):
+    return Markup('<a href="' + url_for('Question2DecimalsFormView.this_form_get') + '?ext_id=' + str(value) + '">' + str(value) + '</a>')
 
 class Question2DecimalsModelView(ModelView):
     datamodel = SQLAInterface(Question2Decimals)
@@ -47,7 +58,10 @@ class Question2DecimalsModelView(ModelView):
     label_columns = {'description_image': 'Description Image'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
+    formatters_columns = {'external_id': link_formatter_2_decimals }
 
+def link_formatter_1_decimal(value):
+    return Markup('<a href="' + url_for('Question1DecimalFormView.this_form_get') + '?ext_id=' + str(value) + '">' + str(value) + '</a>')
 
 class Question1DecimalModelView(ModelView):
     datamodel = SQLAInterface(Question1Decimal)
@@ -55,8 +69,9 @@ class Question1DecimalModelView(ModelView):
     label_columns = {'description_image': 'Description Image'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
+    formatters_columns = {'external_id': link_formatter_1_decimal }
 
-def link_formatter(value):
+def link_formatter_self_assessed(value):
     return Markup('<a href="' + url_for('QuestionSelfAssessedFormView.this_form_get') + '?ext_id=' + str(value) + '">' + str(value) + '</a>')
 
 class QuestionSelfAssessedModelView(ModelView):
@@ -66,8 +81,10 @@ class QuestionSelfAssessedModelView(ModelView):
                      'solution_image': 'Solution Image'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'solution_image_img']
-    formatters_columns = {'external_id': link_formatter }
+    formatters_columns = {'external_id': link_formatter_self_assessed }
 
+def link_formatter_select_4(value):
+    return Markup('<a href="' + url_for('QuestionSelect4FormView.this_form_get') + '?ext_id=' + str(value) + '">' + str(value) + '</a>')
 
 class QuestionSelect4ModelView(ModelView):
     datamodel = SQLAInterface(QuestionSelect4)
@@ -76,6 +93,7 @@ class QuestionSelect4ModelView(ModelView):
                      'solution_image': 'Solution Image'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'solution_image_img']
+    formatters_columns = {'external_id': link_formatter_select_4 }
 
 
 class TopicModelView(ModelView):
@@ -160,7 +178,13 @@ class Question2of5FormView(SimpleFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        result = db.session.query(Question2of5).order_by(func.random()).first()
+
+        request_id = request.args.get('ext_id')
+        if request_id:
+            result = db.session.query(Question2of5).filter_by(external_id=request_id).first()
+        else:
+            result = db.session.query(Question2of5).order_by(func.random()).first()
+
         form.id.data = result.id
 
         form.id.data = result.id
@@ -252,7 +276,12 @@ class Question1of6FormView(SimpleFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        result = db.session.query(Question1of6).order_by(func.random()).first()
+        request_id = request.args.get('ext_id')
+        if request_id:
+            result = db.session.query(Question1of6).filter_by(external_id=request_id).first()
+        else:
+            result = db.session.query(Question1of6).order_by(func.random()).first()
+
         form.id.data = result.id
 
         form.id.data = result.id
@@ -364,7 +393,11 @@ class Question3to3FormView(SimpleFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        result = db.session.query(Question3to3).order_by(func.random()).first()
+        request_id = request.args.get('ext_id')
+        if request_id:
+            result = db.session.query(Question3to3).filter_by(external_id=request_id).first()
+        else:
+            result = db.session.query(Question3to3).order_by(func.random()).first()
         form.id.data = result.id
 
         form.id.data = result.id
@@ -464,7 +497,12 @@ class Question2DecimalsFormView(SimpleFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        result = db.session.query(Question2Decimals).order_by(func.random()).first()
+        request_id = request.args.get('ext_id')
+        if request_id:
+            result = db.session.query(Question2Decimals).filter_by(external_id=request_id).first()
+        else:
+            result = db.session.query(Question2Decimals).order_by(func.random()).first()
+
         form.id.data = result.id
 
         form.id.data = result.id
@@ -529,7 +567,12 @@ class Question1DecimalFormView(SimpleFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        result = db.session.query(Question1Decimal).order_by(func.random()).first()
+        request_id = request.args.get('ext_id')
+        if request_id:
+            result = db.session.query(Question1Decimal).filter_by(external_id=request_id).first()
+        else:
+            result = db.session.query(Question1Decimal).order_by(func.random()).first()
+
         form.id.data = result.id
 
         form.id.data = result.id
@@ -579,7 +622,11 @@ class QuestionSelect4FormView(SimpleFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        result = db.session.query(QuestionSelect4).order_by(func.random()).first()
+        request_id = request.args.get('ext_id')
+        if request_id:
+            result = db.session.query(QuestionSelect4).filter_by(external_id=request_id).first()
+        else:
+            result = db.session.query(QuestionSelect4).order_by(func.random()).first()
         form.id.data = result.id
 
         form.id.data = result.id
