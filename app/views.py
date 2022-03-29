@@ -10,6 +10,7 @@ from .forms import Question2of5Form, Question1of6Form, Question3to3Form, TopicFo
 from .models import Question2of5, Question1of6, Question3to3, Topic, QuestionSelfAssessed, Question2Decimals, Question1Decimal, QuestionSelect4
 from flask_appbuilder.security.views import UserDBModelView
 from flask_babel import lazy_gettext
+from sqlalchemy.sql.expression import func, select
 
 
 class Question2of5ModelView(ModelView):
@@ -103,14 +104,8 @@ class QuestionSelfAssessedFormView(SimpleFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        # Get random question
-        # TODO: no gaps in ID allowed!
-        count = db.session.query(QuestionSelfAssessed).count()
-        id = randrange(1, count + 1)
-        result = db.session.query(
-            QuestionSelfAssessed).filter_by(id=id).first()
-
-        form.id.data = id
+        result = db.session.query(QuestionSelfAssessed).order_by(func.random()).first()
+        form.id.data = result.id
 
         self.extra_args = {'question': {
             'description': result.description_image_img(),
@@ -144,13 +139,10 @@ class Question2of5FormView(SimpleFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        # Get random question
-        # TODO: no gaps in ID allowed!
-        count = db.session.query(Question2of5).count()
-        id = randrange(1, count + 1)
-        result = db.session.query(Question2of5).filter_by(id=id).first()
+        result = db.session.query(Question2of5).order_by(func.random()).first()
+        form.id.data = result.id
 
-        form.id.data = id
+        form.id.data = result.id
         form.checkbox1.label.text = result.get_option_image(
             result.option1_image)
         form.checkbox2.label.text = result.get_option_image(
@@ -233,13 +225,10 @@ class Question1of6FormView(SimpleFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        # Get random question
-        # TODO: no gaps in ID allowed!
-        count = db.session.query(Question1of6).count()
-        id = randrange(1, count + 1)
-        result = db.session.query(Question1of6).filter_by(id=id).first()
+        result = db.session.query(Question1of6).order_by(func.random()).first()
+        form.id.data = result.id
 
-        form.id.data = id
+        form.id.data = result.id
         form.checkbox1.label.text = result.get_option_image(
             result.option1_image)
         form.checkbox2.label.text = result.get_option_image(
@@ -342,13 +331,10 @@ class Question3to3FormView(SimpleFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        # Get random question
-        # TODO: no gaps in ID allowed!
-        count = db.session.query(Question3to3).count()
-        id = randrange(1, count + 1)
-        result = db.session.query(Question3to3).filter_by(id=id).first()
+        result = db.session.query(Question3to3).order_by(func.random()).first()
+        form.id.data = result.id
 
-        form.id.data = id
+        form.id.data = result.id
         form.checkbox1a.label.text = result.get_option_image(
             result.option1a_image)
         form.checkbox1b.label.text = result.get_option_image(
@@ -439,13 +425,10 @@ class Question2DecimalsFormView(SimpleFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        # Get random question
-        # TODO: no gaps in ID allowed!
-        count = db.session.query(Question2Decimals).count()
-        id = randrange(1, count + 1)
-        result = db.session.query(Question2Decimals).filter_by(id=id).first()
+        result = db.session.query(Question2Decimals).order_by(func.random()).first()
+        form.id.data = result.id
 
-        form.id.data = id
+        form.id.data = result.id
         form.value1.label.text = 'Ergebnis 1'
         form.value2.label.text = 'Ergebnis 2'
 
@@ -501,13 +484,10 @@ class Question1DecimalFormView(SimpleFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        # Get random question
-        # TODO: no gaps in ID allowed!
-        count = db.session.query(Question1Decimal).count()
-        id = randrange(1, count + 1)
-        result = db.session.query(Question1Decimal).filter_by(id=id).first()
+        result = db.session.query(Question1Decimal).order_by(func.random()).first()
+        form.id.data = result.id
 
-        form.id.data = id
+        form.id.data = result.id
         form.value.label.text = 'Ergebnis 1'
 
         self.extra_args = {'question': {
@@ -549,13 +529,10 @@ class QuestionSelect4FormView(SimpleFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        # Get random question
-        # TODO: no gaps in ID allowed!
-        count = db.session.query(QuestionSelect4).count()
-        id = randrange(1, count + 1)
-        result = db.session.query(QuestionSelect4).filter_by(id=id).first()
+        result = db.session.query(QuestionSelect4).order_by(func.random()).first()
+        form.id.data = result.id
 
-        form.id.data = id
+        form.id.data = result.id
         form.selection1.label.text = result.get_selection_image(
             result.selection1_image)
         form.selection2.label.text = result.get_selection_image(
