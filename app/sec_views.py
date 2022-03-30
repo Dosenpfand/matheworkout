@@ -10,7 +10,7 @@ class ExtendedUserDBModelView(UserDBModelView):
 
     show_fieldsets = [
         (lazy_gettext('User info'),
-         {'fields': ['username', 'active', 'roles', 'login_count', 'tried_questions', 'correct_questions', 'extra']}),
+         {'fields': ['username', 'active', 'roles', 'login_count', 'learning_group', 'tried_questions', 'correct_questions', 'extra']}),
         (lazy_gettext('Personal Info'),
          {'fields': ['first_name', 'last_name', 'email'], 'expanded': True}),
         (lazy_gettext('Audit Info'),
@@ -20,7 +20,7 @@ class ExtendedUserDBModelView(UserDBModelView):
 
     user_show_fieldsets = [
         (lazy_gettext('User info'),
-         {'fields': ['username', 'active', 'roles', 'login_count', 'tried_questions', 'correct_questions']}),
+         {'fields': ['username', 'active', 'roles', 'login_count', 'learning_group', 'tried_questions', 'correct_questions']}),
         (lazy_gettext('Personal Info'),
          {'fields': ['first_name', 'last_name', 'email'], 'expanded': True}),
     ]
@@ -32,6 +32,7 @@ class ExtendedUserDBModelView(UserDBModelView):
         'active',
         'email',
         'roles',
+        'learning_group',
         'tried_questions',
         'correct_questions',
         'password',
@@ -42,7 +43,10 @@ class ExtendedUserDBModelView(UserDBModelView):
         'last_name',
         'username',
         'email',
-        'active',
+        'learning_group',
+        'tried_questions',
+        'correct_questions',
+        'correct_percentage',
         'roles'
     ]
     edit_columns = [
@@ -52,6 +56,7 @@ class ExtendedUserDBModelView(UserDBModelView):
         'active',
         'email',
         'roles',
+        'learning_group',
         'tried_questions',
         'correct_questions'
     ]

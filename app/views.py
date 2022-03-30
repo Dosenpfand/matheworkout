@@ -1,5 +1,5 @@
 from random import randrange
-from flask_appbuilder import ModelView, BaseView, SimpleFormView, expose, has_access
+from flask_appbuilder import ModelView, BaseView, SimpleFormView, MultipleView, expose, has_access
 from flask_appbuilder.charts.views import GroupByChartView
 from flask_appbuilder.models.group import aggregate_count
 from flask_appbuilder.models.sqla.interface import SQLAInterface
@@ -94,6 +94,9 @@ class QuestionSelect4ModelView(ModelView):
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'solution_image_img']
     formatters_columns = {'external_id': link_formatter_select_4 }
+
+class QuestionMultipleView(MultipleView):
+    views = [Question2of5ModelView, Question1of6ModelView, Question3to3ModelView, Question2DecimalsModelView, Question1DecimalModelView, QuestionSelfAssessed]
 
 
 class TopicModelView(ModelView):
@@ -761,6 +764,13 @@ appbuilder.add_view(
 appbuilder.add_view(
     TopicModelView,
     "List Topics",
+    icon="fa-question-circle",
+    category="Questions",
+    category_icon="fa-question",
+)
+appbuilder.add_view(
+    QuestionMultipleView,
+    "List all questions",
     icon="fa-question-circle",
     category="Questions",
     category_icon="fa-question",

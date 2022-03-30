@@ -25,7 +25,7 @@ class Topic(Model):
 
 class QuestionSelfAssessed(Model):
     id = Column(Integer, primary_key=True)
-    external_id = Column(Integer)
+    external_id = Column(Integer, nullable=False)
     topic_id = Column(Integer, ForeignKey("topic.id"), nullable=False)
     topic = relationship("Topic")
     description_image = Column(ImageColumn(size=(10000, 10000, True)))
@@ -43,7 +43,7 @@ class QuestionSelfAssessed(Model):
 
 class Question2of5(Model):
     id = Column(Integer, primary_key=True)
-    external_id = Column(Integer)
+    external_id = Column(Integer, nullable=False)
     topic_id = Column(Integer, ForeignKey("topic.id"), nullable=False)
     topic = relationship("Topic")
     description_image = Column(ImageColumn(size=(10000, 10000, True)))
@@ -75,7 +75,7 @@ class Question2of5(Model):
 
 class Question1of6(Model):
     id = Column(Integer, primary_key=True)
-    external_id = Column(Integer)
+    external_id = Column(Integer, nullable=False)
     topic_id = Column(Integer, ForeignKey("topic.id"), nullable=False)
     topic = relationship("Topic")
     description_image = Column(ImageColumn(size=(10000, 10000, True)))
@@ -102,14 +102,12 @@ class Question1of6(Model):
         return Markup('<img src="' + im.get_url(self.description_image) +\
             '" alt="Photo" class="img-rounded img-responsive">')
 
-
-
     def __repr__(self):
         return self.title
 
 class Question3to3(Model):
     id = Column(Integer, primary_key=True)
-    external_id = Column(Integer)
+    external_id = Column(Integer, nullable=False)
     topic_id = Column(Integer, ForeignKey("topic.id"), nullable=False)
     topic = relationship("Topic")
     description_image = Column(ImageColumn(size=(10000, 10000, True)))
@@ -143,7 +141,7 @@ class Question3to3(Model):
 
 class Question2Decimals(Model):
     id = Column(Integer, primary_key=True)
-    external_id = Column(Integer)
+    external_id = Column(Integer, nullable=False)
     topic_id = Column(Integer, ForeignKey("topic.id"), nullable=False)
     topic = relationship("Topic")
     description_image = Column(ImageColumn(size=(10000, 10000, True)))
@@ -164,7 +162,7 @@ class Question2Decimals(Model):
 
 class Question1Decimal(Model):
     id = Column(Integer, primary_key=True)
-    external_id = Column(Integer)
+    external_id = Column(Integer, nullable=False)
     topic_id = Column(Integer, ForeignKey("topic.id"), nullable=False)
     topic = relationship("Topic")
     description_image = Column(ImageColumn(size=(10000, 10000, True)))
@@ -184,7 +182,7 @@ class Question1Decimal(Model):
 
 class QuestionSelect4(Model):
     id = Column(Integer, primary_key=True)
-    external_id = Column(Integer)
+    external_id = Column(Integer, nullable=False)
     topic_id = Column(Integer, ForeignKey("topic.id"), nullable=False)
     topic = relationship("Topic")
     description_image = Column(ImageColumn(size=(10000, 10000, True)))
