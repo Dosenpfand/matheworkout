@@ -18,3 +18,5 @@ flask run
 - [ ] DB migration
 - [ ] View multiple tables: `CREATE VIEW alle3 as SELECT external_id, topic_id, 'a' FROM question1of6 UNION SELECT external_id, topic_id, 'b' FROM question2of5`
 - [ ] All teachers can see all users
+- [ ] Test flow, after finished one task -> next task, or return to list
+- [ ] Detailed user statistics: Which questions correct/incorrect answered -> repeat incorrect, statistic per topic
