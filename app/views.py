@@ -24,16 +24,13 @@ def link_formatter(form_view_name, external_id):
 def get_question(question_model):
     request_id = request.args.get('ext_id')
 
-    active_topic_ids = [topic.id for topic in g.user.active_topics]
-    if active_topic_ids:
-        filter_arg = question_model.topic_id.in_(active_topic_ids)
-    else:
-        filter_arg = True
+
 
     if request_id:
         result = db.session.query(question_model).filter_by(
-            external_id=request_id).filter(filter_arg).first()
+            external_id=request_id).first()
     else:
+        active_topic_ids = get_active_topics()
         result = db.session.query(question_model).order_by(
             func.random()).filter(filter_arg).first()
 
