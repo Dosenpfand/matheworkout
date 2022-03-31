@@ -176,11 +176,9 @@ class QuestionSelfAssessedFormView(SimpleFormView):
 
         form_url = url_for('QuestionSelfAssessedFormView.this_form_get')
         solution_img = result.solution_image_img()
-        correct_link = Markup(
-            f'<a href="{form_url}?answer=CORRECT">CORRECT</a>')
-        incorrect_link = Markup(
-            '<a href="{form_url}?answer=INCORRECT">INCORRECT</a>')
-        description = f'{solution_img} {correct_link} {incorrect_link}'
+        correct_link = f'<a href="{form_url}?answer=CORRECT">CORRECT</a>'
+        incorrect_link = f'<a href="{form_url}?answer=INCORRECT">INCORRECT</a>'
+        description = Markup(f'{solution_img} {correct_link} {incorrect_link}')
 
         self.extra_args = {'question': {
             'description': description, 'external_id': result.external_id}}
