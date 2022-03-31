@@ -1,5 +1,5 @@
 from random import randrange
-from flask_appbuilder import ModelView, BaseView, SimpleFormView, MultipleView, expose, has_access
+from flask_appbuilder import ModelView, BaseView, SimpleFormView, MultipleView, IndexView, expose, has_access
 from flask_appbuilder.charts.views import GroupByChartView
 from flask_appbuilder.models.group import aggregate_count
 from flask_appbuilder.models.sqla.interface import SQLAInterface
