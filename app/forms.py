@@ -73,9 +73,3 @@ class QuestionSelect4Form(DynamicForm):
 
 class QuestionSelfAssessedForm(DynamicForm):
     id = HiddenField()
-
-
-class TopicForm(DynamicForm):
-    choices = []
-    topic = SelectMultipleField(
-        choices=choices, validate_choice=False, coerce=int)

@@ -7,7 +7,7 @@ from flask_appbuilder.models.sqla.filters import FilterInFunction
 from flask_babel import lazy_gettext as _
 from flask import render_template, flash, redirect, url_for, Markup, g, request, Markup
 from . import appbuilder, db
-from .forms import Question2of5Form, Question1of6Form, Question3to3Form, TopicForm, QuestionSelfAssessedForm, Question2DecimalsForm, Question1DecimalForm, QuestionSelect4Form
+from .forms import Question2of5Form, Question1of6Form, Question3to3Form, QuestionSelfAssessedForm, Question2DecimalsForm, Question1DecimalForm, QuestionSelect4Form
 from .models import Question2of5, Question1of6, Question3to3, Topic, QuestionSelfAssessed, Question2Decimals, Question1Decimal, QuestionSelect4
 from .sec_models import ExtendedUser
 from flask_appbuilder.security.views import UserDBModelView
@@ -19,6 +19,7 @@ import logging
 def link_formatter(form_view_name, external_id):
     form_url = url_for(f'{form_view_name}.this_form_get')
     return Markup(f'<a href="{form_url}?ext_id={external_id}">{external_id}</a>')
+
 
 def get_question(question_model):
     request_id = request.args.get('ext_id')
@@ -50,9 +51,9 @@ def get_active_topics():
 
     return topic_ids
 
+
 class Question2of5ModelView(ModelView):
     datamodel = SQLAInterface(Question2of5)
-
 
     base_filters = [['topic_id', FilterInFunction, get_active_topics]]
 
@@ -66,7 +67,6 @@ class Question2of5ModelView(ModelView):
 class Question1of6ModelView(ModelView):
     datamodel = SQLAInterface(Question1of6)
 
-
     base_filters = [['topic_id', FilterInFunction, get_active_topics]]
 
     label_columns = {'description_image': 'Description Image'}
@@ -78,7 +78,6 @@ class Question1of6ModelView(ModelView):
 
 class Question3to3ModelView(ModelView):
     datamodel = SQLAInterface(Question3to3)
-
 
     base_filters = [['topic_id', FilterInFunction, get_active_topics]]
 
@@ -92,7 +91,6 @@ class Question3to3ModelView(ModelView):
 class Question2DecimalsModelView(ModelView):
     datamodel = SQLAInterface(Question2Decimals)
 
-
     base_filters = [['topic_id', FilterInFunction, get_active_topics]]
 
     label_columns = {'description_image': 'Description Image'}
@@ -104,7 +102,6 @@ class Question2DecimalsModelView(ModelView):
 
 class Question1DecimalModelView(ModelView):
     datamodel = SQLAInterface(Question1Decimal)
-
 
     base_filters = [['topic_id', FilterInFunction, get_active_topics]]
 
@@ -118,7 +115,6 @@ class Question1DecimalModelView(ModelView):
 class QuestionSelfAssessedModelView(ModelView):
     datamodel = SQLAInterface(QuestionSelfAssessed)
 
-
     base_filters = [['topic_id', FilterInFunction, get_active_topics]]
 
     label_columns = {'description_image': 'Description Image',
@@ -131,7 +127,6 @@ class QuestionSelfAssessedModelView(ModelView):
 
 class QuestionSelect4ModelView(ModelView):
     datamodel = SQLAInterface(QuestionSelect4)
-
 
     base_filters = [['topic_id', FilterInFunction, get_active_topics]]
 
@@ -150,27 +145,6 @@ class QuestionMultipleView(MultipleView):
 
 class TopicModelView(ModelView):
     datamodel = SQLAInterface(Topic)
-
-
-class TopicFormView(SimpleFormView):
-    form = TopicForm
-
-    def form_get(self, form):
-        self.update_redirect()
-        result = db.session.query(Topic)
-        choices = []
-        for element in result:
-            choices += [(element.id, element.name)]
-        form.topic.choices = choices
-
-    def form_post(self, form):
-        self.update_redirect()
-        result = db.session.query(Topic)
-        choices = []
-        for element in result:
-            choices += [(element.id, element.name)]
-        form.topic.choices = choices
-        flash('test', 'info')
 
 
 class QuestionSelfAssessedFormView(SimpleFormView):
@@ -206,8 +180,10 @@ class QuestionSelfAssessedFormView(SimpleFormView):
 
         form_url = url_for('QuestionSelfAssessedFormView.this_form_get')
         solution_img = result.solution_image_img()
-        correct_link = Markup(f'<a href="{form_url}?answer=CORRECT">CORRECT</a>')
-        incorrect_link = Markup('<a href="{form_url}?answer=INCORRECT">INCORRECT</a>')
+        correct_link = Markup(
+            f'<a href="{form_url}?answer=CORRECT">CORRECT</a>')
+        incorrect_link = Markup(
+            '<a href="{form_url}?answer=INCORRECT">INCORRECT</a>')
         description = f'{solution_img} {correct_link} {incorrect_link}'
 
         self.extra_args = {'question': {
@@ -303,7 +279,7 @@ class Question2of5FormView(SimpleFormView):
 
         flash(message, 'info')
 
-        self.extra_args = {'question': {'description': 'TEST',
+        self.extra_args = {'question': {'description': result.description_image_img(),
                                         'external_id': result.external_id}}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
@@ -406,7 +382,7 @@ class Question1of6FormView(SimpleFormView):
 
         flash(message, 'info')
 
-        self.extra_args = {'question': {'description': 'TEST'},
+        self.extra_args = {'question': {'description': result.description_image_img()},
                            'external_id': result.external_id}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
@@ -440,7 +416,7 @@ class Question3to3FormView(SimpleFormView):
         question_result = get_question(Question3to3)
 
         form.id.data = question_result.id
-        form.checkbox1a.label.text = resquestion_resultult.get_option_image(
+        form.checkbox1a.label.text = question_result.get_option_image(
             question_result.option1a_image)
         form.checkbox1b.label.text = question_result.get_option_image(
             question_result.option1b_image)
@@ -517,7 +493,7 @@ class Question3to3FormView(SimpleFormView):
 
         flash(message, 'info')
 
-        self.extra_args = {'question': {'description': 'TEST',
+        self.extra_args = {'question': {'description': result.description_image_img(),
                                         'external_id': result.external_id}}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
@@ -574,7 +550,7 @@ class Question2DecimalsFormView(SimpleFormView):
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             db.session.commit()
         else:
-            message = 'INCORRECT!'
+            message = f'INCORRECT! Correct would have been: {result.value1_upper_limit} <= x <= {result.value1_lower_limit}, {result.value2_upper_limit} <= x <= {result.value2_lower_limit}'
 
         user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
@@ -582,7 +558,7 @@ class Question2DecimalsFormView(SimpleFormView):
 
         flash(message, 'info')
 
-        self.extra_args = {'question': {'description': 'TEST',
+        self.extra_args = {'question': {'description': result.description_image_img(),
                                         'external_id': result.external_id}}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
@@ -614,7 +590,7 @@ class Question1DecimalFormView(SimpleFormView):
         self.update_redirect()
         id = form.id.data
         result = db.session.query(Question1Decimal).filter_by(id=id).first()
-        form.value.label.text = 'Ergebnis 1'
+        form.value.label.text = 'Ergebnis'
         message = 'INCORRECT!'
 
         if (form.value.data <= result.value_upper_limit) and (form.value.data >= result.value_lower_limit):
@@ -624,7 +600,7 @@ class Question1DecimalFormView(SimpleFormView):
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             db.session.commit()
         else:
-            message = 'INCORRECT!'
+            message = f'INCORRECT! Correct would have been: {result.value_upper_limit} <= x <= {result.value_lower_limit}'
 
         user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
@@ -632,7 +608,7 @@ class Question1DecimalFormView(SimpleFormView):
 
         flash(message, 'info')
 
-        self.extra_args = {'question': {'description': 'TEST',
+        self.extra_args = {'question': {'description': result.description_image_img(),
                                         'external_id': result.external_id}}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
@@ -728,7 +704,7 @@ class QuestionSelect4FormView(SimpleFormView):
 
         flash(message, 'info')
 
-        self.extra_args = {'question': {'description': 'TEST',
+        self.extra_args = {'question': {'description': result.description_image_img(),
                                         'external_id': result.external_id}}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
@@ -805,13 +781,6 @@ appbuilder.add_view(
     category="Questions",
     category_icon="fa-question",
 )
-appbuilder.add_view(
-    TopicFormView,
-    "Choose Topic",
-    icon="fa-group",
-    label=_("Choose Topic"),
-    category="Tests",
-    category_icon="fa-cogs")
 appbuilder.add_view(
     Question2of5FormView,
     "2 of 5 Test",
