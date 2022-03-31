@@ -13,6 +13,7 @@ from .sec_models import ExtendedUser
 from flask_appbuilder.security.views import UserDBModelView
 from flask_babel import lazy_gettext
 from sqlalchemy.sql.expression import func, select
+import logging
 
 
 def link_formatter(form_view_name, external_id):
@@ -38,12 +39,22 @@ def get_question(question_model):
     return result
 
 
+def get_active_topics():
+    topic_ids = [topic.id for topic in g.user.active_topics]
+
+    # If no topic IDs set for this user
+    if topic_ids == []:
+        # Set all topic IDs
+        results = db.session.query(Topic).all()
+        topic_ids = [result.id for result in results]
+
+    return topic_ids
+
 class Question2of5ModelView(ModelView):
     datamodel = SQLAInterface(Question2of5)
 
-    # TODO: is empty if active_topics is empty!
-    base_filters = [['topic_id', FilterInFunction, lambda: [
-        topic.id for topic in g.user.active_topics]]]
+
+    base_filters = [['topic_id', FilterInFunction, get_active_topics]]
 
     label_columns = {'description_image': 'Description Image'}
     list_columns = ['external_id', 'topic']
@@ -55,9 +66,8 @@ class Question2of5ModelView(ModelView):
 class Question1of6ModelView(ModelView):
     datamodel = SQLAInterface(Question1of6)
 
-    # TODO: is empty if active_topics is empty!
-    base_filters = [['topic_id', FilterInFunction, lambda: [
-        topic.id for topic in g.user.active_topics]]]
+
+    base_filters = [['topic_id', FilterInFunction, get_active_topics]]
 
     label_columns = {'description_image': 'Description Image'}
     list_columns = ['external_id', 'topic']
@@ -69,9 +79,8 @@ class Question1of6ModelView(ModelView):
 class Question3to3ModelView(ModelView):
     datamodel = SQLAInterface(Question3to3)
 
-    # TODO: is empty if active_topics is empty!
-    base_filters = [['topic_id', FilterInFunction, lambda: [
-        topic.id for topic in g.user.active_topics]]]
+
+    base_filters = [['topic_id', FilterInFunction, get_active_topics]]
 
     label_columns = {'description_image': 'Description Image'}
     list_columns = ['external_id', 'topic']
@@ -83,9 +92,8 @@ class Question3to3ModelView(ModelView):
 class Question2DecimalsModelView(ModelView):
     datamodel = SQLAInterface(Question2Decimals)
 
-    # TODO: is empty if active_topics is empty!
-    base_filters = [['topic_id', FilterInFunction, lambda: [
-        topic.id for topic in g.user.active_topics]]]
+
+    base_filters = [['topic_id', FilterInFunction, get_active_topics]]
 
     label_columns = {'description_image': 'Description Image'}
     list_columns = ['external_id', 'topic']
@@ -97,9 +105,8 @@ class Question2DecimalsModelView(ModelView):
 class Question1DecimalModelView(ModelView):
     datamodel = SQLAInterface(Question1Decimal)
 
-    # TODO: is empty if active_topics is empty!
-    base_filters = [['topic_id', FilterInFunction, lambda: [
-        topic.id for topic in g.user.active_topics]]]
+
+    base_filters = [['topic_id', FilterInFunction, get_active_topics]]
 
     label_columns = {'description_image': 'Description Image'}
     list_columns = ['external_id', 'topic']
@@ -111,9 +118,8 @@ class Question1DecimalModelView(ModelView):
 class QuestionSelfAssessedModelView(ModelView):
     datamodel = SQLAInterface(QuestionSelfAssessed)
 
-    # TODO: is empty if active_topics is empty!
-    base_filters = [['topic_id', FilterInFunction, lambda: [
-        topic.id for topic in g.user.active_topics]]]
+
+    base_filters = [['topic_id', FilterInFunction, get_active_topics]]
 
     label_columns = {'description_image': 'Description Image',
                      'solution_image': 'Solution Image'}
@@ -126,9 +132,8 @@ class QuestionSelfAssessedModelView(ModelView):
 class QuestionSelect4ModelView(ModelView):
     datamodel = SQLAInterface(QuestionSelect4)
 
-    # TODO: is empty if active_topics is empty!
-    base_filters = [['topic_id', FilterInFunction, lambda: [
-        topic.id for topic in g.user.active_topics]]]
+
+    base_filters = [['topic_id', FilterInFunction, get_active_topics]]
 
     label_columns = {'description_image': 'Description Image',
                      'solution_image': 'Solution Image'}
@@ -140,7 +145,7 @@ class QuestionSelect4ModelView(ModelView):
 
 class QuestionMultipleView(MultipleView):
     views = [Question2of5ModelView, Question1of6ModelView, Question3to3ModelView,
-             Question2DecimalsModelView, Question1DecimalModelView, QuestionSelfAssessed]
+             Question2DecimalsModelView, Question1DecimalModelView, QuestionSelfAssessedModelView]
 
 
 class TopicModelView(ModelView):
