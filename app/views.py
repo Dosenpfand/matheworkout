@@ -41,6 +41,10 @@ def get_question(question_model):
 class Question2of5ModelView(ModelView):
     datamodel = SQLAInterface(Question2of5)
 
+    # TODO: is empty if active_topics is empty!
+    base_filters = [['topic_id', FilterInFunction, lambda: [
+        topic.id for topic in g.user.active_topics]]]
+
     label_columns = {'description_image': 'Description Image'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
@@ -50,6 +54,10 @@ class Question2of5ModelView(ModelView):
 
 class Question1of6ModelView(ModelView):
     datamodel = SQLAInterface(Question1of6)
+
+    # TODO: is empty if active_topics is empty!
+    base_filters = [['topic_id', FilterInFunction, lambda: [
+        topic.id for topic in g.user.active_topics]]]
 
     label_columns = {'description_image': 'Description Image'}
     list_columns = ['external_id', 'topic']
@@ -61,6 +69,10 @@ class Question1of6ModelView(ModelView):
 class Question3to3ModelView(ModelView):
     datamodel = SQLAInterface(Question3to3)
 
+    # TODO: is empty if active_topics is empty!
+    base_filters = [['topic_id', FilterInFunction, lambda: [
+        topic.id for topic in g.user.active_topics]]]
+
     label_columns = {'description_image': 'Description Image'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
@@ -70,6 +82,10 @@ class Question3to3ModelView(ModelView):
 
 class Question2DecimalsModelView(ModelView):
     datamodel = SQLAInterface(Question2Decimals)
+
+    # TODO: is empty if active_topics is empty!
+    base_filters = [['topic_id', FilterInFunction, lambda: [
+        topic.id for topic in g.user.active_topics]]]
 
     label_columns = {'description_image': 'Description Image'}
     list_columns = ['external_id', 'topic']
@@ -95,6 +111,10 @@ class Question1DecimalModelView(ModelView):
 class QuestionSelfAssessedModelView(ModelView):
     datamodel = SQLAInterface(QuestionSelfAssessed)
 
+    # TODO: is empty if active_topics is empty!
+    base_filters = [['topic_id', FilterInFunction, lambda: [
+        topic.id for topic in g.user.active_topics]]]
+
     label_columns = {'description_image': 'Description Image',
                      'solution_image': 'Solution Image'}
     list_columns = ['external_id', 'topic']
@@ -105,6 +125,10 @@ class QuestionSelfAssessedModelView(ModelView):
 
 class QuestionSelect4ModelView(ModelView):
     datamodel = SQLAInterface(QuestionSelect4)
+
+    # TODO: is empty if active_topics is empty!
+    base_filters = [['topic_id', FilterInFunction, lambda: [
+        topic.id for topic in g.user.active_topics]]]
 
     label_columns = {'description_image': 'Description Image',
                      'solution_image': 'Solution Image'}
