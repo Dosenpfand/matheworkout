@@ -29,6 +29,7 @@ def get_question(question_model):
             external_id=request_id).first()
     else:
         active_topic_ids = get_active_topics()
+        filter_arg = question_model.topic_id.in_(active_topic_ids)
         result = db.session.query(question_model).order_by(
             func.random()).filter(filter_arg).first()
 
@@ -545,7 +546,7 @@ class Question2DecimalsFormView(SimpleFormView):
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             db.session.commit()
         else:
-            message = f'INCORRECT! Correct would have been: {result.value1_lower_limit} <= x <= {result.value1_upper_limit}, {result.value2_lower_limit} <= y <= {result.value2_upper_limit}'
+            message = f'INCORRECT! Correct would have been: {result.value1_lower_limit} <= Ergebnis 1 <= {result.value1_upper_limit}, {result.value2_lower_limit} <= Ergebnis 2 <= {result.value2_upper_limit}'
 
         user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
@@ -595,7 +596,7 @@ class Question1DecimalFormView(SimpleFormView):
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             db.session.commit()
         else:
-            message = f'INCORRECT! Correct would have been: {result.value_lower_limit} <= x <= {result.value_upper_limit}'
+            message = f'INCORRECT! Correct would have been: {result.value_lower_limit} <= Ergebnis <= {result.value_upper_limit}'
 
         user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
