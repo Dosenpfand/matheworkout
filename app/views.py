@@ -24,8 +24,6 @@ def link_formatter(form_view_name, external_id):
 def get_question(question_model):
     request_id = request.args.get('ext_id')
 
-
-
     if request_id:
         result = db.session.query(question_model).filter_by(
             external_id=request_id).first()
@@ -510,7 +508,7 @@ class Question2DecimalsFormView(SimpleFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        question_result = get_question(Question3to3)
+        question_result = get_question(Question2Decimals)
 
         form.id.data = question_result.id
         form.value1.label.text = 'Ergebnis 1'
@@ -547,7 +545,7 @@ class Question2DecimalsFormView(SimpleFormView):
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             db.session.commit()
         else:
-            message = f'INCORRECT! Correct would have been: {result.value1_upper_limit} <= x <= {result.value1_lower_limit}, {result.value2_upper_limit} <= x <= {result.value2_lower_limit}'
+            message = f'INCORRECT! Correct would have been: {result.value1_lower_limit} <= x <= {result.value1_upper_limit}, {result.value2_lower_limit} <= y <= {result.value2_upper_limit}'
 
         user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
@@ -597,7 +595,7 @@ class Question1DecimalFormView(SimpleFormView):
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             db.session.commit()
         else:
-            message = f'INCORRECT! Correct would have been: {result.value_upper_limit} <= x <= {result.value_lower_limit}'
+            message = f'INCORRECT! Correct would have been: {result.value_lower_limit} <= x <= {result.value_upper_limit}'
 
         user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
