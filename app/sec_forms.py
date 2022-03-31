@@ -9,11 +9,12 @@ from wtforms.validators import DataRequired
 from .models import Topic
 from . import db
 
+
 class ExtendedUserInfoEdit(DynamicForm):
     learning_group = StringField()
     active_topics = QuerySelectMultipleField(
-            query_func=lambda: db.session.query(Topic),
-            get_pk_func=lambda x: x,
-            validators=None,
-            widget=Select2ManyWidget()
-        )
+        query_func=lambda: db.session.query(Topic),
+        get_pk_func=lambda x: x,
+        validators=None,
+        widget=Select2ManyWidget()
+    )

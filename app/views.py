@@ -15,11 +15,14 @@ from flask_babel import lazy_gettext
 from sqlalchemy.sql.expression import func, select
 import logging
 
+
 def get_user():
     return g.user
 
+
 def link_formatter_2_of_5(value):
     return Markup('<a href="' + url_for('Question2of5FormView.this_form_get') + '?ext_id=' + str(value) + '">' + str(value) + '</a>')
+
 
 class Question2of5ModelView(ModelView):
     datamodel = SQLAInterface(Question2of5)
@@ -29,8 +32,10 @@ class Question2of5ModelView(ModelView):
     show_columns = ['description_image_img', 'title']
     formatters_columns = {'external_id': link_formatter_2_of_5}
 
+
 def link_formatter_1_of_6(value):
     return Markup('<a href="' + url_for('Question1of6FormView.this_form_get') + '?ext_id=' + str(value) + '">' + str(value) + '</a>')
+
 
 class Question1of6ModelView(ModelView):
     datamodel = SQLAInterface(Question1of6)
@@ -38,10 +43,12 @@ class Question1of6ModelView(ModelView):
     label_columns = {'description_image': 'Description Image'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
-    formatters_columns = {'external_id': link_formatter_1_of_6 }
+    formatters_columns = {'external_id': link_formatter_1_of_6}
+
 
 def link_formatter_3_to_3(value):
     return Markup('<a href="' + url_for('Question3to3FormView.this_form_get') + '?ext_id=' + str(value) + '">' + str(value) + '</a>')
+
 
 class Question3to3ModelView(ModelView):
     datamodel = SQLAInterface(Question3to3)
@@ -49,10 +56,12 @@ class Question3to3ModelView(ModelView):
     label_columns = {'description_image': 'Description Image'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
-    formatters_columns = {'external_id': link_formatter_3_to_3 }
+    formatters_columns = {'external_id': link_formatter_3_to_3}
+
 
 def link_formatter_2_decimals(value):
     return Markup('<a href="' + url_for('Question2DecimalsFormView.this_form_get') + '?ext_id=' + str(value) + '">' + str(value) + '</a>')
+
 
 class Question2DecimalsModelView(ModelView):
     datamodel = SQLAInterface(Question2Decimals)
@@ -60,24 +69,29 @@ class Question2DecimalsModelView(ModelView):
     label_columns = {'description_image': 'Description Image'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
-    formatters_columns = {'external_id': link_formatter_2_decimals }
+    formatters_columns = {'external_id': link_formatter_2_decimals}
+
 
 def link_formatter_1_decimal(value):
     return Markup('<a href="' + url_for('Question1DecimalFormView.this_form_get') + '?ext_id=' + str(value) + '">' + str(value) + '</a>')
+
 
 class Question1DecimalModelView(ModelView):
     datamodel = SQLAInterface(Question1Decimal)
 
     # TODO: is empty if active_topics is empty!
-    base_filters = [['topic_id', FilterInFunction, lambda: [topic.id for topic in g.user.active_topics]]]
+    base_filters = [['topic_id', FilterInFunction, lambda: [
+        topic.id for topic in g.user.active_topics]]]
 
     label_columns = {'description_image': 'Description Image'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
-    formatters_columns = {'external_id': link_formatter_1_decimal }
+    formatters_columns = {'external_id': link_formatter_1_decimal}
+
 
 def link_formatter_self_assessed(value):
     return Markup('<a href="' + url_for('QuestionSelfAssessedFormView.this_form_get') + '?ext_id=' + str(value) + '">' + str(value) + '</a>')
+
 
 class QuestionSelfAssessedModelView(ModelView):
     datamodel = SQLAInterface(QuestionSelfAssessed)
@@ -86,10 +100,12 @@ class QuestionSelfAssessedModelView(ModelView):
                      'solution_image': 'Solution Image'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'solution_image_img']
-    formatters_columns = {'external_id': link_formatter_self_assessed }
+    formatters_columns = {'external_id': link_formatter_self_assessed}
+
 
 def link_formatter_select_4(value):
     return Markup('<a href="' + url_for('QuestionSelect4FormView.this_form_get') + '?ext_id=' + str(value) + '">' + str(value) + '</a>')
+
 
 class QuestionSelect4ModelView(ModelView):
     datamodel = SQLAInterface(QuestionSelect4)
@@ -98,10 +114,12 @@ class QuestionSelect4ModelView(ModelView):
                      'solution_image': 'Solution Image'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'solution_image_img']
-    formatters_columns = {'external_id': link_formatter_select_4 }
+    formatters_columns = {'external_id': link_formatter_select_4}
+
 
 class QuestionMultipleView(MultipleView):
-    views = [Question2of5ModelView, Question1of6ModelView, Question3to3ModelView, Question2DecimalsModelView, Question1DecimalModelView, QuestionSelfAssessed]
+    views = [Question2of5ModelView, Question1of6ModelView, Question3to3ModelView,
+             Question2DecimalsModelView, Question1DecimalModelView, QuestionSelfAssessed]
 
 
 class TopicModelView(ModelView):
@@ -140,18 +158,22 @@ class QuestionSelfAssessedFormView(SimpleFormView):
         self.update_redirect()
         request_id = request.args.get('ext_id')
         if request_id:
-            result = db.session.query(QuestionSelfAssessed).filter_by(external_id=request_id).first()
+            result = db.session.query(QuestionSelfAssessed).filter_by(
+                external_id=request_id).first()
         else:
-            result = db.session.query(QuestionSelfAssessed).order_by(func.random()).first()
+            result = db.session.query(
+                QuestionSelfAssessed).order_by(func.random()).first()
 
         form.id.data = result.id
 
         answer_value = request.args.get('answer')
         if answer_value:
-            user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update({'tried_questions': ExtendedUser.tried_questions + 1})
+            user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update(
+                {'tried_questions': ExtendedUser.tried_questions + 1})
             db.session.commit()
         if answer_value == 'CORRECT':
-            user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update({'correct_questions': ExtendedUser.correct_questions + 1})
+            user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update(
+                {'correct_questions': ExtendedUser.correct_questions + 1})
             db.session.commit()
 
         self.extra_args = {'question': {
@@ -178,7 +200,6 @@ class QuestionSelfAssessedFormView(SimpleFormView):
         )
 
 
-
 class Question2of5FormView(SimpleFormView):
     form = Question2of5Form
     form_title = '2 of 5 Test'
@@ -189,9 +210,11 @@ class Question2of5FormView(SimpleFormView):
 
         request_id = request.args.get('ext_id')
         if request_id:
-            result = db.session.query(Question2of5).filter_by(external_id=request_id).first()
+            result = db.session.query(Question2of5).filter_by(
+                external_id=request_id).first()
         else:
-            result = db.session.query(Question2of5).order_by(func.random()).first()
+            result = db.session.query(
+                Question2of5).order_by(func.random()).first()
 
         form.id.data = result.id
 
@@ -253,18 +276,20 @@ class Question2of5FormView(SimpleFormView):
             (form.checkbox4.data == result.option4_is_correct) and \
                 (form.checkbox5.data == result.option5_is_correct):
             message = 'CORRECT!'
-            user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update({'correct_questions': ExtendedUser.correct_questions + 1})
+            user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update(
+                {'correct_questions': ExtendedUser.correct_questions + 1})
             db.session.commit()
         else:
             message = 'INCORRECT!'
 
-        user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update({'tried_questions': ExtendedUser.tried_questions + 1})
+        user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update(
+            {'tried_questions': ExtendedUser.tried_questions + 1})
         db.session.commit()
 
         flash(message, 'info')
 
         self.extra_args = {'question': {'description': 'TEST',
-            'external_id': result.external_id}}
+                                        'external_id': result.external_id}}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
         widgets = self._get_edit_widget(form=form)
@@ -276,7 +301,6 @@ class Question2of5FormView(SimpleFormView):
         )
 
 
-
 class Question1of6FormView(SimpleFormView):
     form = Question1of6Form
     form_title = '1 of 6 Test'
@@ -286,9 +310,11 @@ class Question1of6FormView(SimpleFormView):
         self.update_redirect()
         request_id = request.args.get('ext_id')
         if request_id:
-            result = db.session.query(Question1of6).filter_by(external_id=request_id).first()
+            result = db.session.query(Question1of6).filter_by(
+                external_id=request_id).first()
         else:
-            result = db.session.query(Question1of6).order_by(func.random()).first()
+            result = db.session.query(
+                Question1of6).order_by(func.random()).first()
 
         form.id.data = result.id
 
@@ -359,18 +385,20 @@ class Question1of6FormView(SimpleFormView):
                 (form.checkbox5.data == result.option5_is_correct) and \
                 (form.checkbox6.data == result.option6_is_correct):
             message = 'CORRECT!'
-            user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update({'correct_questions': ExtendedUser.correct_questions + 1})
+            user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update(
+                {'correct_questions': ExtendedUser.correct_questions + 1})
             db.session.commit()
         else:
             message = 'INCORRECT!'
 
-        user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update({'tried_questions': ExtendedUser.tried_questions + 1})
+        user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update(
+            {'tried_questions': ExtendedUser.tried_questions + 1})
         db.session.commit()
 
         flash(message, 'info')
 
         self.extra_args = {'question': {'description': 'TEST'},
-            'external_id': result.external_id}
+                           'external_id': result.external_id}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
         widgets = self._get_edit_widget(form=form)
@@ -380,7 +408,6 @@ class Question1of6FormView(SimpleFormView):
             widgets=widgets,
             appbuilder=self.appbuilder,
         )
-
 
 
 class Question3to3FormView(SimpleFormView):
@@ -403,9 +430,11 @@ class Question3to3FormView(SimpleFormView):
         self.update_redirect()
         request_id = request.args.get('ext_id')
         if request_id:
-            result = db.session.query(Question3to3).filter_by(external_id=request_id).first()
+            result = db.session.query(Question3to3).filter_by(
+                external_id=request_id).first()
         else:
-            result = db.session.query(Question3to3).order_by(func.random()).first()
+            result = db.session.query(
+                Question3to3).order_by(func.random()).first()
         form.id.data = result.id
 
         form.id.data = result.id
@@ -474,18 +503,20 @@ class Question3to3FormView(SimpleFormView):
                 (form.checkbox2b.data == result.option2b_is_correct) and \
                 (form.checkbox2c.data == result.option2c_is_correct):
             message = 'CORRECT!'
-            user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update({'correct_questions': ExtendedUser.correct_questions + 1})
+            user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update(
+                {'correct_questions': ExtendedUser.correct_questions + 1})
             db.session.commit()
         else:
             message = 'INCORRECT!'
 
-        user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update({'tried_questions': ExtendedUser.tried_questions + 1})
+        user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update(
+            {'tried_questions': ExtendedUser.tried_questions + 1})
         db.session.commit()
 
         flash(message, 'info')
 
         self.extra_args = {'question': {'description': 'TEST',
-            'external_id': result.external_id}}
+                                        'external_id': result.external_id}}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
         widgets = self._get_edit_widget(form=form)
@@ -497,7 +528,6 @@ class Question3to3FormView(SimpleFormView):
         )
 
 
-
 class Question2DecimalsFormView(SimpleFormView):
     form = Question2DecimalsForm
     form_title = '2 Decimals Test'
@@ -507,9 +537,11 @@ class Question2DecimalsFormView(SimpleFormView):
         self.update_redirect()
         request_id = request.args.get('ext_id')
         if request_id:
-            result = db.session.query(Question2Decimals).filter_by(external_id=request_id).first()
+            result = db.session.query(Question2Decimals).filter_by(
+                external_id=request_id).first()
         else:
-            result = db.session.query(Question2Decimals).order_by(func.random()).first()
+            result = db.session.query(
+                Question2Decimals).order_by(func.random()).first()
 
         form.id.data = result.id
 
@@ -544,18 +576,20 @@ class Question2DecimalsFormView(SimpleFormView):
 
         if value1_correct and value2_correct:
             message = 'CORRECT!'
-            user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update({'correct_questions': ExtendedUser.correct_questions + 1})
+            user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update(
+                {'correct_questions': ExtendedUser.correct_questions + 1})
             db.session.commit()
         else:
             message = 'INCORRECT!'
 
-        user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update({'tried_questions': ExtendedUser.tried_questions + 1})
+        user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update(
+            {'tried_questions': ExtendedUser.tried_questions + 1})
         db.session.commit()
 
         flash(message, 'info')
 
         self.extra_args = {'question': {'description': 'TEST',
-            'external_id': result.external_id}}
+                                        'external_id': result.external_id}}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
         widgets = self._get_edit_widget(form=form)
@@ -565,6 +599,7 @@ class Question2DecimalsFormView(SimpleFormView):
             widgets=widgets,
             appbuilder=self.appbuilder,
         )
+
 
 class Question1DecimalFormView(SimpleFormView):
     form = Question1DecimalForm
@@ -582,9 +617,11 @@ class Question1DecimalFormView(SimpleFormView):
             filter_arg = True
 
         if request_id:
-            result = db.session.query(Question1Decimal).filter_by(external_id=request_id).filter(filter_arg).first()
+            result = db.session.query(Question1Decimal).filter_by(
+                external_id=request_id).filter(filter_arg).first()
         else:
-            result = db.session.query(Question1Decimal).order_by(func.random()).filter(filter_arg).first()
+            result = db.session.query(Question1Decimal).order_by(
+                func.random()).filter(filter_arg).first()
 
         form.id.data = result.id
 
@@ -605,18 +642,20 @@ class Question1DecimalFormView(SimpleFormView):
         if (form.value.data <= result.value_upper_limit) and (form.value.data >= result.value_lower_limit):
             form.value.description = 'correct'
             message = 'CORRECT!'
-            user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update({'correct_questions': ExtendedUser.correct_questions + 1})
+            user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update(
+                {'correct_questions': ExtendedUser.correct_questions + 1})
             db.session.commit()
         else:
             message = 'INCORRECT!'
 
-        user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update({'tried_questions': ExtendedUser.tried_questions + 1})
+        user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update(
+            {'tried_questions': ExtendedUser.tried_questions + 1})
         db.session.commit()
 
         flash(message, 'info')
 
         self.extra_args = {'question': {'description': 'TEST',
-            'external_id': result.external_id}}
+                                        'external_id': result.external_id}}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
         widgets = self._get_edit_widget(form=form)
@@ -637,9 +676,11 @@ class QuestionSelect4FormView(SimpleFormView):
         self.update_redirect()
         request_id = request.args.get('ext_id')
         if request_id:
-            result = db.session.query(QuestionSelect4).filter_by(external_id=request_id).first()
+            result = db.session.query(QuestionSelect4).filter_by(
+                external_id=request_id).first()
         else:
-            result = db.session.query(QuestionSelect4).order_by(func.random()).first()
+            result = db.session.query(
+                QuestionSelect4).order_by(func.random()).first()
         form.id.data = result.id
 
         form.id.data = result.id
@@ -653,14 +694,14 @@ class QuestionSelect4FormView(SimpleFormView):
             result.selection4_image)
 
         self.extra_args = \
-        {'question': {'description': result.description_image_img(),
-                      'options': {'A': result.get_option_image(result.option1_image),
-                                  'B': result.get_option_image(result.option2_image),
-                                  'C': result.get_option_image(result.option3_image),
-                                  'D': result.get_option_image(result.option4_image),
-                                  'E': result.get_option_image(result.option5_image),
-                                  'F': result.get_option_image(result.option6_image)},
-                                  'external_id': result.external_id}}
+            {'question': {'description': result.description_image_img(),
+                          'options': {'A': result.get_option_image(result.option1_image),
+                                      'B': result.get_option_image(result.option2_image),
+                                      'C': result.get_option_image(result.option3_image),
+                                      'D': result.get_option_image(result.option4_image),
+                                      'E': result.get_option_image(result.option5_image),
+                                      'F': result.get_option_image(result.option6_image)},
+                          'external_id': result.external_id}}
 
     def form_post(self, form):
         self.update_redirect()
@@ -697,18 +738,20 @@ class QuestionSelect4FormView(SimpleFormView):
             (form.selection3.data == result.selection3_solution.value) and \
                 (form.selection4.data == result.selection4_solution.value):
             message = 'CORRECT!'
-            user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update({'correct_questions': ExtendedUser.correct_questions + 1})
+            user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update(
+                {'correct_questions': ExtendedUser.correct_questions + 1})
             db.session.commit()
         else:
             message = 'INCORRECT!'
 
-        user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update({'tried_questions': ExtendedUser.tried_questions + 1})
+        user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update(
+            {'tried_questions': ExtendedUser.tried_questions + 1})
         db.session.commit()
 
         flash(message, 'info')
 
         self.extra_args = {'question': {'description': 'TEST',
-            'external_id': result.external_id}}
+                                        'external_id': result.external_id}}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
         widgets = self._get_edit_widget(form=form)
@@ -718,7 +761,6 @@ class QuestionSelect4FormView(SimpleFormView):
             widgets=widgets,
             appbuilder=self.appbuilder,
         )
-
 
 
 db.create_all()

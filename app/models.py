@@ -8,6 +8,7 @@ from flask_appbuilder.filemanager import ImageManager
 from flask import Markup, url_for
 import enum
 
+
 class Select4Enum(enum.Enum):
     A = 'A'
     B = 'B'
@@ -16,12 +17,14 @@ class Select4Enum(enum.Enum):
     E = 'E'
     F = 'F'
 
+
 class Topic(Model):
     id = Column(Integer, primary_key=True)
     name = Column(String(150), nullable=False)
 
     def __repr__(self):
         return self.name
+
 
 class QuestionSelfAssessed(Model):
     id = Column(Integer, primary_key=True)
@@ -33,13 +36,14 @@ class QuestionSelfAssessed(Model):
 
     def description_image_img(self):
         im = ImageManager()
-        return Markup('<img src="' + im.get_url(self.description_image) +\
-            '" alt="Photo" class="img-rounded img-responsive">')
+        return Markup('<img src="' + im.get_url(self.description_image) +
+                      '" alt="Photo" class="img-rounded img-responsive">')
 
     def solution_image_img(self):
         im = ImageManager()
-        return Markup('<img src="' + im.get_url(self.solution_image) +\
-            '" alt="Photo" class="img-rounded img-responsive">')
+        return Markup('<img src="' + im.get_url(self.solution_image) +
+                      '" alt="Photo" class="img-rounded img-responsive">')
+
 
 class Question2of5(Model):
     id = Column(Integer, primary_key=True)
@@ -60,18 +64,17 @@ class Question2of5(Model):
 
     def get_option_image(self, option):
         im = ImageManager()
-        return Markup('<img src="' + im.get_url(option) +\
-            '" alt="Photo" class="img-rounded img-responsive" style="min-width:100%;max-width:4096px;">')
+        return Markup('<img src="' + im.get_url(option) +
+                      '" alt="Photo" class="img-rounded img-responsive" style="min-width:100%;max-width:4096px;">')
 
     def description_image_img(self):
         im = ImageManager()
-        return Markup('<img src="' + im.get_url(self.description_image) +\
-            '" alt="Photo" class="img-rounded img-responsive">')
-
-
+        return Markup('<img src="' + im.get_url(self.description_image) +
+                      '" alt="Photo" class="img-rounded img-responsive">')
 
     def __repr__(self):
         return self.title
+
 
 class Question1of6(Model):
     id = Column(Integer, primary_key=True)
@@ -94,16 +97,17 @@ class Question1of6(Model):
 
     def get_option_image(self, option):
         im = ImageManager()
-        return Markup('<img src="' + im.get_url(option) +\
-            '" alt="Photo" class="img-rounded img-responsive" style="min-width:100%;max-width:4096px;">')
+        return Markup('<img src="' + im.get_url(option) +
+                      '" alt="Photo" class="img-rounded img-responsive" style="min-width:100%;max-width:4096px;">')
 
     def description_image_img(self):
         im = ImageManager()
-        return Markup('<img src="' + im.get_url(self.description_image) +\
-            '" alt="Photo" class="img-rounded img-responsive">')
+        return Markup('<img src="' + im.get_url(self.description_image) +
+                      '" alt="Photo" class="img-rounded img-responsive">')
 
     def __repr__(self):
         return self.title
+
 
 class Question3to3(Model):
     id = Column(Integer, primary_key=True)
@@ -126,18 +130,17 @@ class Question3to3(Model):
 
     def get_option_image(self, option):
         im = ImageManager()
-        return Markup('<img src="' + im.get_url(option) +\
-            '" alt="Photo" class="img-rounded img-responsive" style="min-width:100%;max-width:4096px;">')
+        return Markup('<img src="' + im.get_url(option) +
+                      '" alt="Photo" class="img-rounded img-responsive" style="min-width:100%;max-width:4096px;">')
 
     def description_image_img(self):
         im = ImageManager()
-        return Markup('<img src="' + im.get_url(self.description_image) +\
-            '" alt="Photo" class="img-rounded img-responsive">')
-
-
+        return Markup('<img src="' + im.get_url(self.description_image) +
+                      '" alt="Photo" class="img-rounded img-responsive">')
 
     def __repr__(self):
         return self.title
+
 
 class Question2Decimals(Model):
     id = Column(Integer, primary_key=True)
@@ -152,13 +155,12 @@ class Question2Decimals(Model):
 
     def description_image_img(self):
         im = ImageManager()
-        return Markup('<img src="' + im.get_url(self.description_image) +\
-            '" alt="Photo" class="img-rounded img-responsive">')
-
-
+        return Markup('<img src="' + im.get_url(self.description_image) +
+                      '" alt="Photo" class="img-rounded img-responsive">')
 
     def __repr__(self):
         return self.title
+
 
 class Question1Decimal(Model):
     id = Column(Integer, primary_key=True)
@@ -171,10 +173,8 @@ class Question1Decimal(Model):
 
     def description_image_img(self):
         im = ImageManager()
-        return Markup('<img src="' + im.get_url(self.description_image) +\
-            '" alt="Photo" class="img-rounded img-responsive">')
-
-
+        return Markup('<img src="' + im.get_url(self.description_image) +
+                      '" alt="Photo" class="img-rounded img-responsive">')
 
     def __repr__(self):
         return self.title
@@ -201,23 +201,20 @@ class QuestionSelect4(Model):
     option5_image = Column(ImageColumn(size=(10000, 10000, True)))
     option6_image = Column(ImageColumn(size=(10000, 10000, True)))
 
-
     def get_option_image(self, option):
         im = ImageManager()
-        return Markup('<img src="' + im.get_url(option) +\
-            '" alt="Photo" class="img-rounded img-responsive" style="max-width:4096px;">')
+        return Markup('<img src="' + im.get_url(option) +
+                      '" alt="Photo" class="img-rounded img-responsive" style="max-width:4096px;">')
 
     def get_selection_image(self, selection):
         im = ImageManager()
-        return Markup('<img src="' + im.get_url(selection) +\
-            '" alt="Photo" class="img-rounded img-responsive" style="min-width:100%;max-width:4096px;">')
+        return Markup('<img src="' + im.get_url(selection) +
+                      '" alt="Photo" class="img-rounded img-responsive" style="min-width:100%;max-width:4096px;">')
 
     def description_image_img(self):
         im = ImageManager()
-        return Markup('<img src="' + im.get_url(self.description_image) +\
-            '" alt="Photo" class="img-rounded img-responsive">')
-
-
+        return Markup('<img src="' + im.get_url(self.description_image) +
+                      '" alt="Photo" class="img-rounded img-responsive">')
 
     def __repr__(self):
         return self.title

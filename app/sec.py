@@ -4,8 +4,10 @@ from .sec_models import ExtendedUser
 from .sec_views import ExtendedUserDBModelView
 from .sec_forms import ExtendedUserInfoEdit
 
+
 class ExtendedUserInfoEditView(UserInfoEditView):
     form = ExtendedUserInfoEdit
+
 
 class ExtendedSecurityManager(SecurityManager):
     user_model = ExtendedUser

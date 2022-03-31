@@ -13,6 +13,7 @@ assoc_user_topics = Table(
     UniqueConstraint("user_id", "topic_id"),
 )
 
+
 class ExtendedUser(User):
     __tablename__ = 'ab_user'
     tried_questions = Column(Integer, default=0)

@@ -5,12 +5,14 @@ from wtforms.validators import DataRequired
 from .models import Topic, Select4Enum
 from . import db
 
+
 def safe_math_eval(string):
     allowed_chars = "0123456789+-*(). /"
     for char in string:
         if char not in allowed_chars:
             return ''
     return eval(string)
+
 
 class FlexibleDecimalField(DecimalField):
 
@@ -29,6 +31,7 @@ class Question2of5Form(DynamicForm):
     checkbox4 = BooleanField()
     checkbox5 = BooleanField()
 
+
 class Question1of6Form(DynamicForm):
     id = HiddenField()
     checkbox1 = BooleanField()
@@ -37,6 +40,7 @@ class Question1of6Form(DynamicForm):
     checkbox4 = BooleanField()
     checkbox5 = BooleanField()
     checkbox6 = BooleanField()
+
 
 class Question3to3Form(DynamicForm):
     id = HiddenField()
@@ -47,14 +51,17 @@ class Question3to3Form(DynamicForm):
     checkbox2b = BooleanField()
     checkbox2c = BooleanField()
 
+
 class Question2DecimalsForm(DynamicForm):
     id = HiddenField()
     value1 = FlexibleDecimalField()
     value2 = FlexibleDecimalField()
 
+
 class Question1DecimalForm(DynamicForm):
     id = HiddenField()
     value = FlexibleDecimalField()
+
 
 class QuestionSelect4Form(DynamicForm):
     id = HiddenField()
@@ -63,12 +70,12 @@ class QuestionSelect4Form(DynamicForm):
     selection3 = SelectField(choices=[el.value for el in Select4Enum])
     selection4 = SelectField(choices=[el.value for el in Select4Enum])
 
+
 class QuestionSelfAssessedForm(DynamicForm):
     id = HiddenField()
 
+
 class TopicForm(DynamicForm):
-    # result = db.session.query(Topic)
     choices = []
-    # for element in result:
-    #     choices += [(element.id, element.name)]
-    topic = SelectMultipleField(choices=choices, validate_choice=False, coerce=int)
+    topic = SelectMultipleField(
+        choices=choices, validate_choice=False, coerce=int)
