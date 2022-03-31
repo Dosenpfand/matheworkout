@@ -58,5 +58,6 @@ class ExtendedUserDBModelView(UserDBModelView):
         'roles',
         'learning_group',
         'tried_questions',
-        'correct_questions'
+        'correct_questions',
+        'active_topics'
     ]

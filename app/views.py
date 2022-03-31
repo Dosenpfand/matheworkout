@@ -3,6 +3,7 @@ from flask_appbuilder import ModelView, BaseView, SimpleFormView, MultipleView, 
 from flask_appbuilder.charts.views import GroupByChartView
 from flask_appbuilder.models.group import aggregate_count
 from flask_appbuilder.models.sqla.interface import SQLAInterface
+from flask_appbuilder.models.sqla.filters import FilterInFunction
 from flask_babel import lazy_gettext as _
 from flask import render_template, flash, redirect, url_for, Markup, g, request, Markup
 from . import appbuilder, db
@@ -12,6 +13,7 @@ from .sec_models import ExtendedUser
 from flask_appbuilder.security.views import UserDBModelView
 from flask_babel import lazy_gettext
 from sqlalchemy.sql.expression import func, select
+import logging
 
 def get_user():
     return g.user
@@ -65,6 +67,9 @@ def link_formatter_1_decimal(value):
 
 class Question1DecimalModelView(ModelView):
     datamodel = SQLAInterface(Question1Decimal)
+
+    # TODO: is empty if active_topics is empty!
+    base_filters = [['topic_id', FilterInFunction, lambda: [topic.id for topic in g.user.active_topics]]]
 
     label_columns = {'description_image': 'Description Image'}
     list_columns = ['external_id', 'topic']
@@ -561,8 +566,6 @@ class Question2DecimalsFormView(SimpleFormView):
             appbuilder=self.appbuilder,
         )
 
-
-
 class Question1DecimalFormView(SimpleFormView):
     form = Question1DecimalForm
     form_title = '1 Decimal Test'
@@ -571,10 +574,17 @@ class Question1DecimalFormView(SimpleFormView):
     def form_get(self, form):
         self.update_redirect()
         request_id = request.args.get('ext_id')
-        if request_id:
-            result = db.session.query(Question1Decimal).filter_by(external_id=request_id).first()
+
+        active_topic_ids = [topic.id for topic in g.user.active_topics]
+        if active_topic_ids:
+            filter_arg = Question1Decimal.topic_id.in_(active_topic_ids)
         else:
-            result = db.session.query(Question1Decimal).order_by(func.random()).first()
+            filter_arg = True
+
+        if request_id:
+            result = db.session.query(Question1Decimal).filter_by(external_id=request_id).filter(filter_arg).first()
+        else:
+            result = db.session.query(Question1Decimal).order_by(func.random()).filter(filter_arg).first()
 
         form.id.data = result.id
 
