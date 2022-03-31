@@ -65,10 +65,10 @@ class Question1DecimalForm(DynamicForm):
 
 class QuestionSelect4Form(DynamicForm):
     id = HiddenField()
-    selection1 = SelectField(choices=[el.value for el in Select4Enum])
-    selection2 = SelectField(choices=[el.value for el in Select4Enum])
-    selection3 = SelectField(choices=[el.value for el in Select4Enum])
-    selection4 = SelectField(choices=[el.value for el in Select4Enum])
+    selection1 = SelectField(choices=Select4Enum.get_values())
+    selection2 = SelectField(choices=Select4Enum.get_values())
+    selection3 = SelectField(choices=Select4Enum.get_values())
+    selection4 = SelectField(choices=Select4Enum.get_values())
 
 
 class QuestionSelfAssessedForm(DynamicForm):

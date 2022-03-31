@@ -17,6 +17,9 @@ class Select4Enum(enum.Enum):
     E = 'E'
     F = 'F'
 
+    def get_values():
+        return [el.value for el in Select4Enum]
+
 
 class Topic(Model):
     id = Column(Integer, primary_key=True)

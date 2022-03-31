@@ -13,15 +13,29 @@ from .sec_models import ExtendedUser
 from flask_appbuilder.security.views import UserDBModelView
 from flask_babel import lazy_gettext
 from sqlalchemy.sql.expression import func, select
-import logging
 
 
-def get_user():
-    return g.user
+def link_formatter(form_view_name, external_id):
+    form_url = url_for(f'{form_view_name}.this_form_get')
+    return Markup(f'<a href="{form_url}?ext_id={external_id}">{external_id}</a>')
 
+def get_question(question_model):
+    request_id = request.args.get('ext_id')
 
-def link_formatter_2_of_5(value):
-    return Markup('<a href="' + url_for('Question2of5FormView.this_form_get') + '?ext_id=' + str(value) + '">' + str(value) + '</a>')
+    active_topic_ids = [topic.id for topic in g.user.active_topics]
+    if active_topic_ids:
+        filter_arg = question_model.topic_id.in_(active_topic_ids)
+    else:
+        filter_arg = True
+
+    if request_id:
+        result = db.session.query(question_model).filter_by(
+            external_id=request_id).filter(filter_arg).first()
+    else:
+        result = db.session.query(question_model).order_by(
+            func.random()).filter(filter_arg).first()
+
+    return result
 
 
 class Question2of5ModelView(ModelView):
@@ -30,11 +44,8 @@ class Question2of5ModelView(ModelView):
     label_columns = {'description_image': 'Description Image'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
-    formatters_columns = {'external_id': link_formatter_2_of_5}
-
-
-def link_formatter_1_of_6(value):
-    return Markup('<a href="' + url_for('Question1of6FormView.this_form_get') + '?ext_id=' + str(value) + '">' + str(value) + '</a>')
+    formatters_columns = {'external_id': lambda value: link_formatter(
+        'Question2of5FormView', value)}
 
 
 class Question1of6ModelView(ModelView):
@@ -43,11 +54,8 @@ class Question1of6ModelView(ModelView):
     label_columns = {'description_image': 'Description Image'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
-    formatters_columns = {'external_id': link_formatter_1_of_6}
-
-
-def link_formatter_3_to_3(value):
-    return Markup('<a href="' + url_for('Question3to3FormView.this_form_get') + '?ext_id=' + str(value) + '">' + str(value) + '</a>')
+    formatters_columns = {'external_id': lambda value: link_formatter(
+        'Question1of6FormView', value)}
 
 
 class Question3to3ModelView(ModelView):
@@ -56,11 +64,8 @@ class Question3to3ModelView(ModelView):
     label_columns = {'description_image': 'Description Image'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
-    formatters_columns = {'external_id': link_formatter_3_to_3}
-
-
-def link_formatter_2_decimals(value):
-    return Markup('<a href="' + url_for('Question2DecimalsFormView.this_form_get') + '?ext_id=' + str(value) + '">' + str(value) + '</a>')
+    formatters_columns = {'external_id': lambda value: link_formatter(
+        'Question3to3FormView', value)}
 
 
 class Question2DecimalsModelView(ModelView):
@@ -69,11 +74,8 @@ class Question2DecimalsModelView(ModelView):
     label_columns = {'description_image': 'Description Image'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
-    formatters_columns = {'external_id': link_formatter_2_decimals}
-
-
-def link_formatter_1_decimal(value):
-    return Markup('<a href="' + url_for('Question1DecimalFormView.this_form_get') + '?ext_id=' + str(value) + '">' + str(value) + '</a>')
+    formatters_columns = {'external_id': lambda value: link_formatter(
+        'Question2DecimalsFormView', value)}
 
 
 class Question1DecimalModelView(ModelView):
@@ -86,11 +88,8 @@ class Question1DecimalModelView(ModelView):
     label_columns = {'description_image': 'Description Image'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
-    formatters_columns = {'external_id': link_formatter_1_decimal}
-
-
-def link_formatter_self_assessed(value):
-    return Markup('<a href="' + url_for('QuestionSelfAssessedFormView.this_form_get') + '?ext_id=' + str(value) + '">' + str(value) + '</a>')
+    formatters_columns = {'external_id': lambda value: link_formatter(
+        'Question1DecimalFormView', value)}
 
 
 class QuestionSelfAssessedModelView(ModelView):
@@ -100,11 +99,8 @@ class QuestionSelfAssessedModelView(ModelView):
                      'solution_image': 'Solution Image'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'solution_image_img']
-    formatters_columns = {'external_id': link_formatter_self_assessed}
-
-
-def link_formatter_select_4(value):
-    return Markup('<a href="' + url_for('QuestionSelect4FormView.this_form_get') + '?ext_id=' + str(value) + '">' + str(value) + '</a>')
+    formatters_columns = {'external_id': lambda value: link_formatter(
+        'QuestionSelfAssessedFormView', value)}
 
 
 class QuestionSelect4ModelView(ModelView):
@@ -114,7 +110,8 @@ class QuestionSelect4ModelView(ModelView):
                      'solution_image': 'Solution Image'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'solution_image_img']
-    formatters_columns = {'external_id': link_formatter_select_4}
+    formatters_columns = {'external_id': lambda value: link_formatter(
+        'QuestionSelect4FormView', value)}
 
 
 class QuestionMultipleView(MultipleView):
@@ -146,8 +143,6 @@ class TopicFormView(SimpleFormView):
         form.topic.choices = choices
         flash('test', 'info')
 
-        # form.topic.label = str(form.topic.data)
-
 
 class QuestionSelfAssessedFormView(SimpleFormView):
     form = QuestionSelfAssessedForm
@@ -156,29 +151,23 @@ class QuestionSelfAssessedFormView(SimpleFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        request_id = request.args.get('ext_id')
-        if request_id:
-            result = db.session.query(QuestionSelfAssessed).filter_by(
-                external_id=request_id).first()
-        else:
-            result = db.session.query(
-                QuestionSelfAssessed).order_by(func.random()).first()
+        question_result = get_question(QuestionSelfAssessed)
 
-        form.id.data = result.id
+        form.id.data = question_result.id
 
         answer_value = request.args.get('answer')
         if answer_value:
-            user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update(
+            user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'tried_questions': ExtendedUser.tried_questions + 1})
             db.session.commit()
         if answer_value == 'CORRECT':
-            user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update(
+            user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             db.session.commit()
 
         self.extra_args = {'question': {
-            'description': result.description_image_img(),
-            'external_id': result.external_id}}
+            'description': question_result.description_image_img(),
+            'external_id': question_result.external_id}}
 
     def form_post(self, form):
         self.update_redirect()
@@ -186,9 +175,14 @@ class QuestionSelfAssessedFormView(SimpleFormView):
         result = db.session.query(
             QuestionSelfAssessed).filter_by(id=id).first()
 
-        self.extra_args = {'question': {'description': result.solution_image_img(
-        ) + Markup('<a href="' + url_for('QuestionSelfAssessedFormView.this_form_get') + '?answer=CORRECT">CORRECT</a> <a href="' + url_for('QuestionSelfAssessedFormView.this_form_get') + '?answer=INCORRECT">INCORRECT</a>'),
-            'external_id': result.external_id}}
+        form_url = url_for('QuestionSelfAssessedFormView.this_form_get')
+        solution_img = result.solution_image_img()
+        correct_link = Markup(f'<a href="{form_url}?answer=CORRECT">CORRECT</a>')
+        incorrect_link = Markup('<a href="{form_url}?answer=INCORRECT">INCORRECT</a>')
+        description = f'{solution_img} {correct_link} {incorrect_link}'
+
+        self.extra_args = {'question': {
+            'description': description, 'external_id': result.external_id}}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
         widgets = self._get_edit_widget(form=form)
@@ -208,31 +202,23 @@ class Question2of5FormView(SimpleFormView):
     def form_get(self, form):
         self.update_redirect()
 
-        request_id = request.args.get('ext_id')
-        if request_id:
-            result = db.session.query(Question2of5).filter_by(
-                external_id=request_id).first()
-        else:
-            result = db.session.query(
-                Question2of5).order_by(func.random()).first()
+        question_result = get_question(Question2of5)
+        form.id.data = question_result.id
 
-        form.id.data = result.id
-
-        form.id.data = result.id
-        form.checkbox1.label.text = result.get_option_image(
-            result.option1_image)
-        form.checkbox2.label.text = result.get_option_image(
-            result.option2_image)
-        form.checkbox3.label.text = result.get_option_image(
-            result.option3_image)
-        form.checkbox4.label.text = result.get_option_image(
-            result.option4_image)
-        form.checkbox5.label.text = result.get_option_image(
-            result.option5_image)
+        form.checkbox1.label.text = question_result.get_option_image(
+            question_result.option1_image)
+        form.checkbox2.label.text = question_result.get_option_image(
+            question_result.option2_image)
+        form.checkbox3.label.text = question_result.get_option_image(
+            question_result.option3_image)
+        form.checkbox4.label.text = question_result.get_option_image(
+            question_result.option4_image)
+        form.checkbox5.label.text = question_result.get_option_image(
+            question_result.option5_image)
 
         self.extra_args = {'question': {
-            'description': result.description_image_img(),
-            'external_id': result.external_id}}
+            'description': question_result.description_image_img(),
+            'external_id': question_result.external_id}}
 
     def form_post(self, form):
         self.update_redirect()
@@ -276,13 +262,13 @@ class Question2of5FormView(SimpleFormView):
             (form.checkbox4.data == result.option4_is_correct) and \
                 (form.checkbox5.data == result.option5_is_correct):
             message = 'CORRECT!'
-            user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update(
+            user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             db.session.commit()
         else:
             message = 'INCORRECT!'
 
-        user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update(
+        user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
         db.session.commit()
 
@@ -308,33 +294,27 @@ class Question1of6FormView(SimpleFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        request_id = request.args.get('ext_id')
-        if request_id:
-            result = db.session.query(Question1of6).filter_by(
-                external_id=request_id).first()
-        else:
-            result = db.session.query(
-                Question1of6).order_by(func.random()).first()
+        question_result = get_question(Question1of6)
 
-        form.id.data = result.id
+        form.id.data = question_result.id
 
-        form.id.data = result.id
-        form.checkbox1.label.text = result.get_option_image(
-            result.option1_image)
-        form.checkbox2.label.text = result.get_option_image(
-            result.option2_image)
-        form.checkbox3.label.text = result.get_option_image(
-            result.option3_image)
-        form.checkbox4.label.text = result.get_option_image(
-            result.option4_image)
-        form.checkbox5.label.text = result.get_option_image(
-            result.option5_image)
-        form.checkbox6.label.text = result.get_option_image(
-            result.option6_image)
+        form.id.data = question_result.id
+        form.checkbox1.label.text = question_result.get_option_image(
+            question_result.option1_image)
+        form.checkbox2.label.text = question_result.get_option_image(
+            question_result.option2_image)
+        form.checkbox3.label.text = question_result.get_option_image(
+            question_result.option3_image)
+        form.checkbox4.label.text = question_result.get_option_image(
+            question_result.option4_image)
+        form.checkbox5.label.text = question_result.get_option_image(
+            question_result.option5_image)
+        form.checkbox6.label.text = question_result.get_option_image(
+            question_result.option6_image)
 
         self.extra_args = {'question': {
-            'description': result.description_image_img(),
-            'external_id': result.external_id}}
+            'description': question_result.description_image_img(),
+            'external_id': question_result.external_id}}
 
     def form_post(self, form):
         self.update_redirect()
@@ -385,13 +365,13 @@ class Question1of6FormView(SimpleFormView):
                 (form.checkbox5.data == result.option5_is_correct) and \
                 (form.checkbox6.data == result.option6_is_correct):
             message = 'CORRECT!'
-            user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update(
+            user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             db.session.commit()
         else:
             message = 'INCORRECT!'
 
-        user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update(
+        user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
         db.session.commit()
 
@@ -428,31 +408,24 @@ class Question3to3FormView(SimpleFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        request_id = request.args.get('ext_id')
-        if request_id:
-            result = db.session.query(Question3to3).filter_by(
-                external_id=request_id).first()
-        else:
-            result = db.session.query(
-                Question3to3).order_by(func.random()).first()
-        form.id.data = result.id
+        question_result = get_question(Question3to3)
 
-        form.id.data = result.id
-        form.checkbox1a.label.text = result.get_option_image(
-            result.option1a_image)
-        form.checkbox1b.label.text = result.get_option_image(
-            result.option1b_image)
-        form.checkbox1c.label.text = result.get_option_image(
-            result.option1c_image)
-        form.checkbox2a.label.text = result.get_option_image(
-            result.option2a_image)
-        form.checkbox2b.label.text = result.get_option_image(
-            result.option2b_image)
-        form.checkbox2c.label.text = result.get_option_image(
-            result.option2c_image)
+        form.id.data = question_result.id
+        form.checkbox1a.label.text = resquestion_resultult.get_option_image(
+            question_result.option1a_image)
+        form.checkbox1b.label.text = question_result.get_option_image(
+            question_result.option1b_image)
+        form.checkbox1c.label.text = question_result.get_option_image(
+            question_result.option1c_image)
+        form.checkbox2a.label.text = question_result.get_option_image(
+            question_result.option2a_image)
+        form.checkbox2b.label.text = question_result.get_option_image(
+            question_result.option2b_image)
+        form.checkbox2c.label.text = question_result.get_option_image(
+            question_result.option2c_image)
         self.extra_args = {'question': {
-            'description': result.description_image_img(),
-            'external_id': result.external_id}}
+            'description': question_result.description_image_img(),
+            'external_id': question_result.external_id}}
 
     def form_post(self, form):
         self.update_redirect()
@@ -503,13 +476,13 @@ class Question3to3FormView(SimpleFormView):
                 (form.checkbox2b.data == result.option2b_is_correct) and \
                 (form.checkbox2c.data == result.option2c_is_correct):
             message = 'CORRECT!'
-            user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update(
+            user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             db.session.commit()
         else:
             message = 'INCORRECT!'
 
-        user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update(
+        user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
         db.session.commit()
 
@@ -535,23 +508,15 @@ class Question2DecimalsFormView(SimpleFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        request_id = request.args.get('ext_id')
-        if request_id:
-            result = db.session.query(Question2Decimals).filter_by(
-                external_id=request_id).first()
-        else:
-            result = db.session.query(
-                Question2Decimals).order_by(func.random()).first()
+        question_result = get_question(Question3to3)
 
-        form.id.data = result.id
-
-        form.id.data = result.id
+        form.id.data = question_result.id
         form.value1.label.text = 'Ergebnis 1'
         form.value2.label.text = 'Ergebnis 2'
 
         self.extra_args = {'question': {
-            'description': result.description_image_img(),
-            'external_id': result.external_id}}
+            'description': question_result.description_image_img(),
+            'external_id': question_result.external_id}}
 
     def form_post(self, form):
         self.update_redirect()
@@ -576,13 +541,13 @@ class Question2DecimalsFormView(SimpleFormView):
 
         if value1_correct and value2_correct:
             message = 'CORRECT!'
-            user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update(
+            user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             db.session.commit()
         else:
             message = 'INCORRECT!'
 
-        user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update(
+        user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
         db.session.commit()
 
@@ -608,29 +573,13 @@ class Question1DecimalFormView(SimpleFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        request_id = request.args.get('ext_id')
-
-        active_topic_ids = [topic.id for topic in g.user.active_topics]
-        if active_topic_ids:
-            filter_arg = Question1Decimal.topic_id.in_(active_topic_ids)
-        else:
-            filter_arg = True
-
-        if request_id:
-            result = db.session.query(Question1Decimal).filter_by(
-                external_id=request_id).filter(filter_arg).first()
-        else:
-            result = db.session.query(Question1Decimal).order_by(
-                func.random()).filter(filter_arg).first()
-
-        form.id.data = result.id
-
-        form.id.data = result.id
+        question_result = get_question(Question1Decimal)
+        form.id.data = question_result.id
         form.value.label.text = 'Ergebnis 1'
 
         self.extra_args = {'question': {
-            'description': result.description_image_img(),
-            'external_id': result.external_id}}
+            'description': question_result.description_image_img(),
+            'external_id': question_result.external_id}}
 
     def form_post(self, form):
         self.update_redirect()
@@ -642,13 +591,13 @@ class Question1DecimalFormView(SimpleFormView):
         if (form.value.data <= result.value_upper_limit) and (form.value.data >= result.value_lower_limit):
             form.value.description = 'correct'
             message = 'CORRECT!'
-            user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update(
+            user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             db.session.commit()
         else:
             message = 'INCORRECT!'
 
-        user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update(
+        user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
         db.session.commit()
 
@@ -738,13 +687,13 @@ class QuestionSelect4FormView(SimpleFormView):
             (form.selection3.data == result.selection3_solution.value) and \
                 (form.selection4.data == result.selection4_solution.value):
             message = 'CORRECT!'
-            user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update(
+            user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             db.session.commit()
         else:
             message = 'INCORRECT!'
 
-        user_result = db.session.query(ExtendedUser).filter_by(id=get_user().id).update(
+        user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
         db.session.commit()
 
