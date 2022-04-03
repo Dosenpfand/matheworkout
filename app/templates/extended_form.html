@@ -48,6 +48,13 @@
             {% endcall %}
             </div>
             </div>
+            {% if additional_col %}
+            <div class="col-md-6 col-sm-6 col-2">
+            <div class="widget">
+                {{additional_col}}
+            </div>
+            </div>
+            {% endif %}
         {% endfor %}
         </div>
     {% else %}

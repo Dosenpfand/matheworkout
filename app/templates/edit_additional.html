@@ -1,4 +1,24 @@
 {% extends "appbuilder/general/model/edit.html" %}
+{% import 'appbuilder/general/lib.html' as lib %}
+
+{% macro options_to_additional_col(options) %}
+    {% call lib.accordion_tag("options_additional_col", "Optionen", True) %}
+    <div class="table-responsive">
+        <table class="table table-responsive table-bordered">
+            <tr><td><strong>A</strong></td><td>{{options['A']}}</td></tr>
+            <tr><td><strong>B</strong></td><td>{{options['B']}}</td></tr>
+            <tr><td><strong>C</strong></td><td>{{options['C']}}</td></tr>
+            <tr><td><strong>D</strong></td><td>{{options['D']}}</td></tr>
+            <tr><td><strong>E</strong></td><td>{{options['E']}}</td></tr>
+            <tr><td><strong>F</strong></td><td>{{options['F']}}</td></tr>
+        </table>
+    </div>
+    {% endcall %}
+{% endmacro %}
+
+{% if question['options'] %}
+{% set additional_col = options_to_additional_col(question['options']) %}
+{% endif %}
 
 {% block edit_form %}
     <div id="Home" class="tab-pane active">
@@ -8,15 +28,7 @@
         {% endif %}
         <div class="well well-sm"><strong>{{question['description']}}</strong></div>
         {% if not question['error'] %}
-        {{ widgets.get('edit')(form_action=form_action,submit_text=question['submit_text'])|safe }}
-        {% if question['options'] %}
-            <div class="well well-sm"><strong>A: {{question['options']['A']}}</strong></div>
-            <div class="well well-sm"><strong>B: {{question['options']['B']}}</strong></div>
-            <div class="well well-sm"><strong>C: {{question['options']['C']}}</strong></div>
-            <div class="well well-sm"><strong>D: {{question['options']['D']}}</strong></div>
-            <div class="well well-sm"><strong>E: {{question['options']['E']}}</strong></div>
-            <div class="well well-sm"><strong>F: {{question['options']['F']}}</strong></div>
-        {% endif %}
+        {{ widgets.get('edit')(form_action=form_action,submit_text=question['submit_text'],additional_col=additional_col)|safe }}
         {% endif %}
     </div>
 {% endblock %}

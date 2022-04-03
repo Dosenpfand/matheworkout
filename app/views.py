@@ -752,6 +752,13 @@ class QuestionSelect4FormView(SimpleFormView):
     form_template = 'edit_additional.html'
     edit_widget = ExtendedEditWidget
 
+    form_fieldsets = [
+        (
+            'Antworten',
+            {'fields': ['selection1', 'selection2', 'selection3', 'selection4']}
+        ),
+    ]
+
     def form_get(self, form):
         self.update_redirect()
         question_result = get_question(QuestionSelect4)
