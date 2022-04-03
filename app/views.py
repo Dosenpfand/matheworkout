@@ -212,10 +212,10 @@ class QuestionSelfAssessedFormView(SimpleFormView):
         result = db.session.query(
             QuestionSelfAssessed).filter_by(id=id).first()
 
-        form_url = url_for('QuestionSelfAssessedFormView.this_form_get')
+        random_url = url_for(f'QuestionRandom.question_random')
         solution_img = result.solution_image_img()
-        correct_link = f'<a href="{form_url}?answer=CORRECT">CORRECT</a>'
-        incorrect_link = f'<a href="{form_url}?answer=INCORRECT">INCORRECT</a>'
+        correct_link = f'<a href="{random_url}?answer=CORRECT">RICHTIG</a>'
+        incorrect_link = f'<a href="{random_url}?answer=INCORRECT">FALSCH</a>'
         description = Markup(f'{solution_img} {correct_link} {incorrect_link}')
 
         self.extra_args = {'question': {
@@ -311,12 +311,12 @@ class Question2of5FormView(SimpleFormView):
                 (form.checkbox3.data == result.option3_is_correct) and \
             (form.checkbox4.data == result.option4_is_correct) and \
                 (form.checkbox5.data == result.option5_is_correct):
-            message = 'CORRECT!'
+            message = 'RICHTIG!'
             user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             db.session.commit()
         else:
-            message = 'INCORRECT!'
+            message = 'FALSCH!'
 
         user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
@@ -425,12 +425,12 @@ class Question1of6FormView(SimpleFormView):
             (form.checkbox4.data == result.option4_is_correct) and \
                 (form.checkbox5.data == result.option5_is_correct) and \
                 (form.checkbox6.data == result.option6_is_correct):
-            message = 'CORRECT!'
+            message = 'RICHTIG!'
             user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             db.session.commit()
         else:
-            message = 'INCORRECT!'
+            message = 'FALSCH!'
 
         user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
@@ -550,12 +550,12 @@ class Question3to3FormView(SimpleFormView):
             (form.checkbox2a.data == result.option2a_is_correct) and \
                 (form.checkbox2b.data == result.option2b_is_correct) and \
                 (form.checkbox2c.data == result.option2c_is_correct):
-            message = 'CORRECT!'
+            message = 'RICHTIG!'
             user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             db.session.commit()
         else:
-            message = 'INCORRECT!'
+            message = 'FALSCH!'
 
         user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
@@ -628,12 +628,12 @@ class Question2DecimalsFormView(SimpleFormView):
             form.value2.description = 'incorrect'
 
         if value1_correct and value2_correct:
-            message = 'CORRECT!'
+            message = 'RICHTIG!'
             user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             db.session.commit()
         else:
-            message = f'INCORRECT! Correct would have been: {result.value1_lower_limit} <= Ergebnis 1 <= {result.value1_upper_limit}, {result.value2_lower_limit} <= Ergebnis 2 <= {result.value2_upper_limit}'
+            message = f'FALSCH! Correct would have been: {result.value1_lower_limit} <= Ergebnis 1 <= {result.value1_upper_limit}, {result.value2_lower_limit} <= Ergebnis 2 <= {result.value2_upper_limit}'
 
         user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
@@ -687,16 +687,16 @@ class Question1DecimalFormView(SimpleFormView):
         id = form.id.data
         result = db.session.query(Question1Decimal).filter_by(id=id).first()
         form.value.label.text = 'Ergebnis'
-        message = 'INCORRECT!'
+        message = 'FALSCH!'
 
         if (form.value.data <= result.value_upper_limit) and (form.value.data >= result.value_lower_limit):
             form.value.description = 'correct'
-            message = 'CORRECT!'
+            message = 'RICHTIG!'
             user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             db.session.commit()
         else:
-            message = f'INCORRECT! Correct would have been: {result.value_lower_limit} <= Ergebnis <= {result.value_upper_limit}'
+            message = f'FALSCH! Correct would have been: {result.value_lower_limit} <= Ergebnis <= {result.value_upper_limit}'
 
         user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
@@ -795,12 +795,12 @@ class QuestionSelect4FormView(SimpleFormView):
             (form.selection2.data == result.selection2_solution.value) and \
             (form.selection3.data == result.selection3_solution.value) and \
                 (form.selection4.data == result.selection4_solution.value):
-            message = 'CORRECT!'
+            message = 'RICHTIG!'
             user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             db.session.commit()
         else:
-            message = 'INCORRECT!'
+            message = 'FALSCH!'
 
         user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
