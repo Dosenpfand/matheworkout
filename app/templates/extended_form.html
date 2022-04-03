@@ -24,7 +24,10 @@
     {{form.hidden_tag()}}
 
     {% if fieldsets %}
+        <div class="row">
         {% for fieldset_item in fieldsets %}
+            <div class="col-md-6 col-sm-6 hidden-xs">
+            <div class="widget">
             {% if fieldset_item[1].get('expanded') == None %}
                 {% set expanded = True %}
             {% else %}
@@ -43,7 +46,10 @@
                 </table>
             </div>
             {% endcall %}
+            </div>
+            </div>
         {% endfor %}
+        </div>
     {% else %}
         <div class="table-responsive">
             <table class="table table-bordered">
