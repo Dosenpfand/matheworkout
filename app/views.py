@@ -286,25 +286,25 @@ class Question2of5FormView(SimpleFormView):
             result.option5_image)
 
         if form.checkbox1.data == result.option1_is_correct:
-            form.checkbox1.description = 'correct'
+            form.checkbox1.description = 'Richtig'
         else:
-            form.checkbox1.description = 'incorrect'
+            form.checkbox1.description = 'Falsch'
         if form.checkbox2.data == result.option2_is_correct:
-            form.checkbox2.description = 'correct'
+            form.checkbox2.description = 'Richtig'
         else:
-            form.checkbox2.description = 'incorrect'
+            form.checkbox2.description = 'Falsch'
         if form.checkbox3.data == result.option3_is_correct:
-            form.checkbox3.description = 'correct'
+            form.checkbox3.description = 'Richtig'
         else:
-            form.checkbox3.description = 'incorrect'
+            form.checkbox3.description = 'Falsch'
         if form.checkbox4.data == result.option4_is_correct:
-            form.checkbox4.description = 'correct'
+            form.checkbox4.description = 'Richtig'
         else:
-            form.checkbox4.description = 'incorrect'
+            form.checkbox4.description = 'Falsch'
         if form.checkbox5.data == result.option5_is_correct:
-            form.checkbox5.description = 'correct'
+            form.checkbox5.description = 'Richtig'
         else:
-            form.checkbox5.description = 'incorrect'
+            form.checkbox5.description = 'Falsch'
 
         if (form.checkbox1.data == result.option1_is_correct) and \
             (form.checkbox2.data == result.option2_is_correct) and \
@@ -395,29 +395,29 @@ class Question1of6FormView(SimpleFormView):
             result.option6_image)
 
         if form.checkbox1.data == result.option1_is_correct:
-            form.checkbox1.description = 'correct'
+            form.checkbox1.description = 'Richtig'
         else:
-            form.checkbox1.description = 'incorrect'
+            form.checkbox1.description = 'Falsch'
         if form.checkbox2.data == result.option2_is_correct:
-            form.checkbox2.description = 'correct'
+            form.checkbox2.description = 'Richtig'
         else:
-            form.checkbox2.description = 'incorrect'
+            form.checkbox2.description = 'Falsch'
         if form.checkbox3.data == result.option3_is_correct:
-            form.checkbox3.description = 'correct'
+            form.checkbox3.description = 'Richtig'
         else:
-            form.checkbox3.description = 'incorrect'
+            form.checkbox3.description = 'Falsch'
         if form.checkbox4.data == result.option4_is_correct:
-            form.checkbox4.description = 'correct'
+            form.checkbox4.description = 'Richtig'
         else:
-            form.checkbox4.description = 'incorrect'
+            form.checkbox4.description = 'Falsch'
         if form.checkbox5.data == result.option5_is_correct:
-            form.checkbox5.description = 'correct'
+            form.checkbox5.description = 'Richtig'
         else:
-            form.checkbox5.description = 'incorrect'
+            form.checkbox5.description = 'Falsch'
         if form.checkbox6.data == result.option6_is_correct:
-            form.checkbox6.description = 'correct'
+            form.checkbox6.description = 'Richtig'
         else:
-            form.checkbox6.description = 'incorrect'
+            form.checkbox6.description = 'Falsch'
 
         if (form.checkbox1.data == result.option1_is_correct) and \
             (form.checkbox2.data == result.option2_is_correct) and \
@@ -520,29 +520,29 @@ class Question3to3FormView(SimpleFormView):
             result.option2c_image)
 
         if form.checkbox1a.data == result.option1a_is_correct:
-            form.checkbox1a.description = 'correct'
+            form.checkbox1a.description = 'Richtig'
         else:
-            form.checkbox1a.description = 'incorrect'
+            form.checkbox1a.description = 'Falsch'
         if form.checkbox1b.data == result.option1b_is_correct:
-            form.checkbox1b.description = 'correct'
+            form.checkbox1b.description = 'Richtig'
         else:
-            form.checkbox1b.description = 'incorrect'
+            form.checkbox1b.description = 'Falsch'
         if form.checkbox1c.data == result.option1c_is_correct:
-            form.checkbox1c.description = 'correct'
+            form.checkbox1c.description = 'Richtig'
         else:
-            form.checkbox1c.description = 'incorrect'
+            form.checkbox1c.description = 'Falsch'
         if form.checkbox2a.data == result.option2a_is_correct:
-            form.checkbox2a.description = 'correct'
+            form.checkbox2a.description = 'Richtig'
         else:
-            form.checkbox2a.description = 'incorrect'
+            form.checkbox2a.description = 'Falsch'
         if form.checkbox2b.data == result.option2b_is_correct:
-            form.checkbox2b.description = 'correct'
+            form.checkbox2b.description = 'Richtig'
         else:
-            form.checkbox2b.description = 'incorrect'
+            form.checkbox2b.description = 'Falsch'
         if form.checkbox2c.data == result.option2c_is_correct:
-            form.checkbox2c.description = 'correct'
+            form.checkbox2c.description = 'Richtig'
         else:
-            form.checkbox2c.description = 'incorrect'
+            form.checkbox2c.description = 'Falsch'
 
         if (form.checkbox1a.data == result.option1a_is_correct) and \
             (form.checkbox1b.data == result.option1b_is_correct) and \
@@ -616,16 +616,16 @@ class Question2DecimalsFormView(SimpleFormView):
         value2_correct = False
 
         if (form.value1.data <= result.value1_upper_limit) and (form.value1.data >= result.value1_lower_limit):
-            form.value1.description = 'correct'
+            form.value1.description = 'Richtig'
             value1_correct = True
         else:
-            form.value1.description = 'incorrect'
+            form.value1.description = 'Falsch'
 
         if (form.value2.data <= result.value2_upper_limit) and (form.value2.data >= result.value2_lower_limit):
-            form.value2.description = 'correct'
+            form.value2.description = 'Richtig'
             value2_correct = True
         else:
-            form.value2.description = 'incorrect'
+            form.value2.description = 'Falsch'
 
         if value1_correct and value2_correct:
             message = 'RICHTIG!'
@@ -633,7 +633,7 @@ class Question2DecimalsFormView(SimpleFormView):
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             db.session.commit()
         else:
-            message = f'FALSCH! Correct would have been: {result.value1_lower_limit} <= Ergebnis 1 <= {result.value1_upper_limit}, {result.value2_lower_limit} <= Ergebnis 2 <= {result.value2_upper_limit}'
+            message = f'FALSCH! Richtig gewesen wäre: {result.value1_lower_limit} <= Ergebnis 1 <= {result.value1_upper_limit}, {result.value2_lower_limit} <= Ergebnis 2 <= {result.value2_upper_limit}'
 
         user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
@@ -690,7 +690,7 @@ class Question1DecimalFormView(SimpleFormView):
         message = 'FALSCH!'
 
         if (form.value.data <= result.value_upper_limit) and (form.value.data >= result.value_lower_limit):
-            form.value.description = 'correct'
+            form.value.description = 'Richtig'
             message = 'RICHTIG!'
             user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
@@ -775,21 +775,21 @@ class QuestionSelect4FormView(SimpleFormView):
             result.selection4_image)
 
         if form.selection1.data == result.selection1_solution.value:
-            form.selection1.description = 'correct'
+            form.selection1.description = 'Richtig'
         else:
-            form.selection1.description = 'incorrect'
+            form.selection1.description = 'Falsch'
         if form.selection2.data == result.selection2_solution.value:
-            form.selection2.description = 'correct'
+            form.selection2.description = 'Richtig'
         else:
-            form.selection2.description = 'incorrect'
+            form.selection2.description = 'Falsch'
         if form.selection3.data == result.selection3_solution.value:
-            form.selection3.description = 'correct'
+            form.selection3.description = 'Richtig'
         else:
-            form.selection3.description = 'incorrect'
+            form.selection3.description = 'Falsch'
         if form.selection4.data == result.selection4_solution.value:
-            form.selection4.description = 'correct'
+            form.selection4.description = 'Richtig'
         else:
-            form.selection4.description = 'incorrect'
+            form.selection4.description = 'Falsch'
 
         if (form.selection1.data == result.selection1_solution.value) and \
             (form.selection2.data == result.selection2_solution.value) and \
