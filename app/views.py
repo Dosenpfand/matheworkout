@@ -683,22 +683,22 @@ class QuestionSelect4FormView(SimpleFormView):
             form.id.data = question_result.id
             description = question_result.description_image_img()
             external_id = question_result.external_id
-            options = {'A': result.get_option_image(result.option1_image),
-                       'B': result.get_option_image(result.option2_image),
-                       'C': result.get_option_image(result.option3_image),
-                       'D': result.get_option_image(result.option4_image),
-                       'E': result.get_option_image(result.option5_image),
-                       'F': result.get_option_image(result.option6_image)}
+            options = {'A': question_result.get_option_image(question_result.option1_image),
+                       'B': question_result.get_option_image(question_result.option2_image),
+                       'C': question_result.get_option_image(question_result.option3_image),
+                       'D': question_result.get_option_image(question_result.option4_image),
+                       'E': question_result.get_option_image(question_result.option5_image),
+                       'F': question_result.get_option_image(question_result.option6_image)}
             error = False
 
-            form.selection1.label.text = result.get_selection_image(
-                result.selection1_image)
-            form.selection2.label.text = result.get_selection_image(
-                result.selection2_image)
-            form.selection3.label.text = result.get_selection_image(
-                result.selection3_image)
-            form.selection4.label.text = result.get_selection_image(
-                result.selection4_image)
+            form.selection1.label.text = question_result.get_selection_image(
+                question_result.selection1_image)
+            form.selection2.label.text = question_result.get_selection_image(
+                question_result.selection2_image)
+            form.selection3.label.text = question_result.get_selection_image(
+                question_result.selection3_image)
+            form.selection4.label.text = question_result.get_selection_image(
+                question_result.selection4_image)
 
         self.extra_args = \
             {'question': {'error': error,
