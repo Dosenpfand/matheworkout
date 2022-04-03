@@ -8,7 +8,7 @@
         {% endif %}
         <div class="well well-sm"><strong>{{question['description']}}</strong></div>
         {% if not question['error'] %}
-        {{ widgets.get('edit')(form_action=form_action)|safe }}
+        {{ widgets.get('edit')(form_action=form_action,submit_text=question['submit_text'])|safe }}
         {% if question['options'] %}
             <div class="well well-sm"><strong>A: {{question['options']['A']}}</strong></div>
             <div class="well well-sm"><strong>B: {{question['options']['B']}}</strong></div>
