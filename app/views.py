@@ -89,7 +89,7 @@ class QuestionRandom(BaseView):
             elif rand_id < (type_id_to_count[0] + type_id_to_count[1] + type_id_to_count[2]):
                 rand_form = 'Question3to3FormView'
             elif rand_id < (type_id_to_count[0] + type_id_to_count[1] + type_id_to_count[2] + type_id_to_count[3]):
-                rand_form = 'Question2DecimalsView'
+                rand_form = 'Question2DecimalsFormView'
             elif rand_id < (type_id_to_count[0] + type_id_to_count[1] + type_id_to_count[2] + type_id_to_count[3] + type_id_to_count[4]):
                 rand_form = 'Question1DecimalFormView'
             elif rand_id < (type_id_to_count[0] + type_id_to_count[1] + type_id_to_count[2] + type_id_to_count[3] + type_id_to_count[4] + type_id_to_count[5]):
