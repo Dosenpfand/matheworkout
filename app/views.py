@@ -136,7 +136,8 @@ class QuestionSelect4ModelView(ModelView):
 
 class QuestionMultipleView(MultipleView):
     views = [Question2of5ModelView, Question1of6ModelView, Question3to3ModelView,
-             Question2DecimalsModelView, Question1DecimalModelView, QuestionSelfAssessedModelView]
+             Question2DecimalsModelView, Question1DecimalModelView, QuestionSelfAssessedModelView,
+             QuestionSelect4ModelView]
 
 
 class TopicModelView(ModelView):
@@ -152,7 +153,13 @@ class QuestionSelfAssessedFormView(SimpleFormView):
         self.update_redirect()
         question_result = get_question(QuestionSelfAssessed)
 
-        form.id.data = question_result.id
+        if question_result == None:
+            description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
+            external_id = None
+        else:
+            form.id.data = question_result.id
+            description = question_result.description_image_img()
+            external_id = question_result.external_id
 
         answer_value = request.args.get('answer')
         if answer_value:
@@ -165,8 +172,8 @@ class QuestionSelfAssessedFormView(SimpleFormView):
             db.session.commit()
 
         self.extra_args = {'question': {
-            'description': question_result.description_image_img(),
-            'external_id': question_result.external_id}}
+            'description': description,
+            'external_id': external_id}}
 
     def form_post(self, form):
         self.update_redirect()
@@ -202,22 +209,31 @@ class Question2of5FormView(SimpleFormView):
         self.update_redirect()
 
         question_result = get_question(Question2of5)
-        form.id.data = question_result.id
+        if question_result == None:
+            description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
+            external_id = None
+            error = True
+        else:
+            form.id.data = question_result.id
+            description = question_result.description_image_img()
+            external_id = question_result.external_id
+            error = False
 
-        form.checkbox1.label.text = question_result.get_option_image(
-            question_result.option1_image)
-        form.checkbox2.label.text = question_result.get_option_image(
-            question_result.option2_image)
-        form.checkbox3.label.text = question_result.get_option_image(
-            question_result.option3_image)
-        form.checkbox4.label.text = question_result.get_option_image(
-            question_result.option4_image)
-        form.checkbox5.label.text = question_result.get_option_image(
-            question_result.option5_image)
+            form.checkbox1.label.text = question_result.get_option_image(
+                question_result.option1_image)
+            form.checkbox2.label.text = question_result.get_option_image(
+                question_result.option2_image)
+            form.checkbox3.label.text = question_result.get_option_image(
+                question_result.option3_image)
+            form.checkbox4.label.text = question_result.get_option_image(
+                question_result.option4_image)
+            form.checkbox5.label.text = question_result.get_option_image(
+                question_result.option5_image)
 
         self.extra_args = {'question': {
-            'description': question_result.description_image_img(),
-            'external_id': question_result.external_id}}
+            'error': error,
+            'description': description,
+            'external_id': external_id}}
 
     def form_post(self, form):
         self.update_redirect()
@@ -294,26 +310,33 @@ class Question1of6FormView(SimpleFormView):
     def form_get(self, form):
         self.update_redirect()
         question_result = get_question(Question1of6)
+        if question_result == None:
+            description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
+            external_id = None
+            error = True
+        else:
+            form.id.data = question_result.id
+            description = question_result.description_image_img()
+            external_id = question_result.external_id
+            error = False
 
-        form.id.data = question_result.id
-
-        form.id.data = question_result.id
-        form.checkbox1.label.text = question_result.get_option_image(
-            question_result.option1_image)
-        form.checkbox2.label.text = question_result.get_option_image(
-            question_result.option2_image)
-        form.checkbox3.label.text = question_result.get_option_image(
-            question_result.option3_image)
-        form.checkbox4.label.text = question_result.get_option_image(
-            question_result.option4_image)
-        form.checkbox5.label.text = question_result.get_option_image(
-            question_result.option5_image)
-        form.checkbox6.label.text = question_result.get_option_image(
-            question_result.option6_image)
+            form.checkbox1.label.text = question_result.get_option_image(
+                question_result.option1_image)
+            form.checkbox2.label.text = question_result.get_option_image(
+                question_result.option2_image)
+            form.checkbox3.label.text = question_result.get_option_image(
+                question_result.option3_image)
+            form.checkbox4.label.text = question_result.get_option_image(
+                question_result.option4_image)
+            form.checkbox5.label.text = question_result.get_option_image(
+                question_result.option5_image)
+            form.checkbox6.label.text = question_result.get_option_image(
+                question_result.option6_image)
 
         self.extra_args = {'question': {
-            'description': question_result.description_image_img(),
-            'external_id': question_result.external_id}}
+            'error': error,
+            'description': description,
+            'external_id': external_id}}
 
     def form_post(self, form):
         self.update_redirect()
@@ -408,23 +431,33 @@ class Question3to3FormView(SimpleFormView):
     def form_get(self, form):
         self.update_redirect()
         question_result = get_question(Question3to3)
+        if question_result == None:
+            description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
+            external_id = None
+            error = True
+        else:
+            form.id.data = question_result.id
+            description = question_result.description_image_img()
+            external_id = question_result.external_id
+            error = False
 
-        form.id.data = question_result.id
-        form.checkbox1a.label.text = question_result.get_option_image(
-            question_result.option1a_image)
-        form.checkbox1b.label.text = question_result.get_option_image(
-            question_result.option1b_image)
-        form.checkbox1c.label.text = question_result.get_option_image(
-            question_result.option1c_image)
-        form.checkbox2a.label.text = question_result.get_option_image(
-            question_result.option2a_image)
-        form.checkbox2b.label.text = question_result.get_option_image(
-            question_result.option2b_image)
-        form.checkbox2c.label.text = question_result.get_option_image(
-            question_result.option2c_image)
+            form.checkbox1a.label.text = question_result.get_option_image(
+                question_result.option1a_image)
+            form.checkbox1b.label.text = question_result.get_option_image(
+                question_result.option1b_image)
+            form.checkbox1c.label.text = question_result.get_option_image(
+                question_result.option1c_image)
+            form.checkbox2a.label.text = question_result.get_option_image(
+                question_result.option2a_image)
+            form.checkbox2b.label.text = question_result.get_option_image(
+                question_result.option2b_image)
+            form.checkbox2c.label.text = question_result.get_option_image(
+                question_result.option2c_image)
+
         self.extra_args = {'question': {
-            'description': question_result.description_image_img(),
-            'external_id': question_result.external_id}}
+            'error': error,
+            'description': description,
+            'external_id': external_id}}
 
     def form_post(self, form):
         self.update_redirect()
@@ -508,14 +541,23 @@ class Question2DecimalsFormView(SimpleFormView):
     def form_get(self, form):
         self.update_redirect()
         question_result = get_question(Question2Decimals)
+        if question_result == None:
+            description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
+            external_id = None
+            error = True
+        else:
+            form.id.data = question_result.id
+            description = question_result.description_image_img()
+            external_id = question_result.external_id
+            error = False
 
-        form.id.data = question_result.id
-        form.value1.label.text = 'Ergebnis 1'
-        form.value2.label.text = 'Ergebnis 2'
+            form.value1.label.text = 'Ergebnis 1'
+            form.value2.label.text = 'Ergebnis 2'
 
         self.extra_args = {'question': {
-            'description': question_result.description_image_img(),
-            'external_id': question_result.external_id}}
+            'error': error,
+            'description': description,
+            'external_id': external_id}}
 
     def form_post(self, form):
         self.update_redirect()
@@ -573,12 +615,21 @@ class Question1DecimalFormView(SimpleFormView):
     def form_get(self, form):
         self.update_redirect()
         question_result = get_question(Question1Decimal)
-        form.id.data = question_result.id
-        form.value.label.text = 'Ergebnis 1'
+        if question_result == None:
+            description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
+            external_id = None
+            error = True
+        else:
+            form.id.data = question_result.id
+            description = question_result.description_image_img()
+            external_id = question_result.external_id
+            error = False
+            form.value.label.text = 'Ergebnis 1'
 
         self.extra_args = {'question': {
-            'description': question_result.description_image_img(),
-            'external_id': question_result.external_id}}
+            'error': error,
+            'description': description,
+            'external_id': external_id}}
 
     def form_post(self, form):
         self.update_redirect()
@@ -622,34 +673,38 @@ class QuestionSelect4FormView(SimpleFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        request_id = request.args.get('ext_id')
-        if request_id:
-            result = db.session.query(QuestionSelect4).filter_by(
-                external_id=request_id).first()
+        question_result = get_question(QuestionSelect4)
+        if question_result == None:
+            description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
+            external_id = None
+            options = None
+            error = True
         else:
-            result = db.session.query(
-                QuestionSelect4).order_by(func.random()).first()
-        form.id.data = result.id
+            form.id.data = question_result.id
+            description = question_result.description_image_img()
+            external_id = question_result.external_id
+            options = {'A': result.get_option_image(result.option1_image),
+                       'B': result.get_option_image(result.option2_image),
+                       'C': result.get_option_image(result.option3_image),
+                       'D': result.get_option_image(result.option4_image),
+                       'E': result.get_option_image(result.option5_image),
+                       'F': result.get_option_image(result.option6_image)}
+            error = False
 
-        form.id.data = result.id
-        form.selection1.label.text = result.get_selection_image(
-            result.selection1_image)
-        form.selection2.label.text = result.get_selection_image(
-            result.selection2_image)
-        form.selection3.label.text = result.get_selection_image(
-            result.selection3_image)
-        form.selection4.label.text = result.get_selection_image(
-            result.selection4_image)
+            form.selection1.label.text = result.get_selection_image(
+                result.selection1_image)
+            form.selection2.label.text = result.get_selection_image(
+                result.selection2_image)
+            form.selection3.label.text = result.get_selection_image(
+                result.selection3_image)
+            form.selection4.label.text = result.get_selection_image(
+                result.selection4_image)
 
         self.extra_args = \
-            {'question': {'description': result.description_image_img(),
-                          'options': {'A': result.get_option_image(result.option1_image),
-                                      'B': result.get_option_image(result.option2_image),
-                                      'C': result.get_option_image(result.option3_image),
-                                      'D': result.get_option_image(result.option4_image),
-                                      'E': result.get_option_image(result.option5_image),
-                                      'F': result.get_option_image(result.option6_image)},
-                          'external_id': result.external_id}}
+            {'question': {'error': error,
+                          'description': description,
+                          'options': options,
+                          'external_id': external_id}}
 
     def form_post(self, form):
         self.update_redirect()

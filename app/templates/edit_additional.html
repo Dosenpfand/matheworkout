@@ -3,8 +3,11 @@
 {% block edit_form %}
     <div id="Home" class="tab-pane active">
         <h2>{{question['title']}}</h1>
+        {% if question['external_id'] %}
         <div class="well well-sm"><strong>Frage Nr.: {{question['external_id']}}</strong></div>
+        {% endif %}
         <div class="well well-sm"><strong>{{question['description']}}</strong></div>
+        {% if not question['error'] %}
         {{ widgets.get('edit')(form_action=form_action)|safe }}
         {% if question['options'] %}
             <div class="well well-sm"><strong>A: {{question['options']['A']}}</strong></div>
@@ -13,6 +16,7 @@
             <div class="well well-sm"><strong>D: {{question['options']['D']}}</strong></div>
             <div class="well well-sm"><strong>E: {{question['options']['E']}}</strong></div>
             <div class="well well-sm"><strong>F: {{question['options']['F']}}</strong></div>
+        {% endif %}
         {% endif %}
     </div>
 {% endblock %}
