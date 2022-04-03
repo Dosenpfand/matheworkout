@@ -26,7 +26,7 @@
     {% if fieldsets %}
         <div class="row">
         {% for fieldset_item in fieldsets %}
-            <div class="col-md-6 col-sm-6 hidden-xs">
+            <div class="col-md-6 col-sm-6 col-2">
             <div class="widget">
             {% if fieldset_item[1].get('expanded') == None %}
                 {% set expanded = True %}
