@@ -149,7 +149,8 @@ cython_debug/
 # End of https://www.toptal.com/developers/gitignore/api/flask
 
 # App database
-app.db
+/app.db
+/app_remote.db
 
 # Uploads
 app/static/uploads/**
