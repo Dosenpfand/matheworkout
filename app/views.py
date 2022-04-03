@@ -36,6 +36,12 @@ def get_question(question_model):
 
     return result
 
+def get_question_count(question_model):
+    active_topic_ids = get_active_topics()
+    filter_arg = question_model.topic_id.in_(active_topic_ids)
+    count = db.session.query(question_model).order_by(
+        func.random()).filter(filter_arg).count()
+    return count
 
 def get_active_topics():
     topic_ids = [topic.id for topic in g.user.active_topics]
@@ -55,20 +61,41 @@ class QuestionRandom(BaseView):
     @has_access
     @expose("/questionrandom/", methods=['POST', 'GET'])
     def question_random(self):
-        # TODO: weighted random number according to number of questions
-        rand_type_id = randrange(0, 7)
-
         type_id_to_form = {
-            0: 'Question2of5FormView',
-            1: 'Question1of6FormView',
-            2: 'Question3to3FormView',
-            3: 'Question2DecimalsFormView',
-            4: 'Question1DecimalFormView',
-            5: 'QuestionSelfAssessedFormView',
-            6: 'QuestionSelect4FormView',
+            0: Question2of5,
+            1: Question1of6,
+            2: Question3to3,
+            3: Question2Decimals,
+            4: Question1Decimal,
+            5: QuestionSelfAssessed,
+            6: QuestionSelect4,
         }
 
-        rand_form = type_id_to_form[rand_type_id]
+        type_id_to_count = {}
+        for id, class_name in type_id_to_form.items():
+            type_id_to_count[id] = get_question_count(class_name)
+
+        total_count = sum(type_id_to_count.values())
+
+        if total_count == 0:
+            rand_form = 'Question2of5FormView'
+        else:
+            rand_id = randrange(0, total_count)
+
+            if rand_id < type_id_to_count[0]:
+                rand_form = 'Question2of5FormView'
+            elif rand_id < (type_id_to_count[0] + type_id_to_count[1]):
+                rand_form = 'Question1of6FormView'
+            elif rand_id < (type_id_to_count[0] + type_id_to_count[1] + type_id_to_count[2]):
+                rand_form = 'Question3to3FormView'
+            elif rand_id < (type_id_to_count[0] + type_id_to_count[1] + type_id_to_count[2] + type_id_to_count[3]):
+                rand_form = 'Question2DecimalsView'
+            elif rand_id < (type_id_to_count[0] + type_id_to_count[1] + type_id_to_count[2] + type_id_to_count[3] + type_id_to_count[4]):
+                rand_form = 'Question1DecimalFormView'
+            elif rand_id < (type_id_to_count[0] + type_id_to_count[1] + type_id_to_count[2] + type_id_to_count[3] + type_id_to_count[4] + type_id_to_count[5]):
+                rand_form = 'QuestionSelfAssessedFormView'
+            else:
+                rand_form = 'QuestionSelect4FormView'
 
         return redirect(url_for(f'{rand_form}.this_form_get'))
 
