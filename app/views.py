@@ -220,7 +220,7 @@ class QuestionSelfAssessedFormView(SimpleFormView):
 
         self.extra_args = {'question': {
             'description': description, 'external_id': result.external_id,
-            'submit_text': 'Nächste Aufgabe'},
+            'submit_text': None},
             'form_action': url_for(f'QuestionRandom.question_random')}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
