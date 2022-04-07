@@ -59,7 +59,7 @@ class QuestionRandom(BaseView):
     route_base = "/"
 
     @has_access
-    @expose("/questionrandom/", methods=['POST', 'GET'])
+    @expose("questionrandom/", methods=['POST', 'GET'])
     def question_random(self):
         type_id_to_form = {
             0: Question2of5,
@@ -104,8 +104,12 @@ class Question2of5ModelView(ModelView):
     datamodel = SQLAInterface(Question2of5)
 
     base_filters = [['topic_id', FilterInFunction, get_active_topics]]
-
-    label_columns = {'description_image': 'Description Image'}
+    title = '2 aus 5'
+    list_title = title
+    show_title = title
+    add_title = title
+    edit_title = title
+    label_columns = {'description_image': 'Beschreibung', 'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
     formatters_columns = {'external_id': lambda value: link_formatter(
@@ -202,7 +206,7 @@ class ExtendedEditWidget(RenderTemplateWidget):
 
 class QuestionSelfAssessedFormView(SimpleFormView):
     form = QuestionSelfAssessedForm
-    form_title = 'Self Assessed Test'
+    form_title = 'Selbstkontrolle'
     form_template = 'edit_additional.html'
     edit_widget = ExtendedEditWidget
 
@@ -262,7 +266,7 @@ class QuestionSelfAssessedFormView(SimpleFormView):
 
 class Question2of5FormView(SimpleFormView):
     form = Question2of5Form
-    form_title = '2 of 5 Test'
+    form_title = '2 aus 5'
     form_template = 'edit_additional.html'
     edit_widget = ExtendedEditWidget
 
@@ -368,7 +372,7 @@ class Question2of5FormView(SimpleFormView):
 
 class Question1of6FormView(SimpleFormView):
     form = Question1of6Form
-    form_title = '1 of 6 Test'
+    form_title = '1 aus 6'
     form_template = 'edit_additional.html'
     edit_widget = ExtendedEditWidget
 
@@ -482,7 +486,7 @@ class Question1of6FormView(SimpleFormView):
 
 class Question3to3FormView(SimpleFormView):
     form = Question3to3Form
-    form_title = '3 to 3 Test'
+    form_title = 'Lückentext'
     form_template = 'edit_additional.html'
     edit_widget = ExtendedEditWidget
 
@@ -607,7 +611,7 @@ class Question3to3FormView(SimpleFormView):
 
 class Question2DecimalsFormView(SimpleFormView):
     form = Question2DecimalsForm
-    form_title = '2 Decimals Test'
+    form_title = 'Werteingabe zwei Zahlen'
     form_template = 'edit_additional.html'
     edit_widget = ExtendedEditWidget
 
@@ -685,7 +689,7 @@ class Question2DecimalsFormView(SimpleFormView):
 
 class Question1DecimalFormView(SimpleFormView):
     form = Question1DecimalForm
-    form_title = '1 Decimal Test'
+    form_title = 'Werteingabe eine Zahl'
     form_template = 'edit_additional.html'
     edit_widget = ExtendedEditWidget
 
@@ -723,7 +727,7 @@ class Question1DecimalFormView(SimpleFormView):
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             db.session.commit()
         else:
-            message = f'FALSCH! Correct would have been: {result.value_lower_limit} <= Ergebnis <= {result.value_upper_limit}'
+            message = f'FALSCH! Richtig gewesen wäre: {result.value_lower_limit} <= Ergebnis <= {result.value_upper_limit}'
 
         user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
@@ -748,7 +752,7 @@ class Question1DecimalFormView(SimpleFormView):
 
 class QuestionSelect4FormView(SimpleFormView):
     form = QuestionSelect4Form
-    form_title = 'Select 4 Test'
+    form_title = 'Zuordnung'
     form_template = 'edit_additional.html'
     edit_widget = ExtendedEditWidget
 
@@ -860,118 +864,113 @@ class QuestionSelect4FormView(SimpleFormView):
 db.create_all()
 appbuilder.add_view(
     Question2of5ModelView,
-    "List 2 out of 5 questions",
-    icon="fa-question-circle",
-    category="Questions",
-    category_icon="fa-question",
+    "2 aus 5",
+    icon="fa-align-justify",
+    category="Aufgabenlisten",
+    category_icon="fa-align-justify",
 )
 appbuilder.add_view(
     Question1of6ModelView,
-    "List 1 out of 6 questions",
-    icon="fa-question-circle",
-    category="Questions",
-    category_icon="fa-question",
+    "1 aus 6",
+    icon="fa-align-justify",
+    category="Aufgabenlisten",
+    category_icon="fa-align-justify",
 )
 appbuilder.add_view(
     Question3to3ModelView,
-    "List 3 to 3 questions",
-    icon="fa-question-circle",
-    category="Questions",
-    category_icon="fa-question",
+    "Lückentext",
+    icon="fa-align-justify",
+    category="Aufgabenlisten",
+    category_icon="fa-align-justify",
 )
 appbuilder.add_view(
     Question2DecimalsModelView,
-    "List 2 decimals questions",
-    icon="fa-question-circle",
-    category="Questions",
-    category_icon="fa-question",
+    "Werteingabe zwei Zahlen",
+    icon="fa-align-justify",
+    category="Aufgabenlisten",
+    category_icon="fa-align-justify",
 )
 appbuilder.add_view(
     Question1DecimalModelView,
-    "List 1 decimal questions",
-    icon="fa-question-circle",
-    category="Questions",
-    category_icon="fa-question",
+    "Werteingabe eine Zahl",
+    icon="fa-align-justify",
+    category="Aufgabenlisten",
+    category_icon="fa-align-justify",
 )
 appbuilder.add_view(
     QuestionSelfAssessedModelView,
-    "List self assessed questions",
-    icon="fa-question-circle",
-    category="Questions",
-    category_icon="fa-question",
+    "Selbstkontrolle",
+    icon="fa-align-justify",
+    category="Aufgabenlisten",
+    category_icon="fa-align-justify",
 )
 appbuilder.add_view(
     QuestionSelect4ModelView,
-    "List select 4 questions",
-    icon="fa-question-circle",
-    category="Questions",
-    category_icon="fa-question",
+    "Zuordnung",
+    icon="fa-align-justify",
+    category="Aufgabenlisten",
+    category_icon="fa-align-justify",
 )
 appbuilder.add_view(
     TopicModelView,
-    "List Topics",
-    icon="fa-question-circle",
-    category="Questions",
-    category_icon="fa-question",
+    "Grundkompetenzbereiche",
+    icon="fa-align-justify",
+    category="Aufgabenlisten",
+    category_icon="fa-align-justify",
 )
 appbuilder.add_view(
     QuestionMultipleView,
-    "List all questions",
-    icon="fa-question-circle",
-    category="Questions",
-    category_icon="fa-question",
+    "Alle Aufgaben",
+    icon="fa-align-justify",
+    category="Aufgabenlisten",
+    category_icon="fa-align-justify",
 )
 appbuilder.add_view(
     Question2of5FormView,
-    "2 of 5 Test",
-    icon="fa-group",
-    label=_("2 of 5 Test"),
-    category="Tests",
-    category_icon="fa-cogs")
+    "2 aus 5",
+    icon="fa-question",
+    category="Zufallsaufgaben",
+    category_icon="fa-question")
 appbuilder.add_view(
     Question1of6FormView(),
-    "1 of 6 Test",
-    icon="fa-group",
-    label=_("1 of 6 Test"),
-    category="Tests",
-    category_icon="fa-cogs")
+    "1 aus 6",
+    icon="fa-question",
+    category="Zufallsaufgaben",
+    category_icon="fa-question")
 appbuilder.add_view(
     Question3to3FormView(),
-    "3 to 3 Test",
-    icon="fa-group",
-    label=_("3 to 3 Test"),
-    category="Tests",
-    category_icon="fa-cogs")
+    "Lückentext",
+    icon="fa-question",
+    category="Zufallsaufgaben",
+    category_icon="fa-question")
 appbuilder.add_view(
     Question2DecimalsFormView(),
-    "2 Decimals Test",
-    icon="fa-group",
-    label=_("2 Decimals Test"),
-    category="Tests",
-    category_icon="fa-cogs")
+    "Werteingabe zwei Zahlen",
+    icon="fa-question",
+    category="Zufallsaufgaben",
+    category_icon="fa-question")
 appbuilder.add_view(
     Question1DecimalFormView(),
-    "1 Decimal Test",
-    icon="fa-group",
-    label=_("1 Decimal Test"),
-    category="Tests",
-    category_icon="fa-cogs")
+    "Werteingabe eine Zahl",
+    icon="fa-question",
+    category="Zufallsaufgaben",
+    category_icon="fa-question")
 appbuilder.add_view(
     QuestionSelfAssessedFormView,
-    "Self Assessed Test",
-    icon="fa-group",
-    label=_("Self Assessed Test"),
-    category="Tests",
-    category_icon="fa-cogs")
+    "Selbstkontrolle",
+    icon="fa-question",
+    category="Zufallsaufgaben",
+    category_icon="fa-question")
 appbuilder.add_view(
     QuestionSelect4FormView,
-    "Select 4 Test",
-    icon="fa-group",
-    label=_("Select 4 Test"),
-    category="Tests",
-    category_icon="fa-cogs")
+    "Zuordnung",
+    icon="fa-question",
+    category="Zufallsaufgaben",
+    category_icon="fa-question")
 
 appbuilder.add_view_no_menu(QuestionRandom())
 appbuilder.add_link(
-    "Random Question", href="/questionrandom/", icon="fa-group", category="Tests", category_icon="fa-cogs"
+    "Zufall", href="/questionrandom/", icon="fa-question", category="Zufallsaufgaben", category_icon="fa-question"
 )
+
+appbuilder.security_cleanup()
