@@ -3,11 +3,7 @@ from flask_babel import lazy_gettext
 
 
 class ExtendedUserDBModelView(UserDBModelView):
-    """
-        View that add DB specifics to User view.
-        Override to implement your own custom view.
-        Then override userdbmodelview property on SecurityManager
-    """
+    label_columns = {'username': 'Benutzername', 'learning_group': 'Klasse', 'tried_questions': 'Gelöste Aufgaben', 'correct_questions': 'Richtig gelöste Aufgaben', 'first_name': 'Vorname', 'last_name': 'Nachname', 'email': 'E-Mail'}
 
     show_fieldsets = [
         (lazy_gettext('User info'),
@@ -21,7 +17,7 @@ class ExtendedUserDBModelView(UserDBModelView):
 
     user_show_fieldsets = [
         (lazy_gettext('User info'),
-         {'fields': ['username', 'active', 'roles', 'login_count', 'learning_group', 'tried_questions', 'correct_questions']}),
+         {'fields': ['username', 'learning_group', 'tried_questions', 'correct_questions']}),
         (lazy_gettext('Personal Info'),
          {'fields': ['first_name', 'last_name', 'email'], 'expanded': True}),
     ]

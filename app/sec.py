@@ -7,6 +7,7 @@ from .sec_forms import ExtendedUserInfoEdit
 
 class ExtendedUserInfoEditView(UserInfoEditView):
     form = ExtendedUserInfoEdit
+    form_title = 'Benutzerinformationen bearbeiten'
 
 
 class ExtendedSecurityManager(SecurityManager):

@@ -20,3 +20,4 @@ flask run
 - [ ] All teachers can see all users
 - [ ] Test flow, after finished one task -> next task, or return to list
 - [ ] Detailed user statistics: Which questions correct/incorrect answered -> repeat incorrect, statistic per topic
+- [ ] Selbstkontrolle: Nächste Aufgabe gibt immer random

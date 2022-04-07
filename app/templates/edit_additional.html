@@ -27,6 +27,9 @@
         <div class="well well-sm"><strong>Frage Nr.: {{question['external_id']}}</strong></div>
         {% endif %}
         <div class="well well-sm"><strong>{{question['description']}}</strong></div>
+        {% if question['after_description'] %}
+        <div class="well well-sm">{{question['after_description']}}</div>
+        {% endif %}
         {% if not question['error'] %}
         {{ widgets.get('edit')(form_action=form_action,submit_text=question['submit_text'],additional_col=additional_col)|safe }}
         {% endif %}

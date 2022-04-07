@@ -241,16 +241,19 @@ class QuestionSelfAssessedFormView(SimpleFormView):
         result = db.session.query(
             QuestionSelfAssessed).filter_by(id=id).first()
 
-        random_url = url_for(f'QuestionRandom.question_random')
+        random_url = url_for('QuestionRandom.question_random')
         solution_img = result.solution_image_img()
-        correct_link = f'<a href="{random_url}?answer=CORRECT">RICHTIG</a>'
-        incorrect_link = f'<a href="{random_url}?answer=INCORRECT">FALSCH</a>'
-        description = Markup(f'{solution_img} {correct_link} {incorrect_link}')
+        correct_link = f'<a class="btn btn-primary" href="{random_url}?answer=CORRECT">Richtig</a>'
+        incorrect_link = f'<a class="btn btn-primary" href="{random_url}?answer=INCORRECT">Falsch</a>'
+        description = Markup(f'{solution_img}')
+        after_description = Markup(f'{correct_link} {incorrect_link}')
 
         self.extra_args = {'question': {
-            'description': description, 'external_id': result.external_id,
+            'description': description,
+            'after_description': after_description,
+            'external_id': result.external_id,
             'submit_text': None},
-            'form_action': url_for(f'QuestionRandom.question_random')}
+            'form_action': url_for('QuestionRandom.question_random')}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
         widgets = self._get_edit_widget(form=form)
@@ -356,7 +359,7 @@ class Question2of5FormView(SimpleFormView):
         self.extra_args = {'question': {'description': result.description_image_img(),
                                         'external_id': result.external_id,
                                         'submit_text': 'Nächste Aufgabe'},
-                           'form_action': url_for(f'QuestionRandom.question_random')}
+                           'form_action': url_for('QuestionRandom.question_random')}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
         widgets = self._get_edit_widget(form=form)
@@ -470,7 +473,7 @@ class Question1of6FormView(SimpleFormView):
         self.extra_args = {'question': {'description': result.description_image_img(),
                            'external_id': result.external_id,
                            'submit_text': 'Nächste Aufgabe'},
-                           'form_action': url_for(f'QuestionRandom.question_random')}
+                           'form_action': url_for('QuestionRandom.question_random')}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
         widgets = self._get_edit_widget(form=form)
@@ -595,7 +598,7 @@ class Question3to3FormView(SimpleFormView):
         self.extra_args = {'question': {'description': result.description_image_img(),
                                         'external_id': result.external_id,
                                         'submit_text': 'Nächste Aufgabe'},
-                           'form_action': url_for(f'QuestionRandom.question_random')}
+                           'form_action': url_for('QuestionRandom.question_random')}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
         widgets = self._get_edit_widget(form=form)
@@ -673,7 +676,7 @@ class Question2DecimalsFormView(SimpleFormView):
         self.extra_args = {'question': {'description': result.description_image_img(),
                                         'external_id': result.external_id,
                                         'submit_text': 'Nächste Aufgabe'},
-                           'form_action': url_for(f'QuestionRandom.question_random')}
+                           'form_action': url_for('QuestionRandom.question_random')}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
         widgets = self._get_edit_widget(form=form)
@@ -736,7 +739,7 @@ class Question1DecimalFormView(SimpleFormView):
         self.extra_args = {'question': {'description': result.description_image_img(),
                                         'external_id': result.external_id,
                                         'submit_text': 'Nächste Aufgabe'},
-                           'form_action': url_for(f'QuestionRandom.question_random')}
+                           'form_action': url_for('QuestionRandom.question_random')}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
         widgets = self._get_edit_widget(form=form)
@@ -847,7 +850,7 @@ class QuestionSelect4FormView(SimpleFormView):
         self.extra_args = {'question': {'description': result.description_image_img(),
                                         'external_id': result.external_id,
                                         'submit_text': 'Nächste Aufgabe'},
-                           'form_action': url_for(f'QuestionRandom.question_random')}
+                           'form_action': url_for('QuestionRandom.question_random')}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
         widgets = self._get_edit_widget(form=form)

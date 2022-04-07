@@ -11,8 +11,9 @@ from . import db
 
 
 class ExtendedUserInfoEdit(DynamicForm):
-    learning_group = StringField()
+    learning_group = StringField(label='Klasse')
     active_topics = QuerySelectMultipleField(
+        label='Aktive Grundkompetenzbereiche',
         query_func=lambda: db.session.query(Topic),
         get_pk_func=lambda x: x,
         validators=None,

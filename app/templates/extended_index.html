@@ -2,8 +2,20 @@
 {% block content %}
 <div class="jumbotron">
   <div class="container">
+    {% if current_user.is_authenticated %}
+    <h1>Hallo {{current_user.first_name}}</h1>
+    {% else %}
     <h1>{{_("Willkommen")}}</h1>
-    <p>{{_("Hier kannst du Grundkompetenzaufgaben üben.")}}</p>
+    {% endif %}
+
+    <p>{{_("Auf dieser Seite kannst du Mathematik-Grundkompetenzaufgaben üben.")}}</p>
+    <p>
+    {% if current_user.is_authenticated %}
+    Um loszulegen, wähle einen Aufgabentyp aus den Menüs oben aus, oder starte einfach mit <a href="{{ url_for("QuestionRandom.question_random") }}">einer Zufallsaufgabe</a>.
+    {% else %}
+    Falls du schon mal hier warst, kannst du dich <a href="{{ url_for("AuthDBView.login") }}">hier anmelden</a>. Wenn du neu hier bist, kannst du dich <a href="{{ url_for("AuthDBView.login") }}">hier registrieren</a>.
+    {% endif %}
+    </p>
   </div>
 </div>
 {% endblock %}
