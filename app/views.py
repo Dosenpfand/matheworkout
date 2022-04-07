@@ -120,8 +120,8 @@ class Question1of6ModelView(ModelView):
     datamodel = SQLAInterface(Question1of6)
 
     base_filters = [['topic_id', FilterInFunction, get_active_topics]]
-
-    label_columns = {'description_image': 'Description Image'}
+    title = '1 aus 6'
+    label_columns = {'description_image': 'Beschreibung', 'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
     formatters_columns = {'external_id': lambda value: link_formatter(
@@ -132,8 +132,8 @@ class Question3to3ModelView(ModelView):
     datamodel = SQLAInterface(Question3to3)
 
     base_filters = [['topic_id', FilterInFunction, get_active_topics]]
-
-    label_columns = {'description_image': 'Description Image'}
+    title = 'Lückentext'
+    label_columns = {'description_image': 'Beschreibung', 'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
     formatters_columns = {'external_id': lambda value: link_formatter(
@@ -144,8 +144,8 @@ class Question2DecimalsModelView(ModelView):
     datamodel = SQLAInterface(Question2Decimals)
 
     base_filters = [['topic_id', FilterInFunction, get_active_topics]]
-
-    label_columns = {'description_image': 'Description Image'}
+    title = 'Werteingabe zwei Zahlen'
+    label_columns = {'description_image': 'Beschreibung', 'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
     formatters_columns = {'external_id': lambda value: link_formatter(
@@ -156,8 +156,8 @@ class Question1DecimalModelView(ModelView):
     datamodel = SQLAInterface(Question1Decimal)
 
     base_filters = [['topic_id', FilterInFunction, get_active_topics]]
-
-    label_columns = {'description_image': 'Description Image'}
+    title = 'Werteingabe eine Zahl'
+    label_columns = {'description_image': 'Beschreibung', 'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
     formatters_columns = {'external_id': lambda value: link_formatter(
@@ -168,9 +168,8 @@ class QuestionSelfAssessedModelView(ModelView):
     datamodel = SQLAInterface(QuestionSelfAssessed)
 
     base_filters = [['topic_id', FilterInFunction, get_active_topics]]
-
-    label_columns = {'description_image': 'Description Image',
-                     'solution_image': 'Solution Image'}
+    title = 'Selbstkontrolle'
+    label_columns = {'description_image': 'Beschreibung', 'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'solution_image_img']
     formatters_columns = {'external_id': lambda value: link_formatter(
@@ -181,9 +180,8 @@ class QuestionSelect4ModelView(ModelView):
     datamodel = SQLAInterface(QuestionSelect4)
 
     base_filters = [['topic_id', FilterInFunction, get_active_topics]]
-
-    label_columns = {'description_image': 'Description Image',
-                     'solution_image': 'Solution Image'}
+    title = 'Zuordnung'
+    label_columns = {'description_image': 'Beschreibung', 'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'solution_image_img']
     formatters_columns = {'external_id': lambda value: link_formatter(
