@@ -8,6 +8,9 @@ from . import db
 
 def safe_math_eval(string):
     allowed_chars = "0123456789+-*(). /"
+    if string == '':
+        return ''
+
     for char in string:
         if char not in allowed_chars:
             return ''

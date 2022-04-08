@@ -3,45 +3,45 @@ from flask_appbuilder import ModelView, BaseView, SimpleFormView, MultipleView, 
 from flask_appbuilder.charts.views import GroupByChartView
 from flask_appbuilder.models.group import aggregate_count
 from flask_appbuilder.models.sqla.interface import SQLAInterface
-from flask_appbuilder.models.sqla.filters import FilterInFunction
+from flask_appbuilder.models.sqla.filters import FilterInFunction, FilterEqual
 from flask_appbuilder.widgets import RenderTemplateWidget
-from flask_babel import lazy_gettext as _
+from flask_appbuilder.models.sqla.filters import BaseFilter, get_field_setup_query
 from flask import render_template, flash, redirect, url_for, Markup, g, request, Markup
 from . import appbuilder, db
 from .forms import Question2of5Form, Question1of6Form, Question3to3Form, QuestionSelfAssessedForm, Question2DecimalsForm, Question1DecimalForm, QuestionSelect4Form
-from .models import Question2of5, Question1of6, Question3to3, Topic, QuestionSelfAssessed, Question2Decimals, Question1Decimal, QuestionSelect4
-from .sec_models import ExtendedUser
-from flask_appbuilder.security.views import UserDBModelView
-from flask_babel import lazy_gettext
+from .models import Topic, Question, QuestionType
+from .sec_models import ExtendedUser, AssocUserQuestion
 from sqlalchemy.sql.expression import func, select
-import logging
+from wtforms import HiddenField
 
 
-def link_formatter(form_view_name, external_id):
-    form_url = url_for(f'{form_view_name}.this_form_get')
-    return Markup(f'<a href="{form_url}?ext_id={external_id}">{external_id}</a>')
+def link_formatter(external_id):
+    url = url_for(f'ExtIdToForm.ext_id_to_form', ext_id=external_id)
+    return Markup(f'<a href="{url}">{external_id}</a>')
 
 
-def get_question(question_model):
+def get_question(type):
     request_id = request.args.get('ext_id')
 
     if request_id:
-        result = db.session.query(question_model).filter_by(
-            external_id=request_id).first()
+        result = db.session.query(Question).filter_by(
+            external_id=request_id, type=type).first()
     else:
         active_topic_ids = get_active_topics()
-        filter_arg = question_model.topic_id.in_(active_topic_ids)
-        result = db.session.query(question_model).order_by(
-            func.random()).filter(filter_arg).first()
+        filter_arg = Question.topic_id.in_(active_topic_ids)
+        result = db.session.query(Question).order_by(
+            func.random()).filter(filter_arg).filter_by(type=type).first()
 
     return result
 
-def get_question_count(question_model):
+
+def get_question_count(type):
     active_topic_ids = get_active_topics()
-    filter_arg = question_model.topic_id.in_(active_topic_ids)
-    count = db.session.query(question_model).order_by(
-        func.random()).filter(filter_arg).count()
+    filter_arg = Question.topic_id.in_(active_topic_ids)
+    count = db.session.query(Question).order_by(
+        func.random()).filter(filter_arg).filter_by(type=type).count()
     return count
+
 
 def get_active_topics():
     topic_ids = [topic.id for topic in g.user.active_topics]
@@ -62,13 +62,13 @@ class QuestionRandom(BaseView):
     @expose("questionrandom/", methods=['POST', 'GET'])
     def question_random(self):
         type_id_to_form = {
-            0: Question2of5,
-            1: Question1of6,
-            2: Question3to3,
-            3: Question2Decimals,
-            4: Question1Decimal,
-            5: QuestionSelfAssessed,
-            6: QuestionSelect4,
+            0: QuestionType.two_of_five.value,
+            1: QuestionType.one_of_six.value,
+            2: QuestionType.three_to_three.value,
+            3: QuestionType.two_decimals.value,
+            4: QuestionType.one_decimal.value,
+            5: QuestionType.self_assessed.value,
+            6: QuestionType.select_four.value,
         }
 
         type_id_to_count = {}
@@ -100,98 +100,176 @@ class QuestionRandom(BaseView):
         return redirect(url_for(f'{rand_form}.this_form_get'))
 
 
-class Question2of5ModelView(ModelView):
-    datamodel = SQLAInterface(Question2of5)
+class ExtIdToForm(BaseView):
+    route_base = "/"
 
-    base_filters = [['topic_id', FilterInFunction, get_active_topics]]
+    @has_access
+    @expose("extidtoform/<ext_id>", methods=['GET'])
+    def ext_id_to_form(self, ext_id):
+        question = db.session.query(Question).filter_by(
+            external_id=ext_id).first()
+        type = question.type.value
+
+        type_to_form = {
+            QuestionType.two_of_five.value: 'Question2of5FormView',
+            QuestionType.one_of_six.value: 'Question1of6FormView',
+            QuestionType.three_to_three: 'Question3to3FormView',
+            QuestionType.two_decimals.value: 'Question2DecimalsFormView',
+            QuestionType.one_decimal.value: 'Question1DecimalFormView',
+            QuestionType.self_assessed.value: 'QuestionSelfAssessedFormView',
+            QuestionType.select_four.value: 'QuestionSelect4FormView',
+        }
+
+        form = type_to_form[type]
+        url = url_for(f'{form}.this_form_get')
+
+        return redirect(f'{url}?ext_id={ext_id}')
+
+
+class Question2of5ModelView(ModelView):
+    datamodel = SQLAInterface(Question)
+    base_filters = [['topic_id', FilterInFunction, get_active_topics], [
+        'type', FilterEqual, QuestionType.two_of_five.value]]
     title = '2 aus 5'
+    add_columns = Question.cols_two_of_five
+    add_form_extra_fields = {'type': HiddenField(
+        default=QuestionType.two_of_five.value)}
     list_title = title
     show_title = title
     add_title = title
     edit_title = title
-    label_columns = {'description_image': 'Beschreibung', 'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich'}
+    label_columns = {'description_image': 'Beschreibung',
+                     'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
-    formatters_columns = {'external_id': lambda value: link_formatter(
-        'Question2of5FormView', value)}
+    formatters_columns = {'external_id': link_formatter}
 
 
 class Question1of6ModelView(ModelView):
-    datamodel = SQLAInterface(Question1of6)
-
-    base_filters = [['topic_id', FilterInFunction, get_active_topics]]
+    datamodel = SQLAInterface(Question)
+    base_filters = [['topic_id', FilterInFunction, get_active_topics], [
+        'type', FilterEqual, QuestionType.two_decimals.value]]
     title = '1 aus 6'
-    label_columns = {'description_image': 'Beschreibung', 'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich'}
+    add_columns = Question.cols_one_of_six
+    add_form_extra_fields = {'type': HiddenField(
+        default=QuestionType.one_of_six.value)}
+    label_columns = {'description_image': 'Beschreibung',
+                     'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
-    formatters_columns = {'external_id': lambda value: link_formatter(
-        'Question1of6FormView', value)}
+    formatters_columns = {'external_id': link_formatter}
 
 
 class Question3to3ModelView(ModelView):
-    datamodel = SQLAInterface(Question3to3)
-
-    base_filters = [['topic_id', FilterInFunction, get_active_topics]]
+    datamodel = SQLAInterface(Question)
+    base_filters = [['topic_id', FilterInFunction, get_active_topics], [
+        'type', FilterEqual, QuestionType.three_to_three.value]]
     title = 'Lückentext'
-    label_columns = {'description_image': 'Beschreibung', 'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich'}
+    add_columns = Question.cols_three_to_three
+    add_form_extra_fields = {'type': HiddenField(
+        default=QuestionType.three_to_three.value)}
+    label_columns = {'description_image': 'Beschreibung',
+                     'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
-    formatters_columns = {'external_id': lambda value: link_formatter(
-        'Question3to3FormView', value)}
+    formatters_columns = {'external_id': link_formatter}
 
 
 class Question2DecimalsModelView(ModelView):
-    datamodel = SQLAInterface(Question2Decimals)
-
-    base_filters = [['topic_id', FilterInFunction, get_active_topics]]
+    datamodel = SQLAInterface(Question)
+    base_filters = [['topic_id', FilterInFunction, get_active_topics], [
+        'type', FilterEqual, QuestionType.two_decimals.value]]
     title = 'Werteingabe zwei Zahlen'
-    label_columns = {'description_image': 'Beschreibung', 'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich'}
+    add_columns = Question.cols_two_decimals
+    add_form_extra_fields = {'type': HiddenField(
+        default=QuestionType.two_decimals.value)}
+    label_columns = {'description_image': 'Beschreibung',
+                     'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
-    formatters_columns = {'external_id': lambda value: link_formatter(
-        'Question2DecimalsFormView', value)}
+    formatters_columns = {'external_id': link_formatter}
 
 
 class Question1DecimalModelView(ModelView):
-    datamodel = SQLAInterface(Question1Decimal)
-
-    base_filters = [['topic_id', FilterInFunction, get_active_topics]]
+    datamodel = SQLAInterface(Question)
+    base_filters = [['topic_id', FilterInFunction, get_active_topics], [
+        'type', FilterEqual, QuestionType.one_decimal.value]]
     title = 'Werteingabe eine Zahl'
-    label_columns = {'description_image': 'Beschreibung', 'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich'}
+    add_columns = Question.cols_one_decimal
+    add_form_extra_fields = {'type': HiddenField(
+        default=QuestionType.one_decimal.value)}
+    label_columns = {'description_image': 'Beschreibung',
+                     'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
-    formatters_columns = {'external_id': lambda value: link_formatter(
-        'Question1DecimalFormView', value)}
+    formatters_columns = {'external_id': link_formatter}
 
 
 class QuestionSelfAssessedModelView(ModelView):
-    datamodel = SQLAInterface(QuestionSelfAssessed)
-
-    base_filters = [['topic_id', FilterInFunction, get_active_topics]]
+    datamodel = SQLAInterface(Question)
+    base_filters = [['topic_id', FilterInFunction, get_active_topics], [
+        'type', FilterEqual, QuestionType.self_assessed.value]]
     title = 'Selbstkontrolle'
-    label_columns = {'description_image': 'Beschreibung', 'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich'}
+    add_columns = Question.cols_self_assessed
+    add_form_extra_fields = {'type': HiddenField(
+        default=QuestionType.self_assessed.value)}
+    label_columns = {'description_image': 'Beschreibung',
+                     'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'solution_image_img']
-    formatters_columns = {'external_id': lambda value: link_formatter(
-        'QuestionSelfAssessedFormView', value)}
+    formatters_columns = {'external_id': link_formatter}
 
 
 class QuestionSelect4ModelView(ModelView):
-    datamodel = SQLAInterface(QuestionSelect4)
-
-    base_filters = [['topic_id', FilterInFunction, get_active_topics]]
+    datamodel = SQLAInterface(Question)
+    base_filters = [['topic_id', FilterInFunction, get_active_topics], [
+        'type', FilterEqual, QuestionType.self_assessed.value]]
     title = 'Zuordnung'
-    label_columns = {'description_image': 'Beschreibung', 'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich'}
+    add_columns = Question.cols_select_four
+    add_form_extra_fields = {'type': HiddenField(
+        default=QuestionType.select_four.value)}
+    label_columns = {'description_image': 'Beschreibung',
+                     'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich'}
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'solution_image_img']
-    formatters_columns = {'external_id': lambda value: link_formatter(
-        'QuestionSelect4FormView', value)}
+    formatters_columns = {'external_id': link_formatter}
+
+class FilterQuestionByAnsweredCorrectness(BaseFilter):
+    name = "Filters for incorrectly answered questions"
+    arg_name = None
+
+    def apply(self, query, is_answer_correct):
+        return query.filter(Question.answered_users.any(user_id=g.user.id, is_answer_correct=is_answer_correct))
+
+class QuestionModelView(ModelView):
+    datamodel = SQLAInterface(Question)
+    base_filters = [['topic_id', FilterInFunction, get_active_topics]]
+    title = 'Aufgaben'
+    label_columns = {'description_image': 'Beschreibung',
+                     'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich'}
+    list_columns = ['external_id', 'topic']
+    formatters_columns = {'external_id': link_formatter}
 
 
-class QuestionMultipleView(MultipleView):
-    views = [Question2of5ModelView, Question1of6ModelView, Question3to3ModelView,
-             Question2DecimalsModelView, Question1DecimalModelView, QuestionSelfAssessedModelView,
-             QuestionSelect4ModelView]
+class QuestionModelIncorrectAnsweredView(ModelView):
+    datamodel = SQLAInterface(Question)
+    base_filters = [['topic_id', FilterInFunction, get_active_topics],
+                    ['', FilterQuestionByAnsweredCorrectness, False]]
+    title = 'Aufgaben'
+    label_columns = {'description_image': 'Beschreibung',
+                     'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich'}
+    list_columns = ['external_id', 'topic']
+    formatters_columns = {'external_id': link_formatter}
+
+class QuestionModelCorrectAnsweredView(ModelView):
+    datamodel = SQLAInterface(Question)
+    base_filters = [['topic_id', FilterInFunction, get_active_topics],
+                    ['', FilterQuestionByAnsweredCorrectness, True]]
+    title = 'Aufgaben'
+    label_columns = {'description_image': 'Beschreibung',
+                     'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich'}
+    list_columns = ['external_id', 'topic']
+    formatters_columns = {'external_id': link_formatter}
 
 
 class TopicModelView(ModelView):
@@ -210,7 +288,8 @@ class QuestionSelfAssessedFormView(SimpleFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        question_result = get_question(QuestionSelfAssessed)
+        question_result = get_question(
+            QuestionType.self_assessed.value)
 
         if question_result == None:
             description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
@@ -238,8 +317,7 @@ class QuestionSelfAssessedFormView(SimpleFormView):
     def form_post(self, form):
         self.update_redirect()
         id = form.id.data
-        result = db.session.query(
-            QuestionSelfAssessed).filter_by(id=id).first()
+        result = db.session.query(Question).filter_by(id=id).first()
 
         random_url = url_for('QuestionRandom.question_random')
         solution_img = result.solution_image_img()
@@ -274,7 +352,7 @@ class Question2of5FormView(SimpleFormView):
     def form_get(self, form):
         self.update_redirect()
 
-        question_result = get_question(Question2of5)
+        question_result = get_question(QuestionType.two_of_five.value)
         if question_result == None:
             description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
             external_id = None
@@ -305,7 +383,8 @@ class Question2of5FormView(SimpleFormView):
     def form_post(self, form):
         self.update_redirect()
         id = form.id.data
-        result = db.session.query(Question2of5).filter_by(id=id).first()
+        result = db.session.query(Question).filter_by(
+            id=id, type=QuestionType.two_of_five.value).first()
         form.checkbox1.label.text = result.get_option_image(
             result.option1_image)
         form.checkbox2.label.text = result.get_option_image(
@@ -379,7 +458,7 @@ class Question1of6FormView(SimpleFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        question_result = get_question(Question1of6)
+        question_result = get_question(QuestionType.one_of_six.value)
         if question_result == None:
             description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
             external_id = None
@@ -412,7 +491,8 @@ class Question1of6FormView(SimpleFormView):
     def form_post(self, form):
         self.update_redirect()
         id = form.id.data
-        result = db.session.query(Question1of6).filter_by(id=id).first()
+        result = db.session.query(Question).filter_by(
+            id=id, type=QuestionType.one_of_six.value).first()
         form.checkbox1.label.text = result.get_option_image(
             result.option1_image)
         form.checkbox2.label.text = result.get_option_image(
@@ -472,7 +552,7 @@ class Question1of6FormView(SimpleFormView):
 
         self.extra_args = {'question': {'description': result.description_image_img(),
                            'external_id': result.external_id,
-                           'submit_text': 'Nächste Aufgabe'},
+                                        'submit_text': 'Nächste Aufgabe'},
                            'form_action': url_for('QuestionRandom.question_random')}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
@@ -504,7 +584,8 @@ class Question3to3FormView(SimpleFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        question_result = get_question(Question3to3)
+        question_result = get_question(
+            QuestionType.three_to_three.value)
         if question_result == None:
             description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
             external_id = None
@@ -537,7 +618,8 @@ class Question3to3FormView(SimpleFormView):
     def form_post(self, form):
         self.update_redirect()
         id = form.id.data
-        result = db.session.query(Question3to3).filter_by(id=id).first()
+        result = db.session.query(Question).filter_by(
+            id=id, type=QuestionType.three_to_three.value).first()
         form.checkbox1a.label.text = result.get_option_image(
             result.option1a_image)
         form.checkbox1b.label.text = result.get_option_image(
@@ -618,7 +700,7 @@ class Question2DecimalsFormView(SimpleFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        question_result = get_question(Question2Decimals)
+        question_result = get_question(QuestionType.two_decimals.value)
         if question_result == None:
             description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
             external_id = None
@@ -641,7 +723,8 @@ class Question2DecimalsFormView(SimpleFormView):
     def form_post(self, form):
         self.update_redirect()
         id = form.id.data
-        result = db.session.query(Question2Decimals).filter_by(id=id).first()
+        result = db.session.query(Question).filter_by(
+            id=id, type=QuestionType.two_decimals.value).first()
         form.value1.label.text = 'Ergebnis 1'
         form.value2.label.text = 'Ergebnis 2'
         value1_correct = False
@@ -687,7 +770,6 @@ class Question2DecimalsFormView(SimpleFormView):
             appbuilder=self.appbuilder,
         )
 
-
 class Question1DecimalFormView(SimpleFormView):
     form = Question1DecimalForm
     form_title = 'Werteingabe eine Zahl'
@@ -696,7 +778,7 @@ class Question1DecimalFormView(SimpleFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        question_result = get_question(Question1Decimal)
+        question_result = get_question(QuestionType.one_decimal.value)
         if question_result == None:
             description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
             external_id = None
@@ -717,22 +799,37 @@ class Question1DecimalFormView(SimpleFormView):
     def form_post(self, form):
         self.update_redirect()
         id = form.id.data
-        result = db.session.query(Question1Decimal).filter_by(id=id).first()
+        result = db.session.query(Question).filter_by(
+            id=id, type=QuestionType.one_decimal.value).first()
         form.value.label.text = 'Ergebnis'
         message = 'FALSCH!'
 
-        if (form.value.data <= result.value_upper_limit) and (form.value.data >= result.value_lower_limit):
+        if (form.value.data <= result.value1_upper_limit) and (form.value.data >= result.value1_lower_limit):
             form.value.description = 'Richtig'
             message = 'RICHTIG!'
             user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             db.session.commit()
+            is_answer_correct = True
         else:
-            message = f'FALSCH! Richtig gewesen wäre: {result.value_lower_limit} <= Ergebnis <= {result.value_upper_limit}'
+            message = f'FALSCH! Richtig gewesen wäre: {result.value1_lower_limit} <= Ergebnis <= {result.value1_upper_limit}'
+            is_answer_correct = False
 
         user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
-        db.session.commit()
+
+        # Add entry to answered questions
+        # TODO: for all question types
+        answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)
+        answered_question.question = result
+        g.user.answered_questions.append(answered_question)
+
+        # TODO: for all commits
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            log.error(c.LOGMSG_ERR_SEC_UPD_USER.format(str(e)))
 
         flash(message, 'info')
 
@@ -760,13 +857,14 @@ class QuestionSelect4FormView(SimpleFormView):
     form_fieldsets = [
         (
             'Antworten',
-            {'fields': ['selection1', 'selection2', 'selection3', 'selection4']}
+            {'fields': ['selection1', 'selection2',
+                        'selection3', 'selection4']}
         ),
     ]
 
     def form_get(self, form):
         self.update_redirect()
-        question_result = get_question(QuestionSelect4)
+        question_result = get_question(QuestionType.select_four)
         if question_result == None:
             description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
             external_id = None
@@ -803,7 +901,8 @@ class QuestionSelect4FormView(SimpleFormView):
     def form_post(self, form):
         self.update_redirect()
         id = form.id.data
-        result = db.session.query(QuestionSelect4).filter_by(id=id).first()
+        result = db.session.query(Question).filter_by(
+            id=id, type=QuestionType.select_four.value).first()
         form.selection1.label.text = result.get_selection_image(
             result.selection1_image)
         form.selection2.label.text = result.get_selection_image(
@@ -860,6 +959,17 @@ class QuestionSelect4FormView(SimpleFormView):
             widgets=widgets,
             appbuilder=self.appbuilder,
         )
+
+class AssocUserQuestionModelView(ModelView):
+    datamodel = SQLAInterface(AssocUserQuestion)
+    list_columns = ['user', 'question', 'created_on', 'is_answer_correct']
+
+appbuilder.add_view(
+    AssocUserQuestionModelView,
+    "Beantwortete Fragen",
+    icon="fa-question",
+    category="Security",
+    category_icon="fa-question")
 
 
 db.create_all()
@@ -920,8 +1030,22 @@ appbuilder.add_view(
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
-    QuestionMultipleView,
+    QuestionModelView,
     "Alle Aufgaben",
+    icon="fa-align-justify",
+    category="Aufgabenlisten",
+    category_icon="fa-align-justify",
+)
+appbuilder.add_view(
+    QuestionModelIncorrectAnsweredView,
+    "Falsch beantwortete Aufgaben",
+    icon="fa-align-justify",
+    category="Aufgabenlisten",
+    category_icon="fa-align-justify",
+)
+appbuilder.add_view(
+    QuestionModelCorrectAnsweredView,
+    "Richtig beantwortete Aufgaben",
     icon="fa-align-justify",
     category="Aufgabenlisten",
     category_icon="fa-align-justify",
@@ -973,5 +1097,7 @@ appbuilder.add_view_no_menu(QuestionRandom())
 appbuilder.add_link(
     "Zufall", href="/questionrandom/", icon="fa-question", category="Zufallsaufgaben", category_icon="fa-question"
 )
+appbuilder.add_view_no_menu(ExtIdToForm())
 
-appbuilder.security_cleanup()
+# TODO: activate?
+# appbuilder.security_cleanup()

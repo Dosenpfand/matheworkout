@@ -8,7 +8,6 @@ from .sec_models import ExtendedUser
 from config import AUTH_ROLE_ADMIN
 
 
-# TODO: pull request?
 class FilterInFunctionWithNone(BaseFilter):
     name = "Filter view where field is in a list returned by a function supporting None being in the list"
     arg_name = "infwnone"
@@ -94,5 +93,6 @@ class ExtendedUserDBModelView(UserDBModelView):
         'learning_group',
         'tried_questions',
         'correct_questions',
-        'active_topics'
+        'active_topics',
+        'answered_questions'
     ]
