@@ -3,3 +3,4 @@ flask-mail==0.9.1
 Pillow==8.4.0
 werkzeug<2.1.0 # temporary needed for FAB
 jinja2<3.1.0 # temporary needed for FAB
+psycopg2-binary==2.9.3 # for postgresql
