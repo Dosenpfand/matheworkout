@@ -28,7 +28,7 @@ class FilterInFunctionWithNone(BaseFilter):
 def get_learning_groups():
     if AUTH_ROLE_ADMIN in [role.name for role in g.user.roles]:
         results = db.session.query(ExtendedUser).distinct(
-            ExtendedUser.learning_group).group_by(ExtendedUser.learning_group).all()
+            ExtendedUser.learning_group).all()
         learning_groups = [result.learning_group for result in results]
     else:
         learning_groups = [g.user.learning_group]
