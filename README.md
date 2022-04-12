@@ -18,3 +18,4 @@ flask run
 - [ ] Detailed user statistics: Which questions correct/incorrect answered -> repeat incorrect, statistic per topic
 - [ ] Selbstkontrolle: Nächste Aufgabe gibt immer random
 - [ ] lehrer kann aufgabensammlung (set an aufgaben) zusammenstellen und sie klassen (schülern) zuweisen, und ergebnisse kontrollieren
+- [ ] schüler kann aufgaben markieren -> liste
