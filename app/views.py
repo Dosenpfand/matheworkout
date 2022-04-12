@@ -113,7 +113,7 @@ class ExtIdToForm(BaseView):
         type_to_form = {
             QuestionType.two_of_five.value: 'Question2of5FormView',
             QuestionType.one_of_six.value: 'Question1of6FormView',
-            QuestionType.three_to_three: 'Question3to3FormView',
+            QuestionType.three_to_three.value: 'Question3to3FormView',
             QuestionType.two_decimals.value: 'Question2DecimalsFormView',
             QuestionType.one_decimal.value: 'Question1DecimalFormView',
             QuestionType.self_assessed.value: 'QuestionSelfAssessedFormView',
@@ -148,7 +148,7 @@ class Question2of5ModelView(ModelView):
 class Question1of6ModelView(ModelView):
     datamodel = SQLAInterface(Question)
     base_filters = [['topic_id', FilterInFunction, get_active_topics], [
-        'type', FilterEqual, QuestionType.two_decimals.value]]
+        'type', FilterEqual, QuestionType.one_of_six.value]]
     title = '1 aus 6'
     add_columns = Question.cols_one_of_six
     add_form_extra_fields = {'type': HiddenField(
