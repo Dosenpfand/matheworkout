@@ -76,7 +76,7 @@ class Question2of5(Model):
                       '" alt="Photo" class="img-rounded img-responsive">')
 
     def __repr__(self):
-        return self.title
+        return str(self.external_id)
 
 
 class Question1of6(Model):
@@ -109,7 +109,7 @@ class Question1of6(Model):
                       '" alt="Photo" class="img-rounded img-responsive">')
 
     def __repr__(self):
-        return self.title
+        return str(self.external_id)
 
 
 class Question3to3(Model):
@@ -142,7 +142,7 @@ class Question3to3(Model):
                       '" alt="Photo" class="img-rounded img-responsive">')
 
     def __repr__(self):
-        return self.title
+        return str(self.external_id)
 
 
 class Question2Decimals(Model):
@@ -162,7 +162,7 @@ class Question2Decimals(Model):
                       '" alt="Photo" class="img-rounded img-responsive">')
 
     def __repr__(self):
-        return self.title
+        return str(self.external_id)
 
 
 class Question1Decimal(Model):
@@ -180,7 +180,7 @@ class Question1Decimal(Model):
                       '" alt="Photo" class="img-rounded img-responsive">')
 
     def __repr__(self):
-        return self.title
+        return str(self.external_id)
 
 
 class QuestionSelect4(Model):
@@ -220,4 +220,4 @@ class QuestionSelect4(Model):
                       '" alt="Photo" class="img-rounded img-responsive">')
 
     def __repr__(self):
-        return self.title
+        return str(self.external_id)
