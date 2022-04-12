@@ -143,6 +143,7 @@ class Question2of5ModelView(ModelView):
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
     formatters_columns = {'external_id': link_formatter}
+    page_size = 100
 
 
 class Question1of6ModelView(ModelView):
@@ -158,6 +159,7 @@ class Question1of6ModelView(ModelView):
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
     formatters_columns = {'external_id': link_formatter}
+    page_size = 100
 
 
 class Question3to3ModelView(ModelView):
@@ -173,6 +175,7 @@ class Question3to3ModelView(ModelView):
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
     formatters_columns = {'external_id': link_formatter}
+    page_size = 100
 
 
 class Question2DecimalsModelView(ModelView):
@@ -188,6 +191,7 @@ class Question2DecimalsModelView(ModelView):
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
     formatters_columns = {'external_id': link_formatter}
+    page_size = 100
 
 
 class Question1DecimalModelView(ModelView):
@@ -203,6 +207,7 @@ class Question1DecimalModelView(ModelView):
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'title']
     formatters_columns = {'external_id': link_formatter}
+    page_size = 100
 
 
 class QuestionSelfAssessedModelView(ModelView):
@@ -218,12 +223,13 @@ class QuestionSelfAssessedModelView(ModelView):
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'solution_image_img']
     formatters_columns = {'external_id': link_formatter}
+    page_size = 100
 
 
 class QuestionSelect4ModelView(ModelView):
     datamodel = SQLAInterface(Question)
     base_filters = [['topic_id', FilterInFunction, get_active_topics], [
-        'type', FilterEqual, QuestionType.self_assessed.value]]
+        'type', FilterEqual, QuestionType.select_four.value]]
     title = 'Zuordnung'
     add_columns = Question.cols_select_four
     add_form_extra_fields = {'type': HiddenField(
@@ -233,6 +239,7 @@ class QuestionSelect4ModelView(ModelView):
     list_columns = ['external_id', 'topic']
     show_columns = ['description_image_img', 'solution_image_img']
     formatters_columns = {'external_id': link_formatter}
+    page_size = 100
 
 class FilterQuestionByAnsweredCorrectness(BaseFilter):
     name = "Filters for incorrectly answered questions"
@@ -249,6 +256,7 @@ class QuestionModelView(ModelView):
                      'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich'}
     list_columns = ['external_id', 'topic']
     formatters_columns = {'external_id': link_formatter}
+    page_size = 100
 
 
 class QuestionModelIncorrectAnsweredView(ModelView):
@@ -260,6 +268,7 @@ class QuestionModelIncorrectAnsweredView(ModelView):
                      'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich'}
     list_columns = ['external_id', 'topic']
     formatters_columns = {'external_id': link_formatter}
+    page_size = 100
 
 class QuestionModelCorrectAnsweredView(ModelView):
     datamodel = SQLAInterface(Question)
@@ -270,6 +279,7 @@ class QuestionModelCorrectAnsweredView(ModelView):
                      'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich'}
     list_columns = ['external_id', 'topic']
     formatters_columns = {'external_id': link_formatter}
+    page_size = 100
 
 
 class TopicModelView(ModelView):
