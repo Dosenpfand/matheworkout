@@ -2,6 +2,7 @@ import logging
 
 from flask import Flask
 from flask_appbuilder import AppBuilder, SQLA, IndexView
+from flask_migrate import Migrate
 
 logging.basicConfig(format="%(asctime)s:%(levelname)s:%(name)s:%(message)s")
 logging.getLogger().setLevel(logging.WARNING)
@@ -9,6 +10,7 @@ logging.getLogger().setLevel(logging.WARNING)
 app = Flask(__name__)
 app.config.from_object("config")
 db = SQLA(app)
+migrate = Migrate(app, db)
 
 from .sec import ExtendedSecurityManager  # noqa
 
