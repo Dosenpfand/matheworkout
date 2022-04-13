@@ -24,13 +24,21 @@ class AssocUserQuestion(Model):
     created_on = Column(DateTime, default=datetime.datetime.now, nullable=False)
     is_answer_correct = Column(Boolean, nullable=False)
 
+class LearningGroup(Model):
+    id = Column(Integer, primary_key=True)
+    name = Column(String(150), nullable=False)
+
+    def __repr__(self):
+        return self.name
 
 class ExtendedUser(User):
     __tablename__ = 'ab_user'
     tried_questions = Column(Integer, default=0)
     correct_questions = Column(Integer, default=0)
-    learning_group = Column(String)
     active_topics = relationship("Topic", secondary=assoc_user_topics)
+    learning_group_id = Column(Integer, ForeignKey("learning_group.id"))
+    learning_group = relationship("LearningGroup")
+
     answered_questions = relationship("AssocUserQuestion", back_populates="user")
 
     def correct_percentage(self):

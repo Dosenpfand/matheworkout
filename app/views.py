@@ -10,7 +10,7 @@ from flask import render_template, flash, redirect, url_for, Markup, g, request,
 from . import appbuilder, db
 from .forms import Question2of5Form, Question1of6Form, Question3to3Form, QuestionSelfAssessedForm, Question2DecimalsForm, Question1DecimalForm, QuestionSelect4Form
 from .models import Topic, Question, QuestionType
-from .sec_models import ExtendedUser, AssocUserQuestion
+from .sec_models import ExtendedUser, AssocUserQuestion, LearningGroup
 from sqlalchemy.sql.expression import func, select
 from wtforms import HiddenField
 
@@ -1023,15 +1023,23 @@ class AssocUserQuestionModelView(ModelView):
     datamodel = SQLAInterface(AssocUserQuestion)
     list_columns = ['user', 'question', 'created_on', 'is_answer_correct']
 
+class LearningGroupModelView(ModelView):
+    datamodel = SQLAInterface(LearningGroup)
+
+db.create_all()
 appbuilder.add_view(
     AssocUserQuestionModelView,
     "Beantwortete Fragen",
     icon="fa-question",
     category="Security",
     category_icon="fa-question")
+appbuilder.add_view(
+    LearningGroupModelView,
+    "Klassen",
+    icon="fa-question",
+    category="Security",
+    category_icon="fa-question")
 
-
-db.create_all()
 appbuilder.add_view(
     Question2of5ModelView,
     "2 aus 5",

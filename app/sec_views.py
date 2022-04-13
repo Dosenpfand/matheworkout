@@ -4,7 +4,7 @@ from flask_appbuilder.models.sqla.filters import BaseFilter, get_field_setup_que
 from flask import g
 from logging import warn
 from . import db
-from .sec_models import ExtendedUser
+from .sec_models import ExtendedUser, LearningGroup
 from config import AUTH_ROLE_ADMIN
 
 
@@ -26,18 +26,17 @@ class FilterInFunctionWithNone(BaseFilter):
 
 def get_learning_groups():
     if AUTH_ROLE_ADMIN in [role.name for role in g.user.roles]:
-        results = db.session.query(ExtendedUser).distinct(
-            ExtendedUser.learning_group).all()
-        learning_groups = [result.learning_group for result in results]
+        result = db.session.query(LearningGroup).all()
+        learning_groups = [group.id for group in result] + [None]
     else:
-        learning_groups = [g.user.learning_group]
+        learning_groups = [g.user.learning_group_id]
 
     return learning_groups
 
 
 class ExtendedUserDBModelView(UserDBModelView):
     base_filters = [
-        ['learning_group', FilterInFunctionWithNone, get_learning_groups]]
+        ['learning_group_id', FilterInFunctionWithNone, get_learning_groups]]
 
     label_columns = {'username': 'Benutzername', 'learning_group': 'Klasse', 'tried_questions': 'Gelöste Aufgaben',
                      'correct_questions': 'Richtig gelöste Aufgaben', 'first_name': 'Vorname', 'last_name': 'Nachname', 'email': 'E-Mail'}
