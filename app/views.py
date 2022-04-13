@@ -312,20 +312,22 @@ class QuestionSelfAssessedFormView(SimpleFormView):
         answer_value = request.args.get('answer')
         if answer_value:
             is_answer_correct = False
-        if answer_value == 'CORRECT':
+
+            if answer_value == 'CORRECT':
+                user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
+                    {'correct_questions': ExtendedUser.correct_questions + 1})
+                is_answer_correct = True
+
             user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
-                {'correct_questions': ExtendedUser.correct_questions + 1})
-            is_answer_correct = True
+                {'tried_questions': ExtendedUser.tried_questions + 1})
 
-        user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
-            {'tried_questions': ExtendedUser.tried_questions + 1})
+            # Add entry to answered questions
+            # TODO: for all question types
+            answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)
+            answered_question.question = question_result
+            g.user.answered_questions.append(answered_question)
 
-        # Add entry to answered questions
-        # TODO: for all question types
-        answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)
-        answered_question.question = question_result
-        g.user.answered_questions.append(answered_question)
-        db.session.commit()
+            db.session.commit()
 
         self.extra_args = {'question': {
             'description': description,
@@ -928,6 +930,8 @@ class QuestionSelect4FormView(SimpleFormView):
                        'E': question_result.get_option_image(question_result.option5_image),
                        'F': question_result.get_option_image(question_result.option6_image)}
             error = False
+
+            print(question_result.selection1_image)
 
             form.selection1.label.text = question_result.get_selection_image(
                 question_result.selection1_image)
