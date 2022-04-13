@@ -311,13 +311,21 @@ class QuestionSelfAssessedFormView(SimpleFormView):
 
         answer_value = request.args.get('answer')
         if answer_value:
-            user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
-                {'tried_questions': ExtendedUser.tried_questions + 1})
-            db.session.commit()
+            is_answer_correct = False
         if answer_value == 'CORRECT':
             user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
-            db.session.commit()
+            is_answer_correct = True
+
+        user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
+            {'tried_questions': ExtendedUser.tried_questions + 1})
+
+        # Add entry to answered questions
+        # TODO: for all question types
+        answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)
+        answered_question.question = question_result
+        g.user.answered_questions.append(answered_question)
+        db.session.commit()
 
         self.extra_args = {'question': {
             'description': description,
@@ -435,12 +443,20 @@ class Question2of5FormView(SimpleFormView):
             message = 'RICHTIG!'
             user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
-            db.session.commit()
+            is_answer_correct = True
         else:
             message = 'FALSCH!'
+            is_answer_correct = False
 
         user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
+
+        # Add entry to answered questions
+        # TODO: for all question types
+        answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)
+        answered_question.question = result
+        g.user.answered_questions.append(answered_question)
+
         db.session.commit()
 
         flash(message, 'info')
@@ -551,11 +567,19 @@ class Question1of6FormView(SimpleFormView):
             user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             db.session.commit()
+            is_answer_correct = True
         else:
             message = 'FALSCH!'
+            is_answer_correct = False
 
         user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
+
+        # Add entry to answered questions
+        # TODO: for all question types
+        answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)
+        answered_question.question = result
+        g.user.answered_questions.append(answered_question)
         db.session.commit()
 
         flash(message, 'info')
@@ -677,12 +701,19 @@ class Question3to3FormView(SimpleFormView):
             message = 'RICHTIG!'
             user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
-            db.session.commit()
+            is_answer_correct = True
         else:
             message = 'FALSCH!'
+            is_answer_correct = False
 
         user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
+
+        # Add entry to answered questions
+        # TODO: for all question types
+        answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)
+        answered_question.question = result
+        g.user.answered_questions.append(answered_question)
         db.session.commit()
 
         flash(message, 'info')
@@ -756,12 +787,19 @@ class Question2DecimalsFormView(SimpleFormView):
             message = 'RICHTIG!'
             user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
-            db.session.commit()
+            is_answer_correct = True
         else:
             message = f'FALSCH! Richtig gewesen wäre: {result.value1_lower_limit} <= Ergebnis 1 <= {result.value1_upper_limit}, {result.value2_lower_limit} <= Ergebnis 2 <= {result.value2_upper_limit}'
+            is_answer_correct = False
 
         user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
+
+        # Add entry to answered questions
+        # TODO: for all question types
+        answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)
+        answered_question.question = result
+        g.user.answered_questions.append(answered_question)
         db.session.commit()
 
         flash(message, 'info')
@@ -819,7 +857,6 @@ class Question1DecimalFormView(SimpleFormView):
             message = 'RICHTIG!'
             user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
-            db.session.commit()
             is_answer_correct = True
         else:
             message = f'FALSCH! Richtig gewesen wäre: {result.value1_lower_limit} <= Ergebnis <= {result.value1_upper_limit}'
@@ -946,12 +983,20 @@ class QuestionSelect4FormView(SimpleFormView):
             message = 'RICHTIG!'
             user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
-            db.session.commit()
+            is_answer_correct = True
         else:
             message = 'FALSCH!'
+            is_answer_correct = False
 
         user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
+
+        # Add entry to answered questions
+        # TODO: for all question types
+        answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)
+        answered_question.question = result
+        g.user.answered_questions.append(answered_question)
+
         db.session.commit()
 
         flash(message, 'info')
