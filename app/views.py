@@ -1167,4 +1167,4 @@ appbuilder.add_link(
 appbuilder.add_view_no_menu(ExtIdToForm())
 
 # TODO: activate?
-# appbuilder.security_cleanup()
+appbuilder.security_cleanup()
