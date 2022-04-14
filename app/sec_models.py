@@ -31,6 +31,23 @@ class LearningGroup(Model):
     def __repr__(self):
         return self.name
 
+assoc_assignment_question = Table('association', Model.metadata,
+    Column('assignment_id', ForeignKey('assignment.id'), primary_key=True),
+    Column('question_id', ForeignKey('question.id'), primary_key=True)
+)
+
+class Assignment(Model):
+    id = Column(Integer, primary_key=True)
+    name = Column(String(150), nullable=False)
+    learning_group_id = Column(Integer, ForeignKey("learning_group.id"))
+    learning_group = relationship("LearningGroup")
+    assigned_questions = relationship("Question", secondary=assoc_assignment_question)
+    starts_on = Column(DateTime, nullable=False)
+    is_due_on = Column(DateTime, nullable=False)
+
+    def __repr__(self):
+        return self.name
+
 class ExtendedUser(User):
     __tablename__ = 'ab_user'
     tried_questions = Column(Integer, default=0)
