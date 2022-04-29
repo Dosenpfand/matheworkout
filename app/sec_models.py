@@ -4,6 +4,7 @@ from sqlalchemy.orm import relationship, backref
 from flask_appbuilder import Model
 import datetime
 from .models import Topic, Question
+from .models_assoc import assoc_assignment_question
 
 assoc_user_topics = Table(
     "ab_user_topic",
@@ -31,16 +32,12 @@ class LearningGroup(Model):
     def __repr__(self):
         return self.name
 
-assoc_assignment_question = Table('association', Model.metadata,
-    Column('assignment_id', ForeignKey('assignment.id'), primary_key=True),
-    Column('question_id', ForeignKey('question.id'), primary_key=True)
-)
-
 class Assignment(Model):
     id = Column(Integer, primary_key=True)
     name = Column(String(150), nullable=False)
     learning_group_id = Column(Integer, ForeignKey("learning_group.id"))
     learning_group = relationship("LearningGroup")
+    # TODO: back_populates or backref needed?
     assigned_questions = relationship("Question", secondary=assoc_assignment_question)
     starts_on = Column(DateTime, nullable=False)
     is_due_on = Column(DateTime, nullable=False)

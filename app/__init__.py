@@ -20,6 +20,6 @@ class ExtendedIndexView(IndexView):
 
 
 appbuilder = AppBuilder(
-    app, db.session, security_manager_class=ExtendedSecurityManager, indexview=ExtendedIndexView)
+    app, db.session, security_manager_class=ExtendedSecurityManager, indexview=ExtendedIndexView, base_template='extended_base.html')
 
 from . import models, views  # noqa

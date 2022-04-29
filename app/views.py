@@ -3,14 +3,14 @@ from flask_appbuilder import ModelView, BaseView, SimpleFormView, MultipleView, 
 from flask_appbuilder.charts.views import GroupByChartView
 from flask_appbuilder.models.group import aggregate_count
 from flask_appbuilder.models.sqla.interface import SQLAInterface
-from flask_appbuilder.models.sqla.filters import FilterInFunction, FilterEqual
+from flask_appbuilder.models.sqla.filters import FilterInFunction, FilterEqual, FilterEqualFunction
 from flask_appbuilder.widgets import RenderTemplateWidget
 from flask_appbuilder.models.sqla.filters import BaseFilter, get_field_setup_query
 from flask import render_template, flash, redirect, url_for, Markup, g, request, Markup
 from . import appbuilder, db
 from .forms import Question2of5Form, Question1of6Form, Question3to3Form, QuestionSelfAssessedForm, Question2DecimalsForm, Question1DecimalForm, QuestionSelect4Form
 from .models import Topic, Question, QuestionType
-from .sec_models import ExtendedUser, AssocUserQuestion, LearningGroup
+from .sec_models import ExtendedUser, AssocUserQuestion, LearningGroup, Assignment
 from sqlalchemy.sql.expression import func, select
 from wtforms import HiddenField
 
@@ -254,7 +254,7 @@ class QuestionModelView(ModelView):
     title = 'Aufgaben'
     label_columns = {'description_image': 'Beschreibung',
                      'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich'}
-    list_columns = ['external_id', 'topic']
+    list_columns = ['external_id', 'topic', 'state']
     formatters_columns = {'external_id': link_formatter}
     page_size = 100
 
@@ -322,9 +322,10 @@ class QuestionSelfAssessedFormView(SimpleFormView):
                 {'tried_questions': ExtendedUser.tried_questions + 1})
 
             # Add entry to answered questions
-            # TODO: for all question types
             answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)
-            answered_question.question = question_result
+            prev_id = request.args.get('prev_id')
+            question_old = db.session.query(Question).filter_by(id=prev_id).first()
+            answered_question.question = question_old
             g.user.answered_questions.append(answered_question)
 
             db.session.commit()
@@ -339,10 +340,10 @@ class QuestionSelfAssessedFormView(SimpleFormView):
         id = form.id.data
         result = db.session.query(Question).filter_by(id=id).first()
 
-        random_url = url_for('QuestionRandom.question_random')
+        random_url = url_for('QuestionSelfAssessedFormView.this_form_get')
         solution_img = result.solution_image_img()
-        correct_link = f'<a class="btn btn-primary" href="{random_url}?answer=CORRECT">Richtig</a>'
-        incorrect_link = f'<a class="btn btn-primary" href="{random_url}?answer=INCORRECT">Falsch</a>'
+        correct_link = f'<a class="btn btn-primary" href="{random_url}?answer=CORRECT&prev_id={id}">Richtig</a>'
+        incorrect_link = f'<a class="btn btn-primary" href="{random_url}?answer=INCORRECT&prev_id={id}">Falsch</a>'
         description = Markup(f'{solution_img}')
         after_description = Markup(f'{correct_link} {incorrect_link}')
 
@@ -454,7 +455,6 @@ class Question2of5FormView(SimpleFormView):
             {'tried_questions': ExtendedUser.tried_questions + 1})
 
         # Add entry to answered questions
-        # TODO: for all question types
         answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)
         answered_question.question = result
         g.user.answered_questions.append(answered_question)
@@ -578,7 +578,6 @@ class Question1of6FormView(SimpleFormView):
             {'tried_questions': ExtendedUser.tried_questions + 1})
 
         # Add entry to answered questions
-        # TODO: for all question types
         answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)
         answered_question.question = result
         g.user.answered_questions.append(answered_question)
@@ -712,7 +711,6 @@ class Question3to3FormView(SimpleFormView):
             {'tried_questions': ExtendedUser.tried_questions + 1})
 
         # Add entry to answered questions
-        # TODO: for all question types
         answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)
         answered_question.question = result
         g.user.answered_questions.append(answered_question)
@@ -798,7 +796,6 @@ class Question2DecimalsFormView(SimpleFormView):
             {'tried_questions': ExtendedUser.tried_questions + 1})
 
         # Add entry to answered questions
-        # TODO: for all question types
         answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)
         answered_question.question = result
         g.user.answered_questions.append(answered_question)
@@ -868,7 +865,6 @@ class Question1DecimalFormView(SimpleFormView):
             {'tried_questions': ExtendedUser.tried_questions + 1})
 
         # Add entry to answered questions
-        # TODO: for all question types
         answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)
         answered_question.question = result
         g.user.answered_questions.append(answered_question)
@@ -930,8 +926,6 @@ class QuestionSelect4FormView(SimpleFormView):
                        'E': question_result.get_option_image(question_result.option5_image),
                        'F': question_result.get_option_image(question_result.option6_image)}
             error = False
-
-            print(question_result.selection1_image)
 
             form.selection1.label.text = question_result.get_selection_image(
                 question_result.selection1_image)
@@ -996,7 +990,6 @@ class QuestionSelect4FormView(SimpleFormView):
             {'tried_questions': ExtendedUser.tried_questions + 1})
 
         # Add entry to answered questions
-        # TODO: for all question types
         answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)
         answered_question.question = result
         g.user.answered_questions.append(answered_question)
@@ -1026,6 +1019,27 @@ class AssocUserQuestionModelView(ModelView):
 class LearningGroupModelView(ModelView):
     datamodel = SQLAInterface(LearningGroup)
 
+class AssignmentModelAdminView(ModelView):
+    datamodel = SQLAInterface(Assignment)
+    list_columns = ['name', 'learning_group']
+
+class AssignmentModelStudentView(ModelView):
+    datamodel = SQLAInterface(Assignment)
+    base_filters = [['learning_group_id', FilterEqualFunction, lambda: g.user.learning_group_id]]
+
+    label_columns = {'name': 'Titel',
+                     'learning_group': 'Klasse',
+                     'starts_on': 'Erhalten am',
+                     'is_due_on': 'Fällig am'}
+    list_columns = ['name', 'starts_on', 'is_due_on']
+    show_columns = ['name']
+
+    # TODO: auto-expand + translation of title
+    related_views = [QuestionModelView]
+    show_template = "appbuilder/general/model/show_cascade.html"
+    edit_template = "appbuilder/general/model/edit_cascade.html"
+
+
 db.create_all()
 appbuilder.add_view(
     AssocUserQuestionModelView,
@@ -1034,12 +1048,17 @@ appbuilder.add_view(
     category="Security",
     category_icon="fa-question")
 appbuilder.add_view(
-    LearningGroupModelView,
-    "Klassen",
+    AssignmentModelAdminView,
+    "Hausübungen",
     icon="fa-question",
     category="Security",
     category_icon="fa-question")
-
+appbuilder.add_view(
+    AssignmentModelStudentView,
+    "Hausübungen",
+    icon="fa-question",
+    category="Aufgabenlisten",
+    category_icon="fa-question")
 appbuilder.add_view(
     Question2of5ModelView,
     "2 aus 5",

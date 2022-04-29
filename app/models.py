@@ -1,12 +1,14 @@
 import datetime
 
+
 from flask_appbuilder import Model
 from sqlalchemy import Column, Date, ForeignKey, Integer, String, Boolean, Float, Enum
 from sqlalchemy.orm import relationship
 from flask_appbuilder.models.mixins import ImageColumn
 from flask_appbuilder.filemanager import ImageManager
-from flask import Markup, url_for
+from flask import Markup, url_for, g
 import enum
+from .models_assoc import assoc_assignment_question
 
 
 class Select4Enum(enum.Enum):
@@ -52,6 +54,8 @@ class Question(Model):
     type = Column(Enum(QuestionType), index=True)
     cols_common = ['external_id', 'topic', 'description_image', 'type']
     answered_users = relationship("AssocUserQuestion", back_populates="question")
+    # TODO: back_populates or backref needed?
+    assignments = relationship("Assignment", secondary=assoc_assignment_question)
 
     # self_assessed only
     solution_image = Column(ImageColumn(size=(10000, 10000, True)))
@@ -142,18 +146,34 @@ class Question(Model):
                                          ]
 
     # common
+    def __repr__(self):
+        return f'{self.external_id} ({self.topic.name[0:6]})'
+
+    def state(self):
+        tried_but_incorrect = False
+        for assoc in self.answered_users:
+            if assoc.user_id == g.user.id:
+                if assoc.is_answer_correct:
+                    return Markup('<span class="label label-success"><i class="bi bi-emoji-sunglasses"></i> RICHTIG</span>')
+                else:
+                    tried_but_incorrect = True
+                    print(tried_but_incorrect)
+
+        if tried_but_incorrect:
+            return Markup('<span class="label label-danger"><i class="bi bi-emoji-neutral"></i> FALSCH</span>')
+        else:
+            return Markup('<span class="label label-warning"><i class="bi bi-emoji-frown"></i> ...</span>')
+
     def description_image_img(self):
         im = ImageManager()
         return Markup('<img src="' + im.get_url(self.description_image) +
                       '" alt="Photo" class="img-rounded img-responsive">')
 
-    def __repr__(self):
-        return f'<Question: {self.id=}, {self.external_id=}'
 
     def get_option_image(self, option):
         im = ImageManager()
         return Markup('<img src="' + im.get_url(option) +
-                      '" alt="Photo" class="img-rounded img-responsive" style="max-width:4096px;">')
+                      '" alt="Photo" class="img-rounded img-responsive" style="max-width:400px;">')
 
     # self_assessed only
     def solution_image_img(self):
@@ -165,4 +185,4 @@ class Question(Model):
     def get_selection_image(self, selection):
         im = ImageManager()
         return Markup('<img src="' + im.get_url(selection) +
-                      '" alt="Photo" class="img-rounded img-responsive" style="min-width:100%;max-width:4096px;">')
+                      '" alt="Photo" class="img-rounded img-responsive" style="min-width:100%;max-width:400px;">')
