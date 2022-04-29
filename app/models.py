@@ -160,9 +160,9 @@ class Question(Model):
                     print(tried_but_incorrect)
 
         if tried_but_incorrect:
-            return Markup('<span class="label label-danger"><i class="bi bi-emoji-neutral"></i> FALSCH</span>')
+            return Markup('<span class="label label-danger"><i class="bi bi-emoji-frown"></i> FALSCH</span>')
         else:
-            return Markup('<span class="label label-warning"><i class="bi bi-emoji-frown"></i> ...</span>')
+            return Markup('<span class="label label-warning"><i class="bi bi-emoji-neutral"></i> ...</span>')
 
     def description_image_img(self):
         im = ImageManager()
@@ -171,6 +171,11 @@ class Question(Model):
 
 
     def get_option_image(self, option):
+        im = ImageManager()
+        return Markup('<img src="' + im.get_url(option) +
+                      '" alt="Photo" class="img-rounded img-responsive" style="max-width:2048px;">')
+
+    def get_option_small_image(self, option):
         im = ImageManager()
         return Markup('<img src="' + im.get_url(option) +
                       '" alt="Photo" class="img-rounded img-responsive" style="max-width:400px;">')

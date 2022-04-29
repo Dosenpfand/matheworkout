@@ -253,7 +253,7 @@ class QuestionModelView(ModelView):
     base_filters = [['topic_id', FilterInFunction, get_active_topics]]
     title = 'Aufgaben'
     label_columns = {'description_image': 'Beschreibung',
-                     'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich'}
+                     'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'state': 'Status'}
     list_columns = ['external_id', 'topic', 'state']
     formatters_columns = {'external_id': link_formatter}
     page_size = 100
@@ -631,17 +631,17 @@ class Question3to3FormView(SimpleFormView):
             external_id = question_result.external_id
             error = False
 
-            form.checkbox1a.label.text = question_result.get_option_image(
+            form.checkbox1a.label.text = question_result.get_option_small_image(
                 question_result.option1a_image)
-            form.checkbox1b.label.text = question_result.get_option_image(
+            form.checkbox1b.label.text = question_result.get_option_small_image(
                 question_result.option1b_image)
-            form.checkbox1c.label.text = question_result.get_option_image(
+            form.checkbox1c.label.text = question_result.get_option_small_image(
                 question_result.option1c_image)
-            form.checkbox2a.label.text = question_result.get_option_image(
+            form.checkbox2a.label.text = question_result.get_option_small_image(
                 question_result.option2a_image)
-            form.checkbox2b.label.text = question_result.get_option_image(
+            form.checkbox2b.label.text = question_result.get_option_small_image(
                 question_result.option2b_image)
-            form.checkbox2c.label.text = question_result.get_option_image(
+            form.checkbox2c.label.text = question_result.get_option_small_image(
                 question_result.option2c_image)
 
         self.extra_args = {'question': {
@@ -655,17 +655,17 @@ class Question3to3FormView(SimpleFormView):
         id = form.id.data
         result = db.session.query(Question).filter_by(
             id=id, type=QuestionType.three_to_three.value).first()
-        form.checkbox1a.label.text = result.get_option_image(
+        form.checkbox1a.label.text = result.get_option_small_image(
             result.option1a_image)
-        form.checkbox1b.label.text = result.get_option_image(
+        form.checkbox1b.label.text = result.get_option_small_image(
             result.option1b_image)
-        form.checkbox1c.label.text = result.get_option_image(
+        form.checkbox1c.label.text = result.get_option_small_image(
             result.option1c_image)
-        form.checkbox2a.label.text = result.get_option_image(
+        form.checkbox2a.label.text = result.get_option_small_image(
             result.option2a_image)
-        form.checkbox2b.label.text = result.get_option_image(
+        form.checkbox2b.label.text = result.get_option_small_image(
             result.option2b_image)
-        form.checkbox2c.label.text = result.get_option_image(
+        form.checkbox2c.label.text = result.get_option_small_image(
             result.option2c_image)
 
         if form.checkbox1a.data == result.option1a_is_correct:
@@ -919,12 +919,12 @@ class QuestionSelect4FormView(SimpleFormView):
             form.id.data = question_result.id
             description = question_result.description_image_img()
             external_id = question_result.external_id
-            options = {'A': question_result.get_option_image(question_result.option1_image),
-                       'B': question_result.get_option_image(question_result.option2_image),
-                       'C': question_result.get_option_image(question_result.option3_image),
-                       'D': question_result.get_option_image(question_result.option4_image),
-                       'E': question_result.get_option_image(question_result.option5_image),
-                       'F': question_result.get_option_image(question_result.option6_image)}
+            options = {'A': question_result.get_option_small_image(question_result.option1_image),
+                       'B': question_result.get_option_small_image(question_result.option2_image),
+                       'C': question_result.get_option_small_image(question_result.option3_image),
+                       'D': question_result.get_option_small_image(question_result.option4_image),
+                       'E': question_result.get_option_small_image(question_result.option5_image),
+                       'F': question_result.get_option_small_image(question_result.option6_image)}
             error = False
 
             form.selection1.label.text = question_result.get_selection_image(
@@ -956,6 +956,12 @@ class QuestionSelect4FormView(SimpleFormView):
             result.selection3_image)
         form.selection4.label.text = result.get_selection_image(
             result.selection4_image)
+        options = {'A': question_result.get_option_small_image(question_result.option1_image),
+                    'B': question_result.get_option_small_image(question_result.option2_image),
+                    'C': question_result.get_option_small_image(question_result.option3_image),
+                    'D': question_result.get_option_small_image(question_result.option4_image),
+                    'E': question_result.get_option_small_image(question_result.option5_image),
+                    'F': question_result.get_option_small_image(question_result.option6_image)}
 
         if form.selection1.data == result.selection1_solution.value:
             form.selection1.description = 'Richtig'
@@ -999,6 +1005,7 @@ class QuestionSelect4FormView(SimpleFormView):
         flash(message, 'info')
 
         self.extra_args = {'question': {'description': result.description_image_img(),
+                                        'options': options,
                                         'external_id': result.external_id,
                                         'submit_text': 'Nächste Aufgabe'},
                            'form_action': url_for('QuestionRandom.question_random')}
