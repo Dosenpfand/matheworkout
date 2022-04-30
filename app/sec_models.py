@@ -28,6 +28,7 @@ class AssocUserQuestion(Model):
 class LearningGroup(Model):
     id = Column(Integer, primary_key=True)
     name = Column(String(150), nullable=False)
+    users = relationship("ExtendedUser", back_populates="learning_group")
 
     def __repr__(self):
         return self.name
@@ -51,7 +52,7 @@ class ExtendedUser(User):
     correct_questions = Column(Integer, default=0)
     active_topics = relationship("Topic", secondary=assoc_user_topics)
     learning_group_id = Column(Integer, ForeignKey("learning_group.id"))
-    learning_group = relationship("LearningGroup")
+    learning_group = relationship("LearningGroup", back_populates="users")
 
     answered_questions = relationship("AssocUserQuestion", back_populates="user")
 

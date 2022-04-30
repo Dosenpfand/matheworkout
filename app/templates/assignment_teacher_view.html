@@ -1,0 +1,24 @@
+{% extends "appbuilder/base.html" %}
+{% block content %}
+<h1>{{ name }}</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col"></th>
+{% for question in questions %}
+            <th scope="col">{{ question }}</th>
+{% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+{% for user in users %}
+        <tr>
+            <th scope="row">{{ user }}</th>
+{% for question in questions %}
+            <td>{{ state_users_questions[user.id][question.id] }}</td>
+{% endfor %}
+        </tr>
+{% endfor %}
+    </tbody>
+</table>
+{% endblock %}

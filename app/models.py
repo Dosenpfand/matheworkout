@@ -149,10 +149,10 @@ class Question(Model):
     def __repr__(self):
         return f'{self.external_id} ({self.topic.name[0:6]})'
 
-    def state(self):
+    def state_user(self, user_id):
         tried_but_incorrect = False
         for assoc in self.answered_users:
-            if assoc.user_id == g.user.id:
+            if assoc.user_id == user_id:
                 if assoc.is_answer_correct:
                     return Markup('<span class="label label-success"><i class="bi bi-emoji-sunglasses"></i> RICHTIG</span>')
                 else:
@@ -163,6 +163,9 @@ class Question(Model):
             return Markup('<span class="label label-danger"><i class="bi bi-emoji-frown"></i> FALSCH</span>')
         else:
             return Markup('<span class="label label-warning"><i class="bi bi-emoji-neutral"></i> ...</span>')
+
+    def state(self):
+        return self.state_user(g.user.id)
 
     def description_image_img(self):
         im = ImageManager()

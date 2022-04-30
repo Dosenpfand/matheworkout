@@ -1046,7 +1046,27 @@ class AssignmentModelStudentView(ModelView):
     show_template = "appbuilder/general/model/show_cascade.html"
     edit_template = "appbuilder/general/model/edit_cascade.html"
 
+class AssignmentModelTeacherView(BaseView):
+    default_view = 'show'
 
+    @expose('/show/<int:assignment_id>')
+    @has_access
+    def show(self, assignment_id):
+        assignment = db.session.query(Assignment).filter_by(id=assignment_id).first()
+        # TODO: handle None
+        self.update_redirect()
+
+        users = assignment.learning_group.users
+        questions = assignment.assigned_questions
+        state_users_questions = {}
+        for user in users:
+            state_users_questions[user.id] = {}
+            for question in questions:
+                state_users_questions[user.id][question.id] = question.state_user(user.id)
+
+        return self.render_template('assignment_teacher_view.html', users=users, questions=questions, state_users_questions=state_users_questions)
+
+# TODO: delete for migrate/alembic to work properly?
 db.create_all()
 appbuilder.add_view(
     AssocUserQuestionModelView,
@@ -1192,5 +1212,8 @@ appbuilder.add_link(
 )
 appbuilder.add_view_no_menu(ExtIdToForm())
 
-# TODO: activate?
+# TODO: add menu
+appbuilder.add_view_no_menu(AssignmentModelTeacherView())
+
+# TODO: deactivate?
 appbuilder.security_cleanup()
