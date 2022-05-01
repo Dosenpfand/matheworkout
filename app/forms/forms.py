@@ -1,20 +1,8 @@
-from flask_appbuilder.fieldwidgets import BS3TextFieldWidget
 from flask_appbuilder.forms import DynamicForm
-from wtforms import StringField, SelectMultipleField, BooleanField, HiddenField, DecimalField, SelectField
-from wtforms.validators import DataRequired
-from .models import Topic, Select4Enum
-from . import db
+from wtforms import BooleanField, HiddenField, DecimalField, SelectField
 
-
-def safe_math_eval(string):
-    allowed_chars = "0123456789+-*(). /"
-    if string == '':
-        return ''
-
-    for char in string:
-        if char not in allowed_chars:
-            return ''
-    return eval(string)
+from app.models.general import Select4Enum
+from app.utils.general import safe_math_eval
 
 
 class FlexibleDecimalField(DecimalField):

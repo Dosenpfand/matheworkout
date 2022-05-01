@@ -1,27 +1,12 @@
-from flask_appbuilder.security.views import UserDBModelView
-from flask_babel import lazy_gettext
-from flask_appbuilder.models.sqla.filters import BaseFilter, get_field_setup_query
 from flask import g
-from logging import warn
-from . import db
-from .sec_models import ExtendedUser, LearningGroup
+from flask_appbuilder.security.views import UserDBModelView, UserInfoEditView
+from flask_babel import lazy_gettext
+
+from app.security.forms import ExtendedUserInfoEdit
 from config import AUTH_ROLE_ADMIN
-
-
-class FilterInFunctionWithNone(BaseFilter):
-    name = "Filter view where field is in a list returned by a function supporting None being in the list"
-    arg_name = "infwnone"
-
-    def apply(self, query, func):
-        query, field = get_field_setup_query(
-            query, self.model, self.column_name)
-        func_ret_list = func()
-
-        if None in func_ret_list:
-            filter_arg = field.in_(func_ret_list) | (field == None)
-        else:
-            filter_arg = field.in_(func_ret_list)
-        return query.filter(filter_arg)
+from app import db
+from app.utils.filters import FilterInFunctionWithNone
+from app.models.general import LearningGroup
 
 
 def get_learning_groups():
@@ -95,3 +80,8 @@ class ExtendedUserDBModelView(UserDBModelView):
         'active_topics',
         'answered_questions'
     ]
+
+
+class ExtendedUserInfoEditView(UserInfoEditView):
+    form = ExtendedUserInfoEdit
+    form_title = 'Benutzerinformationen bearbeiten'

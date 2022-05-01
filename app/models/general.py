@@ -1,14 +1,13 @@
-import datetime
-
-
-from flask_appbuilder import Model
-from sqlalchemy import Column, Date, ForeignKey, Integer, String, Boolean, Float, Enum
-from sqlalchemy.orm import relationship
-from flask_appbuilder.models.mixins import ImageColumn
-from flask_appbuilder.filemanager import ImageManager
-from flask import Markup, url_for, g
 import enum
-from .models_assoc import assoc_assignment_question
+
+from flask import Markup, g
+from flask_appbuilder import Model
+from flask_appbuilder.filemanager import ImageManager
+from flask_appbuilder.models.mixins import ImageColumn
+from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, Float, Enum, DateTime
+from sqlalchemy.orm import relationship
+
+from .relations import assoc_assignment_question
 
 
 class Select4Enum(enum.Enum):
@@ -19,6 +18,7 @@ class Select4Enum(enum.Enum):
     E = 'E'
     F = 'F'
 
+    @staticmethod
     def get_values():
         return [el.value for el in Select4Enum]
 
@@ -40,6 +40,7 @@ class QuestionType(enum.Enum):
     two_of_five = 'two_of_five'
     three_to_three = 'three_to_three'
 
+    @staticmethod
     def get_values():
         return [el.value for el in QuestionType]
 
@@ -67,7 +68,7 @@ class Question(Model):
     value2_upper_limit = Column(Float())
     value2_lower_limit = Column(Float())
     cols_one_decimal = cols_common + \
-        ['value1_upper_limit', 'value1_lower_limit']
+                       ['value1_upper_limit', 'value1_lower_limit']
     cols_two_decimals = cols_common + ['value1_upper_limit', 'value1_lower_limit',
                                        'value2_upper_limit', 'value2_lower_limit']
 
@@ -154,7 +155,8 @@ class Question(Model):
         for assoc in self.answered_users:
             if assoc.user_id == user_id:
                 if assoc.is_answer_correct:
-                    return Markup('<span class="label label-success"><i class="bi bi-emoji-sunglasses"></i> RICHTIG</span>')
+                    return Markup(
+                        '<span class="label label-success"><i class="bi bi-emoji-sunglasses"></i> RICHTIG</span>')
                 else:
                     tried_but_incorrect = True
                     print(tried_but_incorrect)
@@ -171,7 +173,6 @@ class Question(Model):
         im = ImageManager()
         return Markup('<img src="' + im.get_url(self.description_image) +
                       '" alt="Photo" class="img-rounded img-responsive">')
-
 
     def get_option_image(self, option):
         im = ImageManager()
@@ -194,3 +195,26 @@ class Question(Model):
         im = ImageManager()
         return Markup('<img src="' + im.get_url(selection) +
                       '" alt="Photo" class="img-rounded img-responsive" style="min-width:100%;max-width:400px;">')
+
+
+class Assignment(Model):
+    id = Column(Integer, primary_key=True)
+    name = Column(String(150), nullable=False)
+    learning_group_id = Column(Integer, ForeignKey("learning_group.id"))
+    learning_group = relationship("LearningGroup")
+    # TODO: back_populates or backref needed?
+    assigned_questions = relationship("Question", secondary=assoc_assignment_question)
+    starts_on = Column(DateTime, nullable=False)
+    is_due_on = Column(DateTime, nullable=False)
+
+    def __repr__(self):
+        return self.name
+
+
+class LearningGroup(Model):
+    id = Column(Integer, primary_key=True)
+    name = Column(String(150), nullable=False)
+    users = relationship("ExtendedUser", back_populates="learning_group")
+
+    def __repr__(self):
+        return self.name

@@ -1,8 +1,10 @@
 import logging
 
 from flask import Flask
-from flask_appbuilder import AppBuilder, SQLA, IndexView
+from flask_appbuilder import AppBuilder, SQLA
 from flask_migrate import Migrate
+
+from app.general import ExtendedIndexView
 
 logging.basicConfig(format="%(asctime)s:%(levelname)s:%(name)s:%(message)s")
 logging.getLogger().setLevel(logging.WARNING)
@@ -12,14 +14,11 @@ app.config.from_object("config")
 db = SQLA(app)
 migrate = Migrate(app, db)
 
-from .sec import ExtendedSecurityManager  # noqa
-
-# TODO: Should be in views (but circular import)
-class ExtendedIndexView(IndexView):
-    index_template = 'extended_index.html'
-
+from app.security.general import ExtendedSecurityManager  # noqa
 
 appbuilder = AppBuilder(
-    app, db.session, security_manager_class=ExtendedSecurityManager, indexview=ExtendedIndexView, base_template='extended_base.html')
+    app, db.session, security_manager_class=ExtendedSecurityManager, indexview=ExtendedIndexView,
+    base_template='extended_base.html')
 
-from . import models, views  # noqa
+from app.models import general # noqa
+from app.views import views # noqa

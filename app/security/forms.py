@@ -1,14 +1,9 @@
-from flask_appbuilder.fieldwidgets import BS3TextFieldWidget
-from flask_appbuilder.forms import DynamicForm
 from flask_appbuilder.fields import QuerySelectMultipleField, QuerySelectField
 from flask_appbuilder.fieldwidgets import Select2ManyWidget, Select2Widget
-from flask_appbuilder.models.sqla.interface import SQLAInterface
-from flask_babel import lazy_gettext
-from wtforms import StringField, FieldList
-from wtforms.validators import DataRequired
-from .models import Topic
-from .sec_models import LearningGroup
-from . import db
+from flask_appbuilder.forms import DynamicForm
+
+from app import db
+from app.models.general import Topic, LearningGroup
 
 
 class ExtendedUserInfoEdit(DynamicForm):
