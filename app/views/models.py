@@ -144,6 +144,7 @@ class AssocUserQuestionModelView(ModelView):
 
 class LearningGroupModelView(ModelView):
     datamodel = SQLAInterface(LearningGroup)
+    list_columns = ['name']
 
 
 # TODO: necessary?
