@@ -150,7 +150,7 @@ class LearningGroupModelView(ModelView):
 # TODO: necessary?
 class AssignmentModelAdminView(ModelView):
     datamodel = SQLAInterface(Assignment)
-    list_columns = ['name', 'learning_group']
+    list_columns = ['name', 'learning_group', 'evaluation_link']
 
 
 class AssignmentModelStudentView(ModelView):

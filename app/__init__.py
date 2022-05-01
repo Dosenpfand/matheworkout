@@ -4,7 +4,7 @@ from flask import Flask
 from flask_appbuilder import AppBuilder, SQLA
 from flask_migrate import Migrate
 
-from app.general import ExtendedIndexView
+from app.views.index import ExtendedIndexView
 
 logging.basicConfig(format="%(asctime)s:%(levelname)s:%(name)s:%(message)s")
 logging.getLogger().setLevel(logging.WARNING)

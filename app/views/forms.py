@@ -96,7 +96,7 @@ class Question2of5FormView(SimpleFormView):
         self.update_redirect()
 
         question_result = get_question(QuestionType.two_of_five.value)
-        if question_result == None:
+        if question_result is None:
             description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
             external_id = None
             error = True
@@ -166,14 +166,13 @@ class Question2of5FormView(SimpleFormView):
                 (form.checkbox4.data == result.option4_is_correct) and \
                 (form.checkbox5.data == result.option5_is_correct):
             message = 'RICHTIG!'
-            user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
-                {'correct_questions': ExtendedUser.correct_questions + 1})
+            db.session.query(ExtendedUser).filter_by(id=g.user.id).update({'correct_questions': ExtendedUser.correct_questions + 1})
             is_answer_correct = True
         else:
             message = 'FALSCH!'
             is_answer_correct = False
 
-        user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
+        db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
 
         # Add entry to answered questions
@@ -209,7 +208,7 @@ class Question1of6FormView(SimpleFormView):
     def form_get(self, form):
         self.update_redirect()
         question_result = get_question(QuestionType.one_of_six.value)
-        if question_result == None:
+        if question_result is None:
             description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
             external_id = None
             error = True
@@ -288,7 +287,7 @@ class Question1of6FormView(SimpleFormView):
                 (form.checkbox5.data == result.option5_is_correct) and \
                 (form.checkbox6.data == result.option6_is_correct):
             message = 'RICHTIG!'
-            user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
+            db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             db.session.commit()
             is_answer_correct = True
@@ -296,7 +295,7 @@ class Question1of6FormView(SimpleFormView):
             message = 'FALSCH!'
             is_answer_correct = False
 
-        user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
+        db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
 
         # Add entry to answered questions
@@ -343,7 +342,7 @@ class Question3to3FormView(SimpleFormView):
         self.update_redirect()
         question_result = get_question(
             QuestionType.three_to_three.value)
-        if question_result == None:
+        if question_result is None:
             description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
             external_id = None
             error = True
@@ -422,14 +421,14 @@ class Question3to3FormView(SimpleFormView):
                 (form.checkbox2b.data == result.option2b_is_correct) and \
                 (form.checkbox2c.data == result.option2c_is_correct):
             message = 'RICHTIG!'
-            user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
+            db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             is_answer_correct = True
         else:
             message = 'FALSCH!'
             is_answer_correct = False
 
-        user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
+        db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
 
         # Add entry to answered questions
@@ -464,7 +463,7 @@ class Question2DecimalsFormView(SimpleFormView):
     def form_get(self, form):
         self.update_redirect()
         question_result = get_question(QuestionType.two_decimals.value)
-        if question_result == None:
+        if question_result is None:
             description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
             external_id = None
             error = True
@@ -507,14 +506,14 @@ class Question2DecimalsFormView(SimpleFormView):
 
         if value1_correct and value2_correct:
             message = 'RICHTIG!'
-            user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
+            db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             is_answer_correct = True
         else:
             message = f'FALSCH! Richtig gewesen wäre: {result.value1_lower_limit} <= Ergebnis 1 <= {result.value1_upper_limit}, {result.value2_lower_limit} <= Ergebnis 2 <= {result.value2_upper_limit}'
             is_answer_correct = False
 
-        user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
+        db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
 
         # Add entry to answered questions
@@ -572,19 +571,18 @@ class Question1DecimalFormView(SimpleFormView):
         result = db.session.query(Question).filter_by(
             id=id, type=QuestionType.one_decimal.value).first()
         form.value.label.text = 'Ergebnis'
-        message = 'FALSCH!'
 
         if (form.value.data <= result.value1_upper_limit) and (form.value.data >= result.value1_lower_limit):
             form.value.description = 'Richtig'
             message = 'RICHTIG!'
-            user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
+            db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             is_answer_correct = True
         else:
             message = f'FALSCH! Richtig gewesen wäre: {result.value1_lower_limit} <= Ergebnis <= {result.value1_upper_limit}'
             is_answer_correct = False
 
-        user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
+        db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
 
         # Add entry to answered questions
@@ -634,7 +632,7 @@ class QuestionSelect4FormView(SimpleFormView):
     def form_get(self, form):
         self.update_redirect()
         question_result = get_question(QuestionType.select_four)
-        if question_result == None:
+        if question_result is None:
             description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
             external_id = None
             options = None
@@ -709,14 +707,14 @@ class QuestionSelect4FormView(SimpleFormView):
                 (form.selection3.data == result.selection3_solution.value) and \
                 (form.selection4.data == result.selection4_solution.value):
             message = 'RICHTIG!'
-            user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
+            db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             is_answer_correct = True
         else:
             message = 'FALSCH!'
             is_answer_correct = False
 
-        user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
+        db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
 
         # Add entry to answered questions

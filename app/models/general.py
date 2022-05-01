@@ -1,6 +1,6 @@
 import enum
 
-from flask import Markup, g
+from flask import Markup, g, url_for
 from flask_appbuilder import Model
 from flask_appbuilder.filemanager import ImageManager
 from flask_appbuilder.models.mixins import ImageColumn
@@ -108,12 +108,6 @@ class Question(Model):
     selection3_solution = Column(Enum(Select4Enum))
     selection4_image = Column(ImageColumn(size=(10000, 10000, True)))
     selection4_solution = Column(Enum(Select4Enum))
-    option1_image = Column(ImageColumn(size=(10000, 10000, True)))
-    option2_image = Column(ImageColumn(size=(10000, 10000, True)))
-    option3_image = Column(ImageColumn(size=(10000, 10000, True)))
-    option4_image = Column(ImageColumn(size=(10000, 10000, True)))
-    option5_image = Column(ImageColumn(size=(10000, 10000, True)))
-    option6_image = Column(ImageColumn(size=(10000, 10000, True)))
     cols_select_four = cols_common + ['selection1_image', 'selection1_solution',
                                       'selection2_image', 'selection2_solution',
                                       'selection3_image', 'selection3_solution',
@@ -209,6 +203,10 @@ class Assignment(Model):
 
     def __repr__(self):
         return self.name
+
+    def evaluation_link(self):
+        url = url_for('AssignmentModelTeacherView.show', assignment_id=self.id)
+        return Markup(f'<a href="{url}")>Auswertung</a>')
 
 
 class LearningGroup(Model):
