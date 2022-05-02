@@ -7,4 +7,6 @@ with open(activate_this) as file_:
 
 logging.basicConfig(stream=sys.stderr)
 sys.path.insert(0, "/var/www/FlaskApp/")
-from app import app as application  # noqa
+from app import create_app # noqa
+application = create_app()
+

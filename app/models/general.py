@@ -158,7 +158,6 @@ class Question(Model):
                     return QuestionUserState.solved_success
                 else:
                     tried_but_incorrect = True
-                    print(tried_but_incorrect)
 
         if tried_but_incorrect:
             return QuestionUserState.tried_failed
