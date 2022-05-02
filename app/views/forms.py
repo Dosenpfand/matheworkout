@@ -46,7 +46,7 @@ class QuestionSelfAssessedFormView(SimpleFormView):
                 {'tried_questions': ExtendedUser.tried_questions + 1})
 
             # Add entry to answered questions
-            answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct) # noqa
+            answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)  # noqa
             answered_question.question = question_result
             g.user.answered_questions.append(answered_question)
 
@@ -63,6 +63,7 @@ class QuestionSelfAssessedFormView(SimpleFormView):
             'external_id': external_id,
             'submit_text': submit_text,
             'back_count': back_count}}
+
     def form_post(self, form):
         question_id = form.id.data
         result = db.session.query(Question).filter_by(id=question_id).first()
@@ -85,7 +86,6 @@ class QuestionSelfAssessedFormView(SimpleFormView):
             'submit_text': None},
             'form_action': url_for('QuestionRandom.question_random')}
 
-        # TODO: why necessary? should happen automatically but redirect is wrong?!
         widgets = self._get_edit_widget(form=form)
         return self.render_template(
             self.form_template,
@@ -186,7 +186,7 @@ class Question2of5FormView(SimpleFormView):
             {'tried_questions': ExtendedUser.tried_questions + 1})
 
         # Add entry to answered questions
-        answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct) # noqa
+        answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)  # noqa
         answered_question.question = result
         g.user.answered_questions.append(answered_question)
 
@@ -198,7 +198,6 @@ class Question2of5FormView(SimpleFormView):
                                         'external_id': result.external_id},
                            'form_action': url_for('QuestionRandom.question_random')}
 
-        # TODO: why necessary? should happen automatically but redirect is wrong?!
         widgets = self._get_edit_widget(form=form)
         return self.render_template(
             self.form_template,
@@ -308,7 +307,7 @@ class Question1of6FormView(SimpleFormView):
             {'tried_questions': ExtendedUser.tried_questions + 1})
 
         # Add entry to answered questions
-        answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct) # noqa
+        answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)  # noqa
         answered_question.question = result
         g.user.answered_questions.append(answered_question)
         db.session.commit()
@@ -319,7 +318,6 @@ class Question1of6FormView(SimpleFormView):
                                         'external_id': result.external_id},
                            'form_action': url_for('QuestionRandom.question_random')}
 
-        # TODO: why necessary? should happen automatically but redirect is wrong?!
         widgets = self._get_edit_widget(form=form)
         return self.render_template(
             self.form_template,
@@ -440,7 +438,7 @@ class Question3to3FormView(SimpleFormView):
             {'tried_questions': ExtendedUser.tried_questions + 1})
 
         # Add entry to answered questions
-        answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct) # noqa
+        answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)  # noqa
         answered_question.question = result
         g.user.answered_questions.append(answered_question)
         db.session.commit()
@@ -451,7 +449,6 @@ class Question3to3FormView(SimpleFormView):
                                         'external_id': result.external_id},
                            'form_action': url_for('QuestionRandom.question_random')}
 
-        # TODO: why necessary? should happen automatically but redirect is wrong?!
         widgets = self._get_edit_widget(form=form)
         return self.render_template(
             self.form_template,
@@ -527,7 +524,7 @@ class Question2DecimalsFormView(SimpleFormView):
             {'tried_questions': ExtendedUser.tried_questions + 1})
 
         # Add entry to answered questions
-        answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct) # noqa
+        answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)  # noqa
         answered_question.question = result
         g.user.answered_questions.append(answered_question)
         db.session.commit()
@@ -538,7 +535,6 @@ class Question2DecimalsFormView(SimpleFormView):
                                         'external_id': result.external_id},
                            'form_action': url_for('QuestionRandom.question_random')}
 
-        # TODO: why necessary? should happen automatically but redirect is wrong?!
         widgets = self._get_edit_widget(form=form)
         return self.render_template(
             self.form_template,
@@ -588,7 +584,7 @@ class Question1DecimalFormView(SimpleFormView):
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             is_answer_correct = True
         else:
-            message =\
+            message = \
                 f'FALSCH! Richtig gewesen wäre: {result.value1_lower_limit} <= Ergebnis <= {result.value1_upper_limit}'
             is_answer_correct = False
 
@@ -596,7 +592,7 @@ class Question1DecimalFormView(SimpleFormView):
             {'tried_questions': ExtendedUser.tried_questions + 1})
 
         # Add entry to answered questions
-        answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct) # noqa
+        answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)  # noqa
         answered_question.question = result
         g.user.answered_questions.append(answered_question)
 
@@ -614,7 +610,6 @@ class Question1DecimalFormView(SimpleFormView):
                                         'external_id': result.external_id},
                            'form_action': url_for('QuestionRandom.question_random')}
 
-        # TODO: why necessary? should happen automatically but redirect is wrong?!
         widgets = self._get_edit_widget(form=form)
         return self.render_template(
             self.form_template,
@@ -727,7 +722,7 @@ class QuestionSelect4FormView(SimpleFormView):
             {'tried_questions': ExtendedUser.tried_questions + 1})
 
         # Add entry to answered questions
-        answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct) # noqa
+        answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)  # noqa
         answered_question.question = result
         g.user.answered_questions.append(answered_question)
 
@@ -740,7 +735,6 @@ class QuestionSelect4FormView(SimpleFormView):
                                         'external_id': result.external_id},
                            'form_action': url_for('QuestionRandom.question_random')}
 
-        # TODO: why necessary? should happen automatically but redirect is wrong?!
         widgets = self._get_edit_widget(form=form)
         return self.render_template(
             self.form_template,

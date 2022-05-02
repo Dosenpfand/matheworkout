@@ -161,5 +161,5 @@ appbuilder.add_view_no_menu(ExtIdToForm())
 appbuilder.add_view_no_menu(AssignmentModelTeacherView())
 appbuilder.add_view_no_menu(UtilExtendedView())
 
-# TODO: deactivate?
+# NOTE: Could be removed for faster site startup
 appbuilder.security_cleanup()
