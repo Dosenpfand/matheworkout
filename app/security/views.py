@@ -16,6 +16,7 @@ def get_learning_groups():
     else:
         learning_groups = [g.user.learning_group_id]
 
+    print(learning_groups)
     return learning_groups
 
 

@@ -1,14 +1,11 @@
 from app import appbuilder, db
-from app.views.forms import QuestionSelfAssessedFormView, Question2of5FormView, Question1of6FormView, Question3to3FormView, \
-    Question2DecimalsFormView, Question1DecimalFormView, QuestionSelect4FormView
+from app.views.forms import QuestionSelfAssessedFormView, Question2of5FormView, Question1of6FormView, \
+    Question3to3FormView, Question2DecimalsFormView, Question1DecimalFormView, QuestionSelect4FormView
 from app.views.models import Question2of5ModelView, Question1of6ModelView, Question3to3ModelView, \
     Question2DecimalsModelView, Question1DecimalModelView, QuestionSelfAssessedModelView, QuestionSelect4ModelView, \
     QuestionModelView, AssocUserQuestionModelView, AssignmentModelAdminView, AssignmentModelStudentView, \
     QuestionModelIncorrectAnsweredView, QuestionModelCorrectAnsweredView, TopicModelView, LearningGroupModelView
 from app.views.general import QuestionRandom, ExtIdToForm, AssignmentModelTeacherView
-
-# TODO: delete for migrate/alembic to work properly?
-db.create_all()
 
 appbuilder.add_view(
     LearningGroupModelView,
@@ -153,14 +150,14 @@ appbuilder.add_view(
     icon="fa-question",
     category="Zufallsaufgaben",
     category_icon="fa-question")
-
 appbuilder.add_view_no_menu(QuestionRandom())
 appbuilder.add_link(
-    "Zufall", href="/questionrandom/", icon="fa-question", category="Zufallsaufgaben", category_icon="fa-question"
-)
+    "Zufall",
+    href="/questionrandom/",
+    icon="fa-question",
+    category="Zufallsaufgaben",
+    category_icon="fa-question")
 appbuilder.add_view_no_menu(ExtIdToForm())
-
-# TODO: add menu
 appbuilder.add_view_no_menu(AssignmentModelTeacherView())
 
 # TODO: deactivate?

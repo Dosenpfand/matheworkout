@@ -1,6 +1,6 @@
 from random import randrange
 
-from flask import url_for
+from flask import url_for, Response
 from flask_appbuilder import BaseView, has_access, expose
 from werkzeug.utils import redirect
 
@@ -88,9 +88,28 @@ class AssignmentModelTeacherView(BaseView):
     @expose('/show/<int:assignment_id>')
     @has_access
     def show(self, assignment_id):
-        assignment = db.session.query(Assignment).filter_by(id=assignment_id).first()
-        # TODO: handle None
         self.update_redirect()
+        questions, state_users_questions, users = self.get_assignment_data(assignment_id)
+
+        return self.render_template('assignment_teacher_view.html', users=users, questions=questions,
+                                    state_users_questions=state_users_questions)
+
+    @expose('/export/<int:assignment_id>')
+    @has_access
+    def export(self, assignment_id):
+        self.update_redirect()
+        questions, state_users_questions, users = self.get_assignment_data(assignment_id)
+        content = self.render_template('assignment_teacher_export.html', users=users, questions=questions,
+                                       state_users_questions=state_users_questions)
+
+        return Response(content, content_type='text/csv')
+
+    @staticmethod
+    def get_assignment_data(assignment_id):
+        assignment = db.session.query(Assignment).filter_by(id=assignment_id).first()
+
+        if not assignment:
+            return [], [], []
 
         users = assignment.learning_group.users
         questions = assignment.assigned_questions
@@ -99,6 +118,4 @@ class AssignmentModelTeacherView(BaseView):
             state_users_questions[user.id] = {}
             for question in questions:
                 state_users_questions[user.id][question.id] = question.state_user(user.id)
-
-        return self.render_template('assignment_teacher_view.html', users=users, questions=questions,
-                                    state_users_questions=state_users_questions)
+        return questions, state_users_questions, users

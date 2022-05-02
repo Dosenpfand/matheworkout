@@ -15,7 +15,7 @@ class FilterInFunctionWithNone(BaseFilter):
         func_ret_list = func()
 
         if None in func_ret_list:
-            filter_arg = field.in_(func_ret_list) | (field is None)
+            filter_arg = field.in_(func_ret_list) | (field == None) # noqa
         else:
             filter_arg = field.in_(func_ret_list)
         return query.filter(filter_arg)

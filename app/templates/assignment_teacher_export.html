@@ -1,0 +1,25 @@
+{% macro state_to_markup(state) -%}
+    {%- if state.name == 'not_tried' -%}
+        KEIN VERSUCH
+    {%- elif state.name == 'tried_failed' -%}
+        FALSCH
+    {%- elif state.name == 'solved_success' -%}
+        RICHTIG
+    {%- else -%}
+        {{state}}
+    {%- endif %}
+{%- endmacro %}
+
+{%- block content -%}
+Schüler \ Aufgabe;
+{%- for question in questions -%}
+{{ question }};
+{%- endfor -%}
+
+{% for user in users %}
+{{ user }};
+{%- for question in questions -%}
+{{ state_to_markup(state_users_questions[user.id][question.id]) }};
+{%- endfor -%}
+{%- endfor -%}
+{% endblock %}

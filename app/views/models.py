@@ -7,7 +7,7 @@ from wtforms import HiddenField
 from app.utils.filters import FilterQuestionByAnsweredCorrectness
 from app.models.general import Question, QuestionType, LearningGroup, Assignment, Topic
 from app.models.relations import AssocUserQuestion
-from app.utils.general import get_active_topics, link_formatter
+from app.utils.general import get_active_topics, link_formatter, state_to_emoji_markup
 
 
 class Question2of5ModelView(ModelView):
@@ -133,7 +133,7 @@ class QuestionModelView(ModelView):
     label_columns = {'description_image': 'Beschreibung',
                      'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'state': 'Status'}
     list_columns = ['external_id', 'topic', 'state']
-    formatters_columns = {'external_id': link_formatter}
+    formatters_columns = {'external_id': link_formatter, 'state': state_to_emoji_markup}
     page_size = 100
 
 
@@ -147,10 +147,14 @@ class LearningGroupModelView(ModelView):
     list_columns = ['name']
 
 
-# TODO: necessary?
 class AssignmentModelAdminView(ModelView):
     datamodel = SQLAInterface(Assignment)
-    list_columns = ['name', 'learning_group', 'evaluation_link']
+    list_columns = ['name', 'learning_group', 'additional_links']
+    label_columns = {'name': 'Titel',
+                     'learning_group': 'Klasse',
+                     'starts_on': 'Erhalten am',
+                     'is_due_on': 'Fällig am',
+                     'additional_links': 'Auswertung'}
 
 
 class AssignmentModelStudentView(ModelView):
@@ -162,7 +166,7 @@ class AssignmentModelStudentView(ModelView):
                      'starts_on': 'Erhalten am',
                      'is_due_on': 'Fällig am'}
     list_columns = ['name', 'starts_on', 'is_due_on']
-    show_columns = ['name']
+    show_columns = ['name', 'starts_on', 'is_due_on']
 
     # TODO: auto-expand + translation of title
     related_views = [QuestionModelView]

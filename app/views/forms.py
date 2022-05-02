@@ -12,6 +12,8 @@ from app.utils.general import get_question
 from app.views.widgets import ExtendedEditWidget
 
 
+# TODO: common base class? also in models.py?
+
 class QuestionSelfAssessedFormView(SimpleFormView):
     form = QuestionSelfAssessedForm
     form_title = 'Selbstkontrolle'
@@ -23,7 +25,7 @@ class QuestionSelfAssessedFormView(SimpleFormView):
         question_result = get_question(
             QuestionType.self_assessed.value)
 
-        if question_result == None:
+        if question_result is None:
             description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
             external_id = None
         else:
@@ -44,7 +46,7 @@ class QuestionSelfAssessedFormView(SimpleFormView):
                 {'tried_questions': ExtendedUser.tried_questions + 1})
 
             # Add entry to answered questions
-            answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)
+            answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct) # noqa
             prev_id = request.args.get('prev_id')
             question_old = db.session.query(Question).filter_by(id=prev_id).first()
             answered_question.question = question_old
@@ -59,13 +61,15 @@ class QuestionSelfAssessedFormView(SimpleFormView):
 
     def form_post(self, form):
         self.update_redirect()
-        id = form.id.data
-        result = db.session.query(Question).filter_by(id=id).first()
+        question_id = form.id.data
+        result = db.session.query(Question).filter_by(id=question_id).first()
 
         random_url = url_for('QuestionSelfAssessedFormView.this_form_get')
         solution_img = result.solution_image_img()
-        correct_link = f'<a class="btn btn-primary" href="{random_url}?answer=CORRECT&prev_id={id}">Richtig</a>'
-        incorrect_link = f'<a class="btn btn-primary" href="{random_url}?answer=INCORRECT&prev_id={id}">Falsch</a>'
+        correct_link = \
+            f'<a class="btn btn-primary" href="{random_url}?answer=CORRECT&prev_id={question_id}">Richtig</a>'
+        incorrect_link = \
+            f'<a class="btn btn-primary" href="{random_url}?answer=INCORRECT&prev_id={question_id}">Falsch</a>'
         description = Markup(f'{solution_img}')
         after_description = Markup(f'{correct_link} {incorrect_link}')
 
@@ -125,9 +129,9 @@ class Question2of5FormView(SimpleFormView):
 
     def form_post(self, form):
         self.update_redirect()
-        id = form.id.data
+        question_id = form.id.data
         result = db.session.query(Question).filter_by(
-            id=id, type=QuestionType.two_of_five.value).first()
+            id=question_id, type=QuestionType.two_of_five.value).first()
         form.checkbox1.label.text = result.get_option_image(
             result.option1_image)
         form.checkbox2.label.text = result.get_option_image(
@@ -166,7 +170,8 @@ class Question2of5FormView(SimpleFormView):
                 (form.checkbox4.data == result.option4_is_correct) and \
                 (form.checkbox5.data == result.option5_is_correct):
             message = 'RICHTIG!'
-            db.session.query(ExtendedUser).filter_by(id=g.user.id).update({'correct_questions': ExtendedUser.correct_questions + 1})
+            db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
+                {'correct_questions': ExtendedUser.correct_questions + 1})
             is_answer_correct = True
         else:
             message = 'FALSCH!'
@@ -176,7 +181,7 @@ class Question2of5FormView(SimpleFormView):
             {'tried_questions': ExtendedUser.tried_questions + 1})
 
         # Add entry to answered questions
-        answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)
+        answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct) # noqa
         answered_question.question = result
         g.user.answered_questions.append(answered_question)
 
@@ -239,9 +244,9 @@ class Question1of6FormView(SimpleFormView):
 
     def form_post(self, form):
         self.update_redirect()
-        id = form.id.data
+        question_id = form.id.data
         result = db.session.query(Question).filter_by(
-            id=id, type=QuestionType.one_of_six.value).first()
+            id=question_id, type=QuestionType.one_of_six.value).first()
         form.checkbox1.label.text = result.get_option_image(
             result.option1_image)
         form.checkbox2.label.text = result.get_option_image(
@@ -299,7 +304,7 @@ class Question1of6FormView(SimpleFormView):
             {'tried_questions': ExtendedUser.tried_questions + 1})
 
         # Add entry to answered questions
-        answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)
+        answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct) # noqa
         answered_question.question = result
         g.user.answered_questions.append(answered_question)
         db.session.commit()
@@ -373,9 +378,9 @@ class Question3to3FormView(SimpleFormView):
 
     def form_post(self, form):
         self.update_redirect()
-        id = form.id.data
+        question_id = form.id.data
         result = db.session.query(Question).filter_by(
-            id=id, type=QuestionType.three_to_three.value).first()
+            id=question_id, type=QuestionType.three_to_three.value).first()
         form.checkbox1a.label.text = result.get_option_small_image(
             result.option1a_image)
         form.checkbox1b.label.text = result.get_option_small_image(
@@ -432,7 +437,7 @@ class Question3to3FormView(SimpleFormView):
             {'tried_questions': ExtendedUser.tried_questions + 1})
 
         # Add entry to answered questions
-        answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)
+        answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct) # noqa
         answered_question.question = result
         g.user.answered_questions.append(answered_question)
         db.session.commit()
@@ -484,9 +489,9 @@ class Question2DecimalsFormView(SimpleFormView):
 
     def form_post(self, form):
         self.update_redirect()
-        id = form.id.data
+        question_id = form.id.data
         result = db.session.query(Question).filter_by(
-            id=id, type=QuestionType.two_decimals.value).first()
+            id=question_id, type=QuestionType.two_decimals.value).first()
         form.value1.label.text = 'Ergebnis 1'
         form.value2.label.text = 'Ergebnis 2'
         value1_correct = False
@@ -510,14 +515,17 @@ class Question2DecimalsFormView(SimpleFormView):
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             is_answer_correct = True
         else:
-            message = f'FALSCH! Richtig gewesen wäre: {result.value1_lower_limit} <= Ergebnis 1 <= {result.value1_upper_limit}, {result.value2_lower_limit} <= Ergebnis 2 <= {result.value2_upper_limit}'
+            message = \
+                f'FALSCH! Richtig gewesen wäre: ' \
+                f'{result.value1_lower_limit} <= Ergebnis 1 <= {result.value1_upper_limit},' \
+                f'{result.value2_lower_limit} <= Ergebnis 2 <= {result.value2_upper_limit}'
             is_answer_correct = False
 
         db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
 
         # Add entry to answered questions
-        answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)
+        answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct) # noqa
         answered_question.question = result
         g.user.answered_questions.append(answered_question)
         db.session.commit()
@@ -548,7 +556,7 @@ class Question1DecimalFormView(SimpleFormView):
     def form_get(self, form):
         self.update_redirect()
         question_result = get_question(QuestionType.one_decimal.value)
-        if question_result == None:
+        if question_result is None:
             description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
             external_id = None
             error = True
@@ -567,9 +575,9 @@ class Question1DecimalFormView(SimpleFormView):
 
     def form_post(self, form):
         self.update_redirect()
-        id = form.id.data
+        question_id = form.id.data
         result = db.session.query(Question).filter_by(
-            id=id, type=QuestionType.one_decimal.value).first()
+            id=question_id, type=QuestionType.one_decimal.value).first()
         form.value.label.text = 'Ergebnis'
 
         if (form.value.data <= result.value1_upper_limit) and (form.value.data >= result.value1_lower_limit):
@@ -579,14 +587,15 @@ class Question1DecimalFormView(SimpleFormView):
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             is_answer_correct = True
         else:
-            message = f'FALSCH! Richtig gewesen wäre: {result.value1_lower_limit} <= Ergebnis <= {result.value1_upper_limit}'
+            message =\
+                f'FALSCH! Richtig gewesen wäre: {result.value1_lower_limit} <= Ergebnis <= {result.value1_upper_limit}'
             is_answer_correct = False
 
         db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
             {'tried_questions': ExtendedUser.tried_questions + 1})
 
         # Add entry to answered questions
-        answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)
+        answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct) # noqa
         answered_question.question = result
         g.user.answered_questions.append(answered_question)
 
@@ -595,7 +604,7 @@ class Question1DecimalFormView(SimpleFormView):
             db.session.commit()
         except Exception as e:
             db.session.rollback()
-            # TODO: import loggin
+            # TODO: import logging
             # log.error(c.LOGMSG_ERR_SEC_UPD_USER.format(str(e)))
 
         flash(message, 'info')
@@ -667,9 +676,9 @@ class QuestionSelect4FormView(SimpleFormView):
 
     def form_post(self, form):
         self.update_redirect()
-        id = form.id.data
+        question_id = form.id.data
         result = db.session.query(Question).filter_by(
-            id=id, type=QuestionType.select_four.value).first()
+            id=question_id, type=QuestionType.select_four.value).first()
         form.selection1.label.text = result.get_selection_image(
             result.selection1_image)
         form.selection2.label.text = result.get_selection_image(
@@ -718,7 +727,7 @@ class QuestionSelect4FormView(SimpleFormView):
             {'tried_questions': ExtendedUser.tried_questions + 1})
 
         # Add entry to answered questions
-        answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)
+        answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct) # noqa
         answered_question.question = result
         g.user.answered_questions.append(answered_question)
 

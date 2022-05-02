@@ -4,21 +4,23 @@ from flask import Flask
 from flask_appbuilder import AppBuilder, SQLA
 from flask_migrate import Migrate
 
-from app.views.index import ExtendedIndexView
+db = SQLA()
+appbuilder = AppBuilder()
+migrate = Migrate()
 
-logging.basicConfig(format="%(asctime)s:%(levelname)s:%(name)s:%(message)s")
-logging.getLogger().setLevel(logging.WARNING)
 
-app = Flask(__name__)
-app.config.from_object("config")
-db = SQLA(app)
-migrate = Migrate(app, db)
+def create_app(config='config'):
+    logging.basicConfig(format="%(asctime)s:%(levelname)s:%(name)s:%(message)s")
+    logging.getLogger().setLevel(logging.WARNING)
 
-from app.security.general import ExtendedSecurityManager  # noqa
+    app = Flask(__name__)
 
-appbuilder = AppBuilder(
-    app, db.session, security_manager_class=ExtendedSecurityManager, indexview=ExtendedIndexView,
-    base_template='extended_base.html')
-
-from app.models import general # noqa
-from app.views import views # noqa
+    with app.app_context():
+        app.config.from_object(config)
+        db.init_app(app)
+        migrate.init_app(app, db)
+        appbuilder.init_app(app, db.session)
+        from app.models import general  # noqa
+        from app.views import views  # noqa
+        appbuilder.post_init()
+    return app

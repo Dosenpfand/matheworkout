@@ -3,12 +3,29 @@ from markupsafe import Markup
 from sqlalchemy import func
 
 from app import db
-from app.models.general import Question, Topic
+from app.models.general import Question, Topic, QuestionUserState
 
 
 def link_formatter(external_id):
     url = url_for(f'ExtIdToForm.ext_id_to_form', ext_id=external_id)
     return Markup(f'<a href="{url}">{external_id}</a>')
+
+
+# TODO: should be in jinja and imported!
+def state_to_emoji_markup(state):
+    if state is QuestionUserState.solved_success:
+        emoji = 'bi-emoji-sunglasses'
+        label = 'label-success'
+        title = 'Richtig gelöst'
+    elif state is QuestionUserState.tried_failed:
+        emoji = 'bi-emoji-frown'
+        label = 'label-danger'
+        title = 'Falsch gelöst'
+    else:
+        emoji = 'bi-emoji-neutral'
+        label = 'label-warning'
+        title = 'Kein Versuch'
+    return Markup(f'<span class="label {label}" title="{title}"><i class="bi {emoji}"></i></span>')
 
 
 def get_question(type):

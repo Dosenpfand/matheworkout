@@ -45,6 +45,12 @@ class QuestionType(enum.Enum):
         return [el.value for el in QuestionType]
 
 
+class QuestionUserState(enum.Enum):
+    not_tried = 1
+    tried_failed = 2
+    solved_success = 3
+
+
 class Question(Model):
     # common
     id = Column(Integer, primary_key=True)
@@ -149,16 +155,15 @@ class Question(Model):
         for assoc in self.answered_users:
             if assoc.user_id == user_id:
                 if assoc.is_answer_correct:
-                    return Markup(
-                        '<span class="label label-success"><i class="bi bi-emoji-sunglasses"></i> RICHTIG</span>')
+                    return QuestionUserState.solved_success
                 else:
                     tried_but_incorrect = True
                     print(tried_but_incorrect)
 
         if tried_but_incorrect:
-            return Markup('<span class="label label-danger"><i class="bi bi-emoji-frown"></i> FALSCH</span>')
+            return QuestionUserState.tried_failed
         else:
-            return Markup('<span class="label label-warning"><i class="bi bi-emoji-neutral"></i> ...</span>')
+            return QuestionUserState.not_tried
 
     def state(self):
         return self.state_user(g.user.id)
@@ -168,12 +173,14 @@ class Question(Model):
         return Markup('<img src="' + im.get_url(self.description_image) +
                       '" alt="Photo" class="img-rounded img-responsive">')
 
-    def get_option_image(self, option):
+    @staticmethod
+    def get_option_image(option):
         im = ImageManager()
         return Markup('<img src="' + im.get_url(option) +
                       '" alt="Photo" class="img-rounded img-responsive" style="max-width:2048px;">')
 
-    def get_option_small_image(self, option):
+    @staticmethod
+    def get_option_small_image(option):
         im = ImageManager()
         return Markup('<img src="' + im.get_url(option) +
                       '" alt="Photo" class="img-rounded img-responsive" style="max-width:400px;">')
@@ -185,7 +192,8 @@ class Question(Model):
                       '" alt="Photo" class="img-rounded img-responsive">')
 
     # select_four only
-    def get_selection_image(self, selection):
+    @staticmethod
+    def get_selection_image(selection):
         im = ImageManager()
         return Markup('<img src="' + im.get_url(selection) +
                       '" alt="Photo" class="img-rounded img-responsive" style="min-width:100%;max-width:400px;">')
@@ -204,9 +212,24 @@ class Assignment(Model):
     def __repr__(self):
         return self.name
 
-    def evaluation_link(self):
-        url = url_for('AssignmentModelTeacherView.show', assignment_id=self.id)
-        return Markup(f'<a href="{url}")>Auswertung</a>')
+    def starts_on_format_de(self):
+        return self.starts_on.strftime
+
+    def additional_links(self):
+        show_url = url_for('AssignmentModelTeacherView.show', assignment_id=self.id)
+        export_url = url_for('AssignmentModelTeacherView.export', assignment_id=self.id)
+
+        return Markup(f'''
+<div class="btn-group btn-group-xs" style="display: flex;">
+    <a href="{show_url}" class="btn btn-sm btn-default" data-toggle="tooltip" rel="tooltip" title="" data-original-title="Auswertung anzeigen">
+        <span class="sr-only">Show</span>
+        <i class="fa fa-table" aria-hidden="true"></i>
+    </a>
+    <a href="{export_url}" class="btn btn-sm btn-default" data-toggle="tooltip" rel="tooltip" title="" data-original-title="Auswertung exportieren">
+        <span class="sr-only">Export</span>
+        <i class="fa fa-download"></i>
+    </a>
+</div>''')
 
 
 class LearningGroup(Model):

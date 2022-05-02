@@ -1,4 +1,17 @@
 {% extends "appbuilder/base.html" %}
+
+{% macro state_to_markup(state) -%}
+    {% if state.name == 'not_tried' %}
+        <span class="label label-warning"><i class="bi bi-emoji-neutral"></i></span>
+    {% elif state.name == 'tried_failed' %}
+        <span class="label label-danger"><i class="bi bi-emoji-frown"></i></span>
+    {% elif state.name == 'solved_success' %}
+        <span class="label label-success"><i class="bi bi-emoji-sunglasses"></i></span>
+    {% else %}
+        {{state}}
+    {% endif %}
+{%- endmacro %}
+
 {% block content %}
 <h1>{{ name }}</h1>
 <table class="table">
@@ -15,7 +28,7 @@
         <tr>
             <th scope="row">{{ user }}</th>
 {% for question in questions %}
-            <td>{{ state_users_questions[user.id][question.id] }}</td>
+            <td>{{ state_to_markup(state_users_questions[user.id][question.id]) }}</td>
 {% endfor %}
         </tr>
 {% endfor %}
