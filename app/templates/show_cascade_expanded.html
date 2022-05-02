@@ -1,0 +1,12 @@
+{% extends "appbuilder/general/model/show_cascade.html" %}
+{% import 'appbuilder/general/lib.html' as lib %}
+
+{% block related_views %}
+    {% if related_views is defined %}
+        {% for view in related_views %}
+            {% call lib.accordion_tag(view.__class__.__name__,view.title, True) %}
+                {{ widgets.get('related_views')[loop.index - 1](pk = pk)|safe }}
+            {% endcall %}
+        {% endfor %}
+    {% endif %}
+{% endblock related_views %}

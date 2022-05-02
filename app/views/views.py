@@ -1,11 +1,11 @@
-from app import appbuilder, db
+from app import appbuilder
 from app.views.forms import QuestionSelfAssessedFormView, Question2of5FormView, Question1of6FormView, \
     Question3to3FormView, Question2DecimalsFormView, Question1DecimalFormView, QuestionSelect4FormView
+from app.views.general import QuestionRandom, ExtIdToForm, AssignmentModelTeacherView, UtilExtendedView
 from app.views.models import Question2of5ModelView, Question1of6ModelView, Question3to3ModelView, \
     Question2DecimalsModelView, Question1DecimalModelView, QuestionSelfAssessedModelView, QuestionSelect4ModelView, \
     QuestionModelView, AssocUserQuestionModelView, AssignmentModelAdminView, AssignmentModelStudentView, \
     QuestionModelIncorrectAnsweredView, QuestionModelCorrectAnsweredView, TopicModelView, LearningGroupModelView
-from app.views.general import QuestionRandom, ExtIdToForm, AssignmentModelTeacherView
 
 appbuilder.add_view(
     LearningGroupModelView,
@@ -159,6 +159,7 @@ appbuilder.add_link(
     category_icon="fa-question")
 appbuilder.add_view_no_menu(ExtIdToForm())
 appbuilder.add_view_no_menu(AssignmentModelTeacherView())
+appbuilder.add_view_no_menu(UtilExtendedView())
 
 # TODO: deactivate?
 appbuilder.security_cleanup()

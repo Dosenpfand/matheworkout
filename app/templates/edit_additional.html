@@ -31,7 +31,7 @@
         <div class="well well-sm">{{question['after_description']}}</div>
         {% endif %}
         {% if not question['error'] %}
-        {{ widgets.get('edit')(form_action=form_action,submit_text=question['submit_text'],additional_col=additional_col)|safe }}
+        {{ widgets.get('edit')(form_action=form_action,submit_text=question['submit_text'],back_count=question.get('back_count', 1),additional_col=additional_col)|safe }}
         {% endif %}
     </div>
 {% endblock %}

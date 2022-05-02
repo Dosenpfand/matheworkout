@@ -1,12 +1,20 @@
 
 {% import 'appbuilder/general/lib.html' as lib %}
 
-{% macro extended_render_form_controls(submit_text="Submit") %}
+{% macro multiple_lnk_back(count=1) %}
+    <a href="{{url_for('UtilExtendedView' + '.back_mult', count=count)}}" class="btn btn-sm btn-default" data-toggle="tooltip" rel="tooltip"
+       title="{{_('Back')}}">
+        <span class="sr-only">{{ _('Back') }}</span>
+        <i class="fa fa-arrow-left"></i>
+    </a>
+{% endmacro %}
+
+{% macro extended_render_form_controls(submit_text="Submit", back_count=1) %}
     <div class="well well-sm">
         {% if submit_text %}
         <button type="submit" class="btn  btn-sm btn-primary">{{submit_text}}</button>
         {% endif %}
-        {{ lib.lnk_back() }}
+        {{ multiple_lnk_back(back_count) }}
     </div>
 {% endmacro %}
 
@@ -72,5 +80,5 @@
         </div>
     {% endif %}
 
-    {{ extended_render_form_controls(submit_text) }}
+    {{ extended_render_form_controls(submit_text, back_count) }}
 </form>

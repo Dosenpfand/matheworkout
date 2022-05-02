@@ -21,7 +21,7 @@ class QuestionSelfAssessedFormView(SimpleFormView):
     edit_widget = ExtendedEditWidget
 
     def form_get(self, form):
-        self.update_redirect()
+
         question_result = get_question(
             QuestionType.self_assessed.value)
 
@@ -38,38 +38,43 @@ class QuestionSelfAssessedFormView(SimpleFormView):
             is_answer_correct = False
 
             if answer_value == 'CORRECT':
-                user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
+                db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                     {'correct_questions': ExtendedUser.correct_questions + 1})
                 is_answer_correct = True
 
-            user_result = db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
+            db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'tried_questions': ExtendedUser.tried_questions + 1})
 
             # Add entry to answered questions
             answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct) # noqa
-            prev_id = request.args.get('prev_id')
-            question_old = db.session.query(Question).filter_by(id=prev_id).first()
-            answered_question.question = question_old
+            answered_question.question = question_result
             g.user.answered_questions.append(answered_question)
 
             db.session.commit()
+            submit_text = None
+            back_count = 2
+        else:
+            submit_text = 'Auswerten'
+            back_count = 1
+            self.update_redirect()
 
         self.extra_args = {'question': {
             'description': description,
             'external_id': external_id,
-            'submit_text': 'Auswerten'}}
-
+            'submit_text': submit_text,
+            'back_count': back_count}}
     def form_post(self, form):
-        self.update_redirect()
         question_id = form.id.data
         result = db.session.query(Question).filter_by(id=question_id).first()
 
-        random_url = url_for('QuestionSelfAssessedFormView.this_form_get')
+        base_url = url_for('QuestionSelfAssessedFormView.this_form_get')
+        url = f'{base_url}?ext_id={result.external_id}'
+
         solution_img = result.solution_image_img()
         correct_link = \
-            f'<a class="btn btn-primary" href="{random_url}?answer=CORRECT&prev_id={question_id}">Richtig</a>'
+            f'<a class="btn btn-primary" href="{url}&answer=CORRECT">Richtig</a>'
         incorrect_link = \
-            f'<a class="btn btn-primary" href="{random_url}?answer=INCORRECT&prev_id={question_id}">Falsch</a>'
+            f'<a class="btn btn-primary" href="{url}&answer=INCORRECT">Falsch</a>'
         description = Markup(f'{solution_img}')
         after_description = Markup(f'{correct_link} {incorrect_link}')
 
@@ -190,8 +195,7 @@ class Question2of5FormView(SimpleFormView):
         flash(message, 'info')
 
         self.extra_args = {'question': {'description': result.description_image_img(),
-                                        'external_id': result.external_id,
-                                        'submit_text': 'Nächste Aufgabe'},
+                                        'external_id': result.external_id},
                            'form_action': url_for('QuestionRandom.question_random')}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
@@ -312,8 +316,7 @@ class Question1of6FormView(SimpleFormView):
         flash(message, 'info')
 
         self.extra_args = {'question': {'description': result.description_image_img(),
-                                        'external_id': result.external_id,
-                                        'submit_text': 'Nächste Aufgabe'},
+                                        'external_id': result.external_id},
                            'form_action': url_for('QuestionRandom.question_random')}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
@@ -445,8 +448,7 @@ class Question3to3FormView(SimpleFormView):
         flash(message, 'info')
 
         self.extra_args = {'question': {'description': result.description_image_img(),
-                                        'external_id': result.external_id,
-                                        'submit_text': 'Nächste Aufgabe'},
+                                        'external_id': result.external_id},
                            'form_action': url_for('QuestionRandom.question_random')}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
@@ -533,8 +535,7 @@ class Question2DecimalsFormView(SimpleFormView):
         flash(message, 'info')
 
         self.extra_args = {'question': {'description': result.description_image_img(),
-                                        'external_id': result.external_id,
-                                        'submit_text': 'Nächste Aufgabe'},
+                                        'external_id': result.external_id},
                            'form_action': url_for('QuestionRandom.question_random')}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
@@ -610,8 +611,7 @@ class Question1DecimalFormView(SimpleFormView):
         flash(message, 'info')
 
         self.extra_args = {'question': {'description': result.description_image_img(),
-                                        'external_id': result.external_id,
-                                        'submit_text': 'Nächste Aufgabe'},
+                                        'external_id': result.external_id},
                            'form_action': url_for('QuestionRandom.question_random')}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!
@@ -737,8 +737,7 @@ class QuestionSelect4FormView(SimpleFormView):
 
         self.extra_args = {'question': {'description': result.description_image_img(),
                                         'options': options,
-                                        'external_id': result.external_id,
-                                        'submit_text': 'Nächste Aufgabe'},
+                                        'external_id': result.external_id},
                            'form_action': url_for('QuestionRandom.question_random')}
 
         # TODO: why necessary? should happen automatically but redirect is wrong?!

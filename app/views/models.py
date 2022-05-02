@@ -15,13 +15,13 @@ class Question2of5ModelView(ModelView):
     base_filters = [['topic_id', FilterInFunction, get_active_topics], [
         'type', FilterEqual, QuestionType.two_of_five.value]]
     title = '2 aus 5'
-    add_columns = Question.cols_two_of_five
-    add_form_extra_fields = {'type': HiddenField(
-        default=QuestionType.two_of_five.value)}
     list_title = title
     show_title = title
     add_title = title
     edit_title = title
+    add_columns = Question.cols_two_of_five
+    add_form_extra_fields = {'type': HiddenField(
+        default=QuestionType.two_of_five.value)}
     label_columns = {'description_image': 'Beschreibung',
                      'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich'}
     list_columns = ['external_id', 'topic']
@@ -35,6 +35,10 @@ class Question1of6ModelView(ModelView):
     base_filters = [['topic_id', FilterInFunction, get_active_topics], [
         'type', FilterEqual, QuestionType.one_of_six.value]]
     title = '1 aus 6'
+    list_title = title
+    show_title = title
+    add_title = title
+    edit_title = title
     add_columns = Question.cols_one_of_six
     add_form_extra_fields = {'type': HiddenField(
         default=QuestionType.one_of_six.value)}
@@ -51,6 +55,10 @@ class Question3to3ModelView(ModelView):
     base_filters = [['topic_id', FilterInFunction, get_active_topics], [
         'type', FilterEqual, QuestionType.three_to_three.value]]
     title = 'Lückentext'
+    list_title = title
+    show_title = title
+    add_title = title
+    edit_title = title
     add_columns = Question.cols_three_to_three
     add_form_extra_fields = {'type': HiddenField(
         default=QuestionType.three_to_three.value)}
@@ -67,6 +75,10 @@ class Question2DecimalsModelView(ModelView):
     base_filters = [['topic_id', FilterInFunction, get_active_topics], [
         'type', FilterEqual, QuestionType.two_decimals.value]]
     title = 'Werteingabe zwei Zahlen'
+    list_title = title
+    show_title = title
+    add_title = title
+    edit_title = title
     add_columns = Question.cols_two_decimals
     add_form_extra_fields = {'type': HiddenField(
         default=QuestionType.two_decimals.value)}
@@ -83,6 +95,10 @@ class Question1DecimalModelView(ModelView):
     base_filters = [['topic_id', FilterInFunction, get_active_topics], [
         'type', FilterEqual, QuestionType.one_decimal.value]]
     title = 'Werteingabe eine Zahl'
+    list_title = title
+    show_title = title
+    add_title = title
+    edit_title = title
     add_columns = Question.cols_one_decimal
     add_form_extra_fields = {'type': HiddenField(
         default=QuestionType.one_decimal.value)}
@@ -99,6 +115,10 @@ class QuestionSelfAssessedModelView(ModelView):
     base_filters = [['topic_id', FilterInFunction, get_active_topics], [
         'type', FilterEqual, QuestionType.self_assessed.value]]
     title = 'Selbstkontrolle'
+    list_title = title
+    show_title = title
+    add_title = title
+    edit_title = title
     add_columns = Question.cols_self_assessed
     add_form_extra_fields = {'type': HiddenField(
         default=QuestionType.self_assessed.value)}
@@ -115,6 +135,10 @@ class QuestionSelect4ModelView(ModelView):
     base_filters = [['topic_id', FilterInFunction, get_active_topics], [
         'type', FilterEqual, QuestionType.select_four.value]]
     title = 'Zuordnung'
+    list_title = title
+    show_title = title
+    add_title = title
+    edit_title = title
     add_columns = Question.cols_select_four
     add_form_extra_fields = {'type': HiddenField(
         default=QuestionType.select_four.value)}
@@ -130,6 +154,10 @@ class QuestionModelView(ModelView):
     datamodel = SQLAInterface(Question)
     base_filters = [['topic_id', FilterInFunction, get_active_topics]]
     title = 'Aufgaben'
+    list_title = title
+    show_title = title
+    add_title = title
+    edit_title = title
     label_columns = {'description_image': 'Beschreibung',
                      'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'state': 'Status'}
     list_columns = ['external_id', 'topic', 'state']
@@ -167,10 +195,14 @@ class AssignmentModelStudentView(ModelView):
                      'is_due_on': 'Fällig am'}
     list_columns = ['name', 'starts_on', 'is_due_on']
     show_columns = ['name', 'starts_on', 'is_due_on']
+    title = 'Hausübungen'
+    list_title = title
+    show_title = title
+    add_title = title
+    edit_title = title
 
-    # TODO: auto-expand + translation of title
     related_views = [QuestionModelView]
-    show_template = "appbuilder/general/model/show_cascade.html"
+    show_template = "show_cascade_expanded.html"
     edit_template = "appbuilder/general/model/edit_cascade.html"
 
 
@@ -178,7 +210,11 @@ class QuestionModelIncorrectAnsweredView(ModelView):
     datamodel = SQLAInterface(Question)
     base_filters = [['topic_id', FilterInFunction, get_active_topics],
                     ['', FilterQuestionByAnsweredCorrectness, False]]
-    title = 'Aufgaben'
+    title = 'Aufgaben (falsch beantwortet)'
+    list_title = title
+    show_title = title
+    add_title = title
+    edit_title = title
     label_columns = {'description_image': 'Beschreibung',
                      'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich'}
     list_columns = ['external_id', 'topic']
@@ -190,7 +226,11 @@ class QuestionModelCorrectAnsweredView(ModelView):
     datamodel = SQLAInterface(Question)
     base_filters = [['topic_id', FilterInFunction, get_active_topics],
                     ['', FilterQuestionByAnsweredCorrectness, True]]
-    title = 'Aufgaben'
+    title = 'Aufgaben (richtig beantwortet)'
+    list_title = title
+    show_title = title
+    add_title = title
+    edit_title = title
     label_columns = {'description_image': 'Beschreibung',
                      'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich'}
     list_columns = ['external_id', 'topic']

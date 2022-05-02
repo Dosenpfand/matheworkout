@@ -60,7 +60,7 @@ class ExtIdToForm(BaseView):
     route_base = "/"
 
     @has_access
-    @expose("extidtoform/<ext_id>", methods=['GET'])
+    @expose("extidtoform/<int:ext_id>")
     def ext_id_to_form(self, ext_id):
         question = db.session.query(Question).filter_by(
             external_id=ext_id).first()
@@ -119,3 +119,14 @@ class AssignmentModelTeacherView(BaseView):
             for question in questions:
                 state_users_questions[user.id][question.id] = question.state_user(user.id)
         return questions, state_users_questions, users
+
+
+class UtilExtendedView(BaseView):
+    route_base = ''
+    default_view = 'back'
+
+    @expose("/back_mult/<int:count>")
+    def back_mult(self, count):
+        for i in range(count-1):
+            self.get_redirect()
+        return redirect(self.get_redirect())
