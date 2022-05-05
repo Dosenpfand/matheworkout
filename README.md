@@ -14,5 +14,3 @@ flask run
 flask db migrate -m "message."
 flask db upgrade
 ```
-
-## TODO

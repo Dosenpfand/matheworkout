@@ -62,8 +62,7 @@ class Question(Model):
     description_image = Column(ImageColumn(size=(10000, 10000, True)))
     type = Column(Enum(QuestionType), index=True)
     answered_users = relationship("AssocUserQuestion", back_populates="question")
-    # TODO: back_populates or backref needed?
-    assignments = relationship("Assignment", secondary=assoc_assignment_question)
+    assignments = relationship("Assignment", secondary=assoc_assignment_question, back_populates="assigned_questions")
     video_url = Column(String(), nullable=True)
     cols_common = ['external_id', 'topic', 'description_image', 'type', 'video_url']
 
@@ -229,8 +228,7 @@ class Assignment(Model):
     name = Column(String(150), nullable=False)
     learning_group_id = Column(Integer, ForeignKey("learning_group.id"))
     learning_group = relationship("LearningGroup")
-    # TODO: back_populates or backref needed?
-    assigned_questions = relationship("Question", secondary=assoc_assignment_question)
+    assigned_questions = relationship("Question", secondary=assoc_assignment_question, back_populates="assignments")
     starts_on = Column(DateTime, nullable=False)
     is_due_on = Column(DateTime, nullable=False)
 

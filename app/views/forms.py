@@ -8,7 +8,7 @@ from app.forms.forms import QuestionSelfAssessedForm, Question2of5Form, Question
 from app.models.general import QuestionType, Question
 from app.models.relations import AssocUserQuestion
 from app.security.models import ExtendedUser
-from app.utils.general import get_question
+from app.utils.general import get_question, commit_safely
 from app.views.widgets import ExtendedEditWidget
 
 
@@ -49,8 +49,8 @@ class QuestionSelfAssessedFormView(SimpleFormView):
             answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)  # noqa
             answered_question.question = question_result
             g.user.answered_questions.append(answered_question)
+            commit_safely(db.session)
 
-            db.session.commit()
             submit_text = None
             back_count = 2
         else:
@@ -190,8 +190,7 @@ class Question2of5FormView(SimpleFormView):
         answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)  # noqa
         answered_question.question = result
         g.user.answered_questions.append(answered_question)
-
-        db.session.commit()
+        commit_safely(db.session)
 
         flash(message, 'info')
 
@@ -299,7 +298,7 @@ class Question1of6FormView(SimpleFormView):
             message = 'RICHTIG!'
             db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
-            db.session.commit()
+            commit_safely(db.session)
             is_answer_correct = True
         else:
             message = 'FALSCH!'
@@ -312,7 +311,7 @@ class Question1of6FormView(SimpleFormView):
         answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)  # noqa
         answered_question.question = result
         g.user.answered_questions.append(answered_question)
-        db.session.commit()
+        commit_safely(db.session)
 
         flash(message, 'info')
 
@@ -444,7 +443,7 @@ class Question3to3FormView(SimpleFormView):
         answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)  # noqa
         answered_question.question = result
         g.user.answered_questions.append(answered_question)
-        db.session.commit()
+        commit_safely(db.session)
 
         flash(message, 'info')
 
@@ -531,7 +530,7 @@ class Question2DecimalsFormView(SimpleFormView):
         answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)  # noqa
         answered_question.question = result
         g.user.answered_questions.append(answered_question)
-        db.session.commit()
+        commit_safely(db.session)
 
         flash(message, 'info')
 
@@ -600,14 +599,7 @@ class Question1DecimalFormView(SimpleFormView):
         answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)  # noqa
         answered_question.question = result
         g.user.answered_questions.append(answered_question)
-
-        # TODO: for all commits
-        try:
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            # TODO: import logging
-            # log.error(c.LOGMSG_ERR_SEC_UPD_USER.format(str(e)))
+        commit_safely(db.session)
 
         flash(message, 'info')
 
@@ -732,7 +724,7 @@ class QuestionSelect4FormView(SimpleFormView):
         answered_question.question = result
         g.user.answered_questions.append(answered_question)
 
-        db.session.commit()
+        commit_safely(db.session)
 
         flash(message, 'info')
 

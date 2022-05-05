@@ -1,3 +1,5 @@
+import logging
+
 from flask import url_for, request, g
 from markupsafe import Markup
 from sqlalchemy import func
@@ -72,3 +74,11 @@ def safe_math_eval(string):
         if char not in allowed_chars:
             return ''
     return eval(string)
+
+
+def commit_safely(db_session):
+    try:
+        db_session.commit()
+    except Exception as e:
+        db_session.rollback()
+        logging.warning(e, exc_info=True)
