@@ -1,4 +1,6 @@
 import enum
+import re
+from urllib.parse import urlparse, parse_qs
 
 from flask import Markup, g, url_for
 from flask_appbuilder import Model
@@ -59,10 +61,11 @@ class Question(Model):
     topic = relationship("Topic")
     description_image = Column(ImageColumn(size=(10000, 10000, True)))
     type = Column(Enum(QuestionType), index=True)
-    cols_common = ['external_id', 'topic', 'description_image', 'type']
     answered_users = relationship("AssocUserQuestion", back_populates="question")
     # TODO: back_populates or backref needed?
     assignments = relationship("Assignment", secondary=assoc_assignment_question)
+    video_url = Column(String(), nullable=True)
+    cols_common = ['external_id', 'topic', 'description_image', 'type', 'video_url']
 
     # self_assessed only
     solution_image = Column(ImageColumn(size=(10000, 10000, True)))
@@ -148,7 +151,17 @@ class Question(Model):
 
     # common
     def __repr__(self):
-        return f'{self.external_id} ({self.topic.name[0:6]})'
+        topic_name = self.topic.name
+        regex = r"^[a-zA-z]{1,4}\s*\d{1,4}(\.\d{1,4})?"
+
+        if match := re.match(regex, topic_name):
+            topic_short_name = match.group()
+        elif len(topic_name) < 6:
+            topic_short_name = topic_name
+        else:
+            topic_short_name = self.topic.name[0:6]
+
+        return f'{self.external_id} ({topic_short_name})'
 
     def state_user(self, user_id):
         tried_but_incorrect = False
@@ -171,6 +184,19 @@ class Question(Model):
         im = ImageManager()
         return Markup('<img src="' + im.get_url(self.description_image) +
                       '" alt="Photo" class="img-rounded img-responsive">')
+
+    def video_embed_url(self):
+        url = urlparse(self.video_url)
+        if not url.hostname == 'www.youtube.com':
+            return None
+        queries = parse_qs(url.query)
+        if queries.get('v', False):
+            video_id = queries['v'][0]
+        else:
+            return None
+
+        video_embed_url = f'https://www.youtube-nocookie.com/embed/{video_id}'
+        return video_embed_url
 
     @staticmethod
     def get_option_image(option):

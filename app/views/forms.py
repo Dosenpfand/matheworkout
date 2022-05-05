@@ -83,7 +83,8 @@ class QuestionSelfAssessedFormView(SimpleFormView):
             'description': description,
             'after_description': after_description,
             'external_id': result.external_id,
-            'submit_text': None},
+            'submit_text': None,
+            'video_embed_url': result.video_embed_url()},
             'form_action': url_for('QuestionRandom.question_random')}
 
         widgets = self._get_edit_widget(form=form)
@@ -195,7 +196,8 @@ class Question2of5FormView(SimpleFormView):
         flash(message, 'info')
 
         self.extra_args = {'question': {'description': result.description_image_img(),
-                                        'external_id': result.external_id},
+                                        'external_id': result.external_id,
+                                        'video_embed_url': result.video_embed_url()},
                            'form_action': url_for('QuestionRandom.question_random')}
 
         widgets = self._get_edit_widget(form=form)
@@ -315,7 +317,8 @@ class Question1of6FormView(SimpleFormView):
         flash(message, 'info')
 
         self.extra_args = {'question': {'description': result.description_image_img(),
-                                        'external_id': result.external_id},
+                                        'external_id': result.external_id,
+                                        'video_embed_url': result.video_embed_url()},
                            'form_action': url_for('QuestionRandom.question_random')}
 
         widgets = self._get_edit_widget(form=form)
@@ -446,7 +449,8 @@ class Question3to3FormView(SimpleFormView):
         flash(message, 'info')
 
         self.extra_args = {'question': {'description': result.description_image_img(),
-                                        'external_id': result.external_id},
+                                        'external_id': result.external_id,
+                                        'video_embed_url': result.video_embed_url()},
                            'form_action': url_for('QuestionRandom.question_random')}
 
         widgets = self._get_edit_widget(form=form)
@@ -532,7 +536,8 @@ class Question2DecimalsFormView(SimpleFormView):
         flash(message, 'info')
 
         self.extra_args = {'question': {'description': result.description_image_img(),
-                                        'external_id': result.external_id},
+                                        'external_id': result.external_id,
+                                        'video_embed_url': result.video_embed_url()},
                            'form_action': url_for('QuestionRandom.question_random')}
 
         widgets = self._get_edit_widget(form=form)
@@ -607,7 +612,8 @@ class Question1DecimalFormView(SimpleFormView):
         flash(message, 'info')
 
         self.extra_args = {'question': {'description': result.description_image_img(),
-                                        'external_id': result.external_id},
+                                        'external_id': result.external_id,
+                                        'video_embed_url': result.video_embed_url()},
                            'form_action': url_for('QuestionRandom.question_random')}
 
         widgets = self._get_edit_widget(form=form)
@@ -732,7 +738,8 @@ class QuestionSelect4FormView(SimpleFormView):
 
         self.extra_args = {'question': {'description': result.description_image_img(),
                                         'options': options,
-                                        'external_id': result.external_id},
+                                        'external_id': result.external_id,
+                                        'video_embed_url': result.video_embed_url()},
                            'form_action': url_for('QuestionRandom.question_random')}
 
         widgets = self._get_edit_widget(form=form)
