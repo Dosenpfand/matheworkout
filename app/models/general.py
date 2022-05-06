@@ -75,8 +75,7 @@ class Question(Model):
     value1_lower_limit = Column(Float())
     value2_upper_limit = Column(Float())
     value2_lower_limit = Column(Float())
-    cols_one_decimal = cols_common + \
-                       ['value1_upper_limit', 'value1_lower_limit']
+    cols_one_decimal = cols_common + ['value1_upper_limit', 'value1_lower_limit']
     cols_two_decimals = cols_common + ['value1_upper_limit', 'value1_lower_limit',
                                        'value2_upper_limit', 'value2_lower_limit']
 
