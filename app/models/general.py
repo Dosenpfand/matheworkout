@@ -151,8 +151,9 @@ class Question(Model):
     def __repr__(self):
         topic_name = self.topic.name
         regex = r"^[a-zA-z]{1,4}\s*\d{1,4}(\.\d{1,4})?"
+        match = re.match(regex, topic_name)
 
-        if match := re.match(regex, topic_name):
+        if match:
             topic_short_name = match.group()
         elif len(topic_name) < 6:
             topic_short_name = topic_name
