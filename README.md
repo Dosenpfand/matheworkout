@@ -14,3 +14,24 @@ flask run
 flask db migrate -m "message."
 flask db upgrade
 ```
+
+## Redeploy from backup
+
+Create database and user:
+```bash
+sudo -u postgres psql
+# create database matheueben;
+# create user mathesuper with encrypted password '123456';
+# grant all privileges on database matheueben to mathesuper;
+```
+
+Import database backup:
+```bash
+sudo -u postgres psql matheueben < backup.sql
+```
+
+Clean up database:
+```bash
+flask fab security-cleanup
+flask fab create-db
+```

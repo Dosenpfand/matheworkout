@@ -64,7 +64,7 @@ class ExtIdToForm(BaseView):
     def ext_id_to_form(self, ext_id):
         question = db.session.query(Question).filter_by(
             external_id=ext_id).first()
-        type = question.type.value
+        question_type = question.type.value
 
         type_to_form = {
             QuestionType.two_of_five.value: 'Question2of5FormView',
@@ -76,7 +76,7 @@ class ExtIdToForm(BaseView):
             QuestionType.select_four.value: 'QuestionSelect4FormView',
         }
 
-        form = type_to_form[type]
+        form = type_to_form[question_type]
         url = url_for(f'{form}.this_form_get')
 
         return redirect(f'{url}?ext_id={ext_id}')
