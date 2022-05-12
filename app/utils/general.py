@@ -1,6 +1,6 @@
 import logging
 
-from flask import url_for, request, g
+from flask import url_for, g
 from markupsafe import Markup
 from sqlalchemy import func
 
@@ -8,13 +8,17 @@ from app import db
 from app.models.general import Question, Topic, QuestionUserState
 
 
-def link_formatter(external_id):
-    url = url_for(f'ExtIdToForm.ext_id_to_form', ext_id=external_id)
+def link_formatter(external_id, filters=None):
+    assignment_id = None
+    if filters:
+        assignment_id = filters.get_filter_value('assignments')
+
+    url = url_for(f'ExtIdToForm.ext_id_to_form', ext_id=external_id, assignment_id=assignment_id)
     return Markup(f'<a href="{url}">{external_id}</a>')
 
 
 # TODO: should be in jinja and imported!
-def state_to_emoji_markup(state):
+def state_to_emoji_markup(state, filters=None):
     if state is QuestionUserState.solved_success:
         emoji = 'bi-emoji-sunglasses'
         label = 'label-success'
@@ -30,17 +34,15 @@ def state_to_emoji_markup(state):
     return Markup(f'<span class="label {label}" title="{title}"><i class="bi {emoji}"></i></span>')
 
 
-def get_question(type):
-    request_id = request.args.get('ext_id')
-
-    if request_id:
+def get_question(question_type, ext_id=None):
+    if ext_id:
         result = db.session.query(Question).filter_by(
-            external_id=request_id, type=type).first()
+            external_id=ext_id, type=question_type).first()
     else:
         active_topic_ids = get_active_topics()
         filter_arg = Question.topic_id.in_(active_topic_ids)
         result = db.session.query(Question).order_by(
-            func.random()).filter(filter_arg).filter_by(type=type).first()
+            func.random()).filter(filter_arg).filter_by(type=question_type).first()
 
     return result
 

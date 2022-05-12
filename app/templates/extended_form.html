@@ -12,7 +12,10 @@
 {% macro extended_render_form_controls(submit_text="Submit", back_count=1) %}
     <div class="well well-sm">
         {% if submit_text %}
-        <button type="submit" class="btn  btn-sm btn-primary">{{submit_text}}</button>
+        <button type="submit" class="btn btn-sm btn-primary">{{submit_text}}</button>
+        {% endif %}
+        {% if forward_text %}
+        <a href="{{forward_url}}" class="btn btn-sm btn-primary">{{forward_text}}</a>
         {% endif %}
         {{ multiple_lnk_back(back_count) }}
     </div>

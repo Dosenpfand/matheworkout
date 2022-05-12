@@ -8,6 +8,7 @@ from app.utils.filters import FilterQuestionByAnsweredCorrectness
 from app.models.general import Question, QuestionType, LearningGroup, Assignment, Topic
 from app.models.relations import AssocUserQuestion
 from app.utils.general import get_active_topics, link_formatter, state_to_emoji_markup
+from app.views.widgets import ExtendedListWidget
 
 
 class Question2of5ModelView(ModelView):
@@ -163,6 +164,7 @@ class QuestionModelView(ModelView):
     list_columns = ['external_id', 'topic', 'state']
     formatters_columns = {'external_id': link_formatter, 'state': state_to_emoji_markup}
     page_size = 100
+    list_widget = ExtendedListWidget
 
 
 class AssocUserQuestionModelView(ModelView):

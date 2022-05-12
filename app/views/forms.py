@@ -1,29 +1,88 @@
 from flask import request, g, url_for, flash
-from flask_appbuilder import SimpleFormView
+from flask_appbuilder import SimpleFormView, expose, has_access
 from markupsafe import Markup
 
 from app import db
 from app.forms.forms import QuestionSelfAssessedForm, Question2of5Form, Question1of6Form, Question3to3Form, \
     Question2DecimalsForm, Question1DecimalForm, QuestionSelect4Form
-from app.models.general import QuestionType, Question
+from app.models.general import QuestionType, Question, Assignment
 from app.models.relations import AssocUserQuestion
 from app.security.models import ExtendedUser
 from app.utils.general import get_question, commit_safely
 from app.views.widgets import ExtendedEditWidget
 
 
-# TODO: common base class? also in models.py?
-
-class QuestionSelfAssessedFormView(SimpleFormView):
-    form = QuestionSelfAssessedForm
-    form_title = 'Selbstkontrolle'
+# TODO: expand base class? also in models.py?
+class QuestionFormView(SimpleFormView):
     form_template = 'edit_additional.html'
     edit_widget = ExtendedEditWidget
 
-    def form_get(self, form):
+    def __init__(self):
+        super().__init__()
+        self.assignment_id = None
+        self.ext_id = None
 
-        question_result = get_question(
-            QuestionType.self_assessed.value)
+    @expose("/form")
+    @expose("/form/<int:ext_id>")
+    @expose("/form/<int:ext_id>/<int:assignment_id>")
+    @has_access
+    def this_form_get(self, ext_id=None, assignment_id=None):
+        self.ext_id = ext_id
+        self.assignment_id = assignment_id
+        return super().this_form_get()
+
+    @expose("/form", methods=["POST"])
+    @expose("/form/<int:ext_id>", methods=["POST"])
+    @expose("/form/<int:ext_id>/<int:assignment_id>", methods=["POST"])
+    @has_access
+    def this_form_post(self, ext_id=None, assignment_id=None):
+        return super().this_form_post()
+
+    def get_forward_button(self, question_id):
+        forward_text = None
+        forward_url = None
+        if self.assignment_id:
+            assignment = db.session.query(Assignment).filter_by(id=self.assignment_id).first()
+            take_next = False
+            next_ext_id = None
+            # TODO: optimize
+            for assigned_question in assignment.assigned_questions:
+                if take_next:
+                    next_ext_id = assigned_question.external_id
+                    break
+                if assigned_question.id == question_id:
+                    take_next = True
+
+            if next_ext_id:
+                forward_text = 'Nächste Aufgabe'
+                forward_url = url_for('ExtIdToForm.ext_id_to_form', ext_id=next_ext_id,
+                                      assignment_id=self.assignment_id)
+            else:
+                forward_text = 'Zur Übungsübersicht'
+                forward_url = url_for('AssignmentModelStudentView.show', pk=self.assignment_id)
+        return forward_text, forward_url
+
+    def get_assignment_progress(self, question_id):
+        assignment_progress = None
+        if self.assignment_id:
+            assignment = db.session.query(Assignment).filter_by(id=self.assignment_id).first()
+            # TODO: optimize
+            for i, assigned_question in enumerate(assignment.assigned_questions, 1):
+                if assigned_question.id == question_id:
+                    break
+
+            assignment_progress = {'done': i, 'total': len(assignment.assigned_questions),
+                                   'percentage': round(i / len(assignment.assigned_questions) * 100)}
+        return assignment_progress
+
+
+class QuestionSelfAssessedFormView(QuestionFormView):
+    form = QuestionSelfAssessedForm
+    form_title = 'Selbstkontrolle'
+
+    # TODO: html input id, csrf, etc. are twice in output!
+    def form_get(self, form):
+        question_result = get_question(QuestionType.self_assessed.value, self.ext_id)
 
         if question_result is None:
             description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
@@ -33,59 +92,68 @@ class QuestionSelfAssessedFormView(SimpleFormView):
             description = question_result.description_image_img()
             external_id = question_result.external_id
 
-        answer_value = request.args.get('answer')
-        if answer_value:
-            is_answer_correct = False
+            assignment_progress = self.get_assignment_progress(question_result.id)
 
-            if answer_value == 'CORRECT':
+            answer_value = request.args.get('answer')
+            if answer_value:
+                is_answer_correct = False
+
+                if answer_value == 'CORRECT':
+                    db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
+                        {'correct_questions': ExtendedUser.correct_questions + 1})
+                    is_answer_correct = True
+
                 db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
-                    {'correct_questions': ExtendedUser.correct_questions + 1})
-                is_answer_correct = True
+                    {'tried_questions': ExtendedUser.tried_questions + 1})
 
-            db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
-                {'tried_questions': ExtendedUser.tried_questions + 1})
+                # Add entry to answered questions
+                answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)  # noqa
+                answered_question.question = question_result
+                g.user.answered_questions.append(answered_question)
+                commit_safely(db.session)
 
-            # Add entry to answered questions
-            answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)  # noqa
-            answered_question.question = question_result
-            g.user.answered_questions.append(answered_question)
-            commit_safely(db.session)
-
-            submit_text = None
-            back_count = 2
-        else:
-            submit_text = 'Auswerten'
-            back_count = 1
-            self.update_redirect()
+                forward_text, forward_url = self.get_forward_button(question_result.id)
+                submit_text = None
+                back_count = 2
+            else:
+                forward_text, forward_url = None, None
+                submit_text = 'Auswerten'
+                back_count = 1
+                self.update_redirect()
 
         self.extra_args = {'question': {
             'description': description,
             'external_id': external_id,
             'submit_text': submit_text,
-            'back_count': back_count}}
+            'back_count': back_count,
+            'forward_text': forward_text,
+            'forward_url': forward_url,
+            'assignment_progress': assignment_progress}}
 
     def form_post(self, form):
-        question_id = form.id.data
+        question_id = int(form.id.data)
         result = db.session.query(Question).filter_by(id=question_id).first()
 
-        base_url = url_for('QuestionSelfAssessedFormView.this_form_get')
-        url = f'{base_url}?ext_id={result.external_id}'
+        url = url_for('QuestionSelfAssessedFormView.this_form_get', ext_id=result.external_id,
+                      assignment_id=self.assignment_id)
 
         solution_img = result.solution_image_img()
         correct_link = \
-            f'<a class="btn btn-primary" href="{url}&answer=CORRECT">Richtig</a>'
+            f'<a class="btn btn-primary" href="{url}?answer=CORRECT">Richtig</a>'
         incorrect_link = \
-            f'<a class="btn btn-primary" href="{url}&answer=INCORRECT">Falsch</a>'
+            f'<a class="btn btn-primary" href="{url}?answer=INCORRECT">Falsch</a>'
         description = Markup(f'{solution_img}')
         after_description = Markup(f'{correct_link} {incorrect_link}')
+
+        assignment_progress = self.get_assignment_progress(question_id)
 
         self.extra_args = {'question': {
             'description': description,
             'after_description': after_description,
             'external_id': result.external_id,
             'submit_text': None,
-            'video_embed_url': result.video_embed_url()},
-            'form_action': url_for('QuestionRandom.question_random')}
+            'video_embed_url': result.video_embed_url(),
+            'assignment_progress': assignment_progress}}
 
         widgets = self._get_edit_widget(form=form)
         return self.render_template(
@@ -96,16 +164,14 @@ class QuestionSelfAssessedFormView(SimpleFormView):
         )
 
 
-class Question2of5FormView(SimpleFormView):
+class Question2of5FormView(QuestionFormView):
     form = Question2of5Form
     form_title = '2 aus 5'
-    form_template = 'edit_additional.html'
-    edit_widget = ExtendedEditWidget
 
     def form_get(self, form):
         self.update_redirect()
 
-        question_result = get_question(QuestionType.two_of_five.value)
+        question_result = get_question(QuestionType.two_of_five.value, self.ext_id)
         if question_result is None:
             description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
             external_id = None
@@ -127,27 +193,25 @@ class Question2of5FormView(SimpleFormView):
             form.checkbox5.label.text = question_result.get_option_image(
                 question_result.option5_image)
 
+            assignment_progress = self.get_assignment_progress(question_result.id)
+
         self.extra_args = {'question': {
             'error': error,
             'description': description,
             'external_id': external_id,
-            'submit_text': 'Auswerten'}}
+            'submit_text': 'Auswerten',
+            'assignment_progress': assignment_progress}}
 
     def form_post(self, form):
         self.update_redirect()
-        question_id = form.id.data
+        question_id = int(form.id.data)
         result = db.session.query(Question).filter_by(
             id=question_id, type=QuestionType.two_of_five.value).first()
-        form.checkbox1.label.text = result.get_option_image(
-            result.option1_image)
-        form.checkbox2.label.text = result.get_option_image(
-            result.option2_image)
-        form.checkbox3.label.text = result.get_option_image(
-            result.option3_image)
-        form.checkbox4.label.text = result.get_option_image(
-            result.option4_image)
-        form.checkbox5.label.text = result.get_option_image(
-            result.option5_image)
+        form.checkbox1.label.text = result.get_option_image(result.option1_image)
+        form.checkbox2.label.text = result.get_option_image(result.option2_image)
+        form.checkbox3.label.text = result.get_option_image(result.option3_image)
+        form.checkbox4.label.text = result.get_option_image(result.option4_image)
+        form.checkbox5.label.text = result.get_option_image(result.option5_image)
 
         if form.checkbox1.data == result.option1_is_correct:
             form.checkbox1.description = 'Richtig'
@@ -194,10 +258,16 @@ class Question2of5FormView(SimpleFormView):
 
         flash(message, 'info')
 
+        # TODO: does not work when post is re-sent!
+        forward_text, forward_url = self.get_forward_button(question_id)
+        assignment_progress = self.get_assignment_progress(question_id)
+
         self.extra_args = {'question': {'description': result.description_image_img(),
                                         'external_id': result.external_id,
-                                        'video_embed_url': result.video_embed_url()},
-                           'form_action': url_for('QuestionRandom.question_random')}
+                                        'video_embed_url': result.video_embed_url(),
+                                        'forward_text': forward_text,
+                                        'forward_url': forward_url,
+                                        'assignment_progress': assignment_progress}}
 
         widgets = self._get_edit_widget(form=form)
         return self.render_template(
@@ -208,15 +278,14 @@ class Question2of5FormView(SimpleFormView):
         )
 
 
-class Question1of6FormView(SimpleFormView):
+class Question1of6FormView(QuestionFormView):
     form = Question1of6Form
     form_title = '1 aus 6'
-    form_template = 'edit_additional.html'
-    edit_widget = ExtendedEditWidget
 
     def form_get(self, form):
         self.update_redirect()
-        question_result = get_question(QuestionType.one_of_six.value)
+        question_result = get_question(QuestionType.one_of_six.value, self.ext_id)
+
         if question_result is None:
             description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
             external_id = None
@@ -240,15 +309,18 @@ class Question1of6FormView(SimpleFormView):
             form.checkbox6.label.text = question_result.get_option_image(
                 question_result.option6_image)
 
+            assignment_progress = self.get_assignment_progress(question_result.id)
+
         self.extra_args = {'question': {
             'error': error,
             'description': description,
             'external_id': external_id,
-            'submit_text': 'Auswerten'}}
+            'submit_text': 'Auswerten',
+            'assignment_progress': assignment_progress}}
 
     def form_post(self, form):
         self.update_redirect()
-        question_id = form.id.data
+        question_id = int(form.id.data)
         result = db.session.query(Question).filter_by(
             id=question_id, type=QuestionType.one_of_six.value).first()
         form.checkbox1.label.text = result.get_option_image(
@@ -315,10 +387,15 @@ class Question1of6FormView(SimpleFormView):
 
         flash(message, 'info')
 
+        forward_text, forward_url = self.get_forward_button(question_id)
+        assignment_progress = self.get_assignment_progress(question_id)
+
         self.extra_args = {'question': {'description': result.description_image_img(),
                                         'external_id': result.external_id,
-                                        'video_embed_url': result.video_embed_url()},
-                           'form_action': url_for('QuestionRandom.question_random')}
+                                        'video_embed_url': result.video_embed_url(),
+                                        'forward_text': forward_text,
+                                        'forward_url': forward_url,
+                                        'assignment_progress': assignment_progress}}
 
         widgets = self._get_edit_widget(form=form)
         return self.render_template(
@@ -329,11 +406,9 @@ class Question1of6FormView(SimpleFormView):
         )
 
 
-class Question3to3FormView(SimpleFormView):
+class Question3to3FormView(QuestionFormView):
     form = Question3to3Form
     form_title = 'Lückentext'
-    form_template = 'edit_additional.html'
-    edit_widget = ExtendedEditWidget
 
     form_fieldsets = [
         (
@@ -348,8 +423,8 @@ class Question3to3FormView(SimpleFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        question_result = get_question(
-            QuestionType.three_to_three.value)
+        question_result = get_question(QuestionType.three_to_three.value, self.ext_id)
+
         if question_result is None:
             description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
             external_id = None
@@ -373,15 +448,18 @@ class Question3to3FormView(SimpleFormView):
             form.checkbox2c.label.text = question_result.get_option_small_image(
                 question_result.option2c_image)
 
+            assignment_progress = self.get_assignment_progress(question_result.id)
+
         self.extra_args = {'question': {
             'error': error,
             'description': description,
             'external_id': external_id,
-            'submit_text': 'Auswerten'}}
+            'submit_text': 'Auswerten',
+            'assignment_progress': assignment_progress}}
 
     def form_post(self, form):
         self.update_redirect()
-        question_id = form.id.data
+        question_id = int(form.id.data)
         result = db.session.query(Question).filter_by(
             id=question_id, type=QuestionType.three_to_three.value).first()
         form.checkbox1a.label.text = result.get_option_small_image(
@@ -447,10 +525,15 @@ class Question3to3FormView(SimpleFormView):
 
         flash(message, 'info')
 
+        forward_text, forward_url = self.get_forward_button(question_id)
+        assignment_progress = self.get_assignment_progress(question_id)
+
         self.extra_args = {'question': {'description': result.description_image_img(),
                                         'external_id': result.external_id,
-                                        'video_embed_url': result.video_embed_url()},
-                           'form_action': url_for('QuestionRandom.question_random')}
+                                        'video_embed_url': result.video_embed_url(),
+                                        'forward_text': forward_text,
+                                        'forward_url': forward_url,
+                                        'assignment_progress': assignment_progress}}
 
         widgets = self._get_edit_widget(form=form)
         return self.render_template(
@@ -461,15 +544,14 @@ class Question3to3FormView(SimpleFormView):
         )
 
 
-class Question2DecimalsFormView(SimpleFormView):
+class Question2DecimalsFormView(QuestionFormView):
     form = Question2DecimalsForm
     form_title = 'Werteingabe zwei Zahlen'
-    form_template = 'edit_additional.html'
-    edit_widget = ExtendedEditWidget
 
     def form_get(self, form):
         self.update_redirect()
-        question_result = get_question(QuestionType.two_decimals.value)
+        question_result = get_question(QuestionType.two_decimals.value, self.ext_id)
+
         if question_result is None:
             description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
             external_id = None
@@ -483,15 +565,18 @@ class Question2DecimalsFormView(SimpleFormView):
             form.value1.label.text = 'Ergebnis 1'
             form.value2.label.text = 'Ergebnis 2'
 
+            assignment_progress = self.get_assignment_progress(question_result.id)
+
         self.extra_args = {'question': {
             'error': error,
             'description': description,
             'external_id': external_id,
-            'submit_text': 'Auswerten'}}
+            'submit_text': 'Auswerten',
+            'assignment_progress': assignment_progress}}
 
     def form_post(self, form):
         self.update_redirect()
-        question_id = form.id.data
+        question_id = int(form.id.data)
         result = db.session.query(Question).filter_by(
             id=question_id, type=QuestionType.two_decimals.value).first()
         form.value1.label.text = 'Ergebnis 1'
@@ -534,10 +619,15 @@ class Question2DecimalsFormView(SimpleFormView):
 
         flash(message, 'info')
 
+        forward_text, forward_url = self.get_forward_button(question_id)
+        assignment_progress = self.get_assignment_progress(question_id)
+
         self.extra_args = {'question': {'description': result.description_image_img(),
                                         'external_id': result.external_id,
-                                        'video_embed_url': result.video_embed_url()},
-                           'form_action': url_for('QuestionRandom.question_random')}
+                                        'video_embed_url': result.video_embed_url(),
+                                        'forward_text': forward_text,
+                                        'forward_url': forward_url,
+                                        'assignment_progress': assignment_progress}}
 
         widgets = self._get_edit_widget(form=form)
         return self.render_template(
@@ -548,15 +638,14 @@ class Question2DecimalsFormView(SimpleFormView):
         )
 
 
-class Question1DecimalFormView(SimpleFormView):
+class Question1DecimalFormView(QuestionFormView):
     form = Question1DecimalForm
     form_title = 'Werteingabe eine Zahl'
-    form_template = 'edit_additional.html'
-    edit_widget = ExtendedEditWidget
 
     def form_get(self, form):
         self.update_redirect()
-        question_result = get_question(QuestionType.one_decimal.value)
+        question_result = get_question(QuestionType.one_decimal.value, self.ext_id)
+
         if question_result is None:
             description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
             external_id = None
@@ -568,15 +657,18 @@ class Question1DecimalFormView(SimpleFormView):
             error = False
             form.value.label.text = 'Ergebnis 1'
 
+            assignment_progress = self.get_assignment_progress(question_result.id)
+
         self.extra_args = {'question': {
             'error': error,
             'description': description,
             'external_id': external_id,
-            'submit_text': 'Auswerten'}}
+            'submit_text': 'Auswerten',
+            'assignment_progress': assignment_progress}}
 
     def form_post(self, form):
         self.update_redirect()
-        question_id = form.id.data
+        question_id = int(form.id.data)
         result = db.session.query(Question).filter_by(
             id=question_id, type=QuestionType.one_decimal.value).first()
         form.value.label.text = 'Ergebnis'
@@ -603,10 +695,15 @@ class Question1DecimalFormView(SimpleFormView):
 
         flash(message, 'info')
 
+        forward_text, forward_url = self.get_forward_button(question_id)
+        assignment_progress = self.get_assignment_progress(question_id)
+
         self.extra_args = {'question': {'description': result.description_image_img(),
                                         'external_id': result.external_id,
-                                        'video_embed_url': result.video_embed_url()},
-                           'form_action': url_for('QuestionRandom.question_random')}
+                                        'video_embed_url': result.video_embed_url(),
+                                        'forward_text': forward_text,
+                                        'forward_url': forward_url,
+                                        'assignment_progress': assignment_progress}}
 
         widgets = self._get_edit_widget(form=form)
         return self.render_template(
@@ -617,11 +714,9 @@ class Question1DecimalFormView(SimpleFormView):
         )
 
 
-class QuestionSelect4FormView(SimpleFormView):
+class QuestionSelect4FormView(QuestionFormView):
     form = QuestionSelect4Form
     form_title = 'Zuordnung'
-    form_template = 'edit_additional.html'
-    edit_widget = ExtendedEditWidget
 
     form_fieldsets = [
         (
@@ -633,7 +728,8 @@ class QuestionSelect4FormView(SimpleFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        question_result = get_question(QuestionType.select_four)
+        question_result = get_question(QuestionType.select_four.value, self.ext_id)
+
         if question_result is None:
             description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
             external_id = None
@@ -660,16 +756,19 @@ class QuestionSelect4FormView(SimpleFormView):
             form.selection4.label.text = question_result.get_selection_image(
                 question_result.selection4_image)
 
+            assignment_progress = self.get_assignment_progress(question_result.id)
+
         self.extra_args = \
             {'question': {'error': error,
                           'description': description,
                           'options': options,
                           'external_id': external_id,
-                          'submit_text': 'Auswerten'}}
+                          'submit_text': 'Auswerten',
+                          'assignment_progress': assignment_progress}}
 
     def form_post(self, form):
         self.update_redirect()
-        question_id = form.id.data
+        question_id = int(form.id.data)
         result = db.session.query(Question).filter_by(
             id=question_id, type=QuestionType.select_four.value).first()
         form.selection1.label.text = result.get_selection_image(
@@ -728,11 +827,16 @@ class QuestionSelect4FormView(SimpleFormView):
 
         flash(message, 'info')
 
+        forward_text, forward_url = self.get_forward_button(question_id)
+        assignment_progress = self.get_assignment_progress(question_id)
+
         self.extra_args = {'question': {'description': result.description_image_img(),
                                         'options': options,
                                         'external_id': result.external_id,
-                                        'video_embed_url': result.video_embed_url()},
-                           'form_action': url_for('QuestionRandom.question_random')}
+                                        'video_embed_url': result.video_embed_url(),
+                                        'forward_text': forward_text,
+                                        'forward_url': forward_url,
+                                        'assignment_progress': assignment_progress}}
 
         widgets = self._get_edit_widget(form=form)
         return self.render_template(

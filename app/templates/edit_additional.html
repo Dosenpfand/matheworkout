@@ -24,14 +24,38 @@
     <div id="Home" class="tab-pane active">
         <h2>{{question['title']}}</h2>
         {% if question['external_id'] %}
-        <div class="well well-sm"><strong>Frage Nr.: {{question['external_id']}}</strong></div>
+        <div class="well well-sm">
+            <strong>Frage Nr.: {{question['external_id']}}</strong>
+        </div>
+        {% endif %}
+        {% if question['assignment_progress'] %}
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Hausübungsfortschritt</h3>
+          </div>
+          <div class="panel-body">
+            <div class="progress">
+                  <div class="progress-bar" role="progressbar" aria-valuenow="{{ question['assignment_progress']['percentage'] }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ question['assignment_progress']['percentage'] }}%; min-width: 7em;">
+                    {{ question['assignment_progress']['done'] }} / {{ question['assignment_progress']['total'] }}
+                  </div>
+            </div>
+          </div>
+        </div>
         {% endif %}
         <div class="well well-sm"><strong>{{question['description']}}</strong></div>
         {% if question['after_description'] %}
         <div class="well well-sm">{{question['after_description']}}</div>
         {% endif %}
         {% if not question['error'] %}
-        {{ widgets.get('edit')(form_action=form_action, submit_text=question['submit_text'], back_count=question.get('back_count', 1), additional_col=additional_col, video_embed_url=question.get('video_embed_url', None))|safe }}
+        {{ widgets.get('edit')(
+            form_action=form_action,
+            submit_text=question['submit_text'],
+            back_count=question.get('back_count', 1),
+            additional_col=additional_col,
+            video_embed_url=question.get('video_embed_url', None),
+            forward_text=question.get('forward_text', None),
+            forward_url=question.get('forward_url', None)
+            )|safe }}
         {% endif %}
     </div>
 {% endblock %}

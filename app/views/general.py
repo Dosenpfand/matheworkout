@@ -13,7 +13,7 @@ class QuestionRandom(BaseView):
     route_base = "/"
 
     @has_access
-    @expose("questionrandom/", methods=['POST', 'GET'])
+    @expose("questionrandom/")
     def question_random(self):
         type_id_to_form = {
             0: QuestionType.two_of_five.value,
@@ -61,7 +61,8 @@ class ExtIdToForm(BaseView):
 
     @has_access
     @expose("extidtoform/<int:ext_id>")
-    def ext_id_to_form(self, ext_id):
+    @expose("extidtoform/<int:ext_id>/<int:assignment_id>")
+    def ext_id_to_form(self, ext_id, assignment_id=None):
         question = db.session.query(Question).filter_by(
             external_id=ext_id).first()
         question_type = question.type.value
@@ -77,9 +78,9 @@ class ExtIdToForm(BaseView):
         }
 
         form = type_to_form[question_type]
-        url = url_for(f'{form}.this_form_get')
+        url = url_for(f'{form}.this_form_get', ext_id=ext_id, assignment_id=assignment_id)
 
-        return redirect(f'{url}?ext_id={ext_id}')
+        return redirect(url)
 
 
 class AssignmentModelTeacherView(BaseView):
@@ -127,6 +128,6 @@ class UtilExtendedView(BaseView):
 
     @expose("/back_mult/<int:count>")
     def back_mult(self, count):
-        for i in range(count-1):
+        for i in range(count - 1):
             self.get_redirect()
         return redirect(self.get_redirect())
