@@ -240,11 +240,13 @@ class Question2of5FormView(QuestionFormView):
                 (form.checkbox4.data == result.option4_is_correct) and \
                 (form.checkbox5.data == result.option5_is_correct):
             message = 'RICHTIG!'
+            category = 'success'
             db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             is_answer_correct = True
         else:
             message = 'FALSCH!'
+            category = 'danger'
             is_answer_correct = False
 
         db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
@@ -256,7 +258,7 @@ class Question2of5FormView(QuestionFormView):
         g.user.answered_questions.append(answered_question)
         commit_safely(db.session)
 
-        flash(message, 'info')
+        flash(message, category)
 
         # TODO: does not work when post is re-sent!
         forward_text, forward_url = self.get_forward_button(question_id)
@@ -368,12 +370,14 @@ class Question1of6FormView(QuestionFormView):
                 (form.checkbox5.data == result.option5_is_correct) and \
                 (form.checkbox6.data == result.option6_is_correct):
             message = 'RICHTIG!'
+            category = 'success'
             db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             commit_safely(db.session)
             is_answer_correct = True
         else:
             message = 'FALSCH!'
+            category = 'danger'
             is_answer_correct = False
 
         db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
@@ -385,7 +389,7 @@ class Question1of6FormView(QuestionFormView):
         g.user.answered_questions.append(answered_question)
         commit_safely(db.session)
 
-        flash(message, 'info')
+        flash(message, category)
 
         forward_text, forward_url = self.get_forward_button(question_id)
         assignment_progress = self.get_assignment_progress(question_id)
@@ -507,11 +511,13 @@ class Question3to3FormView(QuestionFormView):
                 (form.checkbox2b.data == result.option2b_is_correct) and \
                 (form.checkbox2c.data == result.option2c_is_correct):
             message = 'RICHTIG!'
+            category = 'success'
             db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             is_answer_correct = True
         else:
             message = 'FALSCH!'
+            category = 'danger'
             is_answer_correct = False
 
         db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
@@ -523,7 +529,7 @@ class Question3to3FormView(QuestionFormView):
         g.user.answered_questions.append(answered_question)
         commit_safely(db.session)
 
-        flash(message, 'info')
+        flash(message, category)
 
         forward_text, forward_url = self.get_forward_button(question_id)
         assignment_progress = self.get_assignment_progress(question_id)
@@ -598,6 +604,7 @@ class Question2DecimalsFormView(QuestionFormView):
 
         if value1_correct and value2_correct:
             message = 'RICHTIG!'
+            category = 'success'
             db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             is_answer_correct = True
@@ -606,6 +613,7 @@ class Question2DecimalsFormView(QuestionFormView):
                 f'FALSCH! Richtig gewesen wäre: ' \
                 f'{result.value1_lower_limit} <= Ergebnis 1 <= {result.value1_upper_limit},' \
                 f'{result.value2_lower_limit} <= Ergebnis 2 <= {result.value2_upper_limit}'
+            category = 'danger'
             is_answer_correct = False
 
         db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
@@ -617,7 +625,7 @@ class Question2DecimalsFormView(QuestionFormView):
         g.user.answered_questions.append(answered_question)
         commit_safely(db.session)
 
-        flash(message, 'info')
+        flash(message, category)
 
         forward_text, forward_url = self.get_forward_button(question_id)
         assignment_progress = self.get_assignment_progress(question_id)
@@ -676,12 +684,14 @@ class Question1DecimalFormView(QuestionFormView):
         if (form.value.data <= result.value1_upper_limit) and (form.value.data >= result.value1_lower_limit):
             form.value.description = 'Richtig'
             message = 'RICHTIG!'
+            category = 'success'
             db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             is_answer_correct = True
         else:
             message = \
                 f'FALSCH! Richtig gewesen wäre: {result.value1_lower_limit} <= Ergebnis <= {result.value1_upper_limit}'
+            category = 'danger'
             is_answer_correct = False
 
         db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
@@ -693,7 +703,7 @@ class Question1DecimalFormView(QuestionFormView):
         g.user.answered_questions.append(answered_question)
         commit_safely(db.session)
 
-        flash(message, 'info')
+        flash(message, category)
 
         forward_text, forward_url = self.get_forward_button(question_id)
         assignment_progress = self.get_assignment_progress(question_id)
@@ -808,11 +818,13 @@ class QuestionSelect4FormView(QuestionFormView):
                 (form.selection3.data == result.selection3_solution.value) and \
                 (form.selection4.data == result.selection4_solution.value):
             message = 'RICHTIG!'
+            category = 'success'
             db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
                 {'correct_questions': ExtendedUser.correct_questions + 1})
             is_answer_correct = True
         else:
             message = 'FALSCH!'
+            category = 'danger'
             is_answer_correct = False
 
         db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
@@ -825,7 +837,7 @@ class QuestionSelect4FormView(QuestionFormView):
 
         commit_safely(db.session)
 
-        flash(message, 'info')
+        flash(message, category)
 
         forward_text, forward_url = self.get_forward_button(question_id)
         assignment_progress = self.get_assignment_progress(question_id)
