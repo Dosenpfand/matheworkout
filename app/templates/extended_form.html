@@ -53,7 +53,11 @@
                 <table class="table table-responsive table-bordered">
                     {% for item in fieldset_item[1].get('fields') %}
                         {% if item not in exclude_cols %}
+                            {% if form[item].render_kw %}
+                            <tr class="{{form[item].render_kw.get('row_class')}}">
+                            {% else %}
                             <tr>
+                            {% endif %}
                                 {{ lib.render_field(form[item], begin_sep_label, end_sep_label, begin_sep_field, end_sep_field) }}
                             </tr>
                         {% endif %}
@@ -78,7 +82,11 @@
                 {% for col in include_cols %}
                     {% set field = form[col] %}
                     {% if field.name not in exclude_cols %}
-                        <tr>
+                        {% if field.render_kw %}
+                            <tr class="{{field.render_kw.get('row_class')}}">
+                        {% else %}
+                            <tr>
+                        {% endif %}
                             {{ lib.render_field(field, begin_sep_label, end_sep_label, begin_sep_field, end_sep_field) }}
                         </tr>
                     {% endif %}

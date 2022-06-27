@@ -215,24 +215,34 @@ class Question2of5FormView(QuestionFormView):
 
         if form.checkbox1.data == result.option1_is_correct:
             form.checkbox1.description = 'Richtig'
+            form.checkbox1.render_kw = {'row_class': 'success'}
         else:
             form.checkbox1.description = 'Falsch'
+            form.checkbox1.render_kw = {'row_class': 'danger'}
         if form.checkbox2.data == result.option2_is_correct:
             form.checkbox2.description = 'Richtig'
+            form.checkbox2.render_kw = {'row_class': 'success'}
         else:
             form.checkbox2.description = 'Falsch'
+            form.checkbox2.render_kw = {'row_class': 'danger'}
         if form.checkbox3.data == result.option3_is_correct:
             form.checkbox3.description = 'Richtig'
+            form.checkbox3.render_kw = {'row_class': 'success'}
         else:
             form.checkbox3.description = 'Falsch'
+            form.checkbox3.render_kw = {'row_class': 'danger'}
         if form.checkbox4.data == result.option4_is_correct:
             form.checkbox4.description = 'Richtig'
+            form.checkbox4.render_kw = {'row_class': 'success'}
         else:
             form.checkbox4.description = 'Falsch'
+            form.checkbox4.render_kw = {'row_class': 'danger'}
         if form.checkbox5.data == result.option5_is_correct:
             form.checkbox5.description = 'Richtig'
+            form.checkbox5.render_kw = {'row_class': 'success'}
         else:
             form.checkbox5.description = 'Falsch'
+            form.checkbox5.render_kw = {'row_class': 'danger'}
 
         if (form.checkbox1.data == result.option1_is_correct) and \
                 (form.checkbox2.data == result.option2_is_correct) and \
@@ -340,28 +350,40 @@ class Question1of6FormView(QuestionFormView):
 
         if form.checkbox1.data == result.option1_is_correct:
             form.checkbox1.description = 'Richtig'
+            form.checkbox1.render_kw = {'row_class': 'success'}
         else:
             form.checkbox1.description = 'Falsch'
+            form.checkbox1.render_kw = {'row_class': 'danger'}
         if form.checkbox2.data == result.option2_is_correct:
             form.checkbox2.description = 'Richtig'
+            form.checkbox2.render_kw = {'row_class': 'success'}
         else:
             form.checkbox2.description = 'Falsch'
+            form.checkbox2.render_kw = {'row_class': 'danger'}
         if form.checkbox3.data == result.option3_is_correct:
             form.checkbox3.description = 'Richtig'
+            form.checkbox3.render_kw = {'row_class': 'success'}
         else:
             form.checkbox3.description = 'Falsch'
+            form.checkbox3.render_kw = {'row_class': 'danger'}
         if form.checkbox4.data == result.option4_is_correct:
             form.checkbox4.description = 'Richtig'
+            form.checkbox4.render_kw = {'row_class': 'success'}
         else:
             form.checkbox4.description = 'Falsch'
+            form.checkbox4.render_kw = {'row_class': 'danger'}
         if form.checkbox5.data == result.option5_is_correct:
             form.checkbox5.description = 'Richtig'
+            form.checkbox5.render_kw = {'row_class': 'success'}
         else:
             form.checkbox5.description = 'Falsch'
+            form.checkbox5.render_kw = {'row_class': 'danger'}
         if form.checkbox6.data == result.option6_is_correct:
             form.checkbox6.description = 'Richtig'
+            form.checkbox6.render_kw = {'row_class': 'success'}
         else:
             form.checkbox6.description = 'Falsch'
+            form.checkbox6.render_kw = {'row_class': 'danger'}
 
         if (form.checkbox1.data == result.option1_is_correct) and \
                 (form.checkbox2.data == result.option2_is_correct) and \
@@ -481,28 +503,40 @@ class Question3to3FormView(QuestionFormView):
 
         if form.checkbox1a.data == result.option1a_is_correct:
             form.checkbox1a.description = 'Richtig'
+            form.checkbox1a.render_kw = {'row_class': 'success'}
         else:
             form.checkbox1a.description = 'Falsch'
+            form.checkbox1a.render_kw = {'row_class': 'danger'}
         if form.checkbox1b.data == result.option1b_is_correct:
             form.checkbox1b.description = 'Richtig'
+            form.checkbox1b.render_kw = {'row_class': 'success'}
         else:
             form.checkbox1b.description = 'Falsch'
+            form.checkbox1c.render_kw = {'row_class': 'danger'}
         if form.checkbox1c.data == result.option1c_is_correct:
             form.checkbox1c.description = 'Richtig'
+            form.checkbox1c.render_kw = {'row_class': 'success'}
         else:
             form.checkbox1c.description = 'Falsch'
+            form.checkbox1c.render_kw = {'row_class': 'danger'}
         if form.checkbox2a.data == result.option2a_is_correct:
             form.checkbox2a.description = 'Richtig'
+            form.checkbox2a.render_kw = {'row_class': 'success'}
         else:
             form.checkbox2a.description = 'Falsch'
+            form.checkbox2a.render_kw = {'row_class': 'danger'}
         if form.checkbox2b.data == result.option2b_is_correct:
             form.checkbox2b.description = 'Richtig'
+            form.checkbox2b.render_kw = {'row_class': 'success'}
         else:
             form.checkbox2b.description = 'Falsch'
+            form.checkbox2b.render_kw = {'row_class': 'danger'}
         if form.checkbox2c.data == result.option2c_is_correct:
             form.checkbox2c.description = 'Richtig'
+            form.checkbox2c.render_kw = {'row_class': 'success'}
         else:
             form.checkbox2c.description = 'Falsch'
+            form.checkbox2c.render_kw = {'row_class': 'danger'}
 
         if (form.checkbox1a.data == result.option1a_is_correct) and \
                 (form.checkbox1b.data == result.option1b_is_correct) and \
@@ -592,15 +626,19 @@ class Question2DecimalsFormView(QuestionFormView):
 
         if (form.value1.data <= result.value1_upper_limit) and (form.value1.data >= result.value1_lower_limit):
             form.value1.description = 'Richtig'
+            form.value1.render_kw = {'row_class': 'success'}
             value1_correct = True
         else:
             form.value1.description = 'Falsch'
+            form.value1.render_kw = {'row_class': 'danger'}
 
         if (form.value2.data <= result.value2_upper_limit) and (form.value2.data >= result.value2_lower_limit):
             form.value2.description = 'Richtig'
+            form.value2.render_kw = {'row_class': 'success'}
             value2_correct = True
         else:
             form.value2.description = 'Falsch'
+            form.value2.render_kw = {'row_class': 'danger'}
 
         if value1_correct and value2_correct:
             message = 'RICHTIG!'
@@ -798,20 +836,28 @@ class QuestionSelect4FormView(QuestionFormView):
 
         if form.selection1.data == result.selection1_solution.value:
             form.selection1.description = 'Richtig'
+            form.selection1.render_kw = {'row_class': 'success'}
         else:
             form.selection1.description = 'Falsch'
+            form.selection1.render_kw = {'row_class': 'danger'}
         if form.selection2.data == result.selection2_solution.value:
             form.selection2.description = 'Richtig'
+            form.selection2.render_kw = {'row_class': 'success'}
         else:
             form.selection2.description = 'Falsch'
+            form.selection2.render_kw = {'row_class': 'danger'}
         if form.selection3.data == result.selection3_solution.value:
             form.selection3.description = 'Richtig'
+            form.selection3.render_kw = {'row_class': 'success'}
         else:
             form.selection3.description = 'Falsch'
+            form.selection3.render_kw = {'row_class': 'danger'}
         if form.selection4.data == result.selection4_solution.value:
             form.selection4.description = 'Richtig'
+            form.selection4.render_kw = {'row_class': 'success'}
         else:
             form.selection4.description = 'Falsch'
+            form.selection4.render_kw = {'row_class': 'danger'}
 
         if (form.selection1.data == result.selection1_solution.value) and \
                 (form.selection2.data == result.selection2_solution.value) and \
