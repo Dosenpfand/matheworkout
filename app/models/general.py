@@ -33,6 +33,14 @@ class Topic(Model):
         return self.name
 
 
+class Category(Model):
+    id = Column(Integer, primary_key=True)
+    name = Column(String(150), nullable=False)
+
+    def __repr__(self):
+        return self.name
+
+
 class QuestionType(enum.Enum):
     self_assessed = 'self_assessed'
     select_four = 'select_four'
@@ -59,12 +67,14 @@ class Question(Model):
     external_id = Column(Integer, nullable=False, index=True)
     topic_id = Column(Integer, ForeignKey("topic.id"), nullable=False)
     topic = relationship("Topic")
+    category_id = Column(Integer, ForeignKey("category.id"), nullable=True)
+    category = relationship("Category")
     description_image = Column(ImageColumn(size=(10000, 10000, True)))
     type = Column(Enum(QuestionType), index=True)
     answered_users = relationship("AssocUserQuestion", back_populates="question")
     assignments = relationship("Assignment", secondary=assoc_assignment_question, back_populates="assigned_questions")
     video_url = Column(String(), nullable=True)
-    cols_common = ['external_id', 'topic', 'description_image', 'type', 'video_url']
+    cols_common = ['external_id', 'topic', 'category', 'description_image', 'type', 'video_url']
 
     # self_assessed only
     solution_image = Column(ImageColumn(size=(10000, 10000, True)))

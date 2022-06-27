@@ -19,6 +19,7 @@ def link_formatter(external_id, filters=None):
 
 # TODO: should be in jinja and imported!
 def state_to_emoji_markup(state, filters=None):
+    del filters
     if state is QuestionUserState.solved_success:
         emoji = 'bi-emoji-sunglasses'
         label = 'label-success'

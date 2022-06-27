@@ -67,6 +67,7 @@ class QuestionFormView(SimpleFormView):
         if self.assignment_id:
             assignment = db.session.query(Assignment).filter_by(id=self.assignment_id).first()
             # TODO: optimize
+            i = 0
             for i, assigned_question in enumerate(assignment.assigned_questions, 1):
                 if assigned_question.id == question_id:
                     break
@@ -83,10 +84,15 @@ class QuestionSelfAssessedFormView(QuestionFormView):
     # TODO: html input id, csrf, etc. are twice in output!
     def form_get(self, form):
         question_result = get_question(QuestionType.self_assessed.value, self.ext_id)
+        assignment_progress = None
 
         if question_result is None:
             description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
             external_id = None
+            submit_text = None
+            back_count = 1
+            forward_text = None
+            forward_url = None
         else:
             form.id.data = question_result.id
             description = question_result.description_image_img()
@@ -172,6 +178,8 @@ class Question2of5FormView(QuestionFormView):
         self.update_redirect()
 
         question_result = get_question(QuestionType.two_of_five.value, self.ext_id)
+        assignment_progress = None
+
         if question_result is None:
             description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
             external_id = None
@@ -297,6 +305,7 @@ class Question1of6FormView(QuestionFormView):
     def form_get(self, form):
         self.update_redirect()
         question_result = get_question(QuestionType.one_of_six.value, self.ext_id)
+        assignment_progress = None
 
         if question_result is None:
             description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
@@ -450,6 +459,7 @@ class Question3to3FormView(QuestionFormView):
     def form_get(self, form):
         self.update_redirect()
         question_result = get_question(QuestionType.three_to_three.value, self.ext_id)
+        assignment_progress = None
 
         if question_result is None:
             description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
@@ -591,6 +601,7 @@ class Question2DecimalsFormView(QuestionFormView):
     def form_get(self, form):
         self.update_redirect()
         question_result = get_question(QuestionType.two_decimals.value, self.ext_id)
+        assignment_progress = None
 
         if question_result is None:
             description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
@@ -691,6 +702,7 @@ class Question1DecimalFormView(QuestionFormView):
     def form_get(self, form):
         self.update_redirect()
         question_result = get_question(QuestionType.one_decimal.value, self.ext_id)
+        assignment_progress = None
 
         if question_result is None:
             description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
@@ -777,6 +789,7 @@ class QuestionSelect4FormView(QuestionFormView):
     def form_get(self, form):
         self.update_redirect()
         question_result = get_question(QuestionType.select_four.value, self.ext_id)
+        assignment_progress = None
 
         if question_result is None:
             description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
