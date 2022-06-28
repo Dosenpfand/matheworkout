@@ -163,6 +163,11 @@ class Question(Model):
         regex = r"^[a-zA-z]{1,4}\s*\d{1,4}(\.\d{1,4})?"
         match = re.match(regex, topic_name)
 
+        if self.category:
+            extended_info = f'{self.category.name} - '
+        else:
+            extended_info = ''
+
         if match:
             topic_short_name = match.group()
         elif len(topic_name) < 6:
@@ -170,7 +175,7 @@ class Question(Model):
         else:
             topic_short_name = self.topic.name[0:6]
 
-        return f'{self.external_id} ({topic_short_name})'
+        return f'{self.external_id} ({extended_info}{topic_short_name})'
 
     def state_user(self, user_id):
         tried_but_incorrect = False
