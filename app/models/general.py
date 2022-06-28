@@ -200,7 +200,6 @@ class Question(Model):
                       '" alt="Photo" class="img-rounded img-responsive">')
 
     def video_embed_url(self):
-        print(self.video_url)
         url = urlparse(self.video_url)
         if not url.hostname in ['www.youtube.com', 'youtu.be']:
             return None
@@ -210,11 +209,12 @@ class Question(Model):
         else:
             if queries.get('v', False):
                 video_id = queries['v'][0]
-                print(video_id)
             else:
                 return None
         if queries.get('t', False):
             start_at = queries['t'][0]
+            if start_at.endswith('s'):
+                start_at = start_at[:-1]
         else:
             start_at = 0
 
