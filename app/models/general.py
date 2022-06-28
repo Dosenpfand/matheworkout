@@ -195,16 +195,25 @@ class Question(Model):
                       '" alt="Photo" class="img-rounded img-responsive">')
 
     def video_embed_url(self):
+        print(self.video_url)
         url = urlparse(self.video_url)
-        if not url.hostname == 'www.youtube.com':
+        if not url.hostname in ['www.youtube.com', 'youtu.be']:
             return None
         queries = parse_qs(url.query)
-        if queries.get('v', False):
-            video_id = queries['v'][0]
+        if url.hostname == 'youtu.be':
+            video_id = url.path[1:]
         else:
-            return None
+            if queries.get('v', False):
+                video_id = queries['v'][0]
+                print(video_id)
+            else:
+                return None
+        if queries.get('t', False):
+            start_at = queries['t'][0]
+        else:
+            start_at = 0
 
-        video_embed_url = f'https://www.youtube-nocookie.com/embed/{video_id}'
+        video_embed_url = f'https://www.youtube-nocookie.com/embed/{video_id}?start={start_at}'
         return video_embed_url
 
     @staticmethod
