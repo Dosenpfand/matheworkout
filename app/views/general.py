@@ -56,15 +56,14 @@ class QuestionRandom(BaseView):
         return redirect(url_for(f'{rand_form}.this_form_get'))
 
 
-class ExtIdToForm(BaseView):
-    route_base = "/"
+class IdToForm(BaseView):
+    route_base = '/'
 
     @has_access
-    @expose("extidtoform/<int:ext_id>")
-    @expose("extidtoform/<int:ext_id>/<int:assignment_id>")
-    def ext_id_to_form(self, ext_id, assignment_id=None):
-        question = db.session.query(Question).filter_by(
-            external_id=ext_id).first()
+    @expose('idtoform/<int:id>')
+    @expose('idtoform/<int:id>/<int:assignment_id>')
+    def id_to_form(self, id, assignment_id=None):
+        question = db.session.query(Question).filter_by(id=id).first()
         question_type = question.type.value
 
         type_to_form = {
@@ -78,7 +77,7 @@ class ExtIdToForm(BaseView):
         }
 
         form = type_to_form[question_type]
-        url = url_for(f'{form}.this_form_get', ext_id=ext_id, assignment_id=assignment_id)
+        url = url_for(f'{form}.this_form_get', id=id, assignment_id=assignment_id)
 
         return redirect(url)
 

@@ -20,22 +20,22 @@ class QuestionFormView(SimpleFormView):
     def __init__(self):
         super().__init__()
         self.assignment_id = None
-        self.ext_id = None
+        self.id = None
 
     @expose("/form")
-    @expose("/form/<int:ext_id>")
-    @expose("/form/<int:ext_id>/<int:assignment_id>")
+    @expose("/form/<int:id>")
+    @expose("/form/<int:id>/<int:assignment_id>")
     @has_access
-    def this_form_get(self, ext_id=None, assignment_id=None):
-        self.ext_id = ext_id
+    def this_form_get(self, id=None, assignment_id=None):
+        self.id = id
         self.assignment_id = assignment_id
         return super().this_form_get()
 
     @expose("/form", methods=["POST"])
-    @expose("/form/<int:ext_id>", methods=["POST"])
-    @expose("/form/<int:ext_id>/<int:assignment_id>", methods=["POST"])
+    @expose("/form/<int:id>", methods=["POST"])
+    @expose("/form/<int:id>/<int:assignment_id>", methods=["POST"])
     @has_access
-    def this_form_post(self, ext_id=None, assignment_id=None):
+    def this_form_post(self, id=None, assignment_id=None):
         return super().this_form_post()
 
     def get_forward_button(self, question_id):
@@ -44,19 +44,18 @@ class QuestionFormView(SimpleFormView):
         if self.assignment_id:
             assignment = db.session.query(Assignment).filter_by(id=self.assignment_id).first()
             take_next = False
-            next_ext_id = None
+            next_id = None
             # TODO: optimize
             for assigned_question in assignment.assigned_questions:
                 if take_next:
-                    next_ext_id = assigned_question.external_id
+                    next_id = assigned_question.id
                     break
                 if assigned_question.id == question_id:
                     take_next = True
 
-            if next_ext_id:
+            if next_id:
                 forward_text = 'Nächste Aufgabe'
-                forward_url = url_for('ExtIdToForm.ext_id_to_form', ext_id=next_ext_id,
-                                      assignment_id=self.assignment_id)
+                forward_url = url_for('IdToForm.id_to_form', id=next_id, assignment_id=self.assignment_id)
             else:
                 forward_text = 'Zur Übungsübersicht'
                 forward_url = url_for('AssignmentModelStudentView.show', pk=self.assignment_id)
@@ -83,7 +82,7 @@ class QuestionSelfAssessedFormView(QuestionFormView):
 
     # TODO: html input id, csrf, etc. are twice in output!
     def form_get(self, form):
-        question_result = get_question(QuestionType.self_assessed.value, self.ext_id)
+        question_result = get_question(QuestionType.self_assessed.value, self.id)
         assignment_progress = None
 
         if question_result is None:
@@ -140,7 +139,7 @@ class QuestionSelfAssessedFormView(QuestionFormView):
         question_id = int(form.id.data)
         result = db.session.query(Question).filter_by(id=question_id).first()
 
-        url = url_for('QuestionSelfAssessedFormView.this_form_get', ext_id=result.external_id,
+        url = url_for('QuestionSelfAssessedFormView.this_form_get', id=result.id,
                       assignment_id=self.assignment_id)
 
         solution_img = result.solution_image_img()
@@ -177,7 +176,7 @@ class Question2of5FormView(QuestionFormView):
     def form_get(self, form):
         self.update_redirect()
 
-        question_result = get_question(QuestionType.two_of_five.value, self.ext_id)
+        question_result = get_question(QuestionType.two_of_five.value, self.id)
         assignment_progress = None
 
         if question_result is None:
@@ -304,7 +303,7 @@ class Question1of6FormView(QuestionFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        question_result = get_question(QuestionType.one_of_six.value, self.ext_id)
+        question_result = get_question(QuestionType.one_of_six.value, self.id)
         assignment_progress = None
 
         if question_result is None:
@@ -458,7 +457,7 @@ class Question3to3FormView(QuestionFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        question_result = get_question(QuestionType.three_to_three.value, self.ext_id)
+        question_result = get_question(QuestionType.three_to_three.value, self.id)
         assignment_progress = None
 
         if question_result is None:
@@ -600,7 +599,7 @@ class Question2DecimalsFormView(QuestionFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        question_result = get_question(QuestionType.two_decimals.value, self.ext_id)
+        question_result = get_question(QuestionType.two_decimals.value, self.id)
         assignment_progress = None
 
         if question_result is None:
@@ -701,7 +700,7 @@ class Question1DecimalFormView(QuestionFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        question_result = get_question(QuestionType.one_decimal.value, self.ext_id)
+        question_result = get_question(QuestionType.one_decimal.value, self.id)
         assignment_progress = None
 
         if question_result is None:
@@ -788,7 +787,7 @@ class QuestionSelect4FormView(QuestionFormView):
 
     def form_get(self, form):
         self.update_redirect()
-        question_result = get_question(QuestionType.select_four.value, self.ext_id)
+        question_result = get_question(QuestionType.select_four.value, self.id)
         assignment_progress = None
 
         if question_result is None:

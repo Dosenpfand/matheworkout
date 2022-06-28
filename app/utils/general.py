@@ -8,12 +8,13 @@ from app import db
 from app.models.general import Question, Topic, QuestionUserState
 
 
-def link_formatter(external_id, filters=None):
+def link_formatter(id, filters=None):
     assignment_id = None
+    external_id = db.session.query(Question).filter_by(id=id).first().external_id
     if filters:
         assignment_id = filters.get_filter_value('assignments')
 
-    url = url_for(f'ExtIdToForm.ext_id_to_form', ext_id=external_id, assignment_id=assignment_id)
+    url = url_for(f'IdToForm.id_to_form', id=id, assignment_id=assignment_id)
     return Markup(f'<a href="{url}">{external_id}</a>')
 
 
@@ -35,10 +36,9 @@ def state_to_emoji_markup(state, filters=None):
     return Markup(f'<span class="label {label}" title="{title}"><i class="bi {emoji}"></i></span>')
 
 
-def get_question(question_type, ext_id=None):
-    if ext_id:
-        result = db.session.query(Question).filter_by(
-            external_id=ext_id, type=question_type).first()
+def get_question(question_type, id=None):
+    if id:
+        result = db.session.query(Question).filter_by(id=id, type=question_type).first()
     else:
         active_topic_ids = get_active_topics()
         filter_arg = Question.topic_id.in_(active_topic_ids)

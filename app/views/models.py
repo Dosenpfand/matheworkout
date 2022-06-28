@@ -24,10 +24,10 @@ class Question2of5ModelView(ModelView):
     add_form_extra_fields = {'type': HiddenField(
         default=QuestionType.two_of_five.value)}
     label_columns = {'description_image': 'Beschreibung',
-                     'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie'}
-    list_columns = ['external_id', 'topic']
+                     'id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie'}
+    list_columns = ['id', 'topic']
     show_columns = ['description_image_img', 'title']
-    formatters_columns = {'external_id': link_formatter}
+    formatters_columns = {'id': link_formatter}
     page_size = 100
 
 
@@ -44,10 +44,10 @@ class Question1of6ModelView(ModelView):
     add_form_extra_fields = {'type': HiddenField(
         default=QuestionType.one_of_six.value)}
     label_columns = {'description_image': 'Beschreibung',
-                     'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie'}
-    list_columns = ['external_id', 'topic']
+                     'id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie'}
+    list_columns = ['id', 'topic']
     show_columns = ['description_image_img', 'title']
-    formatters_columns = {'external_id': link_formatter}
+    formatters_columns = {'id': link_formatter}
     page_size = 100
 
 
@@ -64,10 +64,10 @@ class Question3to3ModelView(ModelView):
     add_form_extra_fields = {'type': HiddenField(
         default=QuestionType.three_to_three.value)}
     label_columns = {'description_image': 'Beschreibung',
-                     'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie'}
-    list_columns = ['external_id', 'topic']
+                     'id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie'}
+    list_columns = ['id', 'topic']
     show_columns = ['description_image_img', 'title']
-    formatters_columns = {'external_id': link_formatter}
+    formatters_columns = {'id': link_formatter}
     page_size = 100
 
 
@@ -84,10 +84,10 @@ class Question2DecimalsModelView(ModelView):
     add_form_extra_fields = {'type': HiddenField(
         default=QuestionType.two_decimals.value)}
     label_columns = {'description_image': 'Beschreibung',
-                     'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie'}
-    list_columns = ['external_id', 'topic']
+                     'id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie'}
+    list_columns = ['id', 'topic']
     show_columns = ['description_image_img', 'title']
-    formatters_columns = {'external_id': link_formatter}
+    formatters_columns = {'id': link_formatter}
     page_size = 100
 
 
@@ -104,10 +104,10 @@ class Question1DecimalModelView(ModelView):
     add_form_extra_fields = {'type': HiddenField(
         default=QuestionType.one_decimal.value)}
     label_columns = {'description_image': 'Beschreibung',
-                     'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie'}
-    list_columns = ['external_id', 'topic']
+                     'id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie'}
+    list_columns = ['id', 'topic']
     show_columns = ['description_image_img', 'title']
-    formatters_columns = {'external_id': link_formatter}
+    formatters_columns = {'id': link_formatter}
     page_size = 100
 
 
@@ -124,10 +124,10 @@ class QuestionSelfAssessedModelView(ModelView):
     add_form_extra_fields = {'type': HiddenField(
         default=QuestionType.self_assessed.value)}
     label_columns = {'description_image': 'Beschreibung',
-                     'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie'}
-    list_columns = ['external_id', 'topic']
+                     'id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie'}
+    list_columns = ['id', 'topic']
     show_columns = ['description_image_img', 'solution_image_img']
-    formatters_columns = {'external_id': link_formatter}
+    formatters_columns = {'id': link_formatter}
     page_size = 100
 
 
@@ -144,10 +144,10 @@ class QuestionSelect4ModelView(ModelView):
     add_form_extra_fields = {'type': HiddenField(
         default=QuestionType.select_four.value)}
     label_columns = {'description_image': 'Beschreibung',
-                     'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie'}
-    list_columns = ['external_id', 'topic']
+                     'id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie'}
+    list_columns = ['id', 'topic']
     show_columns = ['description_image_img', 'solution_image_img']
-    formatters_columns = {'external_id': link_formatter}
+    formatters_columns = {'id': link_formatter}
     page_size = 100
 
 
@@ -160,9 +160,9 @@ class QuestionModelView(ModelView):
     add_title = title
     edit_title = title
     label_columns = {'description_image': 'Beschreibung',
-                     'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie', 'state': 'Status'}
-    list_columns = ['external_id', 'topic', 'state']
-    formatters_columns = {'external_id': link_formatter, 'state': state_to_emoji_markup}
+                     'id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie', 'state': 'Status'}
+    list_columns = ['id', 'topic', 'state']
+    formatters_columns = {'id': link_formatter, 'state': state_to_emoji_markup}
     page_size = 100
     list_widget = ExtendedListWidget
 
@@ -218,9 +218,9 @@ class QuestionModelIncorrectAnsweredView(ModelView):
     add_title = title
     edit_title = title
     label_columns = {'description_image': 'Beschreibung',
-                     'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie'}
-    list_columns = ['external_id', 'topic']
-    formatters_columns = {'external_id': link_formatter}
+                     'id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie'}
+    list_columns = ['id', 'topic']
+    formatters_columns = {'id': link_formatter}
     page_size = 100
 
 
@@ -234,9 +234,9 @@ class QuestionModelCorrectAnsweredView(ModelView):
     add_title = title
     edit_title = title
     label_columns = {'description_image': 'Beschreibung',
-                     'external_id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie'}
-    list_columns = ['external_id', 'topic']
-    formatters_columns = {'external_id': link_formatter}
+                     'id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie'}
+    list_columns = ['id', 'topic']
+    formatters_columns = {'id': link_formatter}
     page_size = 100
 
 
