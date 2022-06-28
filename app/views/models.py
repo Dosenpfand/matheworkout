@@ -208,6 +208,23 @@ class AssignmentModelStudentView(ModelView):
     edit_template = "appbuilder/general/model/edit_cascade.html"
 
 
+class CategoryModelStudentView(ModelView):
+    datamodel = SQLAInterface(Category)
+
+    label_columns = {'name': 'Titel'}
+    list_columns = ['name']
+    show_columns = ['name']
+    title = 'Maturaaufgaben'
+    list_title = title
+    show_title = title
+    add_title = title
+    edit_title = title
+
+    related_views = [QuestionModelView]
+    show_template = "show_cascade_expanded.html"
+    edit_template = "appbuilder/general/model/edit_cascade.html"
+
+
 class QuestionModelIncorrectAnsweredView(ModelView):
     datamodel = SQLAInterface(Question)
     base_filters = [['topic_id', FilterInFunction, get_active_topics],
@@ -244,5 +261,5 @@ class TopicModelView(ModelView):
     datamodel = SQLAInterface(Topic)
 
 
-class CategoryModelView(ModelView):
+class CategoryModelAdminView(ModelView):
     datamodel = SQLAInterface(Category)

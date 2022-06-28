@@ -6,7 +6,7 @@ from app.views.models import Question2of5ModelView, Question1of6ModelView, Quest
     Question2DecimalsModelView, Question1DecimalModelView, QuestionSelfAssessedModelView, QuestionSelect4ModelView, \
     QuestionModelView, AssocUserQuestionModelView, AssignmentModelAdminView, AssignmentModelStudentView, \
     QuestionModelIncorrectAnsweredView, QuestionModelCorrectAnsweredView, TopicModelView, LearningGroupModelView, \
-    CategoryModelView
+    CategoryModelStudentView, CategoryModelAdminView
 
 appbuilder.add_view(
     LearningGroupModelView,
@@ -34,7 +34,7 @@ appbuilder.add_view(
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
-    CategoryModelView,
+    CategoryModelAdminView,
     "Aufgabenkategorien",
     icon="fa-align-justify",
     category="Verwaltung",
@@ -44,6 +44,12 @@ appbuilder.add_view(
     AssignmentModelStudentView,
     "Hausübungen",
     icon="fa-tasks",
+    category="Aufgabenlisten",
+    category_icon="fa-align-justify")
+appbuilder.add_view(
+    CategoryModelStudentView,
+    "Maturaaufgaben",
+    icon="fa-star",
     category="Aufgabenlisten",
     category_icon="fa-align-justify")
 appbuilder.add_view(
