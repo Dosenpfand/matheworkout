@@ -1,12 +1,13 @@
 from flask import request, g, url_for, flash
 from flask_appbuilder import SimpleFormView, expose, has_access
 from markupsafe import Markup
+from sqlalchemy import asc
 
 from app import db
 from app.forms.forms import QuestionSelfAssessedForm, Question2of5Form, Question1of6Form, Question3to3Form, \
     Question2DecimalsForm, Question1DecimalForm, QuestionSelect4Form
 from app.models.general import QuestionType, Question, Assignment, Category
-from app.models.relations import AssocUserQuestion
+from app.models.relations import AssocUserQuestion, assoc_assignment_question
 from app.security.models import ExtendedUser
 from app.utils.general import get_question, commit_safely
 from app.views.widgets import ExtendedEditWidget
@@ -46,11 +47,12 @@ class QuestionFormView(SimpleFormView):
         forward_text = None
         forward_url = None
         if self.assignment_id:
-            assignment = db.session.query(Assignment).filter_by(id=self.assignment_id).first()
+            questions = db.session.query(Question).join(assoc_assignment_question).join(Assignment). \
+                filter(Assignment.id == self.assignment_id).order_by(asc(Question.external_id))
             take_next = False
             next_id = None
             # TODO: optimize
-            for assigned_question in assignment.assigned_questions:
+            for assigned_question in questions:
                 if take_next:
                     next_id = assigned_question.id
                     break
@@ -59,16 +61,17 @@ class QuestionFormView(SimpleFormView):
 
             if next_id:
                 forward_text = 'Nächste Aufgabe'
-                forward_url = url_for('IdToForm.id_to_form', id=next_id, assignment_id=self.assignment_id)
+                forward_url = url_for('IdToForm.id_to_form', q_id=next_id, assignment_id=self.assignment_id)
             else:
                 forward_text = 'Zur Übungsübersicht'
                 forward_url = url_for('AssignmentModelStudentView.show', pk=self.assignment_id)
         elif self.category_id:
-            category = db.session.query(Category).filter_by(id=self.category_id).first()
+            questions = db.session.query(Question).filter_by(category_id=self.category_id). \
+                order_by(asc(Question.external_id))
             take_next = False
             next_id = None
             # TODO: optimize
-            for question in category.questions:
+            for question in questions:
                 if take_next:
                     next_id = question.id
                     break
@@ -77,7 +80,7 @@ class QuestionFormView(SimpleFormView):
 
             if next_id:
                 forward_text = 'Nächste Aufgabe'
-                forward_url = url_for('IdToForm.id_to_form', id=next_id, category_id=self.category_id)
+                forward_url = url_for('IdToForm.id_to_form', q_id=next_id, category_id=self.category_id)
             else:
                 forward_text = 'Zur Übungsübersicht'
                 forward_url = url_for('CategoryModelStudentView.show', pk=self.category_id)
@@ -85,16 +88,22 @@ class QuestionFormView(SimpleFormView):
 
     def get_assignment_progress(self, question_id):
         assignment_progress = None
-        if self.assignment_id:
-            assignment = db.session.query(Assignment).filter_by(id=self.assignment_id).first()
+        if self.assignment_id or self.category_id:
+            if self.assignment_id:
+                questions = db.session.query(Question).join(assoc_assignment_question).join(Assignment). \
+                    filter(Assignment.id == self.assignment_id).order_by(asc(Question.external_id))
+            else:
+                questions = db.session.query(Question).filter_by(category_id=self.category_id). \
+                    order_by(asc(Question.external_id))
             # TODO: optimize
             i = 0
-            for i, assigned_question in enumerate(assignment.assigned_questions, 1):
+            for i, assigned_question in enumerate(questions, 1):
                 if assigned_question.id == question_id:
                     break
 
-            assignment_progress = {'done': i, 'total': len(assignment.assigned_questions),
-                                   'percentage': round(i / len(assignment.assigned_questions) * 100)}
+            question_count = questions.count()
+            assignment_progress = {'done': i, 'total': question_count,
+                                   'percentage': round(i / question_count * 100)}
         return assignment_progress
 
 
@@ -161,8 +170,8 @@ class QuestionSelfAssessedFormView(QuestionFormView):
         question_id = int(form.id.data)
         result = db.session.query(Question).filter_by(id=question_id).first()
 
-        url = url_for('QuestionSelfAssessedFormView.this_form_get', id=result.id,
-                      assignment_id=self.assignment_id)
+        url = url_for('QuestionSelfAssessedFormView.this_form_get', q_id=result.id,
+                      assignment_id=self.assignment_id, category_id=self.category_id)
 
         solution_img = result.solution_image_img()
         correct_link = \

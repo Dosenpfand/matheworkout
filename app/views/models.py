@@ -154,6 +154,7 @@ class QuestionSelect4ModelView(ModelView):
 class QuestionModelView(ModelView):
     datamodel = SQLAInterface(Question)
     base_filters = [['topic_id', FilterInFunction, get_active_topics]]
+    base_order = ('external_id', 'asc')
     title = 'Aufgaben'
     list_title = title
     show_title = title
