@@ -6,6 +6,7 @@ After=network.target
 User=www-data
 Group=www-data
 WorkingDirectory=/var/www/matheueben/
+EnvironmentFile=/var/www/matheueben/.env
 ExecStart=/var/www/matheueben/venv/bin/gunicorn --workers 5 --bind unix:/var/www/matheueben/matheueben.sock wsgi:application
 
 [Install]
