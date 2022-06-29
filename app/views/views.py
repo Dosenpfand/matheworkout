@@ -10,169 +10,214 @@ from app.views.models import Question2of5ModelView, Question1of6ModelView, Quest
 
 appbuilder.add_view(
     LearningGroupModelView,
-    "Klassen",
-    icon="fa-book",
-    category="Verwaltung",
-    category_icon="fa-book")
+    'classes',
+    label='Klassen',
+    icon='fa-book',
+    category='Verwaltung',
+    category_icon='fa-book')
 appbuilder.add_view(
     AssocUserQuestionModelView,
-    "Beantwortete Fragen",
-    icon="fa-question",
-    category="Verwaltung",
-    category_icon="fa-book")
+    'answered_questions',
+    label='Beantwortete Fragen',
+    icon='fa-question',
+    category='Verwaltung',
+    category_icon='fa-book')
 appbuilder.add_view(
     AssignmentModelAdminView,
-    "Hausübungen",
-    icon="fa-tasks",
-    category="Verwaltung",
-    category_icon="fa-book")
+    'assignments_admin',
+    label='Hausübungen',
+    icon='fa-tasks',
+    category='Verwaltung',
+    category_icon='fa-book')
 appbuilder.add_view(
     TopicModelView,
-    "Grundkompetenzbereiche",
-    icon="fa-align-justify",
-    category="Verwaltung",
-    category_icon="fa-align-justify",
+    'topics',
+    label='Grundkompetenzbereiche',
+    icon='fa-align-justify',
+    category='Verwaltung',
+    category_icon='fa-align-justify',
 )
 appbuilder.add_view(
     CategoryModelAdminView,
-    "Aufgabenkategorien",
-    icon="fa-align-justify",
-    category="Verwaltung",
-    category_icon="fa-align-justify",
+    'categories_admin',
+    label='Aufgabenkategorien',
+    icon='fa-align-justify',
+    category='Verwaltung',
+    category_icon='fa-align-justify',
 )
 appbuilder.add_view(
     AssignmentModelStudentView,
-    "Hausübungen",
-    icon="fa-tasks",
-    category="Aufgabenlisten",
-    category_icon="fa-align-justify")
+    'assignments_student',
+    label='Hausübungen',
+    icon='fa-tasks',
+    category='questions_category',
+    category_label='Aufgabenlisten',
+    category_icon='fa-align-justify')
 appbuilder.add_view(
     CategoryModelStudentView,
-    "Maturaaufgaben",
-    icon="fa-star",
-    category="Aufgabenlisten",
-    category_icon="fa-align-justify")
+    'questions_categories',
+    label='Maturaaufgaben',
+    icon='fa-star',
+    category='questions_category',
+    category_label='Aufgabenlisten',
+    category_icon='fa-align-justify')
 appbuilder.add_view(
     QuestionModelIncorrectAnsweredView,
-    "Falsch beantwortete Aufgaben",
-    icon="fa-minus-square",
-    category="Aufgabenlisten",
-    category_icon="fa-align-justify",
+    'questions_incorrect',
+    label='Falsch beantwortete Aufgaben',
+    icon='fa-minus-square',
+    category='questions_category',
+    category_label='Aufgabenlisten',
+    category_icon='fa-align-justify',
 )
 appbuilder.add_view(
     QuestionModelCorrectAnsweredView,
-    "Richtig beantwortete Aufgaben",
-    icon="fa-plus-square",
-    category="Aufgabenlisten",
-    category_icon="fa-align-justify",
+    'questions_correct',
+    label='Richtig beantwortete Aufgaben',
+    icon='fa-plus-square',
+    category='questions_category',
+    category_label='Aufgabenlisten',
+    category_icon='fa-align-justify',
 )
 appbuilder.add_view(
     QuestionModelView,
-    "Alle Aufgaben",
-    icon="fa-align-justify",
-    category="Aufgabenlisten",
-    category_icon="fa-align-justify",
+    'questions_all',
+    label='Alle Aufgaben',
+    icon='fa-align-justify',
+    category='questions_category',
+    category_label='Aufgabenlisten',
+    category_icon='fa-align-justify',
 )
-appbuilder.add_separator("Aufgabenlisten")
+appbuilder.add_separator('questions_category')
 appbuilder.add_view(
     Question2of5ModelView,
-    "2 aus 5",
-    icon="fa-align-justify",
-    category="Aufgabenlisten",
-    category_icon="fa-align-justify",
+    'questions_2_of_5',
+    label='2 aus 5',
+    icon='fa-align-justify',
+    category='questions_category',
+    category_label='Aufgabenlisten',
+    category_icon='fa-align-justify',
 )
 appbuilder.add_view(
     Question1of6ModelView,
-    "1 aus 6",
-    icon="fa-align-justify",
-    category="Aufgabenlisten",
-    category_icon="fa-align-justify",
+    'questions_1_of_6',
+    label='1 aus 6',
+    icon='fa-align-justify',
+    category='questions_category',
+    category_label='Aufgabenlisten',
+    category_icon='fa-align-justify',
 )
 appbuilder.add_view(
     Question3to3ModelView,
-    "Lückentext",
-    icon="fa-align-justify",
-    category="Aufgabenlisten",
-    category_icon="fa-align-justify",
+    'questions_3_to_3',
+    label='Lückentext',
+    icon='fa-align-justify',
+    category='questions_category',
+    category_label='Aufgabenlisten',
+    category_icon='fa-align-justify',
 )
 appbuilder.add_view(
     Question2DecimalsModelView,
-    "Werteingabe zwei Zahlen",
-    icon="fa-align-justify",
-    category="Aufgabenlisten",
-    category_icon="fa-align-justify",
+    'questions_2_decimals',
+    label='Werteingabe zwei Zahlen',
+    icon='fa-align-justify',
+    category='questions_category',
+    category_label='Aufgabenlisten',
+    category_icon='fa-align-justify',
 )
 appbuilder.add_view(
     Question1DecimalModelView,
-    "Werteingabe eine Zahl",
-    icon="fa-align-justify",
-    category="Aufgabenlisten",
-    category_icon="fa-align-justify",
+    'questions_1_decimals',
+    label='Werteingabe eine Zahl',
+    icon='fa-align-justify',
+    category='questions_category',
+    category_label='Aufgabenlisten',
+    category_icon='fa-align-justify',
 )
 appbuilder.add_view(
     QuestionSelfAssessedModelView,
-    "Selbstkontrolle",
-    icon="fa-align-justify",
-    category="Aufgabenlisten",
-    category_icon="fa-align-justify",
+    'questions_self_assessed',
+    label='Selbstkontrolle',
+    icon='fa-align-justify',
+    category='questions_category',
+    category_label='Aufgabenlisten',
+    category_icon='fa-align-justify',
 )
 appbuilder.add_view(
     QuestionSelect4ModelView,
-    "Zuordnung",
-    icon="fa-align-justify",
-    category="Aufgabenlisten",
-    category_icon="fa-align-justify",
+    'questions_select_4',
+    label='Zuordnung',
+    icon='fa-align-justify',
+    category='questions_category',
+    category_label='Aufgabenlisten',
+    category_icon='fa-align-justify',
 )
 appbuilder.add_view_no_menu(QuestionRandom())
 appbuilder.add_link(
-    "Alle Aufgaben",
-    href="/questionrandom/",
-    icon="fa-question",
-    category="Zufallsaufgaben",
-    category_icon="fa-question")
-appbuilder.add_separator("Zufallsaufgaben")
+    'random_all',
+    label='Alle Aufgaben',
+    href='/questionrandom/',
+    icon='fa-question',
+    category='random_category',
+    category_label='Zufallsaufgaben',
+    category_icon='fa-question')
+appbuilder.add_separator('random_category')
 appbuilder.add_view(
     Question2of5FormView,
-    "2 aus 5",
-    icon="fa-question",
-    category="Zufallsaufgaben",
-    category_icon="fa-question")
+    'random_2_of_5',
+    label='2 aus 5',
+    icon='fa-question',
+    category='random_category',
+    category_label='Zufallsaufgaben',
+    category_icon='fa-question')
 appbuilder.add_view(
     Question1of6FormView(),
-    "1 aus 6",
-    icon="fa-question",
-    category="Zufallsaufgaben",
-    category_icon="fa-question")
+    'random_1_of_6',
+    label='1 aus 6',
+    icon='fa-question',
+    category='random_category',
+    category_label='Zufallsaufgaben',
+    category_icon='fa-question')
 appbuilder.add_view(
     Question3to3FormView(),
-    "Lückentext",
-    icon="fa-question",
-    category="Zufallsaufgaben",
-    category_icon="fa-question")
+    'random_3_to_3',
+    label='Lückentext',
+    icon='fa-question',
+    category='random_category',
+    category_label='Zufallsaufgaben',
+    category_icon='fa-question')
 appbuilder.add_view(
     Question2DecimalsFormView(),
-    "Werteingabe zwei Zahlen",
-    icon="fa-question",
-    category="Zufallsaufgaben",
-    category_icon="fa-question")
+    'random_2_decimals',
+    label='Werteingabe zwei Zahlen',
+    icon='fa-question',
+    category='random_category',
+    category_label='Zufallsaufgaben',
+    category_icon='fa-question')
 appbuilder.add_view(
     Question1DecimalFormView(),
-    "Werteingabe eine Zahl",
-    icon="fa-question",
-    category="Zufallsaufgaben",
-    category_icon="fa-question")
+    'random_1_decimal',
+    label='Werteingabe eine Zahl',
+    icon='fa-question',
+    category='random_category',
+    category_label='Zufallsaufgaben',
+    category_icon='fa-question')
 appbuilder.add_view(
     QuestionSelfAssessedFormView,
-    "Selbstkontrolle",
-    icon="fa-question",
-    category="Zufallsaufgaben",
-    category_icon="fa-question")
+    'random_self_assessed',
+    label='Selbstkontrolle',
+    icon='fa-question',
+    category='random_category',
+    category_label='Zufallsaufgaben',
+    category_icon='fa-question')
 appbuilder.add_view(
     QuestionSelect4FormView,
-    "Zuordnung",
-    icon="fa-question",
-    category="Zufallsaufgaben",
-    category_icon="fa-question")
+    'random_select_4',
+    label='Zuordnung',
+    icon='fa-question',
+    category='random_category',
+    category_label='Zufallsaufgaben',
+    category_icon='fa-question')
 appbuilder.add_view_no_menu(IdToForm())
 appbuilder.add_view_no_menu(AssignmentModelTeacherView())
 appbuilder.add_view_no_menu(UtilExtendedView())
