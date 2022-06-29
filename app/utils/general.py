@@ -10,11 +10,13 @@ from app.models.general import Question, Topic, QuestionUserState
 
 def link_formatter(id, filters=None):
     assignment_id = None
+    category_id = None
     external_id = db.session.query(Question).filter_by(id=id).first().external_id
     if filters:
         assignment_id = filters.get_filter_value('assignments')
+        category_id = filters.get_filter_value('category')
 
-    url = url_for(f'IdToForm.id_to_form', id=id, assignment_id=assignment_id)
+    url = url_for(f'IdToForm.id_to_form', id=id, assignment_id=assignment_id, category_id=category_id)
     return Markup(f'<a href="{url}">{external_id}</a>')
 
 

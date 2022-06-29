@@ -5,7 +5,7 @@ from markupsafe import Markup
 from app import db
 from app.forms.forms import QuestionSelfAssessedForm, Question2of5Form, Question1of6Form, Question3to3Form, \
     Question2DecimalsForm, Question1DecimalForm, QuestionSelect4Form
-from app.models.general import QuestionType, Question, Assignment
+from app.models.general import QuestionType, Question, Assignment, Category
 from app.models.relations import AssocUserQuestion
 from app.security.models import ExtendedUser
 from app.utils.general import get_question, commit_safely
@@ -20,22 +20,26 @@ class QuestionFormView(SimpleFormView):
     def __init__(self):
         super().__init__()
         self.assignment_id = None
+        self.category_id = None
         self.id = None
 
     @expose("/form")
     @expose("/form/<int:id>")
-    @expose("/form/<int:id>/<int:assignment_id>")
+    @expose("/form/<int:id>/assignment/<int:assignment_id>")
+    @expose("/form/<int:id>/category/<int:category_id>")
     @has_access
-    def this_form_get(self, id=None, assignment_id=None):
+    def this_form_get(self, id=None, assignment_id=None, category_id=None):
         self.id = id
         self.assignment_id = assignment_id
+        self.category_id = category_id
         return super().this_form_get()
 
     @expose("/form", methods=["POST"])
     @expose("/form/<int:id>", methods=["POST"])
-    @expose("/form/<int:id>/<int:assignment_id>", methods=["POST"])
+    @expose("/form/<int:id>/assignment/<int:assignment_id>", methods=["POST"])
+    @expose("/form/<int:id>/category/<int:category_id>", methods=["POST"])
     @has_access
-    def this_form_post(self, id=None, assignment_id=None):
+    def this_form_post(self, id=None, assignment_id=None, category_id=None):
         return super().this_form_post()
 
     def get_forward_button(self, question_id):
@@ -59,6 +63,24 @@ class QuestionFormView(SimpleFormView):
             else:
                 forward_text = 'Zur Übungsübersicht'
                 forward_url = url_for('AssignmentModelStudentView.show', pk=self.assignment_id)
+        elif self.category_id:
+            category = db.session.query(Category).filter_by(id=self.category_id).first()
+            take_next = False
+            next_id = None
+            # TODO: optimize
+            for question in category.questions:
+                if take_next:
+                    next_id = question.id
+                    break
+                if question.id == question_id:
+                    take_next = True
+
+            if next_id:
+                forward_text = 'Nächste Aufgabe'
+                forward_url = url_for('IdToForm.id_to_form', id=next_id, category_id=self.category_id)
+            else:
+                forward_text = 'Zur Übungsübersicht'
+                forward_url = url_for('CategoryModelStudentView.show', pk=self.category_id)
         return forward_text, forward_url
 
     def get_assignment_progress(self, question_id):

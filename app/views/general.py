@@ -61,8 +61,9 @@ class IdToForm(BaseView):
 
     @has_access
     @expose('idtoform/<int:id>')
-    @expose('idtoform/<int:id>/<int:assignment_id>')
-    def id_to_form(self, id, assignment_id=None):
+    @expose('idtoform/<int:id>/assignment/<int:assignment_id>')
+    @expose('idtoform/<int:id>/category/<int:category_id>')
+    def id_to_form(self, id, assignment_id=None, category_id=None):
         question = db.session.query(Question).filter_by(id=id).first()
         question_type = question.type.value
 
@@ -77,7 +78,7 @@ class IdToForm(BaseView):
         }
 
         form = type_to_form[question_type]
-        url = url_for(f'{form}.this_form_get', id=id, assignment_id=assignment_id)
+        url = url_for(f'{form}.this_form_get', id=id, assignment_id=assignment_id, category_id=category_id)
 
         return redirect(url)
 

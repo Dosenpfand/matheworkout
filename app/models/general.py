@@ -36,6 +36,7 @@ class Topic(Model):
 class Category(Model):
     id = Column(Integer, primary_key=True)
     name = Column(String(150), nullable=False)
+    questions = relationship("Question", back_populates="category")
 
     def __repr__(self):
         return self.name
@@ -68,7 +69,7 @@ class Question(Model):
     topic_id = Column(Integer, ForeignKey("topic.id"), nullable=False)
     topic = relationship("Topic")
     category_id = Column(Integer, ForeignKey("category.id"), nullable=True)
-    category = relationship("Category")
+    category = relationship("Category", back_populates="questions")
     description_image = Column(ImageColumn(size=(10000, 10000, True)))
     type = Column(Enum(QuestionType), index=True)
     answered_users = relationship("AssocUserQuestion", back_populates="question")
