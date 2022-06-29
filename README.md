@@ -1,6 +1,6 @@
 # matheueben
 
-Practice for the matura exam in maths.
+Practice for the Austrian high school certificate exam (matura) in maths.
 
 ## Run
 
