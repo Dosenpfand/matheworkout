@@ -8,7 +8,10 @@
     <h1>{{_("Willkommen")}}</h1>
     {% endif %}
 
-    <p>{{_("Auf dieser Seite kannst du Mathematik-Grundkompetenzaufgaben üben.")}}</p>
+    <p>
+      {{_("Auf dieser Seite kannst du dich auf die österreichische Mathematik-Zentralmatura vorbereiten.")}}
+      {{_("Dazu stehen Grundkompetenzaufgaben und Maturabeispiele aus der Vergangenheit zur Verfügung.")}}
+    </p>
     <p>
     {% if current_user.is_authenticated %}
     Um loszulegen, wähle einen Aufgabentyp aus den Menüs oben aus, oder starte einfach mit <a href="{{ url_for("QuestionRandom.question_random") }}">einer Zufallsaufgabe</a>.
