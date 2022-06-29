@@ -26,8 +26,8 @@ class QuestionRandom(BaseView):
         }
 
         type_id_to_count = {}
-        for id, class_name in type_id_to_form.items():
-            type_id_to_count[id] = get_question_count(class_name)
+        for q_id, class_name in type_id_to_form.items():
+            type_id_to_count[q_id] = get_question_count(class_name)
 
         total_count = sum(type_id_to_count.values())
 
@@ -63,8 +63,8 @@ class IdToForm(BaseView):
     @expose('idtoform/<int:id>')
     @expose('idtoform/<int:id>/assignment/<int:assignment_id>')
     @expose('idtoform/<int:id>/category/<int:category_id>')
-    def id_to_form(self, id, assignment_id=None, category_id=None):
-        question = db.session.query(Question).filter_by(id=id).first()
+    def id_to_form(self, q_id, assignment_id=None, category_id=None):
+        question = db.session.query(Question).filter_by(id=q_id).first()
         question_type = question.type.value
 
         type_to_form = {
@@ -78,7 +78,7 @@ class IdToForm(BaseView):
         }
 
         form = type_to_form[question_type]
-        url = url_for(f'{form}.this_form_get', id=id, assignment_id=assignment_id, category_id=category_id)
+        url = url_for(f'{form}.this_form_get', id=q_id, assignment_id=assignment_id, category_id=category_id)
 
         return redirect(url)
 

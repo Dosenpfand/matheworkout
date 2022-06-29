@@ -202,25 +202,25 @@ class Question(Model):
 
     def video_embed_url(self):
         url = urlparse(self.video_url)
-        if not url.hostname in ['www.youtube.com', 'youtu.be']:
-            return None
-        queries = parse_qs(url.query)
-        if url.hostname == 'youtu.be':
-            video_id = url.path[1:]
-        else:
-            if queries.get('v', False):
-                video_id = queries['v'][0]
+        if url.hostname not in ['www.youtube.com', 'youtu.be']:
+            queries = parse_qs(url.query)
+            if url.hostname == 'youtu.be':
+                video_id = url.path[1:]
             else:
-                return None
-        if queries.get('t', False):
-            start_at = queries['t'][0]
-            if start_at.endswith('s'):
-                start_at = start_at[:-1]
-        else:
-            start_at = 0
+                if queries.get('v', False):
+                    video_id = queries['v'][0]
+                else:
+                    return None
+            if queries.get('t', False):
+                start_at = queries['t'][0]
+                if start_at.endswith('s'):
+                    start_at = start_at[:-1]
+            else:
+                start_at = 0
 
-        video_embed_url = f'https://www.youtube-nocookie.com/embed/{video_id}?start={start_at}'
-        return video_embed_url
+            video_embed_url = f'https://www.youtube-nocookie.com/embed/{video_id}?start={start_at}'
+            return video_embed_url
+        return None
 
     @staticmethod
     def get_option_image(option):

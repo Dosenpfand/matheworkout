@@ -8,15 +8,15 @@ from app import db
 from app.models.general import Question, Topic, QuestionUserState
 
 
-def link_formatter(id, filters=None):
+def link_formatter(q_id, filters=None):
     assignment_id = None
     category_id = None
-    external_id = db.session.query(Question).filter_by(id=id).first().external_id
+    external_id = db.session.query(Question).filter_by(id=q_id).first().external_id
     if filters:
         assignment_id = filters.get_filter_value('assignments')
         category_id = filters.get_filter_value('category')
 
-    url = url_for(f'IdToForm.id_to_form', id=id, assignment_id=assignment_id, category_id=category_id)
+    url = url_for(f'IdToForm.id_to_form', id=q_id, assignment_id=assignment_id, category_id=category_id)
     return Markup(f'<a href="{url}">{external_id}</a>')
 
 
@@ -38,9 +38,9 @@ def state_to_emoji_markup(state, filters=None):
     return Markup(f'<span class="label {label}" title="{title}"><i class="bi {emoji}"></i></span>')
 
 
-def get_question(question_type, id=None):
-    if id:
-        result = db.session.query(Question).filter_by(id=id, type=question_type).first()
+def get_question(question_type, q_id=None):
+    if q_id:
+        result = db.session.query(Question).filter_by(id=q_id, type=question_type).first()
     else:
         active_topic_ids = get_active_topics()
         filter_arg = Question.topic_id.in_(active_topic_ids)
@@ -50,11 +50,11 @@ def get_question(question_type, id=None):
     return result
 
 
-def get_question_count(type):
+def get_question_count(q_type):
     active_topic_ids = get_active_topics()
     filter_arg = Question.topic_id.in_(active_topic_ids)
     count = db.session.query(Question).order_by(
-        func.random()).filter(filter_arg).filter_by(type=type).count()
+        func.random()).filter(filter_arg).filter_by(type=q_type).count()
     return count
 
 

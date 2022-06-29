@@ -28,8 +28,8 @@ class QuestionFormView(SimpleFormView):
     @expose("/form/<int:id>/assignment/<int:assignment_id>")
     @expose("/form/<int:id>/category/<int:category_id>")
     @has_access
-    def this_form_get(self, id=None, assignment_id=None, category_id=None):
-        self.id = id
+    def this_form_get(self, q_id=None, assignment_id=None, category_id=None):
+        self.id = q_id
         self.assignment_id = assignment_id
         self.category_id = category_id
         return super().this_form_get()
@@ -39,7 +39,7 @@ class QuestionFormView(SimpleFormView):
     @expose("/form/<int:id>/assignment/<int:assignment_id>", methods=["POST"])
     @expose("/form/<int:id>/category/<int:category_id>", methods=["POST"])
     @has_access
-    def this_form_post(self, id=None, assignment_id=None, category_id=None):
+    def this_form_post(self, q_id=None, assignment_id=None, category_id=None):
         return super().this_form_post()
 
     def get_forward_button(self, question_id):
@@ -761,7 +761,8 @@ class Question1DecimalFormView(QuestionFormView):
             is_answer_correct = True
         else:
             message = \
-                f'<strong><div>FALSCH! Richtig gewesen wäre:</div><div>{result.value1_lower_limit} ≤ Ergebnis ≤ {result.value1_upper_limit}</div></strong>'
+                '<strong><div>FALSCH! Richtig gewesen wäre:</div>' \
+                f'<div>{result.value1_lower_limit} ≤ Ergebnis ≤ {result.value1_upper_limit}</div></strong>'
             category = 'danger'
             is_answer_correct = False
 
