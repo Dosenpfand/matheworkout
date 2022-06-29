@@ -24,9 +24,9 @@ class QuestionFormView(SimpleFormView):
         self.id = None
 
     @expose("/form")
-    @expose("/form/<int:id>")
-    @expose("/form/<int:id>/assignment/<int:assignment_id>")
-    @expose("/form/<int:id>/category/<int:category_id>")
+    @expose("/form/<int:q_id>")
+    @expose("/form/<int:q_id>/assignment/<int:assignment_id>")
+    @expose("/form/<int:q_id>/category/<int:category_id>")
     @has_access
     def this_form_get(self, q_id=None, assignment_id=None, category_id=None):
         self.id = q_id
@@ -35,9 +35,9 @@ class QuestionFormView(SimpleFormView):
         return super().this_form_get()
 
     @expose("/form", methods=["POST"])
-    @expose("/form/<int:id>", methods=["POST"])
-    @expose("/form/<int:id>/assignment/<int:assignment_id>", methods=["POST"])
-    @expose("/form/<int:id>/category/<int:category_id>", methods=["POST"])
+    @expose("/form/<int:q_id>", methods=["POST"])
+    @expose("/form/<int:q_id>/assignment/<int:assignment_id>", methods=["POST"])
+    @expose("/form/<int:q_id>/category/<int:category_id>", methods=["POST"])
     @has_access
     def this_form_post(self, q_id=None, assignment_id=None, category_id=None):
         return super().this_form_post()
