@@ -78,7 +78,7 @@ class IdToForm(BaseView):
         }
 
         form = type_to_form[question_type]
-        url = url_for(f'{form}.this_form_get', id=q_id, assignment_id=assignment_id, category_id=category_id)
+        url = url_for(f'{form}.this_form_get', q_id=q_id, assignment_id=assignment_id, category_id=category_id)
 
         return redirect(url)
 
