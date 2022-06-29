@@ -1,5 +1,7 @@
 # matheueben
 
+Practice for the matura exam in maths.
+
 ## Run
 
 ```
@@ -38,4 +40,4 @@ flask fab create-db
 
 ## Live instance
 
-https://matheueben.eu/
+A live instance of the project is reachable at [matheueben.eu](https://matheueben.eu/).
