@@ -1,4 +1,4 @@
-# Mathe-Matura-Quiz
+# matheueben
 
 ## Run
 
@@ -35,3 +35,7 @@ Clean up database:
 flask fab security-cleanup
 flask fab create-db
 ```
+
+## Live instance
+
+https://matheueben.eu/
