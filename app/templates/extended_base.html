@@ -7,6 +7,14 @@
         td {
             vertical-align: middle !important;
         }
+        .navbar-brand > a:hover, a:active {
+            text-decoration: none;
+            color: #ccc;
+        }
+        .navbar-brand > a {
+            color: #fff;
+            font-weight: bold;
+        }
     </style>
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 {% endblock %}
