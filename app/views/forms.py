@@ -311,7 +311,6 @@ class Question2of5FormView(QuestionFormView):
 
         flash(Markup(message), category)
 
-        # TODO: does not work when post is re-sent!
         forward_text, forward_url = self.get_forward_button(question_id)
         assignment_progress = self.get_assignment_progress(question_id)
 
