@@ -201,8 +201,8 @@ class Question(Model):
                       '" alt="Photo" class="img-rounded img-responsive">')
 
     def video_embed_url(self):
-        url = urlparse(self.video_url)
-        if url.hostname not in ['www.youtube.com', 'youtu.be']:
+        url = urlparse(self.video_url.strip())
+        if url.hostname in ['www.youtube.com', 'youtube.com', 'youtu.be']:
             queries = parse_qs(url.query)
             if url.hostname == 'youtu.be':
                 video_id = url.path[1:]
