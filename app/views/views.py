@@ -5,7 +5,7 @@ from app.views.general import QuestionRandom, AssignmentModelTeacherView, UtilEx
 from app.views.models import QuestionModelView, AssocUserQuestionModelView, AssignmentModelAdminView, \
     AssignmentModelStudentView, \
     QuestionModelIncorrectAnsweredView, QuestionModelCorrectAnsweredView, TopicModelView, LearningGroupModelView, \
-    CategoryModelStudentView, CategoryModelAdminView
+    CategoryModelStudentView, CategoryModelAdminView, TopicModelStudentView
 
 appbuilder.add_view(
     LearningGroupModelView,
@@ -74,6 +74,15 @@ appbuilder.add_view(
     'questions_correct',
     label='Richtig beantwortete Aufgaben',
     icon='fa-plus-square',
+    category='questions_category',
+    category_label='Aufgabenlisten',
+    category_icon='fa-align-justify',
+)
+appbuilder.add_view(
+    TopicModelStudentView,
+    'topics',
+    label='Grundkompetenzbereiche',
+    icon='fa-tags',
     category='questions_category',
     category_label='Aufgabenlisten',
     category_icon='fa-align-justify',

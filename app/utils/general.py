@@ -32,6 +32,12 @@ def link_formatter_category(category_id):
     return Markup(f'<a class="btn btn-sm btn-primary" href="{url}">{name}</a>')
 
 
+def link_formatter_topic(topic_id):
+    name = db.session.query(Topic).filter_by(id=topic_id).first().name
+    url = url_for('TopicModelStudentView.show', pk=topic_id)
+    return Markup(f'<a class="btn btn-sm btn-primary" href="{url}">{name}</a>')
+
+
 # TODO: should be in jinja and imported!
 def state_to_emoji_markup(state, filters=None):
     del filters

@@ -6,8 +6,9 @@ from flask_appbuilder.models.sqla.interface import SQLAInterface
 from app.utils.filters import FilterQuestionByAnsweredCorrectness
 from app.models.general import Question, LearningGroup, Assignment, Topic, Category
 from app.models.relations import AssocUserQuestion
-from app.utils.general import get_active_topics, link_formatter_question, state_to_emoji_markup, link_formatter_assignment, \
-    link_formatter_category
+from app.utils.general import get_active_topics, link_formatter_question, state_to_emoji_markup, \
+    link_formatter_assignment, \
+    link_formatter_category, link_formatter_topic
 from app.views.widgets import ExtendedListWidget, ExtendedListNoButtonsWidget
 
 
@@ -90,6 +91,26 @@ class CategoryModelStudentView(ModelView):
     list_widget = ExtendedListNoButtonsWidget
 
     formatters_columns = {'id': link_formatter_category}
+
+
+class TopicModelStudentView(ModelView):
+    datamodel = SQLAInterface(Topic)
+
+    label_columns = {'id': 'Titel'}
+    list_columns = ['id']
+    show_columns = ['name']
+    title = 'Grundkompetenzbereiche'
+    list_title = title
+    show_title = title
+    add_title = title
+    edit_title = title
+
+    related_views = [QuestionModelView]
+    show_template = "show_cascade_expanded.html"
+    edit_template = "appbuilder/general/model/edit_cascade.html"
+    list_widget = ExtendedListNoButtonsWidget
+
+    formatters_columns = {'id': link_formatter_topic}
 
 
 class QuestionModelIncorrectAnsweredView(ModelView):

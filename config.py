@@ -36,6 +36,8 @@ FAB_ROLES = {
         ["AssignmentModelStudentView", "can_show"],
         ["CategoryModelStudentView", "can_list"],
         ["CategoryModelStudentView", "can_show"],
+        ["TopicModelStudentView", "can_list"],
+        ["TopicModelStudentView", "can_show"],
         ["questions_.*", "menu_access"],
         ["random_.*", "menu_access"],
         ["topics", "menu_access"],
