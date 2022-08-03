@@ -6,8 +6,9 @@ from flask_appbuilder.models.sqla.interface import SQLAInterface
 from app.utils.filters import FilterQuestionByAnsweredCorrectness
 from app.models.general import Question, LearningGroup, Assignment, Topic, Category
 from app.models.relations import AssocUserQuestion
-from app.utils.general import get_active_topics, link_formatter, state_to_emoji_markup
-from app.views.widgets import ExtendedListWidget
+from app.utils.general import get_active_topics, link_formatter_question, state_to_emoji_markup, link_formatter_assignment, \
+    link_formatter_category
+from app.views.widgets import ExtendedListWidget, ExtendedListNoButtonsWidget
 
 
 class QuestionModelView(ModelView):
@@ -22,7 +23,7 @@ class QuestionModelView(ModelView):
     label_columns = {'description_image': 'Beschreibung',
                      'id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie', 'state': 'Status'}
     list_columns = ['id', 'topic', 'state']
-    formatters_columns = {'id': link_formatter, 'state': state_to_emoji_markup}
+    formatters_columns = {'id': link_formatter_question, 'state': state_to_emoji_markup}
     page_size = 100
     list_widget = ExtendedListWidget
 
@@ -51,11 +52,11 @@ class AssignmentModelStudentView(ModelView):
     datamodel = SQLAInterface(Assignment)
     base_filters = [['learning_group_id', FilterEqualFunction, lambda: g.user.learning_group_id]]
 
-    label_columns = {'name': 'Titel',
+    label_columns = {'id': 'Titel',
                      'learning_group': 'Klasse',
                      'starts_on': 'Erhalten am',
                      'is_due_on': 'Fällig am'}
-    list_columns = ['name', 'starts_on', 'is_due_on']
+    list_columns = ['id', 'starts_on', 'is_due_on']
     show_columns = ['name', 'starts_on', 'is_due_on']
     title = 'Hausübungen'
     list_title = title
@@ -66,13 +67,16 @@ class AssignmentModelStudentView(ModelView):
     related_views = [QuestionModelView]
     show_template = "show_cascade_expanded.html"
     edit_template = "appbuilder/general/model/edit_cascade.html"
+    list_widget = ExtendedListNoButtonsWidget
+
+    formatters_columns = {'id': link_formatter_assignment}
 
 
 class CategoryModelStudentView(ModelView):
     datamodel = SQLAInterface(Category)
 
-    label_columns = {'name': 'Titel'}
-    list_columns = ['name']
+    label_columns = {'id': 'Titel'}
+    list_columns = ['id']
     show_columns = ['name']
     title = 'Maturaaufgaben'
     list_title = title
@@ -83,6 +87,9 @@ class CategoryModelStudentView(ModelView):
     related_views = [QuestionModelView]
     show_template = "show_cascade_expanded.html"
     edit_template = "appbuilder/general/model/edit_cascade.html"
+    list_widget = ExtendedListNoButtonsWidget
+
+    formatters_columns = {'id': link_formatter_category}
 
 
 class QuestionModelIncorrectAnsweredView(ModelView):
@@ -97,7 +104,7 @@ class QuestionModelIncorrectAnsweredView(ModelView):
     label_columns = {'description_image': 'Beschreibung',
                      'id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie'}
     list_columns = ['id', 'topic']
-    formatters_columns = {'id': link_formatter}
+    formatters_columns = {'id': link_formatter_question}
     page_size = 100
 
 
@@ -113,7 +120,7 @@ class QuestionModelCorrectAnsweredView(ModelView):
     label_columns = {'description_image': 'Beschreibung',
                      'id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie'}
     list_columns = ['id', 'topic']
-    formatters_columns = {'id': link_formatter}
+    formatters_columns = {'id': link_formatter_question}
     page_size = 100
 
 

@@ -5,10 +5,10 @@ from markupsafe import Markup
 from sqlalchemy import func
 
 from app import db
-from app.models.general import Question, Topic, QuestionUserState
+from app.models.general import Question, Topic, QuestionUserState, Assignment, Category
 
 
-def link_formatter(q_id, filters=None):
+def link_formatter_question(q_id, filters=None):
     assignment_id = None
     category_id = None
     external_id = db.session.query(Question).filter_by(id=q_id).first().external_id
@@ -18,6 +18,18 @@ def link_formatter(q_id, filters=None):
 
     url = url_for(f'IdToForm.id_to_form', q_id=q_id, assignment_id=assignment_id, category_id=category_id)
     return Markup(f'<a class="btn btn-sm btn-primary" href="{url}">{external_id}</a>')
+
+
+def link_formatter_assignment(assignmend_id):
+    name = db.session.query(Assignment).filter_by(id=assignmend_id).first().name
+    url = url_for('AssignmentModelStudentView.show', pk=assignmend_id)
+    return Markup(f'<a class="btn btn-sm btn-primary" href="{url}">{name}</a>')
+
+
+def link_formatter_category(category_id):
+    name = db.session.query(Category).filter_by(id=category_id).first().name
+    url = url_for('CategoryModelStudentView.show', pk=category_id)
+    return Markup(f'<a class="btn btn-sm btn-primary" href="{url}">{name}</a>')
 
 
 # TODO: should be in jinja and imported!

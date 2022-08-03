@@ -7,3 +7,7 @@ class ExtendedEditWidget(RenderTemplateWidget):
 
 class ExtendedListWidget(RenderTemplateWidget):
     template = 'extended_list.html'
+
+
+class ExtendedListNoButtonsWidget(RenderTemplateWidget):
+    template = 'extended_list_no_buttons.html'
