@@ -7,17 +7,19 @@
     {% else %}
     <h1>{{_("Willkommen")}}</h1>
     {% endif %}
-
     <p>
-      {{_("Auf dieser Seite kannst du dich auf die österreichische Mathematik-Zentralmatura vorbereiten.")}}
-      {{_("Dazu stehen Grundkompetenzaufgaben und Maturabeispiele aus der Vergangenheit zur Verfügung.")}}
+      Diese Seite dient zur Unterstützung bei der Vorbereitung auf die österreichische AHS-Mathematik-Zentralmatura.
+      Dazu stehen alle Grundkompetenzaufgaben aus dem <a href="{{url_for('QuestionModelView.list')}}">Aufgabenpool</a>,
+      sowie <a href="{{url_for('CategoryModelStudentView.list')}}">Matura-Aufgaben (Teil 1)</a> der letzten Jahre nach Themen sortiert zur Verfügung.
     </p>
     <p>
-    {% if current_user.is_authenticated %}
-    Um loszulegen, wähle einen Aufgabentyp aus den Menüs oben aus, oder starte einfach mit <a href="{{ url_for("QuestionRandom.question_random") }}">einer Zufallsaufgabe</a>.
-    {% else %}
-    Falls du schon mal hier warst, kannst du dich <a href="{{ url_for("AuthDBView.login") }}">hier anmelden</a>. Wenn du neu hier bist, kannst du dich <a href="{{ url_for("AuthDBView.login") }}">hier registrieren</a>.
-    {% endif %}
+      Du kannst Aufgaben interaktiv üben und erhältst so sofort Feedback zu deiner Arbeit.
+      Zu allen Aufgaben wird ein Überblick von bereits richtig bzw. falsch gelösten Aufgaben angeboten, damit du weißt, was du noch üben musst.
+    </p>
+    <p>
+      Lehrer:innen können Übungspakete für eine Klasse erstellen und so gezielt auf bestimmte Kompetenzen vorbereiten.
+      Lehrer:innen können den Bearbeitungsstatus einer Hausaufgabe einer Klasse kontrollieren und so dann im Unterricht gezielt Feedback geben.
+      Die Website ist als Hilfsmittel für Lehrende und Lernende ab der Sekundarstufe 2 konzipiert und kann kostenfrei genutzt werden.
     </p>
   </div>
 </div>
