@@ -2,9 +2,8 @@ from app import appbuilder
 from app.views.forms import QuestionSelfAssessedFormView, Question2of5FormView, Question1of6FormView, \
     Question3to3FormView, Question2DecimalsFormView, Question1DecimalFormView, QuestionSelect4FormView
 from app.views.general import QuestionRandom, AssignmentModelTeacherView, UtilExtendedView, IdToForm
-from app.views.models import Question2of5ModelView, Question1of6ModelView, Question3to3ModelView, \
-    Question2DecimalsModelView, Question1DecimalModelView, QuestionSelfAssessedModelView, QuestionSelect4ModelView, \
-    QuestionModelView, AssocUserQuestionModelView, AssignmentModelAdminView, AssignmentModelStudentView, \
+from app.views.models import QuestionModelView, AssocUserQuestionModelView, AssignmentModelAdminView, \
+    AssignmentModelStudentView, \
     QuestionModelIncorrectAnsweredView, QuestionModelCorrectAnsweredView, TopicModelView, LearningGroupModelView, \
     CategoryModelStudentView, CategoryModelAdminView
 

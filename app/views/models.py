@@ -1,11 +1,10 @@
 from flask import g
 from flask_appbuilder import ModelView
-from flask_appbuilder.models.sqla.filters import FilterInFunction, FilterEqual, FilterEqualFunction
+from flask_appbuilder.models.sqla.filters import FilterInFunction, FilterEqualFunction
 from flask_appbuilder.models.sqla.interface import SQLAInterface
-from wtforms import HiddenField
 
 from app.utils.filters import FilterQuestionByAnsweredCorrectness
-from app.models.general import Question, QuestionType, LearningGroup, Assignment, Topic, Category
+from app.models.general import Question, LearningGroup, Assignment, Topic, Category
 from app.models.relations import AssocUserQuestion
 from app.utils.general import get_active_topics, link_formatter, state_to_emoji_markup
 from app.views.widgets import ExtendedListWidget
