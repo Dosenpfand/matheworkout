@@ -17,7 +17,7 @@ def link_formatter(q_id, filters=None):
         category_id = filters.get_filter_value('category')
 
     url = url_for(f'IdToForm.id_to_form', q_id=q_id, assignment_id=assignment_id, category_id=category_id)
-    return Markup(f'<a href="{url}">{external_id}</a>')
+    return Markup(f'<a class="btn btn-sm btn-primary" href="{url}">{external_id}</a>')
 
 
 # TODO: should be in jinja and imported!
