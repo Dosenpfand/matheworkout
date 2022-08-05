@@ -1,6 +1,6 @@
 from flask import g
 from flask_appbuilder import ModelView
-from flask_appbuilder.models.sqla.filters import FilterInFunction, FilterEqual, FilterEqualFunction
+from flask_appbuilder.models.sqla.filters import FilterInFunction, FilterEqual, FilterEqualFunction, FilterNotEqual
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from wtforms import HiddenField
 
@@ -218,6 +218,7 @@ class AssignmentModelStudentView(ModelView):
 
 class CategoryModelStudentView(ModelView):
     datamodel = SQLAInterface(Category)
+    base_filters =  [['name', FilterNotEqual, 'Aufgabenpool']]
 
     label_columns = {'id': 'Titel'}
     list_columns = ['id']
