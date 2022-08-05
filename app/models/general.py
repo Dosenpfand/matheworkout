@@ -27,7 +27,7 @@ class Select4Enum(enum.Enum):
 
 class Topic(Model):
     id = Column(Integer, primary_key=True)
-    name = Column(String(150), nullable=False)
+    name = Column(String(500), nullable=False)
 
     def __repr__(self):
         return self.name
