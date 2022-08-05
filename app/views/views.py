@@ -45,6 +45,63 @@ appbuilder.add_view(
     category='Verwaltung',
     category_icon='fa-align-justify',
 )
+appbuilder.add_separator('Verwaltung')
+appbuilder.add_view(
+    Question2of5ModelView,
+    'questions_2_of_5',
+    label='2 aus 5',
+    icon='fa-align-justify',
+    category='Verwaltung',
+    category_icon='fa-align-justify',
+)
+appbuilder.add_view(
+    Question1of6ModelView,
+    'questions_1_of_6',
+    label='1 aus 6',
+    icon='fa-align-justify',
+    category='Verwaltung',
+    category_icon='fa-align-justify',
+)
+appbuilder.add_view(
+    Question3to3ModelView,
+    'questions_3_to_3',
+    label='Lückentext',
+    icon='fa-align-justify',
+    category='Verwaltung',
+    category_icon='fa-align-justify',
+)
+appbuilder.add_view(
+    Question2DecimalsModelView,
+    'questions_2_decimals',
+    label='Werteingabe zwei Zahlen',
+    icon='fa-align-justify',
+    category='Verwaltung',
+    category_icon='fa-align-justify',
+)
+appbuilder.add_view(
+    Question1DecimalModelView,
+    'questions_1_decimals',
+    label='Werteingabe eine Zahl',
+    icon='fa-align-justify',
+    category='Verwaltung',
+    category_icon='fa-align-justify',
+)
+appbuilder.add_view(
+    QuestionSelfAssessedModelView,
+    'questions_self_assessed',
+    label='Selbstkontrolle',
+    icon='fa-align-justify',
+    category='Verwaltung',
+    category_icon='fa-align-justify',
+)
+appbuilder.add_view(
+    QuestionSelect4ModelView,
+    'questions_select_4',
+    label='Zuordnung',
+    icon='fa-align-justify',
+    category='Verwaltung',
+    category_icon='fa-align-justify',
+)
 appbuilder.add_view(
     AssignmentModelStudentView,
     'assignments_student',
@@ -92,70 +149,6 @@ appbuilder.add_view(
     QuestionModelView,
     'questions_all',
     label='Alle Aufgaben',
-    icon='fa-align-justify',
-    category='questions_category',
-    category_label='Aufgabenlisten',
-    category_icon='fa-align-justify',
-)
-appbuilder.add_separator('questions_category')
-appbuilder.add_view(
-    Question2of5ModelView,
-    'questions_2_of_5',
-    label='2 aus 5',
-    icon='fa-align-justify',
-    category='questions_category',
-    category_label='Aufgabenlisten',
-    category_icon='fa-align-justify',
-)
-appbuilder.add_view(
-    Question1of6ModelView,
-    'questions_1_of_6',
-    label='1 aus 6',
-    icon='fa-align-justify',
-    category='questions_category',
-    category_label='Aufgabenlisten',
-    category_icon='fa-align-justify',
-)
-appbuilder.add_view(
-    Question3to3ModelView,
-    'questions_3_to_3',
-    label='Lückentext',
-    icon='fa-align-justify',
-    category='questions_category',
-    category_label='Aufgabenlisten',
-    category_icon='fa-align-justify',
-)
-appbuilder.add_view(
-    Question2DecimalsModelView,
-    'questions_2_decimals',
-    label='Werteingabe zwei Zahlen',
-    icon='fa-align-justify',
-    category='questions_category',
-    category_label='Aufgabenlisten',
-    category_icon='fa-align-justify',
-)
-appbuilder.add_view(
-    Question1DecimalModelView,
-    'questions_1_decimals',
-    label='Werteingabe eine Zahl',
-    icon='fa-align-justify',
-    category='questions_category',
-    category_label='Aufgabenlisten',
-    category_icon='fa-align-justify',
-)
-appbuilder.add_view(
-    QuestionSelfAssessedModelView,
-    'questions_self_assessed',
-    label='Selbstkontrolle',
-    icon='fa-align-justify',
-    category='questions_category',
-    category_label='Aufgabenlisten',
-    category_icon='fa-align-justify',
-)
-appbuilder.add_view(
-    QuestionSelect4ModelView,
-    'questions_select_4',
-    label='Zuordnung',
     icon='fa-align-justify',
     category='questions_category',
     category_label='Aufgabenlisten',

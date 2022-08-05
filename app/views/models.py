@@ -29,7 +29,7 @@ class Question2of5ModelView(ModelView):
                      'id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie'}
     list_columns = ['id', 'topic']
     show_columns = ['description_image_img', 'title']
-    formatters_columns = {'id': link_formatter}
+    formatters_columns = {'id': link_formatter_question}
     page_size = 100
 
 
@@ -49,7 +49,7 @@ class Question1of6ModelView(ModelView):
                      'id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie'}
     list_columns = ['id', 'topic']
     show_columns = ['description_image_img', 'title']
-    formatters_columns = {'id': link_formatter}
+    formatters_columns = {'id': link_formatter_question}
     page_size = 100
 
 
@@ -69,7 +69,7 @@ class Question3to3ModelView(ModelView):
                      'id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie'}
     list_columns = ['id', 'topic']
     show_columns = ['description_image_img', 'title']
-    formatters_columns = {'id': link_formatter}
+    formatters_columns = {'id': link_formatter_question}
     page_size = 100
 
 
@@ -89,7 +89,7 @@ class Question2DecimalsModelView(ModelView):
                      'id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie'}
     list_columns = ['id', 'topic']
     show_columns = ['description_image_img', 'title']
-    formatters_columns = {'id': link_formatter}
+    formatters_columns = {'id': link_formatter_question}
     page_size = 100
 
 
@@ -109,7 +109,7 @@ class Question1DecimalModelView(ModelView):
                      'id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie'}
     list_columns = ['id', 'topic']
     show_columns = ['description_image_img', 'title']
-    formatters_columns = {'id': link_formatter}
+    formatters_columns = {'id': link_formatter_question}
     page_size = 100
 
 
@@ -129,7 +129,7 @@ class QuestionSelfAssessedModelView(ModelView):
                      'id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie'}
     list_columns = ['id', 'topic']
     show_columns = ['description_image_img', 'solution_image_img']
-    formatters_columns = {'id': link_formatter}
+    formatters_columns = {'id': link_formatter_question}
     page_size = 100
 
 
@@ -149,7 +149,7 @@ class QuestionSelect4ModelView(ModelView):
                      'id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie'}
     list_columns = ['id', 'topic']
     show_columns = ['description_image_img', 'solution_image_img']
-    formatters_columns = {'id': link_formatter}
+    formatters_columns = {'id': link_formatter_question}
     page_size = 100
 
 
