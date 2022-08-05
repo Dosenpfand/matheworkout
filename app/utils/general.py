@@ -1,4 +1,5 @@
 import logging
+import re
 
 from flask import url_for, g
 from markupsafe import Markup
@@ -36,6 +37,22 @@ def link_formatter_topic(topic_id):
     name = db.session.query(Topic).filter_by(id=topic_id).first().name
     url = url_for('TopicModelStudentView.show', pk=topic_id)
     return Markup(f'<a class="btn btn-sm btn-primary" href="{url}">{name}</a>')
+
+
+def link_formatter_topic_abbr(topic, filters=None):
+    topic_name = topic.name
+    # TODO: common function
+    regex = r"^[a-zA-z]{1,4}\s*\d{1,4}(\.\d{1,4})?"
+    match = re.match(regex, topic_name)
+
+    if match:
+        topic_short_name = match.group()
+    elif len(topic_name) < 6:
+        topic_short_name = topic_name
+    else:
+        topic_short_name = topic_name[0:6]
+
+    return Markup(f'<abbr title="{topic_name}">{topic_short_name}</abbr>')
 
 
 # TODO: should be in jinja and imported!

@@ -9,7 +9,7 @@ from app.models.general import Question, QuestionType, LearningGroup, Assignment
 from app.models.relations import AssocUserQuestion
 from app.utils.general import get_active_topics, link_formatter_question, state_to_emoji_markup, \
     link_formatter_assignment, \
-    link_formatter_category, link_formatter_topic
+    link_formatter_category, link_formatter_topic, link_formatter_topic_abbr
 from app.views.widgets import ExtendedListWidget, ExtendedListNoButtonsWidget
 
 
@@ -164,8 +164,10 @@ class QuestionModelView(ModelView):
     edit_title = title
     label_columns = {'description_image': 'Beschreibung',
                      'id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie', 'state': 'Status'}
-    list_columns = ['id', 'topic', 'state']
-    formatters_columns = {'id': link_formatter_question, 'state': state_to_emoji_markup}
+    list_columns = ['id', 'topic', 'category', 'state']
+    formatters_columns = {'id': link_formatter_question, 'state': state_to_emoji_markup,
+                          'topic': link_formatter_topic_abbr}
+
     page_size = 100
     list_widget = ExtendedListWidget
 
@@ -265,8 +267,8 @@ class QuestionModelIncorrectAnsweredView(ModelView):
     edit_title = title
     label_columns = {'description_image': 'Beschreibung',
                      'id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie'}
-    list_columns = ['id', 'topic']
-    formatters_columns = {'id': link_formatter_question}
+    list_columns = ['id', 'topic', 'category']
+    formatters_columns = {'id': link_formatter_question, 'topic': link_formatter_topic_abbr}
     page_size = 100
 
 
@@ -281,8 +283,8 @@ class QuestionModelCorrectAnsweredView(ModelView):
     edit_title = title
     label_columns = {'description_image': 'Beschreibung',
                      'id': 'Frage Nr.', 'topic': 'Grundkompetenzbereich', 'category': 'Kategorie'}
-    list_columns = ['id', 'topic']
-    formatters_columns = {'id': link_formatter_question}
+    list_columns = ['id', 'topic', 'category']
+    formatters_columns = {'id': link_formatter_question, 'topic': link_formatter_topic_abbr}
     page_size = 100
 
 
