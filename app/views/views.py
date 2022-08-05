@@ -155,71 +155,18 @@ appbuilder.add_view(
     category_icon='fa-align-justify',
 )
 appbuilder.add_view_no_menu(QuestionRandom())
+appbuilder.add_view_no_menu(Question2of5FormView)
+appbuilder.add_view_no_menu(Question1of6FormView)
+appbuilder.add_view_no_menu(Question3to3FormView)
+appbuilder.add_view_no_menu(Question2DecimalsFormView)
+appbuilder.add_view_no_menu(Question1DecimalFormView)
+appbuilder.add_view_no_menu(QuestionSelfAssessedFormView)
+appbuilder.add_view_no_menu(QuestionSelect4FormView)
 appbuilder.add_link(
     'random_all',
-    label='Alle Aufgaben',
+    label='Zufallsaufgabe',
     href='/questionrandom/',
-    icon='fa-question',
-    category='random_category',
-    category_label='Zufallsaufgaben',
-    category_icon='fa-question')
-appbuilder.add_separator('random_category')
-appbuilder.add_view(
-    Question2of5FormView,
-    'random_2_of_5',
-    label='2 aus 5',
-    icon='fa-question',
-    category='random_category',
-    category_label='Zufallsaufgaben',
-    category_icon='fa-question')
-appbuilder.add_view(
-    Question1of6FormView(),
-    'random_1_of_6',
-    label='1 aus 6',
-    icon='fa-question',
-    category='random_category',
-    category_label='Zufallsaufgaben',
-    category_icon='fa-question')
-appbuilder.add_view(
-    Question3to3FormView(),
-    'random_3_to_3',
-    label='Lückentext',
-    icon='fa-question',
-    category='random_category',
-    category_label='Zufallsaufgaben',
-    category_icon='fa-question')
-appbuilder.add_view(
-    Question2DecimalsFormView(),
-    'random_2_decimals',
-    label='Werteingabe zwei Zahlen',
-    icon='fa-question',
-    category='random_category',
-    category_label='Zufallsaufgaben',
-    category_icon='fa-question')
-appbuilder.add_view(
-    Question1DecimalFormView(),
-    'random_1_decimal',
-    label='Werteingabe eine Zahl',
-    icon='fa-question',
-    category='random_category',
-    category_label='Zufallsaufgaben',
-    category_icon='fa-question')
-appbuilder.add_view(
-    QuestionSelfAssessedFormView,
-    'random_self_assessed',
-    label='Selbstkontrolle',
-    icon='fa-question',
-    category='random_category',
-    category_label='Zufallsaufgaben',
-    category_icon='fa-question')
-appbuilder.add_view(
-    QuestionSelect4FormView,
-    'random_select_4',
-    label='Zuordnung',
-    icon='fa-question',
-    category='random_category',
-    category_label='Zufallsaufgaben',
-    category_icon='fa-question')
+    icon='fa-question')
 appbuilder.add_view_no_menu(IdToForm())
 appbuilder.add_view_no_menu(AssignmentModelTeacherView())
 appbuilder.add_view_no_menu(UtilExtendedView())
