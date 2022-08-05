@@ -68,7 +68,7 @@ class Question(Model):
     external_id = Column(Integer, nullable=False, index=True)
     topic_id = Column(Integer, ForeignKey("topic.id"), nullable=False)
     topic = relationship("Topic")
-    category_id = Column(Integer, ForeignKey("category.id"), nullable=True)
+    category_id = Column(Integer, ForeignKey("category.id"), nullable=False)
     category = relationship("Category", back_populates="questions")
     description_image = Column(ImageColumn(size=(10000, 10000, True)))
     type = Column(Enum(QuestionType), index=True)
