@@ -1,5 +1,6 @@
 from flask_appbuilder.forms import DynamicForm
 from wtforms import BooleanField, HiddenField, DecimalField, SelectField
+from wtforms.validators import NoneOf
 
 from app.models.general import Select4Enum
 from app.utils.general import safe_math_eval
@@ -65,4 +66,4 @@ class QuestionSelfAssessedForm(QuestionForm):
 
 
 class DeleteStatsForm(DynamicForm):
-    user_is_sure = BooleanField(label='Bist du sicher?')
+    user_is_sure = BooleanField(label='Bist du sicher?', validators=[NoneOf([False], message='Muss ausgewählt sein.')])

@@ -8,7 +8,6 @@ from app.forms.forms import QuestionSelfAssessedForm, Question2of5Form, Question
     Question2DecimalsForm, Question1DecimalForm, QuestionSelect4Form, DeleteStatsForm
 from app.models.general import QuestionType, Question, Assignment, Category
 from app.models.relations import AssocUserQuestion, assoc_assignment_question
-from app.security.models import ExtendedUser
 from app.utils.general import get_question, commit_safely
 from app.views.widgets import ExtendedEditWidget
 
@@ -929,4 +928,5 @@ class DeleteStatsFormView(SimpleFormView):
 
     def form_post(self, form):
         db.session.query(AssocUserQuestion).filter_by(user_id=g.user.id).delete()
+        commit_safely(db.session)
         flash('Benutzerstatistik gelöscht', 'info')
