@@ -1,6 +1,6 @@
 from app import appbuilder
 from app.views.forms import QuestionSelfAssessedFormView, Question2of5FormView, Question1of6FormView, \
-    Question3to3FormView, Question2DecimalsFormView, Question1DecimalFormView, QuestionSelect4FormView
+    Question3to3FormView, Question2DecimalsFormView, Question1DecimalFormView, QuestionSelect4FormView, DeleteStatsFormView
 from app.views.general import QuestionRandom, AssignmentModelTeacherView, UtilExtendedView, IdToForm
 from app.views.models import Question2of5ModelView, Question1of6ModelView, Question3to3ModelView, \
     Question2DecimalsModelView, Question1DecimalModelView, QuestionSelfAssessedModelView, QuestionSelect4ModelView, \
@@ -170,3 +170,4 @@ appbuilder.add_link(
 appbuilder.add_view_no_menu(IdToForm())
 appbuilder.add_view_no_menu(AssignmentModelTeacherView())
 appbuilder.add_view_no_menu(UtilExtendedView())
+appbuilder.add_view_no_menu(DeleteStatsFormView())

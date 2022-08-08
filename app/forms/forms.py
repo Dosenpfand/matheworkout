@@ -62,3 +62,7 @@ class QuestionSelect4Form(QuestionForm):
 
 class QuestionSelfAssessedForm(QuestionForm):
     pass
+
+
+class DeleteStatsForm(DynamicForm):
+    user_is_sure = BooleanField(label='Bist du sicher?')

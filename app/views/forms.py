@@ -5,7 +5,7 @@ from sqlalchemy import asc
 
 from app import db
 from app.forms.forms import QuestionSelfAssessedForm, Question2of5Form, Question1of6Form, Question3to3Form, \
-    Question2DecimalsForm, Question1DecimalForm, QuestionSelect4Form
+    Question2DecimalsForm, Question1DecimalForm, QuestionSelect4Form, DeleteStatsForm
 from app.models.general import QuestionType, Question, Assignment, Category
 from app.models.relations import AssocUserQuestion, assoc_assignment_question
 from app.security.models import ExtendedUser
@@ -138,12 +138,7 @@ class QuestionSelfAssessedFormView(QuestionFormView):
                 is_answer_correct = False
 
                 if answer_value == 'CORRECT':
-                    db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
-                        {'correct_questions': ExtendedUser.correct_questions + 1})
                     is_answer_correct = True
-
-                db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
-                    {'tried_questions': ExtendedUser.tried_questions + 1})
 
                 # Add entry to answered questions
                 answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)  # noqa
@@ -292,16 +287,11 @@ class Question2of5FormView(QuestionFormView):
                 (form.checkbox5.data == result.option5_is_correct):
             message = '<strong>RICHTIG!</strong>'
             category = 'success'
-            db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
-                {'correct_questions': ExtendedUser.correct_questions + 1})
             is_answer_correct = True
         else:
             message = '<strong>FALSCH!</strong>'
             category = 'danger'
             is_answer_correct = False
-
-        db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
-            {'tried_questions': ExtendedUser.tried_questions + 1})
 
         # Add entry to answered questions
         answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)  # noqa
@@ -434,17 +424,12 @@ class Question1of6FormView(QuestionFormView):
                 (form.checkbox6.data == result.option6_is_correct):
             message = '<strong>RICHTIG!</strong>'
             category = 'success'
-            db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
-                {'correct_questions': ExtendedUser.correct_questions + 1})
             commit_safely(db.session)
             is_answer_correct = True
         else:
             message = '<strong>FALSCH!</strong>'
             category = 'danger'
             is_answer_correct = False
-
-        db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
-            {'tried_questions': ExtendedUser.tried_questions + 1})
 
         # Add entry to answered questions
         answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)  # noqa
@@ -588,16 +573,11 @@ class Question3to3FormView(QuestionFormView):
                 (form.checkbox2c.data == result.option2c_is_correct):
             message = '<strong>RICHTIG!</strong>'
             category = 'success'
-            db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
-                {'correct_questions': ExtendedUser.correct_questions + 1})
             is_answer_correct = True
         else:
             message = '<strong>FALSCH!</strong>'
             category = 'danger'
             is_answer_correct = False
-
-        db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
-            {'tried_questions': ExtendedUser.tried_questions + 1})
 
         # Add entry to answered questions
         answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)  # noqa
@@ -686,8 +666,6 @@ class Question2DecimalsFormView(QuestionFormView):
         if value1_correct and value2_correct:
             message = '<strong>RICHTIG!</strong>'
             category = 'success'
-            db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
-                {'correct_questions': ExtendedUser.correct_questions + 1})
             is_answer_correct = True
         else:
             message = \
@@ -696,9 +674,6 @@ class Question2DecimalsFormView(QuestionFormView):
                 f'<div>{result.value2_lower_limit} ≤ Ergebnis 2 ≤ {result.value2_upper_limit}</div></strong>'
             category = 'danger'
             is_answer_correct = False
-
-        db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
-            {'tried_questions': ExtendedUser.tried_questions + 1})
 
         # Add entry to answered questions
         answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)  # noqa
@@ -767,8 +742,6 @@ class Question1DecimalFormView(QuestionFormView):
             form.value.description = 'Richtig'
             message = '<strong>RICHTIG!</strong>'
             category = 'success'
-            db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
-                {'correct_questions': ExtendedUser.correct_questions + 1})
             is_answer_correct = True
         else:
             message = \
@@ -776,9 +749,6 @@ class Question1DecimalFormView(QuestionFormView):
                 f'<div>{result.value1_lower_limit} ≤ Ergebnis ≤ {result.value1_upper_limit}</div></strong>'
             category = 'danger'
             is_answer_correct = False
-
-        db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
-            {'tried_questions': ExtendedUser.tried_questions + 1})
 
         # Add entry to answered questions
         answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)  # noqa
@@ -911,16 +881,11 @@ class QuestionSelect4FormView(QuestionFormView):
                 (form.selection4.data == result.selection4_solution.value):
             message = '<strong>RICHTIG!</strong>'
             category = 'success'
-            db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
-                {'correct_questions': ExtendedUser.correct_questions + 1})
             is_answer_correct = True
         else:
             message = '<strong>FALSCH!</strong>'
             category = 'danger'
             is_answer_correct = False
-
-        db.session.query(ExtendedUser).filter_by(id=g.user.id).update(
-            {'tried_questions': ExtendedUser.tried_questions + 1})
 
         # Add entry to answered questions
         answered_question = AssocUserQuestion(is_answer_correct=is_answer_correct)  # noqa
@@ -949,3 +914,19 @@ class QuestionSelect4FormView(QuestionFormView):
             widgets=widgets,
             appbuilder=self.appbuilder,
         )
+
+
+class DeleteStatsFormView(SimpleFormView):
+    form = DeleteStatsForm
+    form_title = 'Benutzerstatistik löschen'
+    form_template = 'edit_additional.html'
+    edit_widget = ExtendedEditWidget
+    extra_args = {'question': {'description': 'Die Benutzerstatistik beinhaltet alle bereits gelösten Aufgaben.',
+                  'submit_text': 'Löschen'}}
+
+    def form_get(self, form):
+        pass
+
+    def form_post(self, form):
+        db.session.query(AssocUserQuestion).filter_by(user_id=g.user.id).delete()
+        flash('Benutzerstatistik gelöscht', 'info')
