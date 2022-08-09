@@ -155,6 +155,11 @@ appbuilder.add_view(
     category_icon='fa-align-justify',
 )
 appbuilder.add_view_no_menu(QuestionRandom())
+appbuilder.add_link(
+    'random_all',
+    label='Zufallsaufgabe',
+    href='/questionrandom/',
+    icon='fa-question')
 appbuilder.add_view_no_menu(Question2of5FormView)
 appbuilder.add_view_no_menu(Question1of6FormView)
 appbuilder.add_view_no_menu(Question3to3FormView)
@@ -162,11 +167,6 @@ appbuilder.add_view_no_menu(Question2DecimalsFormView)
 appbuilder.add_view_no_menu(Question1DecimalFormView)
 appbuilder.add_view_no_menu(QuestionSelfAssessedFormView)
 appbuilder.add_view_no_menu(QuestionSelect4FormView)
-appbuilder.add_link(
-    'random_all',
-    label='Zufallsaufgabe',
-    href='/questionrandom/',
-    icon='fa-question')
 appbuilder.add_view_no_menu(IdToForm())
 appbuilder.add_view_no_menu(AssignmentModelTeacherView())
 appbuilder.add_view_no_menu(UtilExtendedView())

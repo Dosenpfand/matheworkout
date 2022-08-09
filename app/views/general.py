@@ -1,10 +1,10 @@
 from random import randrange
 
-from flask import url_for, Response
+from flask import url_for, Response, flash
 from flask_appbuilder import BaseView, has_access, expose
 from werkzeug.utils import redirect
 
-from app import db
+from app import db, appbuilder
 from app.models.general import QuestionType, Question, Assignment
 from app.utils.general import get_question_count
 
@@ -32,7 +32,8 @@ class QuestionRandom(BaseView):
         total_count = sum(type_id_to_count.values())
 
         if total_count == 0:
-            rand_form = 'Question2of5FormView'
+            flash('Keine Aufgaben vorhanden', 'error')
+            return redirect(appbuilder.get_url_for_index)
         else:
             rand_id = randrange(0, total_count)
 
