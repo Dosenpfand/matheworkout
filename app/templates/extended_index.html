@@ -1,36 +1,74 @@
 {% extends "appbuilder/base.html" %}
 {% block content %}
-<div class="jumbotron">
-  <div class="container">
-    {% if current_user.is_authenticated %}
-    <h1>Hallo {{current_user.first_name}}</h1>
-    {% else %}
-    <h1>{{_("Willkommen")}}</h1>
-    {% endif %}
-    {% if current_user.is_authenticated %}
-    <p>
-      Um loszulegen, wähle einen Eintrag aus den Menüs oben aus, starte einfach mit dem <a href="{{url_for('QuestionModelView.list')}}">Aufgabenpool</a>
-      oder <a href="{{url_for('CategoryModelStudentView.list')}}">Matura-Aufgaben (Teil 1)</a>.
-    </p>
-    {% else %}
-    <p>
-      Diese Seite dient zur Unterstützung bei der Vorbereitung auf die österreichische AHS-Mathematik-Zentralmatura.
-      Dazu stehen alle Grundkompetenzaufgaben aus dem <a href="{{url_for('QuestionModelView.list')}}">Aufgabenpool</a>,
-      sowie <a href="{{url_for('CategoryModelStudentView.list')}}">Matura-Aufgaben (Teil 1)</a> der letzten Jahre nach Themen sortiert zur Verfügung.
-    </p>
-    <p>
-      Du kannst Aufgaben interaktiv üben und erhältst so sofort Feedback zu deiner Arbeit.
-      Zu allen Aufgaben wird ein Überblick von bereits richtig bzw. falsch gelösten Aufgaben angeboten, damit du weißt, was du noch üben musst.
-    </p>
-    <p>
-      Lehrer:innen können Übungspakete für eine Klasse erstellen und so gezielt auf bestimmte Kompetenzen vorbereiten.
-      Lehrer:innen können den Bearbeitungsstatus einer Hausaufgabe einer Klasse kontrollieren und so dann im Unterricht gezielt Feedback geben.
-      Die Website ist als Hilfsmittel für Lehrende und Lernende ab der Sekundarstufe 2 konzipiert und kann kostenfrei genutzt werden.
-    </p>
-    <p>
-      Falls du schon mal hier warst, kannst du dich <a href="{{ url_for("AuthDBView.login") }}">hier anmelden</a>. Wenn du neu hier bist, kannst du dich <a href="{{ url_for("AuthDBView.login") }}">hier registrieren</a>.
-    </p>
-    {% endif %}
-  </div>
+
+<div class="container" id="about">
+     <div class="row">
+
+          <div class="col-md-6 col-sm-12">
+               <div class="about-info">
+                    <h2>Highlights</h2>
+
+                    <figure>
+                         <span><i class="fa fa-users"></i></span>
+                         <figcaption>
+                              <h3>Hausübungen</h3>
+                              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint ipsa voluptatibus.</p>
+                         </figcaption>
+                    </figure>
+
+                    <figure>
+                         <span><i class="fa fa-certificate"></i></span>
+                         <figcaption>
+                              <h3>Maturaaufgaben und Aufgabenpool</h3>
+                              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint ipsa voluptatibus.</p>
+                         </figcaption>
+                    </figure>
+
+                    <figure>
+                         <span><i class="fa fa-bar-chart-o"></i></span>
+                         <figcaption>
+                              <h3>Kostenlos</h3>
+                              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint ipsa voluptatibus.</p>
+                         </figcaption>
+                    </figure>
+               </div>
+          </div>
+
+          <div class="col-md-6 col-sm-12">
+               <div class="about-info">
+                  {% if current_user.is_authenticated %}
+                  <h2>Hallo {{current_user.first_name}}</h2>
+                  {% else %}
+                  <h2>{{_("Willkommen")}}</h2>
+                  {% endif %}
+                  {% if current_user.is_authenticated %}
+                  <p>
+                    Um loszulegen, wähle einen Eintrag aus den Menüs oben aus, starte einfach mit dem <a href="{{url_for('QuestionModelView.list')}}">Aufgabenpool</a>
+                    oder <a href="{{url_for('CategoryModelStudentView.list')}}">Matura-Aufgaben (Teil 1)</a>.
+                  </p>
+                  {% else %}
+                  <p>
+                    Diese Seite dient zur Unterstützung bei der Vorbereitung auf die österreichische AHS-Mathematik-Zentralmatura.
+                    Dazu stehen alle Grundkompetenzaufgaben aus dem <a href="{{url_for('QuestionModelView.list')}}">Aufgabenpool</a>,
+                    sowie <a href="{{url_for('CategoryModelStudentView.list')}}">Matura-Aufgaben (Teil 1)</a> der letzten Jahre nach Themen sortiert zur Verfügung.
+                  </p>
+                  <p>
+                    Du kannst Aufgaben interaktiv üben und erhältst so sofort Feedback zu deiner Arbeit.
+                    Zu allen Aufgaben wird ein Überblick von bereits richtig bzw. falsch gelösten Aufgaben angeboten, damit du weißt, was du noch üben musst.
+                  </p>
+                  <p>
+                    Lehrer:innen können Übungspakete für eine Klasse erstellen und so gezielt auf bestimmte Kompetenzen vorbereiten.
+                    Lehrer:innen können den Bearbeitungsstatus einer Hausaufgabe einer Klasse kontrollieren und so dann im Unterricht gezielt Feedback geben.
+                    Die Website ist als Hilfsmittel für Lehrende und Lernende ab der Sekundarstufe 2 konzipiert und kann kostenfrei genutzt werden.
+                  </p>
+                  <p>
+                    Falls du schon mal hier warst, kannst du dich <a href="{{ url_for("AuthDBView.login") }}">hier anmelden</a>. Wenn du neu hier bist, kannst du dich <a href="{{ url_for("AuthDBView.login") }}">hier registrieren</a>.
+                  </p>
+                  {% endif %}
+               </div>
+          </div>
+
+     </div>
 </div>
+
 {% endblock %}
