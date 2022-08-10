@@ -1,21 +1,26 @@
 {% extends 'appbuilder/baselayout.html' %}
 
 {% block head_css %}
-    {{ super() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-icons.css') }}">
-    <!-- TODO: some of these not needed anymore -->
-    <style>
-        td {
-            vertical-align: middle !important;
-        }
-        /* TODO
-        .navbar-brand {
-            padding: 0;
-        }
-         */
-    </style>
-    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" sizes="any">
-    <link rel="icon" href="{{ url_for('static', filename='icon.svg') }}" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
-    <link rel="manifest" href="{{ url_for('static', filename='manifest.webmanifest') }}">
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-icons.css') }}">
+<!-- TODO: some of these not needed anymore -->
+<style>
+    td {
+        vertical-align: middle !important;
+    }
+
+    .btn-primary, .btn-secondary, .btn-success, .btn-danger, .btn-warning, .btn-info, .btn-light, .btn-dark, .btn-default {
+        background-image: none;
+    }
+
+    /* TODO
+    .navbar-brand {
+        padding: 0;
+    }
+     */
+</style>
+<link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" sizes="any">
+<link rel="icon" href="{{ url_for('static', filename='icon.svg') }}" type="image/svg+xml">
+<link rel="apple-touch-icon" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+<link rel="manifest" href="{{ url_for('static', filename='manifest.webmanifest') }}">
 {% endblock %}
