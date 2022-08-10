@@ -73,18 +73,8 @@ def state_to_emoji_markup(state, filters=None):
     return Markup(f'<span class="label {label}" title="{title}"><i class="bi {emoji}"></i></span>')
 
 
-def get_question(question_type, q_id=None):
-    if q_id:
-        result = db.session.query(Question).filter_by(id=q_id, type=question_type).first()
-    else:
-        result = db.session.query(Question).order_by(func.random()).filter_by(type=question_type).first()
-
-    return result
-
-
-def get_question_count(q_type):
-    count = db.session.query(Question).order_by(func.random()).filter_by(type=q_type).count()
-    return count
+def get_question(question_type, q_id):
+    return db.session.query(Question).filter_by(id=q_id, type=question_type).first()
 
 
 def safe_math_eval(string):

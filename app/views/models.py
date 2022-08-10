@@ -1,4 +1,4 @@
-from flask import g, redirect
+from flask import g, redirect, url_for
 from flask_appbuilder import ModelView, action
 from flask_appbuilder.models.sqla.filters import FilterInFunction, FilterEqual, FilterEqualFunction, FilterNotEqual
 from flask_appbuilder.models.sqla.interface import SQLAInterface
@@ -248,6 +248,11 @@ class TopicModelStudentView(ModelView):
     list_widget = ExtendedListNoButtonsWidget
 
     formatters_columns = {'id': link_formatter_topic}
+
+    @action('random_question', 'Zufallsaufgabe', confirmation=None, icon='fa-question', multiple=False)
+    def random_question(self, item):
+        url = url_for('QuestionRandom.random_question_redirect', topic_id=item.id)
+        return redirect(url)
 
 
 class QuestionModelIncorrectAnsweredView(ModelView):

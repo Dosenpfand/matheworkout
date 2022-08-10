@@ -2,59 +2,48 @@ from random import randrange
 
 from flask import url_for, Response, flash
 from flask_appbuilder import BaseView, has_access, expose
+from sqlalchemy import func
+from sqlalchemy.orm import load_only
 from werkzeug.utils import redirect
 
-from app import db, appbuilder
-from app.models.general import QuestionType, Question, Assignment
-from app.utils.general import get_question_count
+from app import db
+from app.models.general import QuestionType, Question, Assignment, Topic
 
 
 class QuestionRandom(BaseView):
     route_base = "/"
 
-    @has_access
-    @expose("questionrandom/")
-    def question_random(self):
-        type_id_to_form = {
-            0: QuestionType.two_of_five.value,
-            1: QuestionType.one_of_six.value,
-            2: QuestionType.three_to_three.value,
-            3: QuestionType.two_decimals.value,
-            4: QuestionType.one_decimal.value,
-            5: QuestionType.self_assessed.value,
-            6: QuestionType.select_four.value,
-        }
-
-        type_id_to_count = {}
-        for q_id, class_name in type_id_to_form.items():
-            type_id_to_count[q_id] = get_question_count(class_name)
-
-        total_count = sum(type_id_to_count.values())
-
-        if total_count == 0:
-            flash('Keine Aufgaben vorhanden', 'error')
-            return redirect(appbuilder.get_url_for_index)
+    def get_random_question(self, topic=None):
+        if not topic:
+            return db.session.query(Question).options(load_only('id')).offset(
+                func.floor(func.random() * db.session.query(func.count(Question.id)))
+            ).first()
         else:
-            rand_id = randrange(0, total_count)
+            return db.session.query(Question).options(load_only('id', 'topic_id')).filter_by(topic_id=topic.id).offset(
+                func.floor(func.random() * db.session.query(func.count(Question.id)).filter_by(topic_id=topic.id))
+            ).first()
 
-            if rand_id < type_id_to_count[0]:
-                rand_form = 'Question2of5FormView'
-            elif rand_id < (type_id_to_count[0] + type_id_to_count[1]):
-                rand_form = 'Question1of6FormView'
-            elif rand_id < (type_id_to_count[0] + type_id_to_count[1] + type_id_to_count[2]):
-                rand_form = 'Question3to3FormView'
-            elif rand_id < (type_id_to_count[0] + type_id_to_count[1] + type_id_to_count[2] + type_id_to_count[3]):
-                rand_form = 'Question2DecimalsFormView'
-            elif rand_id < (type_id_to_count[0] + type_id_to_count[1] + type_id_to_count[2] + type_id_to_count[3] +
-                            type_id_to_count[4]):
-                rand_form = 'Question1DecimalFormView'
-            elif rand_id < (type_id_to_count[0] + type_id_to_count[1] + type_id_to_count[2] + type_id_to_count[3] +
-                            type_id_to_count[4] + type_id_to_count[5]):
-                rand_form = 'QuestionSelfAssessedFormView'
-            else:
-                rand_form = 'QuestionSelect4FormView'
+    @has_access
+    @expose("/questionrandom/")
+    @expose("/questionrandom/topic/<int:topic_id>")
+    def random_question_redirect(self, topic_id=None):
+        if topic_id:
+            topic = db.session.query(Topic).filter_by(id=topic_id).first()
+        else:
+            topic = None
 
-        return redirect(url_for(f'{rand_form}.this_form_get'))
+        question = self.get_random_question(topic)
+        type_to_form = {
+            QuestionType.two_of_five: 'Question2of5FormView',
+            QuestionType.one_of_six: 'Question1of6FormView',
+            QuestionType.three_to_three: 'Question3to3FormView',
+            QuestionType.two_decimals: 'Question2DecimalsFormView',
+            QuestionType.one_decimal: 'Question1DecimalFormView',
+            QuestionType.self_assessed: 'QuestionSelfAssessedFormView',
+            QuestionType.select_four: 'QuestionSelect4FormView',
+        }
+        form = type_to_form[question.type]
+        return redirect(url_for(f'{form}.this_form_get', q_id=question.id))
 
 
 class IdToForm(BaseView):
