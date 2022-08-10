@@ -1,5 +1,5 @@
-from flask import g
-from flask_appbuilder import ModelView
+from flask import g, redirect
+from flask_appbuilder import ModelView, action
 from flask_appbuilder.models.sqla.filters import FilterInFunction, FilterEqual, FilterEqualFunction, FilterNotEqual
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from wtforms import HiddenField
@@ -7,7 +7,7 @@ from wtforms import HiddenField
 from app.utils.filters import FilterQuestionByAnsweredCorrectness
 from app.models.general import Question, QuestionType, LearningGroup, Assignment, Topic, Category
 from app.models.relations import AssocUserQuestion
-from app.utils.general import get_active_topics, link_formatter_question, state_to_emoji_markup, \
+from app.utils.general import link_formatter_question, state_to_emoji_markup, \
     link_formatter_assignment, \
     link_formatter_category, link_formatter_topic, link_formatter_topic_abbr
 from app.views.widgets import ExtendedListWidget, ExtendedListNoButtonsWidget
@@ -15,8 +15,7 @@ from app.views.widgets import ExtendedListWidget, ExtendedListNoButtonsWidget
 
 class Question2of5ModelView(ModelView):
     datamodel = SQLAInterface(Question)
-    base_filters = [['topic_id', FilterInFunction, get_active_topics], [
-        'type', FilterEqual, QuestionType.two_of_five.value]]
+    base_filters = [['type', FilterEqual, QuestionType.two_of_five.value]]
     title = '2 aus 5'
     list_title = title
     show_title = title
@@ -35,8 +34,7 @@ class Question2of5ModelView(ModelView):
 
 class Question1of6ModelView(ModelView):
     datamodel = SQLAInterface(Question)
-    base_filters = [['topic_id', FilterInFunction, get_active_topics], [
-        'type', FilterEqual, QuestionType.one_of_six.value]]
+    base_filters = [['type', FilterEqual, QuestionType.one_of_six.value]]
     title = '1 aus 6'
     list_title = title
     show_title = title
@@ -55,8 +53,7 @@ class Question1of6ModelView(ModelView):
 
 class Question3to3ModelView(ModelView):
     datamodel = SQLAInterface(Question)
-    base_filters = [['topic_id', FilterInFunction, get_active_topics], [
-        'type', FilterEqual, QuestionType.three_to_three.value]]
+    base_filters = [['type', FilterEqual, QuestionType.three_to_three.value]]
     title = 'Lückentext'
     list_title = title
     show_title = title
@@ -75,8 +72,7 @@ class Question3to3ModelView(ModelView):
 
 class Question2DecimalsModelView(ModelView):
     datamodel = SQLAInterface(Question)
-    base_filters = [['topic_id', FilterInFunction, get_active_topics], [
-        'type', FilterEqual, QuestionType.two_decimals.value]]
+    base_filters = [['type', FilterEqual, QuestionType.two_decimals.value]]
     title = 'Werteingabe zwei Zahlen'
     list_title = title
     show_title = title
@@ -95,8 +91,7 @@ class Question2DecimalsModelView(ModelView):
 
 class Question1DecimalModelView(ModelView):
     datamodel = SQLAInterface(Question)
-    base_filters = [['topic_id', FilterInFunction, get_active_topics], [
-        'type', FilterEqual, QuestionType.one_decimal.value]]
+    base_filters = [['type', FilterEqual, QuestionType.one_decimal.value]]
     title = 'Werteingabe eine Zahl'
     list_title = title
     show_title = title
@@ -115,8 +110,7 @@ class Question1DecimalModelView(ModelView):
 
 class QuestionSelfAssessedModelView(ModelView):
     datamodel = SQLAInterface(Question)
-    base_filters = [['topic_id', FilterInFunction, get_active_topics], [
-        'type', FilterEqual, QuestionType.self_assessed.value]]
+    base_filters = [['type', FilterEqual, QuestionType.self_assessed.value]]
     title = 'Selbstkontrolle'
     list_title = title
     show_title = title
@@ -135,8 +129,7 @@ class QuestionSelfAssessedModelView(ModelView):
 
 class QuestionSelect4ModelView(ModelView):
     datamodel = SQLAInterface(Question)
-    base_filters = [['topic_id', FilterInFunction, get_active_topics], [
-        'type', FilterEqual, QuestionType.select_four.value]]
+    base_filters = [['type', FilterEqual, QuestionType.select_four.value]]
     title = 'Zuordnung'
     list_title = title
     show_title = title
@@ -155,7 +148,7 @@ class QuestionSelect4ModelView(ModelView):
 
 class QuestionModelView(ModelView):
     datamodel = SQLAInterface(Question)
-    base_filters = [['topic_id', FilterInFunction, get_active_topics]]
+    base_filters = []
     base_order = ('external_id', 'asc')
     title = 'Aufgaben'
     list_title = title
@@ -218,7 +211,7 @@ class AssignmentModelStudentView(ModelView):
 
 class CategoryModelStudentView(ModelView):
     datamodel = SQLAInterface(Category)
-    base_filters =  [['name', FilterNotEqual, 'Aufgabenpool']]
+    base_filters = [['name', FilterNotEqual, 'Aufgabenpool']]
 
     label_columns = {'id': 'Titel'}
     list_columns = ['id']
@@ -259,8 +252,7 @@ class TopicModelStudentView(ModelView):
 
 class QuestionModelIncorrectAnsweredView(ModelView):
     datamodel = SQLAInterface(Question)
-    base_filters = [['topic_id', FilterInFunction, get_active_topics],
-                    ['', FilterQuestionByAnsweredCorrectness, False]]
+    base_filters = [['', FilterQuestionByAnsweredCorrectness, False]]
     title = 'Aufgaben (falsch beantwortet)'
     list_title = title
     show_title = title
@@ -275,8 +267,7 @@ class QuestionModelIncorrectAnsweredView(ModelView):
 
 class QuestionModelCorrectAnsweredView(ModelView):
     datamodel = SQLAInterface(Question)
-    base_filters = [['topic_id', FilterInFunction, get_active_topics],
-                    ['', FilterQuestionByAnsweredCorrectness, True]]
+    base_filters = [['', FilterQuestionByAnsweredCorrectness, True]]
     title = 'Aufgaben (richtig beantwortet)'
     list_title = title
     show_title = title

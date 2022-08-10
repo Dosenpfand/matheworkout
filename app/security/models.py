@@ -2,12 +2,9 @@ from flask_appbuilder.security.sqla.models import User
 from sqlalchemy import Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 
-from app.models.relations import assoc_user_topics
-
 
 class ExtendedUser(User):
     __tablename__ = 'ab_user'
-    active_topics = relationship("Topic", secondary=assoc_user_topics)
     learning_group_id = Column(Integer, ForeignKey("learning_group.id"))
     learning_group = relationship("LearningGroup", back_populates="users")
     answered_questions = relationship("AssocUserQuestion", back_populates="user", lazy="dynamic")

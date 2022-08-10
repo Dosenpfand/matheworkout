@@ -14,10 +14,3 @@ class ExtendedUserInfoEdit(DynamicForm):
         validators=None,
         widget=Select2Widget()
     )
-    active_topics = QuerySelectMultipleField(
-        label='Aktive Grundkompetenzbereiche',
-        query_func=lambda: db.session.query(Topic),
-        get_pk_func=lambda x: x,
-        validators=None,
-        widget=Select2ManyWidget()
-    )

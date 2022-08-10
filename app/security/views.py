@@ -76,7 +76,6 @@ class ExtendedUserDBModelView(UserDBModelView):
         'email',
         'roles',
         'learning_group',
-        'active_topics',
         'answered_questions'
     ]
 

@@ -77,32 +77,14 @@ def get_question(question_type, q_id=None):
     if q_id:
         result = db.session.query(Question).filter_by(id=q_id, type=question_type).first()
     else:
-        active_topic_ids = get_active_topics()
-        filter_arg = Question.topic_id.in_(active_topic_ids)
-        result = db.session.query(Question).order_by(
-            func.random()).filter(filter_arg).filter_by(type=question_type).first()
+        result = db.session.query(Question).order_by(func.random()).filter_by(type=question_type).first()
 
     return result
 
 
 def get_question_count(q_type):
-    active_topic_ids = get_active_topics()
-    filter_arg = Question.topic_id.in_(active_topic_ids)
-    count = db.session.query(Question).order_by(
-        func.random()).filter(filter_arg).filter_by(type=q_type).count()
+    count = db.session.query(Question).order_by(func.random()).filter_by(type=q_type).count()
     return count
-
-
-def get_active_topics():
-    topic_ids = [topic.id for topic in g.user.active_topics]
-
-    # If no topic IDs set for this user
-    if not topic_ids:
-        # Set all topic IDs
-        results = db.session.query(Topic).all()
-        topic_ids = [result.id for result in results]
-
-    return topic_ids
 
 
 def safe_math_eval(string):
