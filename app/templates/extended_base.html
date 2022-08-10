@@ -3,18 +3,16 @@
 {% block head_css %}
     {{ super() }}
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-icons.css') }}">
+    <!-- TODO: some of these not needed anymore -->
     <style>
         td {
             vertical-align: middle !important;
         }
-        .navbar-brand > a:hover, a:active {
-            text-decoration: none;
-            color: #ccc;
+        /* TODO
+        .navbar-brand {
+            padding: 0;
         }
-        .navbar-brand > a {
-            color: #fff;
-            font-weight: bold;
-        }
+         */
     </style>
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" sizes="any">
     <link rel="icon" href="{{ url_for('static', filename='icon.svg') }}" type="image/svg+xml">

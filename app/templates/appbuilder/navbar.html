@@ -5,13 +5,18 @@
       <div class="container">
 
            <div class="navbar-header">
+                <a href="{{ appbuilder.get_url_for_index }}" class="navbar-brand">
+                     <!-- TODO: Fix
+                     <img src="{{ url_for('static', filename='logo.svg') }}" width="50" height="50" class="pull-left d-inline-block align-middle"  alt="Logo: Infinity Symbol">
+                     -->
+                     {{ appbuilder.app_name }}
+                </a>
+
                 <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                      <span class="icon icon-bar"></span>
                      <span class="icon icon-bar"></span>
                      <span class="icon icon-bar"></span>
                 </button>
-
-                <a href="{{ appbuilder.get_url_for_index }}" class="navbar-brand">{{ appbuilder.app_name }}</a>
            </div>
 
            <div class="collapse navbar-collapse">
