@@ -49,7 +49,7 @@ FAB_ROLES = {
         [".*", "can_userinfo"],
         [".*", "userinfoedit"],
         [".*", "resetmypassword"],
-        ["QuestionRandom", "can_question_random"],
+        ["QuestionRandom", "can_random_question_redirect"],
         ["IdToForm", "can_id_to_form"]
     ],
     "Teacher": [
@@ -65,7 +65,7 @@ FAB_ROLES = {
         [".*", "resetmypassword"],
         ["AssignmentModelStudentView", "can_edit"],
         ["AssignmentModelStudentView", "can_add"],
-        ["QuestionRandom", "can_question_random"],
+        ["QuestionRandom", "can_random_question_redirect"],
         ["IdToForm", "can_id_to_form"]
     ]
 }

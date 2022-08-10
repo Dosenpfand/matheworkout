@@ -1,6 +1,6 @@
 /*
 
-Known Template 
+Known Template
 
 http://www.templatemo.com/tm-516-known
 
@@ -17,7 +17,7 @@ http://www.templatemo.com/tm-516-known
 
 
   /*---------------------------------------
-     TYPOGRAPHY              
+     TYPOGRAPHY
   -----------------------------------------*/
 
   h1,h2,h3,h4,h5,h6 {
@@ -58,7 +58,7 @@ http://www.templatemo.com/tm-516-known
 
 
   /*---------------------------------------
-     GENERAL               
+     GENERAL
   -----------------------------------------*/
 
   html{
@@ -167,11 +167,11 @@ http://www.templatemo.com/tm-516-known
     background: #f9f9f9;
   }
 
-  #team, 
+  #team,
   #testimonial {
     text-align: center;
   }
-  
+
   #google-map iframe {
     border: 0;
     width: 100%;
@@ -181,7 +181,7 @@ http://www.templatemo.com/tm-516-known
 
 
   /*---------------------------------------
-     BUTTONS               
+     BUTTONS
   -----------------------------------------*/
 
   .section-btn {
@@ -203,7 +203,7 @@ http://www.templatemo.com/tm-516-known
 
 
   /*---------------------------------------
-       PRE LOADER              
+       PRE LOADER
   -----------------------------------------*/
 
   .preloader {
@@ -253,7 +253,7 @@ http://www.templatemo.com/tm-516-known
 
 
   /*---------------------------------------
-      MENU              
+      MENU
   -----------------------------------------*/
 
   .custom-navbar {
@@ -335,7 +335,7 @@ http://www.templatemo.com/tm-516-known
 
 
   /*---------------------------------------
-      HOME  & SLIDER            
+      HOME  & SLIDER
   -----------------------------------------*/
 
   #home {
@@ -377,7 +377,7 @@ http://www.templatemo.com/tm-516-known
     background-size: cover;
     height: 650px;
   }
-  
+
   .caption h3 a { color: #FFF; }
   .caption h3 a:hover { color: #FF3; }
 
@@ -397,7 +397,7 @@ http://www.templatemo.com/tm-516-known
 
 
   /*---------------------------------------
-      FEATURE              
+      FEATURE
   -----------------------------------------*/
 
   .feature-thumb {
@@ -426,7 +426,7 @@ http://www.templatemo.com/tm-516-known
 
 
   /*---------------------------------------
-      ABOUT              
+      ABOUT
   -----------------------------------------*/
 
   #about figure {
@@ -457,7 +457,7 @@ http://www.templatemo.com/tm-516-known
 
 
   /*---------------------------------------
-      TEAM              
+      TEAM
   -----------------------------------------*/
 
   .team-thumb {
@@ -491,7 +491,7 @@ http://www.templatemo.com/tm-516-known
 
 
   /*---------------------------------------
-      COURSES             
+      COURSES
   -----------------------------------------*/
 
   #courses .section-title {
@@ -594,7 +594,7 @@ http://www.templatemo.com/tm-516-known
 
 
   /*---------------------------------------
-     NEWS              
+     NEWS
   -----------------------------------------*/
 
   .news-thumb {
@@ -623,7 +623,7 @@ http://www.templatemo.com/tm-516-known
 
 
   /*---------------------------------------
-      TESTIMONIAL             
+      TESTIMONIAL
   -----------------------------------------*/
 
   #testimonial .item {
@@ -679,7 +679,7 @@ http://www.templatemo.com/tm-516-known
 
 
   /*---------------------------------------
-      CONTACT             
+      CONTACT
   -----------------------------------------*/
 
   #contact {
@@ -730,17 +730,17 @@ http://www.templatemo.com/tm-516-known
     border-color: #ffffff;
     color: #ffffff;
   }
-  
+
 
 
 
   /*---------------------------------------
-     FOOTER              
+     FOOTER
   -----------------------------------------*/
 
   footer {
     background: #252020;
-    padding: 120px 0;
+    padding: 20px 0;
   }
 
   footer .section-title {
@@ -828,7 +828,7 @@ http://www.templatemo.com/tm-516-known
 
 
   /*---------------------------------------
-     SOCIAL ICON              
+     SOCIAL ICON
   -----------------------------------------*/
 
   .social-icon {
@@ -865,7 +865,7 @@ http://www.templatemo.com/tm-516-known
 
 
   /*---------------------------------------
-     RESPONSIVE STYLES              
+     RESPONSIVE STYLES
   -----------------------------------------*/
 
   @media screen and (max-width: 1170px) {
@@ -993,4 +993,3 @@ http://www.templatemo.com/tm-516-known
       height: inherit;
     }
   }
-  
