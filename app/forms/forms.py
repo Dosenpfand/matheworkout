@@ -45,12 +45,12 @@ class Question3to3Form(QuestionForm):
 
 
 class Question2DecimalsForm(QuestionForm):
-    value1 = FlexibleDecimalField()
-    value2 = FlexibleDecimalField()
+    value1 = FlexibleDecimalField(label='Ergebnis 1')
+    value2 = FlexibleDecimalField(label='Ergebnis 2')
 
 
 class Question1DecimalForm(QuestionForm):
-    value = FlexibleDecimalField(validators=[NoneOf([''], message='Eingabe konnte nicht ausgewertet werden.')])
+    value = FlexibleDecimalField(label='Ergebnis')
 
 
 class QuestionSelect4Form(QuestionForm):

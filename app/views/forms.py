@@ -624,9 +624,6 @@ class Question2DecimalsFormView(QuestionFormView):
             external_id = question_result.external_id
             error = False
 
-            form.value1.label.text = 'Ergebnis 1'
-            form.value2.label.text = 'Ergebnis 2'
-
             assignment_progress = self.get_assignment_progress(question_result.id)
 
         self.extra_args = {'question': {
@@ -641,8 +638,6 @@ class Question2DecimalsFormView(QuestionFormView):
         question_id = int(form.id.data)
         result = db.session.query(Question).filter_by(
             id=question_id, type=QuestionType.two_decimals.value).first()
-        form.value1.label.text = 'Ergebnis 1'
-        form.value2.label.text = 'Ergebnis 2'
         value1_correct = False
         value2_correct = False
 
@@ -719,7 +714,6 @@ class Question1DecimalFormView(QuestionFormView):
             description = question_result.description_image_img()
             external_id = question_result.external_id
             error = False
-            form.value.label.text = 'Ergebnis 1'
 
             assignment_progress = self.get_assignment_progress(question_result.id)
 
@@ -735,7 +729,6 @@ class Question1DecimalFormView(QuestionFormView):
         question_id = int(form.id.data)
         result = db.session.query(Question).filter_by(
             id=question_id, type=QuestionType.one_decimal.value).first()
-        form.value.label.text = 'Ergebnis'
 
         if (form.value.data <= result.value1_upper_limit) and (form.value.data >= result.value1_lower_limit):
             form.value.description = 'Richtig'
