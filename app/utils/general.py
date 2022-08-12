@@ -78,6 +78,8 @@ def get_question(question_type, q_id):
 
 
 def safe_math_eval(string):
+    string = string.replace(",", ".")
+    string = string.replace('%', '*0.01')
     allowed_chars = "0123456789+-*(). /"
     if string == '':
         return ''

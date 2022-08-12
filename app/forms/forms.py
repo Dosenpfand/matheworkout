@@ -1,17 +1,16 @@
 from flask_appbuilder.forms import DynamicForm
-from wtforms import BooleanField, HiddenField, DecimalField, SelectField
+from wtforms import BooleanField, HiddenField, FloatField, SelectField
 from wtforms.validators import NoneOf
 
 from app.models.general import Select4Enum
 from app.utils.general import safe_math_eval
 
 
-class FlexibleDecimalField(DecimalField):
+class FlexibleDecimalField(FloatField):
 
     def process_formdata(self, valuelist):
         if valuelist:
-            valuelist[0] = valuelist[0].replace(",", ".")
-            valuelist[0] = float(safe_math_eval(valuelist[0]))
+            valuelist[0] = safe_math_eval(valuelist[0])
         return super(FlexibleDecimalField, self).process_formdata(valuelist)
 
 
@@ -51,7 +50,7 @@ class Question2DecimalsForm(QuestionForm):
 
 
 class Question1DecimalForm(QuestionForm):
-    value = FlexibleDecimalField()
+    value = FlexibleDecimalField(validators=[NoneOf([''], message='Eingabe konnte nicht ausgewertet werden.')])
 
 
 class QuestionSelect4Form(QuestionForm):
