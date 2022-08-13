@@ -1,12 +1,49 @@
 /*
-
 Known Template
-
 http://www.templatemo.com/tm-516-known
-
 */
 
-  @import url('https://fonts.googleapis.com/css?family=Muli:300,700|Nunito');
+/* nunito-regular - latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/nunito-v25-latin-regular.eot'); /* IE9 Compat Modes */
+  src: local(''),
+       url('../fonts/nunito-v25-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../fonts/nunito-v25-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+       url('../fonts/nunito-v25-latin-regular.woff') format('woff'), /* Modern Browsers */
+       url('../fonts/nunito-v25-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('../fonts/nunito-v25-latin-regular.svg#Nunito') format('svg'); /* Legacy iOS */
+}
+
+  /* mulish-300 - latin */
+  @font-face {
+    font-family: 'Mulish';
+    font-style: normal;
+    font-weight: 300;
+    src: url('../fonts/mulish-v12-latin-300.eot'); /* IE9 Compat Modes */
+    src: local(''),
+         url('../fonts/mulish-v12-latin-300.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('../fonts/mulish-v12-latin-300.woff2') format('woff2'), /* Super Modern Browsers */
+         url('../fonts/mulish-v12-latin-300.woff') format('woff'), /* Modern Browsers */
+         url('../fonts/mulish-v12-latin-300.ttf') format('truetype'), /* Safari, Android, iOS */
+         url('../fonts/mulish-v12-latin-300.svg#Mulish') format('svg'); /* Legacy iOS */
+  }
+
+  /* mulish-700 - latin */
+  @font-face {
+    font-family: 'Mulish';
+    font-style: normal;
+    font-weight: 700;
+    src: url('../fonts/mulish-v12-latin-700.eot'); /* IE9 Compat Modes */
+    src: local(''),
+         url('../fonts/mulish-v12-latin-700.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('../fonts/mulish-v12-latin-700.woff2') format('woff2'), /* Super Modern Browsers */
+         url('../fonts/mulish-v12-latin-700.woff') format('woff'), /* Modern Browsers */
+         url('../fonts/mulish-v12-latin-700.ttf') format('truetype'), /* Safari, Android, iOS */
+         url('../fonts/mulish-v12-latin-700.svg#Mulish') format('svg'); /* Legacy iOS */
+  }
 
   body {
     background: #ffffff;
@@ -21,7 +58,7 @@ http://www.templatemo.com/tm-516-known
   -----------------------------------------*/
 
   h1,h2,h3,h4,h5,h6 {
-    font-family: 'Muli', sans-serif;
+    font-family: 'Mulish', sans-serif;
     font-weight: bold;
     line-height: inherit;
   }
