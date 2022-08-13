@@ -215,6 +215,11 @@ http://www.templatemo.com/tm-516-known
     height: 390px;
   }
 
+  .btn-table {
+    min-width: 150px;
+    width: 100%;
+  }
+
 
 
   /*---------------------------------------

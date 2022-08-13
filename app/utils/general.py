@@ -18,25 +18,25 @@ def link_formatter_question(q_id, filters=None):
         category_id = filters.get_filter_value('category')
 
     url = url_for(f'IdToForm.id_to_form', q_id=q_id, assignment_id=assignment_id, category_id=category_id)
-    return Markup(f'<a class="btn btn-sm btn-primary" href="{url}">{external_id}</a>')
+    return Markup(f'<a class="btn btn-sm btn-primary btn-table" href="{url}">{external_id}</a>')
 
 
 def link_formatter_assignment(assignmend_id):
     name = db.session.query(Assignment).filter_by(id=assignmend_id).first().name
     url = url_for('AssignmentModelStudentView.show', pk=assignmend_id)
-    return Markup(f'<a class="btn btn-sm btn-primary" href="{url}">{name}</a>')
+    return Markup(f'<a class="btn btn-sm btn-primary btn-table" href="{url}">{name}</a>')
 
 
 def link_formatter_category(category_id):
     name = db.session.query(Category).filter_by(id=category_id).first().name
     url = url_for('CategoryModelStudentView.show', pk=category_id)
-    return Markup(f'<a class="btn btn-sm btn-primary" href="{url}">{name}</a>')
+    return Markup(f'<a class="btn btn-sm btn-primary btn-table" href="{url}">{name}</a>')
 
 
 def link_formatter_topic(topic_id):
     name = db.session.query(Topic).filter_by(id=topic_id).first().name
     url = url_for('TopicModelStudentView.show', pk=topic_id)
-    return Markup(f'<a class="btn btn-sm btn-primary" href="{url}">{name}</a>')
+    return Markup(f'<a class="btn btn-sm btn-primary btn-table" href="{url}">{name}</a>')
 
 
 def link_formatter_topic_abbr(topic, filters=None):
