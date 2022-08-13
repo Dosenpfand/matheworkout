@@ -9,7 +9,7 @@ from flask_appbuilder.models.mixins import ImageColumn
 from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, Float, Enum, DateTime
 from sqlalchemy.orm import relationship
 
-from .relations import assoc_assignment_question
+from app.models.relations import assoc_assignment_question
 
 
 class Select4Enum(enum.Enum):
