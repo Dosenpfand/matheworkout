@@ -5,7 +5,7 @@ from sqlalchemy import Column, Integer, ForeignKey, Sequence, Table, DateTime, B
 from sqlalchemy.orm import relationship
 from app.security.models import ExtendedUser # noqa
 
-assoc_assignment_question = Table('association', Model.metadata,
+assoc_assignment_question = Table('assoc_assignment_question', Model.metadata,
                                   Column('assignment_id', ForeignKey('assignment.id'), primary_key=True),
                                   Column('question_id', ForeignKey('question.id'), primary_key=True)
                                   )
