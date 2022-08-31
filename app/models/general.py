@@ -309,12 +309,9 @@ class LearningGroup(Model, AuditMixin):
 
         root_url = request.root_url
         join_path = url_for('JoinLearningGroup.join_learning_group', group_id=self.id, join_token=self.join_token)
-        print(root_url[-1])
-        print(join_path[0])
 
         if (root_url[-1] == '/') and (join_path[0] == '/'):
             root_url = root_url[:-1]
-            print('ELIMINATED')
         full_url = root_url + join_path
         return Markup(f'<a href="{full_url}">{full_url}</a>')
 

@@ -91,6 +91,20 @@ class ExtendedUserDBModelView(UserDBModelView):
         return redirect(url_for('DeleteStatsFormView.this_form_get'))
 
 
+class ExtendedUserDBModelTeacherView(ExtendedUserDBModelView):
+
+    title = 'Schüler'
+    list_title = title
+    show_title = title
+    add_title = title
+    edit_title = title
+
+    list_columns = [
+        'first_name',
+        'last_name',
+    ]
+
+
 class ExtendedUserInfoEditView(UserInfoEditView):
     # TODO: class needed?
     # TODO: delete form = ExtendedUserInfoEdit

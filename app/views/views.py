@@ -1,4 +1,5 @@
 from app import appbuilder
+from app.security.views import ExtendedUserDBModelTeacherView
 from app.views.forms import QuestionSelfAssessedFormView, Question2of5FormView, Question1of6FormView, \
     Question3to3FormView, Question2DecimalsFormView, Question1DecimalFormView, QuestionSelect4FormView, DeleteStatsFormView
 from app.views.general import QuestionRandom, AssignmentModelTeacherView, UtilExtendedView, IdToForm, JoinLearningGroup
@@ -172,3 +173,4 @@ appbuilder.add_view_no_menu(AssignmentModelTeacherView())
 appbuilder.add_view_no_menu(UtilExtendedView())
 appbuilder.add_view_no_menu(DeleteStatsFormView())
 appbuilder.add_view_no_menu(JoinLearningGroup())
+appbuilder.add_view_no_menu(ExtendedUserDBModelTeacherView())

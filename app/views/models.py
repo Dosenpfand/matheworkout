@@ -4,6 +4,7 @@ from flask_appbuilder.models.sqla.filters import FilterEqual, FilterEqualFunctio
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from wtforms import HiddenField
 
+from app.security.views import ExtendedUserDBModelTeacherView
 from app.utils.filters import FilterQuestionByAnsweredCorrectness
 from app.models.general import Question, QuestionType, LearningGroup, Assignment, Topic, Category, AssocUserQuestion
 from app.utils.general import link_formatter_question, state_to_emoji_markup, \
@@ -169,17 +170,6 @@ class AssocUserQuestionModelView(ModelView):
     list_columns = ['user', 'question', 'created_on', 'is_answer_correct']
 
 
-class LearningGroupModelView(ModelView):
-    datamodel = SQLAInterface(LearningGroup)
-    base_filters = [['created_by', FilterEqualFunction, lambda: g.user]]
-    list_columns = ['name']
-    add_columns = ['name']
-    edit_columns = ['name']
-    show_columns = ['name', 'users', 'join_url']
-
-    label_columns = {'name': 'Name', 'users': 'Schüler', 'join_url': 'Link zum Beitreten'}
-
-
 class AssignmentModelAdminView(ModelView):
     datamodel = SQLAInterface(Assignment)
     base_filters = [['created_by', FilterEqualFunction, lambda: g.user]]
@@ -195,9 +185,38 @@ class AssignmentModelAdminView(ModelView):
                      'assigned_questions': 'Fragen',
                      'additional_links': 'Auswertung'}
 
+    title = 'Hausübungen'
+    list_title = title
+    show_title = title
+    add_title = title
+    edit_title = title
+
     add_form_query_rel_fields = {'learning_group': [['created_by', FilterEqualFunction, lambda: g.user]]}
     edit_form_query_rel_fields = {'learning_group': [['created_by', FilterEqualFunction, lambda: g.user]]}
 
+class LearningGroupModelView(ModelView):
+    datamodel = SQLAInterface(LearningGroup)
+    base_filters = [['created_by', FilterEqualFunction, lambda: g.user]]
+
+    label_columns = {'name': 'Name', 'users': 'Schüler', 'join_url': 'Link zum Beitreten'}
+
+    list_columns = ['name']
+    add_columns = ['name']
+    edit_columns = ['name']
+    show_columns = ['name', 'join_url']
+
+    title = 'Klassen'
+    list_title = title
+    show_title = title
+    add_title = title
+    edit_title = title
+
+    related_views = [AssignmentModelAdminView, ExtendedUserDBModelTeacherView]
+
+    show_template = "show_cascade_expanded.html"
+    edit_template = "appbuilder/general/model/edit_cascade.html"
+    # TODO: not needed?
+    # list_widget = ExtendedListNoButtonsWidget
 
 class AssignmentModelStudentView(ModelView):
     datamodel = SQLAInterface(Assignment)
@@ -209,6 +228,7 @@ class AssignmentModelStudentView(ModelView):
                      'is_due_on': 'Fällig am'}
     list_columns = ['id', 'starts_on', 'is_due_on']
     show_columns = ['name', 'starts_on', 'is_due_on']
+
     title = 'Hausübungen'
     list_title = title
     show_title = title
@@ -216,6 +236,7 @@ class AssignmentModelStudentView(ModelView):
     edit_title = title
 
     related_views = [QuestionModelView]
+
     show_template = "show_cascade_expanded.html"
     edit_template = "appbuilder/general/model/edit_cascade.html"
     list_widget = ExtendedListNoButtonsWidget
