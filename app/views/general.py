@@ -1,13 +1,13 @@
 from random import randrange
 
-from flask import url_for, Response, flash
+from flask import url_for, Response, flash, g
 from flask_appbuilder import BaseView, has_access, expose
 from sqlalchemy import func
 from sqlalchemy.orm import load_only
 from werkzeug.utils import redirect
 
 from app import db
-from app.models.general import QuestionType, Question, Assignment, Topic
+from app.models.general import QuestionType, Question, Assignment, Topic, LearningGroup
 
 
 class QuestionRandom(BaseView):
@@ -121,3 +121,25 @@ class UtilExtendedView(BaseView):
         for i in range(count - 1):
             self.get_redirect()
         return redirect(self.get_redirect())
+
+
+class JoinLearningGroup(BaseView):
+    route_base = ''
+
+    @expose("/join_learning_group/<int:group_id>/<string:join_token>")
+    @has_access
+    def join_learning_group(self, group_id, join_token):
+        learning_group = db.session.query(LearningGroup).filter_by(id=group_id).first()
+        if learning_group:
+            if g.user in learning_group.users:
+                flash('Du bist bereits Mitlgied dieser Klasse', 'danger')
+            elif join_token == learning_group.join_token:
+                learning_group.users.append(g.user)
+                db.session.commit()
+                flash('Du bist erfolgreich der Klasse beigetreten', 'success')
+            else:
+                flash('Klasse beitreten fehlgeschlagen', 'danger')
+        else:
+            flash('Klasse nicht gefunden', 'danger')
+
+        return redirect(url_for('ExtendedIndexView.index'))

@@ -112,7 +112,6 @@ class QuestionSelfAssessedFormView(QuestionFormView):
     form = QuestionSelfAssessedForm
     form_title = 'Selbstkontrolle'
 
-    # TODO: html input id, csrf, etc. are twice in output!
     def form_get(self, form):
         question_result = get_question(QuestionType.self_assessed.value, self.id)
         assignment_progress = None

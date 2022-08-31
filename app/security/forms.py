@@ -6,6 +6,7 @@ from app import db
 from app.models.general import LearningGroup
 
 
+# TODO: Dead code, delete
 class ExtendedUserInfoEdit(DynamicForm):
     learning_groups = QuerySelectMultipleField(
         label='Klassen',

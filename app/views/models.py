@@ -171,17 +171,32 @@ class AssocUserQuestionModelView(ModelView):
 
 class LearningGroupModelView(ModelView):
     datamodel = SQLAInterface(LearningGroup)
+    base_filters = [['created_by', FilterEqualFunction, lambda: g.user]]
     list_columns = ['name']
+    add_columns = ['name']
+    edit_columns = ['name']
+    show_columns = ['name', 'users', 'join_url']
+
+    label_columns = {'name': 'Name', 'users': 'Schüler', 'join_url': 'Link zum Beitreten'}
 
 
 class AssignmentModelAdminView(ModelView):
     datamodel = SQLAInterface(Assignment)
+    base_filters = [['created_by', FilterEqualFunction, lambda: g.user]]
+
     list_columns = ['name', 'learning_group', 'additional_links']
+    add_columns = ['name', 'learning_group', 'assigned_questions', 'starts_on', 'is_due_on']
+    edit_columns = ['name', 'learning_group', 'assigned_questions', 'starts_on', 'is_due_on']
+
     label_columns = {'name': 'Titel',
                      'learning_group': 'Klasse',
                      'starts_on': 'Erhalten am',
                      'is_due_on': 'Fällig am',
+                     'assigned_questions': 'Fragen',
                      'additional_links': 'Auswertung'}
+
+    add_form_query_rel_fields = {'learning_group': [['created_by', FilterEqualFunction, lambda: g.user]]}
+    edit_form_query_rel_fields = {'learning_group': [['created_by', FilterEqualFunction, lambda: g.user]]}
 
 
 class AssignmentModelStudentView(ModelView):

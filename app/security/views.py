@@ -3,28 +3,8 @@ from flask_appbuilder import action, expose, has_access
 from flask_appbuilder.security.views import UserDBModelView, UserInfoEditView
 from flask_babel import lazy_gettext
 
-from app.security.forms import ExtendedUserInfoEdit
-from config import AUTH_ROLE_ADMIN
-from app import db
-from app.utils.filters import FilterInFunctionWithNone
-from app.models.general import LearningGroup
-
-
-def get_learning_groups():
-    if AUTH_ROLE_ADMIN in [role.name for role in g.user.roles]:
-        result = db.session.query(LearningGroup).all()
-        learning_groups = [group.id for group in result] + [None]
-    else:
-        learning_groups = [group.id for group in g.user.learning_groups]
-
-    return learning_groups
-
 
 class ExtendedUserDBModelView(UserDBModelView):
-    # TODO: !!!
-    # base_filters = [
-    #     ['learning_group_id', FilterInFunctionWithNone, get_learning_groups]]
-
     label_columns = {'username': 'Benutzername', 'learning_groups': 'Klassen', 'tried_questions': 'Gelöste Aufgaben',
                      'correct_questions': 'Richtig gelöste Aufgaben', 'first_name': 'Vorname', 'last_name': 'Nachname',
                      'email': 'E-Mail'}
@@ -112,5 +92,6 @@ class ExtendedUserDBModelView(UserDBModelView):
 
 
 class ExtendedUserInfoEditView(UserInfoEditView):
-    form = ExtendedUserInfoEdit
+    # TODO: class needed?
+    # TODO: delete form = ExtendedUserInfoEdit
     form_title = 'Benutzerinformationen bearbeiten'

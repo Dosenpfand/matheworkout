@@ -1,12 +1,13 @@
 import datetime
 import enum
 import re
+import secrets
 from urllib.parse import urlparse, parse_qs
 
-from flask import Markup, g, url_for
+from flask import Markup, g, url_for, request
 from flask_appbuilder import Model
 from flask_appbuilder.filemanager import ImageManager
-from flask_appbuilder.models.mixins import ImageColumn
+from flask_appbuilder.models.mixins import ImageColumn, AuditMixin
 from flask_appbuilder.security.sqla.models import User
 from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, Float, Enum, DateTime, Sequence, Table
 from sqlalchemy.orm import relationship
@@ -260,7 +261,7 @@ class Question(Model):
                       '" alt="Photo" class="img-rounded img-responsive" style="min-width:100%;max-width:400px;">')
 
 
-class Assignment(Model):
+class Assignment(Model, AuditMixin):
     id = Column(Integer, primary_key=True)
     name = Column(String(150), nullable=False)
     learning_group_id = Column(Integer, ForeignKey("learning_group.id"))
@@ -292,13 +293,30 @@ class Assignment(Model):
 </div>''')
 
 
-class LearningGroup(Model):
+class LearningGroup(Model, AuditMixin):
     id = Column(Integer, primary_key=True)
     name = Column(String(150), nullable=False)
     users = relationship("ExtendedUser", secondary=assoc_user_learning_group, back_populates="learning_groups")
+    join_token = Column(String(255), default=secrets.token_urlsafe())
 
     def __repr__(self):
         return self.name
+
+    def join_url(self):
+        # TODO: check can be eliminated when all old classes have been deleted!
+        if not self.join_token:
+            return ''
+
+        root_url = request.root_url
+        join_path = url_for('JoinLearningGroup.join_learning_group', group_id=self.id, join_token=self.join_token)
+        print(root_url[-1])
+        print(join_path[0])
+
+        if (root_url[-1] == '/') and (join_path[0] == '/'):
+            root_url = root_url[:-1]
+            print('ELIMINATED')
+        full_url = root_url + join_path
+        return Markup(f'<a href="{full_url}">{full_url}</a>')
 
 
 class ExtendedUser(User):
