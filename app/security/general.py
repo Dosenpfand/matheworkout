@@ -1,6 +1,6 @@
 from flask_appbuilder.security.sqla.manager import SecurityManager
-from .models import ExtendedUser
-from .views import ExtendedUserDBModelView, ExtendedUserInfoEditView
+from app.models.general import ExtendedUser
+from app.security.views import ExtendedUserDBModelView, ExtendedUserInfoEditView
 
 
 class ExtendedSecurityManager(SecurityManager):

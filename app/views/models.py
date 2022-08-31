@@ -1,12 +1,11 @@
 from flask import g, redirect, url_for
 from flask_appbuilder import ModelView, action
-from flask_appbuilder.models.sqla.filters import FilterInFunction, FilterEqual, FilterEqualFunction, FilterNotEqual
+from flask_appbuilder.models.sqla.filters import FilterEqual, FilterEqualFunction, FilterNotEqual, FilterInFunction
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from wtforms import HiddenField
 
 from app.utils.filters import FilterQuestionByAnsweredCorrectness
-from app.models.general import Question, QuestionType, LearningGroup, Assignment, Topic, Category
-from app.models.relations import AssocUserQuestion
+from app.models.general import Question, QuestionType, LearningGroup, Assignment, Topic, Category, AssocUserQuestion
 from app.utils.general import link_formatter_question, state_to_emoji_markup, \
     link_formatter_assignment, \
     link_formatter_category, link_formatter_topic, link_formatter_topic_abbr
@@ -187,7 +186,7 @@ class AssignmentModelAdminView(ModelView):
 
 class AssignmentModelStudentView(ModelView):
     datamodel = SQLAInterface(Assignment)
-    base_filters = [['learning_group_id', FilterEqualFunction, lambda: g.user.learning_group_id]]
+    base_filters = [['learning_group_id', FilterInFunction, lambda: [group.id for group in g.user.learning_groups]]]
 
     label_columns = {'id': 'Titel',
                      'learning_group': 'Klasse',

@@ -1,3 +1,4 @@
+import datetime
 import enum
 import re
 from urllib.parse import urlparse, parse_qs
@@ -6,10 +7,9 @@ from flask import Markup, g, url_for
 from flask_appbuilder import Model
 from flask_appbuilder.filemanager import ImageManager
 from flask_appbuilder.models.mixins import ImageColumn
-from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, Float, Enum, DateTime
+from flask_appbuilder.security.sqla.models import User
+from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, Float, Enum, DateTime, Sequence, Table
 from sqlalchemy.orm import relationship
-
-from app.models.relations import assoc_assignment_question
 
 
 class Select4Enum(enum.Enum):
@@ -23,6 +23,16 @@ class Select4Enum(enum.Enum):
     @staticmethod
     def get_values():
         return [el.value for el in Select4Enum]
+
+
+assoc_user_learning_group = Table('assoc_user_learning_group', Model.metadata,
+                                  Column('user_id', ForeignKey('ab_user.id'), primary_key=True),
+                                  Column('learning_group_id', ForeignKey('learning_group.id'), primary_key=True)
+                                  )
+assoc_assignment_question = Table('assoc_assignment_question', Model.metadata,
+                                  Column('assignment_id', ForeignKey('assignment.id'), primary_key=True),
+                                  Column('question_id', ForeignKey('question.id'), primary_key=True)
+                                  )
 
 
 class Topic(Model):
@@ -285,7 +295,36 @@ class Assignment(Model):
 class LearningGroup(Model):
     id = Column(Integer, primary_key=True)
     name = Column(String(150), nullable=False)
-    users = relationship("ExtendedUser", back_populates="learning_group")
+    users = relationship("ExtendedUser", secondary=assoc_user_learning_group, back_populates="learning_groups")
 
     def __repr__(self):
         return self.name
+
+
+class ExtendedUser(User):
+    __tablename__ = 'ab_user'
+    learning_groups = relationship("LearningGroup", secondary=assoc_user_learning_group, back_populates="users")
+    answered_questions = relationship("AssocUserQuestion", back_populates="user", lazy="dynamic")
+
+    def tried_questions(self):
+        return self.answered_questions.count()
+
+    def correct_questions(self):
+        return self.answered_questions.filter_by(is_answer_correct=True).count()
+
+    def correct_percentage(self):
+        if self.tried_questions() == 0:
+            return 0
+        else:
+            return int(round(self.correct_questions() / self.tried_questions(), 2) * 100)
+
+
+class AssocUserQuestion(Model):
+    __tablename__ = 'assoc_user_question'
+    id = Column(Integer, Sequence("assoc_user_question_id_seq"), primary_key=True)
+    user_id = Column(ForeignKey('ab_user.id'))
+    question_id = Column(ForeignKey('question.id'))
+    user = relationship("ExtendedUser")
+    question = relationship("Question")
+    created_on = Column(DateTime, default=datetime.datetime.now, nullable=False)
+    is_answer_correct = Column(Boolean, nullable=False)

@@ -6,8 +6,7 @@ from sqlalchemy import asc
 from app import db
 from app.forms.forms import QuestionSelfAssessedForm, Question2of5Form, Question1of6Form, Question3to3Form, \
     Question2DecimalsForm, Question1DecimalForm, QuestionSelect4Form, DeleteStatsForm
-from app.models.general import QuestionType, Question, Assignment
-from app.models.relations import AssocUserQuestion, assoc_assignment_question
+from app.models.general import QuestionType, Question, Assignment, AssocUserQuestion, assoc_assignment_question
 from app.utils.general import get_question, commit_safely
 from app.views.widgets import ExtendedEditWidget
 

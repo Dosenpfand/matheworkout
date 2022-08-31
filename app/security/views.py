@@ -15,22 +15,23 @@ def get_learning_groups():
         result = db.session.query(LearningGroup).all()
         learning_groups = [group.id for group in result] + [None]
     else:
-        learning_groups = [g.user.learning_group_id]
+        learning_groups = [group.id for group in g.user.learning_groups]
 
     return learning_groups
 
 
 class ExtendedUserDBModelView(UserDBModelView):
-    base_filters = [
-        ['learning_group_id', FilterInFunctionWithNone, get_learning_groups]]
+    # TODO: !!!
+    # base_filters = [
+    #     ['learning_group_id', FilterInFunctionWithNone, get_learning_groups]]
 
-    label_columns = {'username': 'Benutzername', 'learning_group': 'Klasse', 'tried_questions': 'Gelöste Aufgaben',
+    label_columns = {'username': 'Benutzername', 'learning_groups': 'Klassen', 'tried_questions': 'Gelöste Aufgaben',
                      'correct_questions': 'Richtig gelöste Aufgaben', 'first_name': 'Vorname', 'last_name': 'Nachname',
                      'email': 'E-Mail'}
 
     show_fieldsets = [
         (lazy_gettext('User info'),
-         {'fields': ['username', 'active', 'roles', 'login_count', 'learning_group', 'tried_questions',
+         {'fields': ['username', 'active', 'roles', 'login_count', 'learning_groups', 'tried_questions',
                      'correct_questions', 'extra']}),
         (lazy_gettext('Personal Info'),
          {'fields': ['first_name', 'last_name', 'email'], 'expanded': True}),
@@ -41,7 +42,7 @@ class ExtendedUserDBModelView(UserDBModelView):
 
     user_show_fieldsets = [
         (lazy_gettext('User info'),
-         {'fields': ['username', 'learning_group', 'tried_questions', 'correct_questions']}),
+         {'fields': ['username', 'learning_groups', 'tried_questions', 'correct_questions']}),
         (lazy_gettext('Personal Info'),
          {'fields': ['first_name', 'last_name', 'email'], 'expanded': True}),
     ]
@@ -53,7 +54,7 @@ class ExtendedUserDBModelView(UserDBModelView):
         'active',
         'email',
         'roles',
-        'learning_group',
+        'learning_groups',
         'password',
         'conf_password'
     ]
@@ -62,7 +63,7 @@ class ExtendedUserDBModelView(UserDBModelView):
         'last_name',
         'username',
         'email',
-        'learning_group',
+        'learning_groups',
         'tried_questions',
         'correct_questions',
         'correct_percentage',
@@ -75,7 +76,7 @@ class ExtendedUserDBModelView(UserDBModelView):
         'active',
         'email',
         'roles',
-        'learning_group',
+        'learning_groups',
         'answered_questions'
     ]
 
