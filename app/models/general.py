@@ -265,7 +265,7 @@ class Assignment(Model, AuditMixin):
     id = Column(Integer, primary_key=True)
     name = Column(String(150), nullable=False)
     learning_group_id = Column(Integer, ForeignKey("learning_group.id"))
-    learning_group = relationship("LearningGroup")
+    learning_group = relationship("LearningGroup", back_populates="assignments")
     assigned_questions = relationship("Question", secondary=assoc_assignment_question, back_populates="assignments")
     starts_on = Column(DateTime, nullable=False)
     is_due_on = Column(DateTime, nullable=False)
@@ -297,6 +297,7 @@ class LearningGroup(Model, AuditMixin):
     id = Column(Integer, primary_key=True)
     name = Column(String(150), nullable=False)
     users = relationship("ExtendedUser", secondary=assoc_user_learning_group, back_populates="learning_groups")
+    assignments = relationship("Assignment", back_populates="learning_group")
     join_token = Column(String(255), default=secrets.token_urlsafe())
 
     def __repr__(self):
