@@ -1,6 +1,6 @@
 from random import randrange
 
-from flask import url_for, Response, flash, g
+from flask import url_for, Response, flash, g, abort
 from flask_appbuilder import BaseView, has_access, expose
 from sqlalchemy import func
 from sqlalchemy.orm import load_only
@@ -82,6 +82,9 @@ class AssignmentModelTeacherView(BaseView):
         self.update_redirect()
         questions, state_users_questions, users = self.get_assignment_data(assignment_id)
 
+        if not questions:
+            abort(404)
+
         return self.render_template('assignment_teacher_view.html', users=users, questions=questions,
                                     state_users_questions=state_users_questions)
 
@@ -90,6 +93,10 @@ class AssignmentModelTeacherView(BaseView):
     def export(self, assignment_id):
         self.update_redirect()
         questions, state_users_questions, users = self.get_assignment_data(assignment_id)
+
+        if not questions:
+            abort(404)
+
         content = self.render_template('assignment_teacher_export.html', users=users, questions=questions,
                                        state_users_questions=state_users_questions)
 
@@ -97,7 +104,7 @@ class AssignmentModelTeacherView(BaseView):
 
     @staticmethod
     def get_assignment_data(assignment_id):
-        assignment = db.session.query(Assignment).filter_by(id=assignment_id).first()
+        assignment = db.session.query(Assignment).filter_by(id=assignment_id, created_by_fk=g.user.id).first()
 
         if not assignment:
             return [], [], []
