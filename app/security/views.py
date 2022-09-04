@@ -92,7 +92,6 @@ class ExtendedUserDBModelView(UserDBModelView):
 
 
 class ExtendedUserDBModelTeacherView(ExtendedUserDBModelView):
-
     title = 'Schüler'
     list_title = title
     show_title = title
@@ -106,6 +105,4 @@ class ExtendedUserDBModelTeacherView(ExtendedUserDBModelView):
 
 
 class ExtendedUserInfoEditView(UserInfoEditView):
-    # TODO: class needed?
-    # TODO: delete form = ExtendedUserInfoEdit
     form_title = 'Benutzerinformationen bearbeiten'
