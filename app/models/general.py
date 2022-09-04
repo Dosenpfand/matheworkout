@@ -321,6 +321,8 @@ class ExtendedUser(User):
     __tablename__ = 'ab_user'
     learning_groups = relationship("LearningGroup", secondary=assoc_user_learning_group, back_populates="users")
     answered_questions = relationship("AssocUserQuestion", back_populates="user", lazy="dynamic")
+    password_reset_token = Column(String(255))
+    password_reset_expiration = Column(DateTime)
 
     def tried_questions(self):
         return self.answered_questions.count()
