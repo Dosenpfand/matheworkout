@@ -33,10 +33,7 @@ class ExtendedRegisterUserDBForm(DynamicForm):
     )
     password = PasswordField(
         lazy_gettext("Password"),
-        description=lazy_gettext(
-            "Please use a good password policy,"
-            " this application does not check this for you"
-        ),
+        description=lazy_gettext("Bitte wählen Sie ein sicheres Passwort"),
         validators=[DataRequired()],
         widget=BS3PasswordFieldWidget(),
     )
@@ -47,5 +44,5 @@ class ExtendedRegisterUserDBForm(DynamicForm):
         widget=BS3PasswordFieldWidget(),
     )
     # TODO: choices should not be hardcoded
-    role = SelectField('Rolle', description='Wähle ob dein Benutzer ein Schüler oder Lehrer sein soll', choices=[('Student', 'Schüler'), ('Teacher', 'Lehrer')], widget=Select2Widget())
+    role = SelectField('Rolle', choices=[('Student', 'Schüler'), ('Teacher', 'Lehrer')], widget=Select2Widget())
     recaptcha = RecaptchaField()
