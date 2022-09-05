@@ -239,7 +239,7 @@ class Question(Model):
     def get_option_image(option):
         im = ImageManager()
         return Markup('<img src="' + im.get_url(option) +
-                      '" alt="Photo" class="img-rounded img-responsive" style="max-width:2048px;">')
+                      '" alt="Photo" class="img-rounded img-responsive" style="max-width:1024px;">')
 
     @staticmethod
     def get_option_small_image(option):
