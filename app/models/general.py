@@ -332,9 +332,9 @@ class ExtendedUser(User):
 
     def correct_percentage(self):
         if self.tried_questions() == 0:
-            return 0
+            return '0 %'
         else:
-            return int(round(self.correct_questions() / self.tried_questions(), 2) * 100)
+            return f'{int(round(self.correct_questions() / self.tried_questions(), 2) * 100)} %'
 
 
 class AssocUserQuestion(Model):

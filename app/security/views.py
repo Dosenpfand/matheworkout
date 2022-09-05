@@ -17,12 +17,12 @@ from app.security.forms import ForgotPasswordForm
 class ExtendedUserDBModelView(UserDBModelView):
     label_columns = {'username': 'Benutzername', 'learning_groups': 'Klassen', 'tried_questions': 'Gelöste Aufgaben',
                      'correct_questions': 'Richtig gelöste Aufgaben', 'first_name': 'Vorname', 'last_name': 'Nachname',
-                     'email': 'E-Mail'}
+                     'email': 'E-Mail', 'correct_percentage': 'Anteil richtig'}
 
     show_fieldsets = [
         (lazy_gettext('User info'),
          {'fields': ['username', 'active', 'roles', 'login_count', 'learning_groups', 'tried_questions',
-                     'correct_questions', 'extra']}),
+                     'correct_questions', 'correct_percentage']}),
         (lazy_gettext('Personal Info'),
          {'fields': ['first_name', 'last_name', 'email'], 'expanded': True}),
         (lazy_gettext('Audit Info'),
@@ -32,7 +32,7 @@ class ExtendedUserDBModelView(UserDBModelView):
 
     user_show_fieldsets = [
         (lazy_gettext('User info'),
-         {'fields': ['username', 'learning_groups', 'tried_questions', 'correct_questions']}),
+         {'fields': ['username', 'learning_groups', 'tried_questions', 'correct_questions', 'correct_percentage']}),
         (lazy_gettext('Personal Info'),
          {'fields': ['first_name', 'last_name', 'email'], 'expanded': True}),
     ]
