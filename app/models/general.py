@@ -8,7 +8,7 @@ from flask import Markup, g, url_for, request
 from flask_appbuilder import Model
 from flask_appbuilder.filemanager import ImageManager
 from flask_appbuilder.models.mixins import ImageColumn, AuditMixin
-from flask_appbuilder.security.sqla.models import User
+from flask_appbuilder.security.sqla.models import User, RegisterUser
 from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, Float, Enum, DateTime, Sequence, Table
 from sqlalchemy.orm import relationship
 
@@ -335,6 +335,11 @@ class ExtendedUser(User):
             return '0 %'
         else:
             return f'{int(round(self.correct_questions() / self.tried_questions(), 2) * 100)} %'
+
+
+class ExtendedRegisterUser(RegisterUser):
+    __tablename__ = 'ab_register_user'
+    role = Column(String(255))  # TODO: should be relation
 
 
 class AssocUserQuestion(Model):

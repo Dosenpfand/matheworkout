@@ -3,15 +3,19 @@ import datetime
 import secrets
 
 from flask import g, redirect, url_for, flash, abort, current_app
-from flask_appbuilder import action, expose, has_access, PublicFormView
+from flask_appbuilder import action, expose, has_access, PublicFormView, const
+from flask_appbuilder._compat import as_unicode
 from flask_appbuilder.security.forms import ResetPasswordForm
+from flask_appbuilder.security.registerviews import RegisterUserDBView
 from flask_appbuilder.security.views import UserDBModelView, UserInfoEditView
 from flask_babel import lazy_gettext
 from flask_mail import Mail, Message
 
 from app import db
 from app.models.general import ExtendedUser
-from app.security.forms import ForgotPasswordForm
+from app.security.forms import ForgotPasswordForm, ExtendedRegisterUserDBForm
+
+log = logging.getLogger(__name__)
 
 
 class ExtendedUserDBModelView(UserDBModelView):
@@ -262,3 +266,65 @@ class ResetForgotPasswordView(PublicFormView):
                 appbuilder=self.appbuilder,
                 form=form,
             )
+
+
+class ExtendedRegisterUserDBView(RegisterUserDBView):
+
+    form = ExtendedRegisterUserDBForm
+    redirect_url = "/"
+
+    def add_registration(self, username, first_name, last_name, email, password, role):
+        register_user = self.appbuilder.sm.add_register_user(
+            username, first_name, last_name, email, password, role
+        )
+        if register_user:
+            if self.send_email(register_user):
+                flash(as_unicode(self.message), "info")
+                return register_user
+            else:
+                flash(as_unicode(self.error_message), "danger")
+                self.appbuilder.sm.del_register_user(register_user)
+                return None
+
+    @expose("/activation/<string:activation_hash>")
+    def activation(self, activation_hash):
+        reg = self.appbuilder.sm.find_register_user(activation_hash)
+        if not reg:
+            log.error(const.LOGMSG_ERR_SEC_NO_REGISTER_HASH.format(activation_hash))
+            flash(as_unicode(self.false_error_message), "danger")
+            return redirect(self.appbuilder.get_url_for_index)
+        print(f'{reg.role=}')
+        print(f'{self.appbuilder.sm.find_role(reg.role)}')
+        if not self.appbuilder.sm.add_user(
+            username=reg.username,
+            email=reg.email,
+            first_name=reg.first_name,
+            last_name=reg.last_name,
+            role=self.appbuilder.sm.find_role(reg.role),
+            hashed_password=reg.password,
+        ):
+            flash(as_unicode(self.error_message), "danger")
+            return redirect(self.appbuilder.get_url_for_index)
+        else:
+            self.appbuilder.sm.del_register_user(reg)
+            return self.render_template(
+                self.activation_template,
+                username=reg.username,
+                first_name=reg.first_name,
+                last_name=reg.last_name,
+                appbuilder=self.appbuilder,
+            )
+
+    def form_get(self, form):
+        self.add_form_unique_validations(form)
+
+    def form_post(self, form):
+        self.add_form_unique_validations(form)
+        self.add_registration(
+            username=form.username.data,
+            first_name=form.first_name.data,
+            last_name=form.last_name.data,
+            email=form.email.data,
+            password=form.password.data,
+            role=form.role.data,
+        )
