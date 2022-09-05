@@ -2,8 +2,10 @@ from app import appbuilder
 from app.security.views import ExtendedUserDBModelTeacherView, ForgotPasswordFormView, \
     ResetForgotPasswordView
 from app.views.forms import QuestionSelfAssessedFormView, Question2of5FormView, Question1of6FormView, \
-    Question3to3FormView, Question2DecimalsFormView, Question1DecimalFormView, QuestionSelect4FormView, DeleteStatsFormView
-from app.views.general import QuestionRandom, AssignmentModelTeacherView, UtilExtendedView, IdToForm, JoinLearningGroup
+    Question3to3FormView, Question2DecimalsFormView, Question1DecimalFormView, QuestionSelect4FormView, \
+    DeleteStatsFormView
+from app.views.general import QuestionRandom, AssignmentModelTeacherView, UtilExtendedView, IdToForm, JoinLearningGroup, \
+    DataProtectionView, ImprintView
 from app.views.models import Question2of5ModelView, Question1of6ModelView, Question3to3ModelView, \
     Question2DecimalsModelView, Question1DecimalModelView, QuestionSelfAssessedModelView, QuestionSelect4ModelView, \
     QuestionModelView, AssocUserQuestionModelView, AssignmentModelAdminView, AssignmentModelStudentView, \
@@ -177,3 +179,5 @@ appbuilder.add_view_no_menu(JoinLearningGroup())
 appbuilder.add_view_no_menu(ExtendedUserDBModelTeacherView())
 appbuilder.add_view_no_menu(ForgotPasswordFormView())
 appbuilder.add_view_no_menu(ResetForgotPasswordView())
+appbuilder.add_view_no_menu(DataProtectionView())
+appbuilder.add_view_no_menu(ImprintView())

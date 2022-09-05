@@ -105,4 +105,6 @@ FAB_SECURITY_MANAGER_CLASS = 'app.security.general.ExtendedSecurityManager'
 FAB_BASE_TEMPLATE = 'extended_base.html'
 FAB_INDEX_VIEW = 'app.views.index.ExtendedIndexView'
 
+SITE_EMAIL = 'info@matheworkout.at'
+
 PASSWORD_RESET_TOKEN_EXPIRATION_HOURS = 12

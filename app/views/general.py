@@ -150,3 +150,24 @@ class JoinLearningGroup(BaseView):
             flash('Klasse nicht gefunden', 'danger')
 
         return redirect(url_for('ExtendedIndexView.index'))
+
+
+class DataProtectionView(BaseView):
+    route_base = ""
+    default_view = "data_protection"
+    template = "data_protection.html"
+
+    @expose("/data_protection")
+    def data_protection(self):
+        self.update_redirect()
+        return self.render_template(self.template, appbuilder=self.appbuilder)
+
+class ImprintView(BaseView):
+    route_base = ""
+    default_view = "imprint"
+    template = "imprint.html"
+
+    @expose("/imprint")
+    def imprint(self):
+        self.update_redirect()
+        return self.render_template(self.template, appbuilder=self.appbuilder)

@@ -1,0 +1,210 @@
+{% extends "appbuilder/base.html" %}
+
+{% block content %}
+        <h1 class="card-title">Datenschutz</h1>
+        <div>
+        Der Verarbeitung personenbezogener Daten und der damit verbundene Datenschutz dieser Website erfolgt
+        entsprechend den Grundsätzen der <abbr title="Datenschutzgrundverordnung">DSGVO</abbr>:
+        </div>
+        <ul>
+            <li>Rechtmäßigkeit, Verarbeitung nach Treu und Glauben, Transparenz</li>
+            <li>Zweckbindung</li>
+            <li>Richtigkeit</li>
+            <li>Speicherbegrenzung</li>
+            <li>Integrität und Vertraulichkeit</li>
+            <li>Rechenschaftspflicht</li>
+        </ul>
+
+        <h2>Verantwortlicher</h2>
+        <div>
+            Für den Datenschutz dieser Webseite verantwortlich ist:<br>
+            Erwin Premstaller<br>
+            Holzstraße 44/3<br>
+            4020 Linz<br>
+            Österreich<br>
+            E-Mail: <a href="mailto:{{ config['SITE_EMAIL'] }}">{{ config['SITE_EMAIL'] }}</a>
+        </div>
+
+        <h2>Personenbezogenen Daten</h2>
+
+        <h3>Server-Logs</h3>
+        <div>
+            Die von der Webseite Webserver-Software speichert bei Seitenaufrufen folgende Daten:
+        <ul>
+            <li>IP-Adresse</li>
+            <li>Datum und Uhrzeit</li>
+            <li><abbr title="Hypertext Transfer Protocol">HTTP</abbr>-Request-Methode</li>
+            <li>Ressource/URL</li>
+            <li>HTTP-Protokoll-Version</li>
+            <li>HTTP-Status-Code</li>
+            <li>Dateigröße der Antwort</li>
+            <li>Referrer</li>
+            <li>User Agent (Browser, inklusive Version und Betriebssystem)</li>
+        </ul>
+        </div>
+        <div>
+            Diese Daten werden gespeichert um die Sicherheit (Abwehr gegen und Analyse von Hacker-Angriffen) und die
+            Verfügbarkeit (Analyse von Fehlverhalten) des Dienstes sicherzustellen.
+        </div>
+        <div>
+            Die Speicherdauer dieser Daten beträgt 14 Tage. Sie werden nach Ablauf dieser Frist automatisiert gelöscht.
+        </div>
+
+        <h3>Cookies</h3>
+        <div>
+            Diese Seite verwendet 1st Party Session Cookies. Das sind Textdateien, die der Dienst an den Browser der
+            betroffenen Person sendet und in nachfolgenden Anfragen dieser zurückgesendet werden. Diese sind temporär
+            und können nicht dienstübergeifend ausgelesen werden.
+            In diesen Cookies sind folgende Daten gespeichert:
+        <ul>
+            <li>Anmelde-Status</li>
+            <li>Sprache</li>
+            <li>Aufgerufene Ressourcen</li>
+            <li>weitere technische und sicherheitsrelevante Informationen (z.B. <abbr
+                    title="Cross Site Request Forgery">CSRF</abbr>-Token und Signatur)
+            </li>
+        </ul>
+        </div>
+        <div>
+            Diese Daten werden gespeichert, um die grundlegende Funktionalität des Dienstes sicherzustellen.
+        </div>
+        <div>
+            Da es sich bei den verwendeten Cookies um sogenannte Session Cookies handelt, werden die darin enthaltenen
+            Daten am Ende der Sitzung gelöscht. Dies kann, je nach Browser und Benutzereinstellungen, nach Verlassen der
+            Seite oder nach Schließen des Browser-Fensters passieren.
+        </div>
+
+        <h3>Profil</h3>
+        <div>
+            In der vom Dienst der betroffenen Person zur Verfügung gestellten
+            <a href="{{appbuilder.get_url_for_userinfo}}">Profil-Funktionalität</a>
+            kann sie folgende Daten eingeben, die gespeichert werden:
+        <ul>
+            <li>Benutzername</li>
+            <li>Vorname</li>
+            <li>Nachname</li>
+            <li>E-Mail-Adresse</li>
+            <li>Passwort (gehashed)</li>
+            <li>Benutzerrolle (lehrend oder lernend)</li>
+        </ul>
+        </div>
+        <div>
+            Die Speicherung dieser Daten erfolgt auf Grundlage der Einwilligung der betroffenen Person.
+            Sie dient dazu, ihr die grundlegende Funktionalität dieses Dienstes zur Verfügung zu stellen.
+            Dazu gehört die statistische Auswertung, von richtig und falsch beantworteten Aufgaben.
+        </div>
+        <div>
+            Diese Daten werden so lange gespeichert bis ein Konto beim zugrundeliegenden Dienst besteht. Dieses Konto
+            kann jederzeit gelöscht werden, siehe <a href="#right_to_delete">Recht auf Löschung</a>. Damit einhergehend
+            erfolgt die Löschung der Profildaten.
+        </div>
+
+        <h3>Aufgabenauswertung</h3>
+        <div>
+            Zur Bearbeitung der einzelnen vom Dienst zur Verfügung gestellten Aufgaben werden folgende Eingaben erfasst,
+            die gespeichert werden:
+        <ul>
+            <li>falsch beantwortete Aufgaben</li>
+            <li>richtig beantwortete Aufgaben</li>
+            <li>Themengebiet der Aufgaben</li>
+            <li>Bearbeitungszeitpunkt</li>
+            <li>Anteil richtig beantwortete Aufgaben</li>
+        </ul>
+        </div>
+        <div>
+            Die Speicherung dieser Daten erfolgt auf Grundlage der Einwilligung der betroffenen Person.
+            Sie dient dazu, ihr die grundlegende Funktionalität dieses Dienstes zur Verfügung zu stellen.
+            Dazu gehört die statistische Auswertung, welche Aufgaben und Themengebiete beherrscht oder nicht beherrscht
+            werden.
+        </div>
+        <div>
+            Diese Daten werden so lange gespeichert bis sie von der betroffenen Person gelöscht werden. Dies kann durch
+            Zurücksetzen der Benutzerstatistik im <a href="{{appbuilder.get_url_for_userinfo}}">Benutzerprofil</a>
+            erfolgen.
+            Alternativ besteht die
+            Möglichkeit der Löschung des gesamten Benutzerkontos, siehe <a href="#right_to_delete">Recht auf
+            Löschung</a>. Damit einhergehend erfolgt die Löschung aller Datensätze des Reisetagebuchs der betroffenen
+            Person.
+        </div>
+
+        <h3>Lehrende-Lernende-Beziehung</h3>
+        <div>
+            Nach Beitritt zu einer von einem Lehrenden verwalteten Klasse, hat dieser Einsicht in folgende
+            personenbezogenen Daten des Lernenden:
+        <ul>
+            <li>Vorname</li>
+            <li>Nachname</li>
+            <li>Status (richtig/falsch) der einem Aufgabenpaket zugewiesenen Aufgaben</li>
+        </ul>
+        </div>
+
+        <h2>Inhalte von Drittanbietern</h2>
+        <h3>hCaptcha</h3>
+        <div>
+            Der Registrierungsprozess des Dienstes ist durch ein <abbr
+                title="completely automated public Turing test to tell computers and humans apart">CAPTCHA</abbr>
+            gesichert. Dieses Verfahren wird vom externen
+            Dienstleister reCAPTCHA von Google bereitgestellt. Dazu werden Inhalte von <a
+                href="https://www.gstatic.com/">gstatic.com</a>
+            eingebunden.
+            Diese Inhalte werden lediglich auf der <a href="{{appbuilder.sm.get_url_for_registeruser}}">Registrierungs-Seite</a>
+            eingebunden.
+            Die Einbindung dieses Inhalts dient zur Absicherung des Dienstes gegen automatisierte Benutzerregistrierung,
+            und dient somit zur Sicherstellung des Betriebs.
+        </div>
+        <div>
+            Welche Daten und auf welcher Grundlage diese von reCAPTCHA erhoben werden, sowie wie lange diese gespeichert
+            werden kann vom Betroffenen in den <a href="https://policies.google.com/privacy?hl=de">Datenschutzbestimmungen
+            von
+            Google</a> eingesehen werden.
+        </div>
+
+        <h2>Auskunftsrecht</h2>
+        Die betroffenen Person hat die Möglichkeit, alle sie betreffenden personenbezogenen Daten einzusehen. Dazu kann
+        eine E-Mail an <a
+            href="mailto:{{ config['SITE_EMAIL'] }}">{{ config['SITE_EMAIL'] }}</a> gesendet werden.
+        Des Weiteren, hat die betroffene Person das Recht, eine Bestätigung zu verlangen, ob und inwiefern sie
+        betreffende personenbezogenen Daten verarbeitet werden. Kontaktieren Sie dazu bitte formlos <a
+            href="mailto:{{ config['SITE_EMAIL'] }}">{{ config['SITE_EMAIL'] }}</a>.
+
+        <h2>Beschwerderecht</h2>
+        <div>
+            Die betroffene Person hat das Recht, Beschwerde über die Verarbeitung ihrer personenbezogenen Daten
+            einzureichen.
+            Die dafür zuständige Aufsichtsbehörde ist die Datenschutzbehörde der Republik Österreich:<br>
+            Österreichische Datenschutzbehörde<br>
+            Barichgasse 40-42<br>
+            1030 Wien<br>
+            Webseite: <a href="https://www.dsb.gv.at">www.dsb.gv.at</a>
+        </div>
+
+        <h2>Automatisierten Entscheidungsfindung</h2>
+        <div>
+            Der Verantwortliche, bzw. diese Webseite setzt keine automatisierte Entscheidungsfindung einschließlich
+            Profiling ein.
+        </div>
+
+        <h2>Recht auf Berichtigung</h2>
+        <div>
+            Die betroffenen Person hat die Möglichkeit, alle sie betreffenden personenbezogenen Daten zu berichtigen.
+            Dazu kann eine E-Mail an <a
+                href="mailto:{{ config['SITE_EMAIL'] }}">{{ config['SITE_EMAIL'] }}</a> gesendet werden.
+            Alle weiteren personenbezogenen Daten können über die <a href="{{appbuilder.get_url_for_userinfo}}">Profil-Funktionalität</a>
+            berichtigt werden.
+        </div>
+
+        <h2 id="right_to_delete">Recht auf Löschung</h2>
+        <div>
+            Die betroffene Person hat die Möglichkeit, alle sie betreffenden personenbezogenen Daten löschen zu lassen.
+            Dazu kann eine E-Mail an <a
+                href="mailto:{{ config['SITE_EMAIL'] }}">{{ config['SITE_EMAIL'] }}</a> gesendet werden. Eine
+            Wiederherstellung jeglicher Daten ist nach erfolgter Löschung nicht mehr möglich.
+        </div>
+
+        <h2>Recht auf Datenübertragbarkeit</h2>
+        <div>
+            Die betroffene Person hat die Möglichkeit, alle sie betreffenden personenbezogenen Daten bereitgestellt zu
+            bekommen. Dazu kann eine E-Mail an <a
+                href="mailto:{{ config['SITE_EMAIL'] }}">{{ config['SITE_EMAIL'] }}</a> gesendet werden.
+        </div>
+{% endblock %}

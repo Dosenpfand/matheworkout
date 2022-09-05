@@ -1,0 +1,13 @@
+{% extends "appbuilder/base.html" %}
+
+{% block content %}
+<h1>Impressum</h1>
+<div>
+    Für den Inhalt dieser Webseite verantwortlich ist:<br>
+    Erwin Premstaller<br>
+    Holzstraße 44/3<br>
+    4020 Linz<br>
+    Österreich<br>
+    E-Mail: <a href="mailto:{{ config['SITE_EMAIL'] }}">{{ config['SITE_EMAIL'] }}</a>
+</div>
+{% endblock %}
