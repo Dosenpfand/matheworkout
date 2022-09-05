@@ -293,8 +293,6 @@ class ExtendedRegisterUserDBView(RegisterUserDBView):
             log.error(const.LOGMSG_ERR_SEC_NO_REGISTER_HASH.format(activation_hash))
             flash(as_unicode(self.false_error_message), "danger")
             return redirect(self.appbuilder.get_url_for_index)
-        print(f'{reg.role=}')
-        print(f'{self.appbuilder.sm.find_role(reg.role)}')
         if not self.appbuilder.sm.add_user(
             username=reg.username,
             email=reg.email,
