@@ -1,9 +1,8 @@
 import logging
 import re
 
-from flask import url_for, g
+from flask import url_for
 from markupsafe import Markup
-from sqlalchemy import func
 
 from app import db
 from app.models.general import Question, Topic, QuestionUserState, Assignment, Category
@@ -81,6 +80,7 @@ def safe_math_eval(string):
     string = string.replace(",", ".")
     string = string.replace('%', '*0.01')
     allowed_chars = "0123456789+-*(). /"
+    string = string.replace(' ',  '')
     if string == '':
         return ''
 
