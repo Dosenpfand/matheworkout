@@ -99,7 +99,7 @@ AUTH_USER_REGISTRATION_ROLE = 'Student'
 
 AUTH_ROLE_ADMIN = "Admin"
 AUTH_ROLE_PUBLIC = "Public"
-APP_NAME = "Mathe Üben"
+APP_NAME = "matheworkout"
 APP_THEME = ""
 FAB_SECURITY_MANAGER_CLASS = 'app.security.general.ExtendedSecurityManager'
 FAB_BASE_TEMPLATE = 'extended_base.html'

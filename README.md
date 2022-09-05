@@ -1,4 +1,4 @@
-# matheueben
+# MatheWorkout
 
 Practice for the Austrian high school certificate exam (matura) in maths.
 
@@ -40,4 +40,4 @@ flask fab create-db
 
 ## Live instance
 
-A live instance of the project is reachable at [matheueben.eu](https://matheueben.eu/).
+A live instance of the project is reachable at [matheworkout.at](https://matheworkout.at/).
