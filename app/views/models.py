@@ -191,6 +191,11 @@ class AssignmentModelAdminView(ModelView):
     add_title = title
     edit_title = title
 
+    related_views = [QuestionModelView]
+
+    show_template = "show_cascade_expanded.html"
+    edit_template = "appbuilder/general/model/edit_cascade.html"
+
     add_form_query_rel_fields = {'learning_group': [['created_by', FilterEqualFunction, lambda: g.user]]}
     edit_form_query_rel_fields = {'learning_group': [['created_by', FilterEqualFunction, lambda: g.user]]}
 

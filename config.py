@@ -65,7 +65,6 @@ FAB_ROLES = {
         ["questions_.*", "menu_access"],
         ["random_.*", "menu_access"],
         ["topics", "menu_access"],
-        ["assignments_student", "menu_access"],
         [".*", "can_get"],
         [".*", "can_info"],
         [".*", "can_this_form_get"],
