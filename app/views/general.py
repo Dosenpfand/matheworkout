@@ -1,5 +1,3 @@
-from random import randrange
-
 from flask import url_for, Response, flash, g, abort
 from flask_appbuilder import BaseView, has_access, expose
 from sqlalchemy import func
@@ -13,7 +11,8 @@ from app.models.general import QuestionType, Question, Assignment, Topic, Learni
 class QuestionRandom(BaseView):
     route_base = "/"
 
-    def get_random_question(self, topic=None):
+    @staticmethod
+    def get_random_question(topic=None):
         if not topic:
             return db.session.query(Question).options(load_only('id')).offset(
                 func.floor(func.random() * db.session.query(func.count(Question.id)))
@@ -161,6 +160,7 @@ class DataProtectionView(BaseView):
     def data_protection(self):
         self.update_redirect()
         return self.render_template(self.template, appbuilder=self.appbuilder)
+
 
 class ImprintView(BaseView):
     route_base = ""

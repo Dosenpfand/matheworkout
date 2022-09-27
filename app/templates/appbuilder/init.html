@@ -12,7 +12,7 @@
     {% block head_meta %}
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <!-- TODO -->
+      {# TODO #}
       <meta name="description" content="">
       <meta name="author" content="">
       <meta name="keywords" content="">
@@ -44,13 +44,61 @@
       <script src="{{url_for('appbuilder.static',filename='datepicker/bootstrap-datepicker.js')}}"></script>
       <script src="{{url_for('appbuilder.static',filename='select2/select2.js')}}"></script>
       <script src="{{url_for('appbuilder.static',filename='js/ab.js')}}"></script>
-      <!-- TODO: Might need template js?-->
+      <script src="{{url_for('static',filename='js/confetti.browser.min.js')}}"></script>
+      {# TODO: Might need template js? #}
     {% endblock %}
 
     {% block add_tail_js %}
     {% endblock %}
 
+    {% block confetti %}
+    {% if fire_confetti %}
+    <script type="text/javascript">
+        var count = 200;
+        var defaults = {
+          origin: { y: 0.7 },
+          ticks: 200,
+          disableForReducedMotion: true
+        };
+
+        function fire(particleRatio, opts) {
+          confetti(Object.assign({}, defaults, opts, {
+            particleCount: Math.floor(count * particleRatio)
+          }));
+        }
+
+        window.addEventListener('load', function () {
+          setTimeout(function() {
+            fire(0.25, {
+              spread: 26,
+              startVelocity: 55,
+            });
+            fire(0.2, {
+              spread: 60,
+            });
+            fire(0.35, {
+              spread: 100,
+              decay: 0.91,
+              scalar: 0.8
+            });
+            fire(0.1, {
+              spread: 120,
+              startVelocity: 25,
+              decay: 0.92,
+              scalar: 1.2
+            });
+            fire(0.1, {
+              spread: 120,
+              startVelocity: 45,
+            });
+          }, 500);
+        })
+    </script>
+    {% endif %}
+    {% endblock %}
+
     {% block tail %}
     {% endblock %}
+
   </body>
 </html>

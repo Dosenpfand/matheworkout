@@ -199,6 +199,7 @@ class AssignmentModelAdminView(ModelView):
     add_form_query_rel_fields = {'learning_group': [['created_by', FilterEqualFunction, lambda: g.user]]}
     edit_form_query_rel_fields = {'learning_group': [['created_by', FilterEqualFunction, lambda: g.user]]}
 
+
 class LearningGroupModelView(ModelView):
     datamodel = SQLAInterface(LearningGroup)
     base_filters = [['created_by', FilterEqualFunction, lambda: g.user]]
@@ -222,6 +223,7 @@ class LearningGroupModelView(ModelView):
     edit_template = "appbuilder/general/model/edit_cascade.html"
     # TODO: not needed?
     # list_widget = ExtendedListNoButtonsWidget
+
 
 class AssignmentModelStudentView(ModelView):
     datamodel = SQLAInterface(Assignment)

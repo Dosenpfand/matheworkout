@@ -115,6 +115,7 @@ class QuestionSelfAssessedFormView(QuestionFormView):
     def form_get(self, form):
         question_result = get_question(QuestionType.self_assessed.value, self.id)
         assignment_progress = None
+        is_answer_correct = False
 
         if question_result is None:
             description = 'Es existieren keine Fragen zu diesem Thema und Typ.'
@@ -129,11 +130,9 @@ class QuestionSelfAssessedFormView(QuestionFormView):
             external_id = question_result.external_id
 
             assignment_progress = self.get_assignment_progress(question_result.id)
-
             answer_value = request.args.get('answer')
-            if answer_value:
-                is_answer_correct = False
 
+            if answer_value:
                 if answer_value == 'CORRECT':
                     is_answer_correct = True
 
@@ -152,14 +151,17 @@ class QuestionSelfAssessedFormView(QuestionFormView):
                 back_count = 1
                 self.update_redirect()
 
-        self.extra_args = {'question': {
-            'description': description,
-            'external_id': external_id,
-            'submit_text': submit_text,
-            'back_count': back_count,
-            'forward_text': forward_text,
-            'forward_url': forward_url,
-            'assignment_progress': assignment_progress}}
+        self.extra_args = {
+            'question': {
+                'description': description,
+                'external_id': external_id,
+                'submit_text': submit_text,
+                'back_count': back_count,
+                'forward_text': forward_text,
+                'forward_url': forward_url,
+                'assignment_progress': assignment_progress
+            },
+            'fire_confetti': is_answer_correct}
 
     def form_post(self, form):
         question_id = int(form.id.data)
@@ -306,7 +308,8 @@ class Question2of5FormView(QuestionFormView):
                                         'video_embed_url': result.video_embed_url(),
                                         'forward_text': forward_text,
                                         'forward_url': forward_url,
-                                        'assignment_progress': assignment_progress}}
+                                        'assignment_progress': assignment_progress},
+                           'fire_confetti': is_answer_correct}
 
         widgets = self._get_edit_widget(form=form)
         return self.render_template(
@@ -444,7 +447,8 @@ class Question1of6FormView(QuestionFormView):
                                         'video_embed_url': result.video_embed_url(),
                                         'forward_text': forward_text,
                                         'forward_url': forward_url,
-                                        'assignment_progress': assignment_progress}}
+                                        'assignment_progress': assignment_progress},
+                           'fire_confetti': is_answer_correct}
 
         widgets = self._get_edit_widget(form=form)
         return self.render_template(
@@ -592,7 +596,8 @@ class Question3to3FormView(QuestionFormView):
                                         'video_embed_url': result.video_embed_url(),
                                         'forward_text': forward_text,
                                         'forward_url': forward_url,
-                                        'assignment_progress': assignment_progress}}
+                                        'assignment_progress': assignment_progress},
+                           'fire_confetti': is_answer_correct}
 
         widgets = self._get_edit_widget(form=form)
         return self.render_template(
@@ -683,7 +688,8 @@ class Question2DecimalsFormView(QuestionFormView):
                                         'video_embed_url': result.video_embed_url(),
                                         'forward_text': forward_text,
                                         'forward_url': forward_url,
-                                        'assignment_progress': assignment_progress}}
+                                        'assignment_progress': assignment_progress},
+                           'fire_confetti': is_answer_correct}
 
         widgets = self._get_edit_widget(form=form)
         return self.render_template(
@@ -756,7 +762,8 @@ class Question1DecimalFormView(QuestionFormView):
                                         'video_embed_url': result.video_embed_url(),
                                         'forward_text': forward_text,
                                         'forward_url': forward_url,
-                                        'assignment_progress': assignment_progress}}
+                                        'assignment_progress': assignment_progress},
+                           'fire_confetti': is_answer_correct}
 
         widgets = self._get_edit_widget(form=form)
         return self.render_template(
@@ -895,7 +902,8 @@ class QuestionSelect4FormView(QuestionFormView):
                                         'video_embed_url': result.video_embed_url(),
                                         'forward_text': forward_text,
                                         'forward_url': forward_url,
-                                        'assignment_progress': assignment_progress}}
+                                        'assignment_progress': assignment_progress},
+                           'fire_confetti': is_answer_correct}
 
         widgets = self._get_edit_widget(form=form)
         return self.render_template(
@@ -912,7 +920,7 @@ class DeleteStatsFormView(SimpleFormView):
     form_template = 'edit_additional.html'
     edit_widget = ExtendedEditWidget
     extra_args = {'question': {'description': 'Die Benutzerstatistik beinhaltet alle bereits gelösten Aufgaben.',
-                  'submit_text': 'Löschen'}}
+                               'submit_text': 'Löschen'}}
 
     def form_get(self, form):
         pass
