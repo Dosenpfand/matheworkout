@@ -292,6 +292,8 @@ class TopicModelStudentView(ModelView):
     list_widget = ExtendedListNoButtonsWidget
 
     formatters_columns = {'id': link_formatter_topic}
+    base_order = ('id', 'asc')
+    page_size = 100
 
     @action('random_question', 'Zufallsaufgabe', confirmation=None, icon='fa-question', multiple=False)
     def random_question(self, item):
