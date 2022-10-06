@@ -292,6 +292,10 @@ class Assignment(Model, AuditMixin):
     </a>
 </div>''')
 
+    def student_link(self):
+        url = url_for('AssignmentModelStudentView.show', pk=self.id, _external=True)
+        return Markup(f'<a href="{url}">{url}</a>')
+
 
 class LearningGroup(Model, AuditMixin):
     id = Column(Integer, primary_key=True)

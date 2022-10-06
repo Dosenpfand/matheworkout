@@ -177,13 +177,15 @@ class AssignmentModelAdminView(ModelView):
     list_columns = ['name', 'learning_group', 'additional_links']
     add_columns = ['name', 'learning_group', 'assigned_questions', 'starts_on', 'is_due_on']
     edit_columns = ['name', 'learning_group', 'assigned_questions', 'starts_on', 'is_due_on']
+    show_columns = ['name', 'learning_group', 'starts_on', 'is_due_on', 'student_link']
 
     label_columns = {'name': 'Titel',
                      'learning_group': 'Klasse',
                      'starts_on': 'Erhalten am',
                      'is_due_on': 'Fällig am',
                      'assigned_questions': 'Fragen',
-                     'additional_links': 'Auswertung'}
+                     'additional_links': 'Auswertung',
+                     'student_link': 'Link für Schüler'}
 
     title = 'Hausübungen'
     list_title = title
