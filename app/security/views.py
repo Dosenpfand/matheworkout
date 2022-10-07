@@ -117,6 +117,8 @@ class ExtendedUserDBModelTeacherView(ExtendedUserDBModelView):
         'last_name',
     ]
 
+    base_order = ('last_name', 'asc')
+
 
 class ExtendedUserInfoEditView(UserInfoEditView):
     form_title = 'Benutzerinformationen bearbeiten'
