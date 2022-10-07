@@ -74,6 +74,8 @@ class ExtendedUserDBModelView(UserDBModelView):
         'answered_questions'
     ]
 
+    base_order = ('id', 'asc')
+
     @expose("/userinfo/")
     @has_access
     def userinfo(self):
