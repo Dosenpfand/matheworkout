@@ -300,7 +300,8 @@ class Assignment(Model, AuditMixin):
 class LearningGroup(Model, AuditMixin):
     id = Column(Integer, primary_key=True)
     name = Column(String(150), nullable=False)
-    users = relationship("ExtendedUser", secondary=assoc_user_learning_group, back_populates="learning_groups")
+    users = relationship("ExtendedUser", secondary=assoc_user_learning_group, back_populates="learning_groups",
+                         order_by="ExtendedUser.last_name.asc()")
     assignments = relationship("Assignment", back_populates="learning_group")
     join_token = Column(String(255), default=secrets.token_urlsafe())
 
