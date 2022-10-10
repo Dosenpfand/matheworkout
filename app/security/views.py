@@ -4,7 +4,6 @@ import secrets
 
 from flask import g, redirect, url_for, flash, abort, current_app
 from flask_appbuilder import action, expose, has_access, PublicFormView, const
-from flask_appbuilder._compat import as_unicode
 from flask_appbuilder.security.forms import ResetPasswordForm
 from flask_appbuilder.security.registerviews import RegisterUserDBView
 from flask_appbuilder.security.views import UserDBModelView, UserInfoEditView
@@ -283,10 +282,10 @@ class ExtendedRegisterUserDBView(RegisterUserDBView):
         )
         if register_user:
             if self.send_email(register_user):
-                flash(as_unicode(self.message), "info")
+                flash(self.message, "info")
                 return register_user
             else:
-                flash(as_unicode(self.error_message), "danger")
+                flash(self.error_message, "danger")
                 self.appbuilder.sm.del_register_user(register_user)
                 return None
 
@@ -295,7 +294,7 @@ class ExtendedRegisterUserDBView(RegisterUserDBView):
         reg = self.appbuilder.sm.find_register_user(activation_hash)
         if not reg:
             log.error(const.LOGMSG_ERR_SEC_NO_REGISTER_HASH.format(activation_hash))
-            flash(as_unicode(self.false_error_message), "danger")
+            flash(self.false_error_message, "danger")
             return redirect(self.appbuilder.get_url_for_index)
         if not self.appbuilder.sm.add_user(
             username=reg.username,
@@ -305,7 +304,7 @@ class ExtendedRegisterUserDBView(RegisterUserDBView):
             role=self.appbuilder.sm.find_role(reg.role),
             hashed_password=reg.password,
         ):
-            flash(as_unicode(self.error_message), "danger")
+            flash(self.error_message, "danger")
             return redirect(self.appbuilder.get_url_for_index)
         else:
             self.appbuilder.sm.del_register_user(reg)
