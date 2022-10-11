@@ -1,0 +1,42 @@
+{% import 'appbuilder/general/lib.html' as lib %}
+
+{% if cellsets %}
+    <div class="row">
+    {% for cellset_item in cellsets %}
+        <div class="col-md-6 col-sm-6 col-2">
+        <div class="widget">
+        {% if cellset_item[1].get('expanded') == None %}
+            {% set expanded = True %}
+        {% else %}
+            {% set expanded = cellset_item[1].get('expanded') %}
+        {% endif %}
+        {% call lib.accordion_tag(loop.index,cellset_item[0], expanded) %}
+        <div class="table-responsive">
+            <table class="table table-responsive table-bordered">
+                {% for item in cellset_item[1].get('fields') %}
+                    <tr>
+                        <td>
+                            {{ cells[item] }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        {% endcall %}
+        </div>
+        </div>
+    {% endfor %}
+    </div>
+{% else %}
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            {% for cell in cells %}
+                <tr>
+                    <td>
+                        {{ cell }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endif %}

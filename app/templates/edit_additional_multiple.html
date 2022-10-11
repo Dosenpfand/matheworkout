@@ -1,0 +1,32 @@
+{% extends "appbuilder/general/model/edit.html" %}
+{% import 'appbuilder/general/lib.html' as lib %}
+
+{% block edit_form %}
+    <div id="Home" class="tab-pane active">
+        {% for question in questions %}
+
+            {% if question['options'] %}
+            {% set additional_col = options_to_additional_col(question['options']) %}
+            {% endif %}
+
+            {% if question['title'] %}
+            <h2>{{question['title']}}</h2>
+            {% endif %}
+            {% if question['external_id'] %}
+            <div class="well well-sm">
+                <strong>Frage Nr.: {{question['external_id']}}</strong>
+            </div>
+            {% endif %}
+            <div class="well well-sm"><strong>{{question['description']}}</strong></div>
+            {% if question['after_description'] %}
+            <div class="well well-sm">{{question['after_description']}}</div>
+            {% endif %}
+            {% if not question['error'] %}
+            {{ widgets.get('edit')(
+                cells=question['cells'],
+                cellsets=question['cellsets']
+                )|safe }}
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock %}

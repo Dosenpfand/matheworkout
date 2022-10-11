@@ -39,6 +39,7 @@ assoc_assignment_question = Table('assoc_assignment_question', Model.metadata,
 class Topic(Model):
     id = Column(Integer, primary_key=True)
     name = Column(String(500), nullable=False)
+    questions = relationship("Question", back_populates="topic", order_by="Question.external_id.asc()")
 
     def __repr__(self):
         return self.name
@@ -78,7 +79,7 @@ class Question(Model):
     id = Column(Integer, primary_key=True)
     external_id = Column(Integer, nullable=False, index=True)
     topic_id = Column(Integer, ForeignKey("topic.id"), nullable=False)
-    topic = relationship("Topic")
+    topic = relationship("Topic", back_populates="questions")
     category_id = Column(Integer, ForeignKey("category.id"), nullable=False)
     category = relationship("Category", back_populates="questions")
     description_image = Column(ImageColumn(size=(10000, 10000, True)))

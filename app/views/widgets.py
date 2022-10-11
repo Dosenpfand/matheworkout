@@ -11,3 +11,7 @@ class ExtendedListWidget(RenderTemplateWidget):
 
 class ExtendedListNoButtonsWidget(RenderTemplateWidget):
     template = 'extended_list_no_buttons.html'
+
+
+class ExtendedShowWidget(RenderTemplateWidget):
+    template = 'extended_show.html'
