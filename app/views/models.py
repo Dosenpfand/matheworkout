@@ -1,5 +1,5 @@
-from flask import g, redirect, url_for, abort
-from flask_appbuilder import ModelView, action, expose, has_access
+from flask import g, redirect, url_for
+from flask_appbuilder import ModelView, action
 from flask_appbuilder.models.sqla.filters import (
     FilterEqual,
     FilterEqualFunction,
@@ -28,10 +28,10 @@ from app.utils.general import (
     link_formatter_topic,
     link_formatter_topic_abbr,
 )
+from app.views.general import ShowQuestionDetailsMixIn
 from app.views.widgets import (
     ExtendedListWidget,
     ExtendedListNoButtonsWidget,
-    ExtendedShowWidget,
 )
 
 
@@ -310,7 +310,7 @@ class LearningGroupModelView(ModelView):
     edit_template = "appbuilder/general/model/edit_cascade.html"
 
 
-class AssignmentModelStudentView(ModelView):
+class AssignmentModelStudentView(ModelView, ShowQuestionDetailsMixIn):
     datamodel = SQLAInterface(Assignment)
     base_filters = [
         [
@@ -343,8 +343,10 @@ class AssignmentModelStudentView(ModelView):
 
     formatters_columns = {"id": link_formatter_assignment}
 
+    questions_col_name = "assigned_questions"
 
-class CategoryModelStudentView(ModelView):
+
+class CategoryModelStudentView(ModelView, ShowQuestionDetailsMixIn):
     datamodel = SQLAInterface(Category)
     base_filters = [["name", FilterNotEqual, "Aufgabenpool"]]
 
@@ -365,9 +367,8 @@ class CategoryModelStudentView(ModelView):
     formatters_columns = {"id": link_formatter_category}
 
 
-class TopicModelStudentView(ModelView):
+class TopicModelStudentView(ModelView, ShowQuestionDetailsMixIn):
     datamodel = SQLAInterface(Topic)
-    edit_widget = ExtendedShowWidget
 
     label_columns = {"id": "Titel"}
     list_columns = ["id"]
@@ -397,125 +398,6 @@ class TopicModelStudentView(ModelView):
     def random_question(self, item):
         url = url_for("QuestionRandom.random_question_redirect", topic_id=item.id)
         return redirect(url)
-
-    @expose("/show_detail/<pk>", methods=["GET"])
-    @has_access
-    def show_detail(self, pk):
-        pk = self._deserialize_pk_if_composite(pk)
-
-        item = self.datamodel.get(pk, self._base_filters)
-        if not item:
-            abort(404)
-
-        questions = []
-        widgets = self._get_edit_widget(form=None)
-        for question in item.questions:
-            description = question.description_image_img()
-            external_id = question.external_id
-            current_question = {
-                "error": False,
-                "description": description,
-                "external_id": external_id,
-                "submit_text": None,
-                "assignment_progress": None,
-            }
-            # TODO: should be handled in Question class
-            if question.type == QuestionType.one_of_six:
-                current_question["cells"] = [
-                    question.get_option_image(question.option1_image),
-                    question.get_option_image(question.option2_image),
-                    question.get_option_image(question.option3_image),
-                    question.get_option_image(question.option4_image),
-                    question.get_option_image(question.option5_image),
-                    question.get_option_image(question.option6_image),
-                ]
-            elif question.type == QuestionType.two_of_five:
-                current_question["cells"] = [
-                    question.get_option_image(question.option1_image),
-                    question.get_option_image(question.option2_image),
-                    question.get_option_image(question.option3_image),
-                    question.get_option_image(question.option4_image),
-                    question.get_option_image(question.option5_image),
-                ]
-            elif question.type == QuestionType.three_to_three:
-                current_question["cellsets"] = [
-                    ("1", {"fields": ["checkbox1a", "checkbox1b", "checkbox1c"]}),
-                    ("2", {"fields": ["checkbox2a", "checkbox2b", "checkbox2c"]}),
-                ]
-
-                current_question["cells"] = {
-                    "checkbox1a": question.get_option_small_image(
-                        question.option1a_image
-                    ),
-                    "checkbox1b": question.get_option_small_image(
-                        question.option1b_image
-                    ),
-                    "checkbox1c": question.get_option_small_image(
-                        question.option1c_image
-                    ),
-                    "checkbox2a": question.get_option_small_image(
-                        question.option2a_image
-                    ),
-                    "checkbox2b": question.get_option_small_image(
-                        question.option2b_image
-                    ),
-                    "checkbox2c": question.get_option_small_image(
-                        question.option2c_image
-                    ),
-                }
-            elif question.type == QuestionType.select_four:
-                current_question["cellsets"] = [
-                    (
-                        "Antworten",
-                        {
-                            "fields": [
-                                "selection1",
-                                "selection2",
-                                "selection3",
-                                "selection4",
-                            ]
-                        },
-                    ),
-                    (
-                        "Optionen",
-                        {
-                            "fields": [
-                                "option1",
-                                "option2",
-                                "option3",
-                                "option4",
-                                "option5",
-                                "option6",
-                            ]
-                        },
-                    ),
-                ]
-
-                current_question["cells"] = {
-                    "option1": question.get_option_small_image(question.option1_image),
-                    "option2": question.get_option_small_image(question.option2_image),
-                    "option3": question.get_option_small_image(question.option3_image),
-                    "option4": question.get_option_small_image(question.option4_image),
-                    "option5": question.get_option_small_image(question.option5_image),
-                    "option6": question.get_option_small_image(question.option6_image),
-                    "selection1": question.get_option_small_image(
-                        question.selection1_image
-                    ),
-                    "selection2": question.get_option_small_image(
-                        question.selection2_image
-                    ),
-                    "selection3": question.get_option_small_image(
-                        question.selection3_image
-                    ),
-                    "selection4": question.get_option_small_image(
-                        question.selection4_image
-                    ),
-                }
-
-            questions.append(current_question)
-
-        self.extra_args = {"questions": questions}
-        return self.render_template("edit_additional_multiple.html", widgets=widgets)
 
 
 class QuestionModelIncorrectAnsweredView(ModelView):

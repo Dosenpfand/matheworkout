@@ -6,6 +6,7 @@ from werkzeug.utils import redirect
 
 from app import db
 from app.models.general import QuestionType, Question, Assignment, Topic, LearningGroup
+from app.views.widgets import ExtendedShowWidget
 
 
 class QuestionRandom(BaseView):
@@ -212,3 +213,137 @@ class ImprintView(BaseView):
     def imprint(self):
         self.update_redirect()
         return self.render_template(self.template, appbuilder=self.appbuilder)
+
+
+class ShowQuestionDetailsMixIn:
+    questions_col_name = "questions"
+    show_details_widget = ExtendedShowWidget
+
+    def __init__(self):
+        if not self.extra_args:
+            self.extra_args = None
+
+    def _get_show_details_widget(self, widgets=None):
+        widgets = widgets or {}
+        widgets["show_details"] = self.show_details_widget(route_base=self.route_base)
+        return widgets
+
+    @expose("/show_question_details/<pk>", methods=["GET"])
+    @has_access
+    def show_question_details(self, pk):
+        pk = self._deserialize_pk_if_composite(pk)
+
+        item = self.datamodel.get(pk, self._base_filters)
+        if not item:
+            abort(404)
+
+        questions = []
+        widgets = self._get_show_details_widget()
+
+        for question in getattr(item, self.questions_col_name):
+            description = question.description_image_img()
+            external_id = question.external_id
+            current_question = {
+                "error": False,
+                "description": description,
+                "external_id": external_id,
+                "submit_text": None,
+                "assignment_progress": None,
+            }
+            # TODO: should be handled in Question class
+            if question.type == QuestionType.one_of_six:
+                current_question["cells"] = [
+                    question.get_option_image(question.option1_image),
+                    question.get_option_image(question.option2_image),
+                    question.get_option_image(question.option3_image),
+                    question.get_option_image(question.option4_image),
+                    question.get_option_image(question.option5_image),
+                    question.get_option_image(question.option6_image),
+                ]
+            elif question.type == QuestionType.two_of_five:
+                current_question["cells"] = [
+                    question.get_option_image(question.option1_image),
+                    question.get_option_image(question.option2_image),
+                    question.get_option_image(question.option3_image),
+                    question.get_option_image(question.option4_image),
+                    question.get_option_image(question.option5_image),
+                ]
+            elif question.type == QuestionType.three_to_three:
+                current_question["cellsets"] = [
+                    ("1", {"fields": ["checkbox1a", "checkbox1b", "checkbox1c"]}),
+                    ("2", {"fields": ["checkbox2a", "checkbox2b", "checkbox2c"]}),
+                ]
+
+                current_question["cells"] = {
+                    "checkbox1a": question.get_option_small_image(
+                        question.option1a_image
+                    ),
+                    "checkbox1b": question.get_option_small_image(
+                        question.option1b_image
+                    ),
+                    "checkbox1c": question.get_option_small_image(
+                        question.option1c_image
+                    ),
+                    "checkbox2a": question.get_option_small_image(
+                        question.option2a_image
+                    ),
+                    "checkbox2b": question.get_option_small_image(
+                        question.option2b_image
+                    ),
+                    "checkbox2c": question.get_option_small_image(
+                        question.option2c_image
+                    ),
+                }
+            elif question.type == QuestionType.select_four:
+                current_question["cellsets"] = [
+                    (
+                        "Antworten",
+                        {
+                            "fields": [
+                                "selection1",
+                                "selection2",
+                                "selection3",
+                                "selection4",
+                            ]
+                        },
+                    ),
+                    (
+                        "Optionen",
+                        {
+                            "fields": [
+                                "option1",
+                                "option2",
+                                "option3",
+                                "option4",
+                                "option5",
+                                "option6",
+                            ]
+                        },
+                    ),
+                ]
+
+                current_question["cells"] = {
+                    "option1": question.get_option_small_image(question.option1_image),
+                    "option2": question.get_option_small_image(question.option2_image),
+                    "option3": question.get_option_small_image(question.option3_image),
+                    "option4": question.get_option_small_image(question.option4_image),
+                    "option5": question.get_option_small_image(question.option5_image),
+                    "option6": question.get_option_small_image(question.option6_image),
+                    "selection1": question.get_option_small_image(
+                        question.selection1_image
+                    ),
+                    "selection2": question.get_option_small_image(
+                        question.selection2_image
+                    ),
+                    "selection3": question.get_option_small_image(
+                        question.selection3_image
+                    ),
+                    "selection4": question.get_option_small_image(
+                        question.selection4_image
+                    ),
+                }
+
+            questions.append(current_question)
+
+        self.extra_args = {"questions": questions}
+        return self.render_template("edit_additional_multiple.html", widgets=widgets)

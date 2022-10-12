@@ -22,7 +22,7 @@
             <div class="well well-sm">{{question['after_description']}}</div>
             {% endif %}
             {% if not question['error'] %}
-            {{ widgets.get('edit')(
+            {{ widgets.get('show_details')(
                 cells=question['cells'],
                 cellsets=question['cellsets']
                 )|safe }}
