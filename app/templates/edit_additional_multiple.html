@@ -9,24 +9,28 @@
             {% set additional_col = options_to_additional_col(question['options']) %}
             {% endif %}
 
-            {% if question['title'] %}
-            <h2>{{question['title']}}</h2>
-            {% endif %}
-            {% if question['external_id'] %}
-            <div class="well well-sm">
-                <strong>Frage Nr.: {{question['external_id']}}</strong>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    {% if question['title'] %}
+                    <h2>{{question['title']}}</h2>
+                    {% endif %}
+                    {% if question['external_id'] %}
+                    <div class="well well-sm">
+                        <strong>Frage Nr.: {{question['external_id']}}</strong>
+                    </div>
+                    {% endif %}
+                    <div class="well well-sm"><strong>{{question['description']}}</strong></div>
+                    {% if question['after_description'] %}
+                    <div class="well well-sm">{{question['after_description']}}</div>
+                    {% endif %}
+                    {% if not question['error'] %}
+                    {{ widgets.get('show_details')(
+                        cells=question['cells'],
+                        cellsets=question['cellsets']
+                        )|safe }}
+                    {% endif %}
+                </div>
             </div>
-            {% endif %}
-            <div class="well well-sm"><strong>{{question['description']}}</strong></div>
-            {% if question['after_description'] %}
-            <div class="well well-sm">{{question['after_description']}}</div>
-            {% endif %}
-            {% if not question['error'] %}
-            {{ widgets.get('show_details')(
-                cells=question['cells'],
-                cellsets=question['cellsets']
-                )|safe }}
-            {% endif %}
         {% endfor %}
     </div>
 {% endblock %}

@@ -228,8 +228,8 @@ class ShowQuestionDetailsMixIn:
         widgets["show_details"] = self.show_details_widget(route_base=self.route_base)
         return widgets
 
-    @expose("/show_question_details/<pk>", methods=["GET"])
     @has_access
+    @expose("/show_question_details/<pk>", methods=["GET"])
     def show_question_details(self, pk):
         pk = self._deserialize_pk_if_composite(pk)
 
