@@ -241,14 +241,12 @@ class ShowQuestionDetailsMixIn:
         widgets = self._get_show_details_widget()
 
         for question in getattr(item, self.questions_col_name):
-            description = question.description_image_img()
-            external_id = question.external_id
+
             current_question = {
                 "error": False,
-                "description": description,
-                "external_id": external_id,
-                "submit_text": None,
-                "assignment_progress": None,
+                "description": question.description_image_img(),
+                "external_id": question.external_id,
+                "category": question.category.name,
             }
             # TODO: should be handled in Question class
             if question.type == QuestionType.one_of_six:

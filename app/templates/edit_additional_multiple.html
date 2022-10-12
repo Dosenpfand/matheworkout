@@ -9,15 +9,16 @@
             {% set additional_col = options_to_additional_col(question['options']) %}
             {% endif %}
 
-            <div class="panel panel-default">
+            <div class="panel panel-default" style="page-break-after: always;">
                 <div class="panel-body">
                     {% if question['title'] %}
                     <h2>{{question['title']}}</h2>
                     {% endif %}
                     {% if question['external_id'] %}
-                    <div class="well well-sm">
-                        <strong>Frage Nr.: {{question['external_id']}}</strong>
-                    </div>
+                    <ol class="breadcrumb">
+                        <li><strong>Frage Nr.: {{ question['external_id'] }}</strong></li>
+                        <li>{{ question['category'] }}</li>
+                    </ol>
                     {% endif %}
                     <div class="well well-sm"><strong>{{question['description']}}</strong></div>
                     {% if question['after_description'] %}
