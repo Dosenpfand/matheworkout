@@ -7,7 +7,6 @@ from app.utils.general import safe_math_eval
 
 
 class FlexibleDecimalField(FloatField):
-
     def process_formdata(self, valuelist):
         if valuelist:
             valuelist[0] = safe_math_eval(valuelist[0])
@@ -45,12 +44,12 @@ class Question3to3Form(QuestionForm):
 
 
 class Question2DecimalsForm(QuestionForm):
-    value1 = FlexibleDecimalField(label='Ergebnis 1')
-    value2 = FlexibleDecimalField(label='Ergebnis 2')
+    value1 = FlexibleDecimalField(label="Ergebnis 1")
+    value2 = FlexibleDecimalField(label="Ergebnis 2")
 
 
 class Question1DecimalForm(QuestionForm):
-    value = FlexibleDecimalField(label='Ergebnis')
+    value = FlexibleDecimalField(label="Ergebnis")
 
 
 class QuestionSelect4Form(QuestionForm):
@@ -65,4 +64,7 @@ class QuestionSelfAssessedForm(QuestionForm):
 
 
 class DeleteStatsForm(DynamicForm):
-    user_is_sure = BooleanField(label='Bist du sicher?', validators=[NoneOf([False], message='Muss ausgewählt sein.')])
+    user_is_sure = BooleanField(
+        label="Bist du sicher?",
+        validators=[NoneOf([False], message="Muss ausgewählt sein.")],
+    )

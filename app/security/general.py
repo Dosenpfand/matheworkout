@@ -6,7 +6,11 @@ from flask_appbuilder.security.sqla.manager import SecurityManager
 from werkzeug.security import generate_password_hash
 
 from app.models.general import ExtendedUser, ExtendedRegisterUser
-from app.security.views import ExtendedUserDBModelView, ExtendedUserInfoEditView, ExtendedRegisterUserDBView
+from app.security.views import (
+    ExtendedUserDBModelView,
+    ExtendedUserInfoEditView,
+    ExtendedRegisterUserDBView,
+)
 
 log = logging.getLogger(__name__)
 
@@ -18,9 +22,7 @@ class ExtendedSecurityManager(SecurityManager):
     registeruserdbview = ExtendedRegisterUserDBView
     registeruser_model = ExtendedRegisterUser
 
-    def add_register_user(
-        self, username, first_name, last_name, email, password, role
-    ):
+    def add_register_user(self, username, first_name, last_name, email, password, role):
         register_user = self.registeruser_model()
         register_user.username = username
         register_user.email = email

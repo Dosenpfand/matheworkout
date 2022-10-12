@@ -18,62 +18,106 @@ log = logging.getLogger(__name__)
 
 
 class ExtendedUserDBModelView(UserDBModelView):
-    label_columns = {'username': 'Benutzername', 'learning_groups': 'Klassen', 'tried_questions': 'Gelöste Aufgaben',
-                     'correct_questions': 'Richtig gelöste Aufgaben', 'first_name': 'Vorname', 'last_name': 'Nachname',
-                     'email': 'E-Mail', 'correct_percentage': 'Anteil richtig'}
+    label_columns = {
+        "username": "Benutzername",
+        "learning_groups": "Klassen",
+        "tried_questions": "Gelöste Aufgaben",
+        "correct_questions": "Richtig gelöste Aufgaben",
+        "first_name": "Vorname",
+        "last_name": "Nachname",
+        "email": "E-Mail",
+        "correct_percentage": "Anteil richtig",
+    }
 
     show_fieldsets = [
-        (lazy_gettext('User info'),
-         {'fields': ['username', 'active', 'roles', 'login_count', 'learning_groups', 'tried_questions',
-                     'correct_questions', 'correct_percentage']}),
-        (lazy_gettext('Personal Info'),
-         {'fields': ['first_name', 'last_name', 'email'], 'expanded': True}),
-        (lazy_gettext('Audit Info'),
-         {'fields': ['last_login', 'fail_login_count', 'created_on',
-                     'created_by', 'changed_on', 'changed_by'], 'expanded': False}),
+        (
+            lazy_gettext("User info"),
+            {
+                "fields": [
+                    "username",
+                    "active",
+                    "roles",
+                    "login_count",
+                    "learning_groups",
+                    "tried_questions",
+                    "correct_questions",
+                    "correct_percentage",
+                ]
+            },
+        ),
+        (
+            lazy_gettext("Personal Info"),
+            {"fields": ["first_name", "last_name", "email"], "expanded": True},
+        ),
+        (
+            lazy_gettext("Audit Info"),
+            {
+                "fields": [
+                    "last_login",
+                    "fail_login_count",
+                    "created_on",
+                    "created_by",
+                    "changed_on",
+                    "changed_by",
+                ],
+                "expanded": False,
+            },
+        ),
     ]
 
     user_show_fieldsets = [
-        (lazy_gettext('User info'),
-         {'fields': ['username', 'learning_groups', 'tried_questions', 'correct_questions', 'correct_percentage']}),
-        (lazy_gettext('Personal Info'),
-         {'fields': ['first_name', 'last_name', 'email'], 'expanded': True}),
+        (
+            lazy_gettext("User info"),
+            {
+                "fields": [
+                    "username",
+                    "learning_groups",
+                    "tried_questions",
+                    "correct_questions",
+                    "correct_percentage",
+                ]
+            },
+        ),
+        (
+            lazy_gettext("Personal Info"),
+            {"fields": ["first_name", "last_name", "email"], "expanded": True},
+        ),
     ]
 
     add_columns = [
-        'first_name',
-        'last_name',
-        'username',
-        'active',
-        'email',
-        'roles',
-        'learning_groups',
-        'password',
-        'conf_password'
+        "first_name",
+        "last_name",
+        "username",
+        "active",
+        "email",
+        "roles",
+        "learning_groups",
+        "password",
+        "conf_password",
     ]
     list_columns = [
-        'first_name',
-        'last_name',
-        'username',
-        'email',
-        'learning_groups',
-        'tried_questions',
-        'correct_questions',
-        'correct_percentage',
-        'roles'
+        "first_name",
+        "last_name",
+        "username",
+        "email",
+        "learning_groups",
+        "tried_questions",
+        "correct_questions",
+        "correct_percentage",
+        "roles",
     ]
     edit_columns = [
-        'first_name',
-        'last_name',
-        'username',
-        'active',
-        'email',
-        'roles',
-        'learning_groups',
-        'answered_questions'
+        "first_name",
+        "last_name",
+        "username",
+        "active",
+        "email",
+        "roles",
+        "learning_groups",
+        "answered_questions",
     ]
 
-    base_order = ('id', 'asc')
+    base_order = ("id", "asc")
 
     @expose("/userinfo/")
     @has_access
@@ -103,41 +147,45 @@ class ExtendedUserDBModelView(UserDBModelView):
         multiple=False,
     )
     def delete_user_stats(self, item):
-        return redirect(url_for('DeleteStatsFormView.this_form_get'))
+        return redirect(url_for("DeleteStatsFormView.this_form_get"))
 
 
 class ExtendedUserDBModelTeacherView(ExtendedUserDBModelView):
-    title = 'Schüler'
+    title = "Schüler"
     list_title = title
     show_title = title
     add_title = title
     edit_title = title
 
     list_columns = [
-        'first_name',
-        'last_name',
+        "first_name",
+        "last_name",
     ]
 
-    base_order = ('last_name', 'asc')
+    base_order = ("last_name", "asc")
 
 
 class ExtendedUserInfoEditView(UserInfoEditView):
-    form_title = 'Benutzerinformationen bearbeiten'
+    form_title = "Benutzerinformationen bearbeiten"
 
 
 class ForgotPasswordFormView(PublicFormView):
     form = ForgotPasswordForm
-    form_template = 'forgot_password.html'
-    form_title = 'Vergessenes Passwort zurücksetzen'
-    email_template = 'password_reset_mail.html'
-    email_subject = current_app.config['APP_NAME'] + ' - Passwort zurücksetzen'
+    form_template = "forgot_password.html"
+    form_title = "Vergessenes Passwort zurücksetzen"
+    email_template = "password_reset_mail.html"
+    email_subject = current_app.config["APP_NAME"] + " - Passwort zurücksetzen"
 
     def send_email(self, user):
         mail = Mail(self.appbuilder.get_app)
         msg = Message()
         msg.subject = self.email_subject
-        url = url_for('ResetForgotPasswordView.this_form_get', _external=True, user_id=user.id,
-                      token=user.password_reset_token)
+        url = url_for(
+            "ResetForgotPasswordView.this_form_get",
+            _external=True,
+            user_id=user.id,
+            token=user.password_reset_token,
+        )
         msg.html = self.render_template(
             self.email_template,
             url=url,
@@ -171,13 +219,18 @@ class ForgotPasswordFormView(PublicFormView):
 
     def form_post(self, form):
         # Get user
-        user = db.session.query(ExtendedUser).filter_by(username=form.username.data).first()
+        user = (
+            db.session.query(ExtendedUser)
+            .filter_by(username=form.username.data)
+            .first()
+        )
 
         if user:
             # Generate token
             token = secrets.token_urlsafe()
             expiration = datetime.datetime.now() + datetime.timedelta(
-                hours=current_app.config['PASSWORD_RESET_TOKEN_EXPIRATION_HOURS'])
+                hours=current_app.config["PASSWORD_RESET_TOKEN_EXPIRATION_HOURS"]
+            )
             user.password_reset_token = token
             user.password_reset_expiration = expiration
             db.session.commit()
@@ -187,8 +240,9 @@ class ForgotPasswordFormView(PublicFormView):
 
         # Flash message
         flash(
-            'Falls dieser Benutzer existiert, haben Sie eine E-Mail mit einem Link zum Zurücksetzen des Passworts erhalten',
-            'info')
+            "Falls dieser Benutzer existiert, haben Sie eine E-Mail mit einem Link zum Zurücksetzen des Passworts erhalten",
+            "info",
+        )
         pass
 
     @expose("/form", methods=["POST"])
@@ -218,8 +272,12 @@ class ResetForgotPasswordView(PublicFormView):
     message = lazy_gettext("Password Changed")
 
     def form_get(self, form, user_id, token):
-        user = db.session.query(ExtendedUser).filter_by(id=user_id, password_reset_token=token).filter(
-            ExtendedUser.password_reset_expiration > datetime.datetime.now()).first()
+        user = (
+            db.session.query(ExtendedUser)
+            .filter_by(id=user_id, password_reset_token=token)
+            .filter(ExtendedUser.password_reset_expiration > datetime.datetime.now())
+            .first()
+        )
         return user
 
     @expose("/form/<int:user_id>/<string:token>", methods=["GET"])
@@ -242,12 +300,19 @@ class ResetForgotPasswordView(PublicFormView):
         )
 
     def form_post(self, form, user_id, token):
-        user = db.session.query(ExtendedUser).filter_by(id=user_id, password_reset_token=token).filter(
-            ExtendedUser.password_reset_expiration > datetime.datetime.now()).first()
+        user = (
+            db.session.query(ExtendedUser)
+            .filter_by(id=user_id, password_reset_token=token)
+            .filter(ExtendedUser.password_reset_expiration > datetime.datetime.now())
+            .first()
+        )
         if user:
             self.appbuilder.sm.reset_password(user_id, form.password.data)
-            flash(self.message, 'Ihr Passwort wurde geändert, Sie können sich jetzt damit anmelden')
-            return redirect(url_for('AuthDBView.login'))
+            flash(
+                self.message,
+                "Ihr Passwort wurde geändert, Sie können sich jetzt damit anmelden",
+            )
+            return redirect(url_for("AuthDBView.login"))
         else:
             return abort(404)
 

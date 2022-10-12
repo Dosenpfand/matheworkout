@@ -13,29 +13,42 @@ def link_formatter_question(q_id, filters=None):
     category_id = None
     external_id = db.session.query(Question).filter_by(id=q_id).first().external_id
     if filters:
-        assignment_id = filters.get_filter_value('assignments')
-        category_id = filters.get_filter_value('category')
+        assignment_id = filters.get_filter_value("assignments")
+        category_id = filters.get_filter_value("category")
 
-    url = url_for(f'IdToForm.id_to_form', q_id=q_id, assignment_id=assignment_id, category_id=category_id)
-    return Markup(f'<a class="btn btn-sm btn-primary btn-table" href="{url}">{external_id}</a>')
+    url = url_for(
+        f"IdToForm.id_to_form",
+        q_id=q_id,
+        assignment_id=assignment_id,
+        category_id=category_id,
+    )
+    return Markup(
+        f'<a class="btn btn-sm btn-primary btn-table" href="{url}">{external_id}</a>'
+    )
 
 
 def link_formatter_assignment(assignmend_id):
     name = db.session.query(Assignment).filter_by(id=assignmend_id).first().name
-    url = url_for('AssignmentModelStudentView.show', pk=assignmend_id)
-    return Markup(f'<a class="btn btn-sm btn-primary btn-table" href="{url}">{name}</a>')
+    url = url_for("AssignmentModelStudentView.show", pk=assignmend_id)
+    return Markup(
+        f'<a class="btn btn-sm btn-primary btn-table" href="{url}">{name}</a>'
+    )
 
 
 def link_formatter_category(category_id):
     name = db.session.query(Category).filter_by(id=category_id).first().name
-    url = url_for('CategoryModelStudentView.show', pk=category_id)
-    return Markup(f'<a class="btn btn-sm btn-primary btn-table" href="{url}">{name}</a>')
+    url = url_for("CategoryModelStudentView.show", pk=category_id)
+    return Markup(
+        f'<a class="btn btn-sm btn-primary btn-table" href="{url}">{name}</a>'
+    )
 
 
 def link_formatter_topic(topic_id):
     name = db.session.query(Topic).filter_by(id=topic_id).first().name
-    url = url_for('TopicModelStudentView.show', pk=topic_id)
-    return Markup(f'<a class="btn btn-sm btn-primary btn-table" href="{url}">{name}</a>')
+    url = url_for("TopicModelStudentView.show", pk=topic_id)
+    return Markup(
+        f'<a class="btn btn-sm btn-primary btn-table" href="{url}">{name}</a>'
+    )
 
 
 def link_formatter_topic_abbr(topic, filters=None):
@@ -58,18 +71,20 @@ def link_formatter_topic_abbr(topic, filters=None):
 def state_to_emoji_markup(state, filters=None):
     del filters
     if state is QuestionUserState.solved_success:
-        emoji = 'bi-emoji-sunglasses'
-        label = 'label-success'
-        title = 'Richtig gelöst'
+        emoji = "bi-emoji-sunglasses"
+        label = "label-success"
+        title = "Richtig gelöst"
     elif state is QuestionUserState.tried_failed:
-        emoji = 'bi-emoji-frown'
-        label = 'label-danger'
-        title = 'Falsch gelöst'
+        emoji = "bi-emoji-frown"
+        label = "label-danger"
+        title = "Falsch gelöst"
     else:
-        emoji = 'bi-emoji-neutral'
-        label = 'label-warning'
-        title = 'Kein Versuch'
-    return Markup(f'<span class="label {label}" title="{title}"><i class="bi {emoji}"></i></span>')
+        emoji = "bi-emoji-neutral"
+        label = "label-warning"
+        title = "Kein Versuch"
+    return Markup(
+        f'<span class="label {label}" title="{title}"><i class="bi {emoji}"></i></span>'
+    )
 
 
 def get_question(question_type, q_id):
@@ -78,15 +93,15 @@ def get_question(question_type, q_id):
 
 def safe_math_eval(string):
     string = string.replace(",", ".")
-    string = string.replace('%', '*0.01')
+    string = string.replace("%", "*0.01")
     allowed_chars = "0123456789+-*(). /"
-    string = string.replace(' ',  '')
-    if string == '':
-        return ''
+    string = string.replace(" ", "")
+    if string == "":
+        return ""
 
     for char in string:
         if char not in allowed_chars:
-            return ''
+            return ""
     return eval(string)
 
 

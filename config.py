@@ -83,7 +83,7 @@ FAB_ROLES = {
         ["AssignmentModelTeacherView", ".*"],
         ["TopicModelView", "can_list"],
         ["QuestionRandom", "can_random_question_redirect"],
-    ]
+    ],
 }
 
 # ------------------------------
@@ -94,16 +94,16 @@ IMG_UPLOAD_FOLDER = basedir + "/app/static/uploads/"
 IMG_UPLOAD_URL = "/static/uploads/"
 AUTH_TYPE = AUTH_DB
 AUTH_USER_REGISTRATION = True
-AUTH_USER_REGISTRATION_ROLE = 'Student'
+AUTH_USER_REGISTRATION_ROLE = "Student"
 
 AUTH_ROLE_ADMIN = "Admin"
 AUTH_ROLE_PUBLIC = "Public"
 APP_NAME = "MatheWorkout"
 APP_THEME = ""
-FAB_SECURITY_MANAGER_CLASS = 'app.security.general.ExtendedSecurityManager'
-FAB_BASE_TEMPLATE = 'extended_base.html'
-FAB_INDEX_VIEW = 'app.views.index.ExtendedIndexView'
+FAB_SECURITY_MANAGER_CLASS = "app.security.general.ExtendedSecurityManager"
+FAB_BASE_TEMPLATE = "extended_base.html"
+FAB_INDEX_VIEW = "app.views.index.ExtendedIndexView"
 
-SITE_EMAIL = 'info@matheworkout.at'
+SITE_EMAIL = "info@matheworkout.at"
 
 PASSWORD_RESET_TOKEN_EXPIRATION_HOURS = 12

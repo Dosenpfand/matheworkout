@@ -1,4 +1,8 @@
-from flask_appbuilder.fieldwidgets import BS3TextFieldWidget, BS3PasswordFieldWidget, Select2Widget
+from flask_appbuilder.fieldwidgets import (
+    BS3TextFieldWidget,
+    BS3PasswordFieldWidget,
+    Select2Widget,
+)
 from flask_appbuilder.forms import DynamicForm
 from flask_babel import lazy_gettext
 from flask_wtf import RecaptchaField
@@ -44,5 +48,9 @@ class ExtendedRegisterUserDBForm(DynamicForm):
         widget=BS3PasswordFieldWidget(),
     )
     # TODO: choices should not be hardcoded
-    role = SelectField('Rolle', choices=[('Student', 'Schüler'), ('Teacher', 'Lehrer')], widget=Select2Widget())
+    role = SelectField(
+        "Rolle",
+        choices=[("Student", "Schüler"), ("Teacher", "Lehrer")],
+        widget=Select2Widget(),
+    )
     recaptcha = RecaptchaField()
