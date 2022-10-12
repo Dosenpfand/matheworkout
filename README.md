@@ -1,5 +1,7 @@
 # MatheWorkout
 
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 Practice for the Austrian high school certificate exam (matura) in maths.
 
 ## Run
@@ -9,6 +11,16 @@ export FLASK_APP=app/__init__.py
 export FLASK_ENV=development
 flask fab create-admin
 flask run
+```
+
+## Setup local development
+Install additional dependencies
+```
+pip install -r requirements-dev.txt
+```
+and install the pre-commit hooks
+```
+pre-commit install
 ```
 
 ## Migrate database schema
