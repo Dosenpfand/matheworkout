@@ -348,7 +348,7 @@ class ShowQuestionDetailsMixIn:
 
     @action(
         "show_question_details_action",
-        "Alle Anzeigen",
+        "Alle Aufgaben anzeigen",
         confirmation=None,
         icon="fa-magnifying-glass",
         multiple=False,

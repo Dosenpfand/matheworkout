@@ -1,4 +1,4 @@
-from flask import g, redirect, url_for
+from flask import g, redirect, url_for, flash
 from flask_appbuilder import ModelView, action
 from flask_appbuilder.models.sqla.filters import (
     FilterEqual,
@@ -9,6 +9,7 @@ from flask_appbuilder.models.sqla.filters import (
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from wtforms import HiddenField
 
+from app import db
 from app.security.views import ExtendedUserDBModelTeacherView
 from app.utils.filters import FilterQuestionByAnsweredCorrectness
 from app.models.general import (
@@ -283,6 +284,22 @@ class AssignmentModelAdminView(ModelView, ShowQuestionDetailsMixIn):
     }
 
     questions_col_name = "assigned_questions"
+
+    @action(
+        "duplicate_assignment",
+        "Hausübung duplizieren",
+        confirmation=None,
+        icon="fa-paste",
+        multiple=False,
+    )
+    def duplicate_assignment(self, item):
+        duplicated = item.duplicate()
+        db.session.add(duplicated)
+        db.session.commit()
+
+        url = url_for(f"{self.__class__.__name__}.list")
+        flash("Hausübung dupliziert", "info")
+        return redirect(url)
 
 
 class LearningGroupModelView(ModelView):

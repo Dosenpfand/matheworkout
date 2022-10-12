@@ -376,6 +376,16 @@ class Assignment(Model, AuditMixin):
         url = url_for("AssignmentModelStudentView.show", pk=self.id, _external=True)
         return Markup(f'<a href="{url}">{url}</a>')
 
+    def duplicate(self):
+        return self.__class__(
+            name=f"{self.name} (Duplikat)",
+            learning_group_id=self.learning_group_id,
+            learning_group=self.learning_group,
+            assigned_questions=self.assigned_questions.copy(),
+            starts_on=self.starts_on,
+            is_due_on=self.is_due_on,
+        )
+
 
 class LearningGroup(Model, AuditMixin):
     id = Column(Integer, primary_key=True)
