@@ -308,8 +308,6 @@ class LearningGroupModelView(ModelView):
 
     show_template = "show_cascade_expanded.html"
     edit_template = "appbuilder/general/model/edit_cascade.html"
-    # TODO: not needed?
-    # list_widget = ExtendedListNoButtonsWidget
 
 
 class AssignmentModelStudentView(ModelView):
