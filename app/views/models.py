@@ -233,7 +233,7 @@ class AssocUserQuestionModelView(ModelView):
     list_columns = ["user", "question", "created_on", "is_answer_correct"]
 
 
-class AssignmentModelAdminView(ModelView):
+class AssignmentModelAdminView(ModelView, ShowQuestionDetailsMixIn):
     datamodel = SQLAInterface(Assignment)
     base_filters = [["created_by", FilterEqualFunction, lambda: g.user]]
 
@@ -281,6 +281,8 @@ class AssignmentModelAdminView(ModelView):
     edit_form_query_rel_fields = {
         "learning_group": [["created_by", FilterEqualFunction, lambda: g.user]]
     }
+
+    questions_col_name = "assigned_questions"
 
 
 class LearningGroupModelView(ModelView):

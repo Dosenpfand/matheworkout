@@ -1,5 +1,5 @@
 from flask import url_for, Response, flash, g, abort
-from flask_appbuilder import BaseView, has_access, expose
+from flask_appbuilder import BaseView, has_access, expose, action
 from sqlalchemy import func
 from sqlalchemy.orm import load_only
 from werkzeug.utils import redirect
@@ -347,3 +347,14 @@ class ShowQuestionDetailsMixIn:
 
         self.extra_args = {"questions": questions}
         return self.render_template("edit_additional_multiple.html", widgets=widgets)
+
+    @action(
+        "show_question_details_action",
+        "Alle Anzeigen",
+        confirmation=None,
+        icon="fa-magnifying-glass",
+        multiple=False,
+    )
+    def show_question_details_action(self, item):
+        url = url_for(f"{self.__class__.__name__}.show_question_details", pk=item.id)
+        return redirect(url)
