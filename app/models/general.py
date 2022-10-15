@@ -305,7 +305,7 @@ class Question(Model):
         return Markup(
             '<img src="'
             + im.get_url(option)
-            + '" alt="Photo" class="img-rounded img-responsive option-image" style="max-width:768px;">'
+            + '" alt="Photo" class="img-rounded img-responsive option-image">'
         )
 
     @staticmethod
@@ -314,7 +314,7 @@ class Question(Model):
         return Markup(
             '<img src="'
             + im.get_url(option)
-            + '" alt="Photo" class="img-rounded img-responsive" style="max-width:400px;">'
+            + '" alt="Photo" class="img-rounded img-responsive">'
         )
 
     # self_assessed only
@@ -333,7 +333,7 @@ class Question(Model):
         return Markup(
             '<img src="'
             + im.get_url(selection)
-            + '" alt="Photo" class="img-rounded img-responsive" style="min-width:100%;max-width:400px;">'
+            + '" alt="Photo" class="img-rounded img-responsive">'
         )
 
 
