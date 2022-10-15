@@ -3,7 +3,7 @@
 {% if cellsets %}
     <div class="row">
     {% for cellset_item in cellsets %}
-        <div class="col-md-6 col-sm-6 col-2">
+        <div class="col-xs-6 col-sm-6 col-6">
         <div class="widget">
         {% if cellset_item[1].get('expanded') == None %}
             {% set expanded = True %}
@@ -15,8 +15,11 @@
             <table class="table table-responsive table-bordered">
                 {% for item in cellset_item[1].get('fields') %}
                     <tr>
+                        <td style="width: 1.5cm">
+                            {{ cells[item][0] }}
+                        </td>
                         <td>
-                            {{ cells[item] }}
+                            {{ cells[item][1] }}
                         </td>
                     </tr>
                 {% endfor %}
@@ -34,6 +37,8 @@
                 <tr>
                     <td>
                         {{ cell }}
+                    </td>
+                    <td style="width: 1.5cm">
                     </td>
                 </tr>
             {% endfor %}

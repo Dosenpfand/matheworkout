@@ -273,23 +273,29 @@ class ShowQuestionDetailsMixIn:
                 ]
 
                 current_question["cells"] = {
-                    "checkbox1a": question.get_option_small_image(
-                        question.option1a_image
+                    "checkbox1a": (
+                        "",
+                        question.get_option_small_image(question.option1a_image),
                     ),
-                    "checkbox1b": question.get_option_small_image(
-                        question.option1b_image
+                    "checkbox1b": (
+                        "",
+                        question.get_option_small_image(question.option1b_image),
                     ),
-                    "checkbox1c": question.get_option_small_image(
-                        question.option1c_image
+                    "checkbox1c": (
+                        "",
+                        question.get_option_small_image(question.option1c_image),
                     ),
-                    "checkbox2a": question.get_option_small_image(
-                        question.option2a_image
+                    "checkbox2a": (
+                        "",
+                        question.get_option_small_image(question.option2a_image),
                     ),
-                    "checkbox2b": question.get_option_small_image(
-                        question.option2b_image
+                    "checkbox2b": (
+                        "",
+                        question.get_option_small_image(question.option2b_image),
                     ),
-                    "checkbox2c": question.get_option_small_image(
-                        question.option2c_image
+                    "checkbox2c": (
+                        "",
+                        question.get_option_small_image(question.option2c_image),
                     ),
                 }
             elif question.type == QuestionType.select_four:
@@ -321,23 +327,45 @@ class ShowQuestionDetailsMixIn:
                 ]
 
                 current_question["cells"] = {
-                    "option1": question.get_option_small_image(question.option1_image),
-                    "option2": question.get_option_small_image(question.option2_image),
-                    "option3": question.get_option_small_image(question.option3_image),
-                    "option4": question.get_option_small_image(question.option4_image),
-                    "option5": question.get_option_small_image(question.option5_image),
-                    "option6": question.get_option_small_image(question.option6_image),
-                    "selection1": question.get_option_small_image(
-                        question.selection1_image
+                    "option1": (
+                        "A",
+                        question.get_option_small_image(question.option1_image),
                     ),
-                    "selection2": question.get_option_small_image(
-                        question.selection2_image
+                    "option2": (
+                        "B",
+                        question.get_option_small_image(question.option2_image),
                     ),
-                    "selection3": question.get_option_small_image(
-                        question.selection3_image
+                    "option3": (
+                        "C",
+                        question.get_option_small_image(question.option3_image),
                     ),
-                    "selection4": question.get_option_small_image(
-                        question.selection4_image
+                    "option4": (
+                        "D",
+                        question.get_option_small_image(question.option4_image),
+                    ),
+                    "option5": (
+                        "E",
+                        question.get_option_small_image(question.option5_image),
+                    ),
+                    "option6": (
+                        "F",
+                        question.get_option_small_image(question.option6_image),
+                    ),
+                    "selection1": (
+                        "",
+                        question.get_option_small_image(question.selection1_image),
+                    ),
+                    "selection2": (
+                        "",
+                        question.get_option_small_image(question.selection2_image),
+                    ),
+                    "selection3": (
+                        "",
+                        question.get_option_small_image(question.selection3_image),
+                    ),
+                    "selection4": (
+                        "",
+                        question.get_option_small_image(question.selection4_image),
                     ),
                 }
 
