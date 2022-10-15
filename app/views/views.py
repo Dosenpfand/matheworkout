@@ -42,8 +42,17 @@ from app.views.models import (
     CategoryModelStudentView,
     CategoryModelAdminView,
     TopicModelStudentView,
+    LearningGroupModelAdminView,
 )
 
+appbuilder.add_view(
+    LearningGroupModelAdminView,
+    "all_classes",
+    label="Alle Klassen",
+    icon="fa-book",
+    category="Security",
+    category_icon="fa-book",
+)
 appbuilder.add_view(
     LearningGroupModelView,
     "classes",

@@ -329,6 +329,10 @@ class LearningGroupModelView(ModelView):
     edit_template = "appbuilder/general/model/edit_cascade.html"
 
 
+class LearningGroupModelAdminView(LearningGroupModelView):
+    base_filters = None
+
+
 class AssignmentModelStudentView(ModelView, ShowQuestionDetailsMixIn):
     datamodel = SQLAInterface(Assignment)
     base_filters = [
