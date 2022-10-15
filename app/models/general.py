@@ -270,7 +270,7 @@ class Question(Model):
         return Markup(
             '<img src="'
             + im.get_url(self.description_image)
-            + '" alt="Photo" class="img-rounded img-responsive">'
+            + '" alt="Photo" class="img-rounded img-responsive question-image">'
         )
 
     def video_embed_url(self):
@@ -305,7 +305,7 @@ class Question(Model):
         return Markup(
             '<img src="'
             + im.get_url(option)
-            + '" alt="Photo" class="img-rounded img-responsive" style="max-width:1024px;">'
+            + '" alt="Photo" class="img-rounded img-responsive option-image" style="max-width:768px;">'
         )
 
     @staticmethod

@@ -16,6 +16,30 @@
     #navbar-collapse {
         max-height: none;
     }
+
+    @media print {
+        .custom-navbar {
+            display: none;
+        }
+        .panel-heading {
+            display: none;
+        }
+        .question-image {
+            max-height: 8cm !important;
+        }
+        .option-image {
+            max-height: 2cm !important;
+        }
+        #top {
+            padding-top: 0;
+        }
+        section {
+            padding: 0;
+        }
+        .panel {
+            border: none;
+        }
+    }
 </style>
 <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" sizes="any">
 <link rel="icon" href="{{ url_for('static', filename='icon.svg') }}" type="image/svg+xml">
