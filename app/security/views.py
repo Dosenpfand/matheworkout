@@ -225,6 +225,13 @@ class ForgotPasswordFormView(PublicFormView):
             .first()
         )
 
+        if not user:
+            user = (
+                db.session.query(ExtendedUser)
+                .filter_by(email=form.username.data)
+                .first()
+            )
+
         if user:
             # Generate token
             token = secrets.token_urlsafe()
