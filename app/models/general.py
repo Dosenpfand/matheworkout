@@ -65,7 +65,9 @@ class Topic(Model):
 class Category(Model):
     id = Column(Integer, primary_key=True)
     name = Column(String(150), nullable=False)
-    questions = relationship("Question", back_populates="category")
+    questions = relationship(
+        "Question", back_populates="category", order_by="Question.external_id.asc()"
+    )
 
     def __repr__(self):
         return self.name
@@ -343,7 +345,10 @@ class Assignment(Model, AuditMixin):
     learning_group_id = Column(Integer, ForeignKey("learning_group.id"))
     learning_group = relationship("LearningGroup", back_populates="assignments")
     assigned_questions = relationship(
-        "Question", secondary=assoc_assignment_question, back_populates="assignments"
+        "Question",
+        secondary=assoc_assignment_question,
+        back_populates="assignments",
+        order_by="Question.external_id.asc()",
     )
     starts_on = Column(DateTime, nullable=False)
     is_due_on = Column(DateTime, nullable=False)
