@@ -5,31 +5,68 @@
             {% if current_user.is_authenticated %}
                 <h2>Hallo {{ current_user.first_name }}</h2>
                 <div class="col-md-6 col-sm-12">
+
                     <div class="panel panel-primary">
                         <div class="panel-heading"><h3 class="panel-title">Hausübungen</h3></div>
-                        <div class="panel-body">TODO</div>
+                        <div class="panel-body">
+                            Du hast gerade
+                            {%- if current_user.active_assignments()|length > 1 -%}
+                                &nbsp;die folgenden {{ current_user.active_assignments()|length }} aktiven Hausübungen:
+                            {%- else -%}
+                                &nbsp;die folgende aktive Hausübung:
+                            {%- endif -%}
+                        </div>
                         <ul class="list-group">
-                            <li class="list-group-item">derzeitig aktive hüs (mit fortschritt)</li>
-                            <li class="list-group-item">vergangene</li>
-                            <li class="list-group-item">zukünftige</li>
+                            <table class="table table-striped table-responsive">
+                                <thead>
+                                <tr>
+                                    <th>
+                                        Hausübung
+                                    </th>
+                                    <th>
+                                        Klasse
+                                    </th>
+                                    <th>
+                                        Fällig am
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for assignment in current_user.active_assignments() -%}
+                                    <tr>
+                                        <td>
+                                            <a href="{{ url_for("AssignmentModelStudentView.show", pk=assignment.id) }}">
+                                                {{ assignment.name }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            {{ assignment.learning_group.name }}
+                                        </td>
+                                        <td>
+                                            {{ assignment.is_due_on }}
+                                        </td>
+                                    </tr>
+                                {% endfor -%}
+                                </tbody>
+                            </table>
                         </ul>
                     </div>
 
                     <div class="panel panel-primary">
                         <div class="panel-heading"><h3 class="panel-title">Klassen</h3></div>
-                        <div class="panel-body">Du bist gerade Mitglied in den folgenden 2 Klassen.</div>
-                        <ul class="list-group">
-                            <li class="list-group-item">7A - Körergymnasium</li>
-                            <li class="list-group-item">Strebergruppe - Körnergymnasium</li>
-                        </ul>
-                        <div class="panel-footer">In der <a href="#">Klassenverwaltung</a> kannst du deine
-                            Mitgliedschaften in Klassen einsehen.
+                        <div class="panel-body">
+                            Du bist gerade Mitglied in
+                            {%- if current_user.learning_groups|length > 1 -%}
+                                &nbsp;den folgenden {{ current_user.learning_groups|length }} Klassen:
+                            {%- else -%}
+                                &nbsp;der folgenden Klasse:
+                            {%- endif -%}
                         </div>
-                    </div>
-
-                    <div class="panel panel-primary">
-                        <div class="panel-heading"><h3 class="panel-title">Maturaaufgaben</h3></div>
-                        <div class="panel-body">anzahl, aufforderung zum selbstständigen üben</div>
+                        <ul class="list-group">
+                            {% for learning_group in current_user.learning_groups -%}
+                                <li class="list-group-item">{{ learning_group.name }}</li>
+                            {% endfor -%}
+                        </ul>
                     </div>
                 </div>
 

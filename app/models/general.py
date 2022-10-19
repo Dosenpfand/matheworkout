@@ -1,7 +1,9 @@
 import datetime
 import enum
+import operator
 import re
 import secrets
+from functools import reduce
 from itertools import groupby
 from urllib.parse import urlparse, parse_qs
 
@@ -407,14 +409,16 @@ class LearningGroup(Model, AuditMixin):
         back_populates="learning_groups",
         order_by="ExtendedUser.last_name.asc()",
     )
-    assignments = relationship("Assignment", back_populates="learning_group")
+    assignments = relationship(
+        "Assignment", back_populates="learning_group", lazy="dynamic"
+    )
     join_token = Column(String(255), default=secrets.token_urlsafe())
 
     def __repr__(self):
         return self.name
 
     def join_url(self):
-        # TODO: check can be eliminated when all old classes have been deleted!
+        # TODO: check can be eliminated when all old learning groups have been deleted!
         if not self.join_token:
             return ""
 
@@ -430,11 +434,20 @@ class LearningGroup(Model, AuditMixin):
         full_url = root_url + join_path
         return Markup(f'<a href="{full_url}">{full_url}</a>')
 
+    def active_assignments(self):
+        now = datetime.datetime.now()
+        return self.assignments.filter(
+            Assignment.starts_on < now, Assignment.is_due_on > now
+        ).all()
+
 
 class ExtendedUser(User):
     __tablename__ = "ab_user"
     learning_groups = relationship(
-        "LearningGroup", secondary=assoc_user_learning_group, back_populates="users"
+        "LearningGroup",
+        secondary=assoc_user_learning_group,
+        back_populates="users",
+        order_by="LearningGroup.name.asc()",
     )
     answered_questions = relationship(
         "AssocUserQuestion",
@@ -456,6 +469,14 @@ class ExtendedUser(User):
             return "0 %"
         else:
             return f"{int(round(self.correct_questions() / self.tried_questions(), 2) * 100)} %"
+
+    def active_assignments(self):
+        # TODO: optimize?
+        return reduce(
+            operator.concat,
+            map(lambda group: group.active_assignments(), self.learning_groups),
+            [],
+        )
 
     def answered_by_topic(self):
         def get_topic_name(answer):
