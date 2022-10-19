@@ -364,8 +364,13 @@ class Assignment(Model, AuditMixin):
     def __repr__(self):
         return self.name
 
-    def starts_on_format_de(self):
-        return self.starts_on.strftime
+    @property
+    def starts_on_de(self):
+        return self.starts_on.strftime("%d.%m.%Y")
+
+    @property
+    def is_due_on_de(self):
+        return self.is_due_on.strftime("%d.%m.%Y")
 
     def additional_links(self):
         show_url = url_for("AssignmentModelTeacherView.show", assignment_id=self.id)

@@ -1,3 +1,4 @@
+from flask_appbuilder.fieldwidgets import DatePickerWidget
 from flask_appbuilder.widgets import RenderTemplateWidget
 
 
@@ -15,3 +16,13 @@ class ExtendedListNoButtonsWidget(RenderTemplateWidget):
 
 class ExtendedShowWidget(RenderTemplateWidget):
     template = "extended_show.html"
+
+
+class DatePickerWidgetDe(DatePickerWidget):
+    data_template = (
+        '<div class="input-group date appbuilder_date" id="datepicker">'
+        '<span class="input-group-addon"><i class="fa fa-calendar cursor-hand"></i>'
+        "</span>"
+        '<input class="form-control" data-format="dd.MM.yyyy" %(text)s />'
+        "</div>"
+    )

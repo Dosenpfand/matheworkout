@@ -2,6 +2,7 @@
 {% block content %}
     <div class="container" id="about">
         <div class="row">
+            {# TODO: only for students! #}
             {% if current_user.is_authenticated %}
                 <h2>Hallo {{ current_user.first_name }}</h2>
                 <div class="col-md-6 col-sm-12">
@@ -43,7 +44,7 @@
                                             {{ assignment.learning_group.name }}
                                         </td>
                                         <td>
-                                            {{ assignment.is_due_on }}
+                                            {{ assignment.is_due_on_de }}
                                         </td>
                                     </tr>
                                 {% endfor -%}

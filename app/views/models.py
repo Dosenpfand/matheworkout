@@ -7,7 +7,7 @@ from flask_appbuilder.models.sqla.filters import (
     FilterInFunction,
 )
 from flask_appbuilder.models.sqla.interface import SQLAInterface
-from wtforms import HiddenField
+from wtforms import HiddenField, DateField
 
 from app import db
 from app.security.views import ExtendedUserDBModelTeacherView
@@ -33,6 +33,7 @@ from app.views.general import ShowQuestionDetailsMixIn
 from app.views.widgets import (
     ExtendedListWidget,
     ExtendedListNoButtonsWidget,
+    DatePickerWidgetDe,
 )
 
 
@@ -253,13 +254,37 @@ class AssignmentModelAdminView(ModelView, ShowQuestionDetailsMixIn):
         "starts_on",
         "is_due_on",
     ]
-    show_columns = ["name", "learning_group", "starts_on", "is_due_on", "student_link"]
+    show_columns = [
+        "name",
+        "learning_group",
+        "starts_on_de",
+        "is_due_on_de",
+        "student_link",
+    ]
+
+    extra_fields = {
+        "starts_on": DateField(
+            "Erhalten am",
+            format="%d.%m.%Y",
+            widget=DatePickerWidgetDe(),
+        ),
+        "is_due_on": DateField(
+            "Fällig am",
+            format="%d.%m.%Y",
+            widget=DatePickerWidgetDe(),
+        ),
+    }
+
+    add_form_extra_fields = extra_fields
+    edit_form_extra_fields = extra_fields
 
     label_columns = {
         "name": "Titel",
         "learning_group": "Klasse",
         "starts_on": "Erhalten am",
         "is_due_on": "Fällig am",
+        "starts_on_de": "Erhalten am",
+        "is_due_on_de": "Fällig am",
         "assigned_questions": "Fragen",
         "additional_links": "Auswertung",
         "student_link": "Link für Schüler",
@@ -346,11 +371,11 @@ class AssignmentModelStudentView(ModelView, ShowQuestionDetailsMixIn):
     label_columns = {
         "id": "Titel",
         "learning_group": "Klasse",
-        "starts_on": "Erhalten am",
-        "is_due_on": "Fällig am",
+        "starts_on_de": "Erhalten am",
+        "is_due_on_de": "Fällig am",
     }
-    list_columns = ["id", "starts_on", "is_due_on"]
-    show_columns = ["name", "starts_on", "is_due_on"]
+    list_columns = ["id", "starts_on_de", "is_due_on_de"]
+    show_columns = ["name", "starts_on_de", "is_due_on_de"]
 
     title = "Hausübungen"
     list_title = title
