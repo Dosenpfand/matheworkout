@@ -29,8 +29,11 @@ LANGUAGES = {
 FAB_API_MAX_PAGE_SIZE = 100
 FAB_PASSWORD_COMPLEXITY_ENABLED = False
 
+STUDENT_ROLE_NAME = "Student"
+TEACHER_ROLE_NAME = "Teacher"
+
 FAB_ROLES = {
-    "Student": [
+    STUDENT_ROLE_NAME: [
         ["Question.*", "can_list"],
         ["AssignmentModelStudentView", "can_list"],
         ["AssignmentModelStudentView", "can_show"],
@@ -55,7 +58,7 @@ FAB_ROLES = {
         ["IdToForm", "can_id_to_form"],
         ["JoinLearningGroup", "can_join_learning_group"],
     ],
-    "Teacher": [
+    TEACHER_ROLE_NAME: [
         ["Question.*", "can_list"],
         ["AssignmentModelStudentView", "can_list"],
         ["AssignmentModelStudentView", "can_show"],
@@ -89,14 +92,15 @@ FAB_ROLES = {
 }
 
 # ------------------------------
-# GLOBALS FOR GENERAL APP's
+# GLOBALS FOR GENERAL APP
 # ------------------------------
+
 UPLOAD_FOLDER = basedir + "/app/static/uploads/"
 IMG_UPLOAD_FOLDER = basedir + "/app/static/uploads/"
 IMG_UPLOAD_URL = "/static/uploads/"
 AUTH_TYPE = AUTH_DB
 AUTH_USER_REGISTRATION = True
-AUTH_USER_REGISTRATION_ROLE = "Student"
+AUTH_USER_REGISTRATION_ROLE = STUDENT_ROLE_NAME
 
 AUTH_ROLE_ADMIN = "Admin"
 AUTH_ROLE_PUBLIC = "Public"

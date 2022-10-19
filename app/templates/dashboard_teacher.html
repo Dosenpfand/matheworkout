@@ -1,0 +1,21 @@
+<h2>Hallo {{ current_user.first_name }}</h2>
+<div class="col-md-6 col-sm-12">
+    <div class="panel panel-primary">
+        <div class="panel-heading"><h3 class="panel-title">Klassen</h3></div>
+        <div class="panel-body">
+            Um loszulegen führe folgende Schritte durch:
+        </div>
+        <ol class="list-group">
+            <li class="list-group-item">
+                1. Erstelle eine <a href="{{ url_for("LearningGroupModelView.list") }}">Klasse</a>
+            </li>
+            <li class="list-group-item">
+                2. Teile den Beitrittslink mit deinen Schülern
+            </li>
+            <li class="list-group-item">
+                3. Erstelle eine <a href="{{ url_for("AssignmentModelAdminView.list") }}">Hausübung</a> und teile sie
+                der Klasse zu
+            </li>
+        </ol>
+    </div>
+</div>

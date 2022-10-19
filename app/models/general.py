@@ -463,6 +463,9 @@ class ExtendedUser(User):
     password_reset_token = Column(String(255))
     password_reset_expiration = Column(DateTime)
 
+    def role_names(self):
+        return map(lambda role: role.name, self.roles)
+
     def tried_questions(self):
         return self.answered_questions.count()
 
