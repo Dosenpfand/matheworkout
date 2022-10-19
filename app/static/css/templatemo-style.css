@@ -104,6 +104,7 @@ http://www.templatemo.com/tm-516-known
 
   a {
     color: #252525;
+    font-weight: bold;
     -webkit-transition: 0.5s;
     transition: 0.5s;
     text-decoration: none !important;

@@ -53,16 +53,7 @@ def link_formatter_topic(topic_id):
 
 def link_formatter_topic_abbr(topic, filters=None):
     topic_name = topic.name
-    # TODO: common function
-    regex = r"^[a-zA-z]{1,4}\s*\d{1,4}(\.\d{1,4})?"
-    match = re.match(regex, topic_name)
-
-    if match:
-        topic_short_name = match.group()
-    elif len(topic_name) < 6:
-        topic_short_name = topic_name
-    else:
-        topic_short_name = topic_name[0:6]
+    topic_short_name = topic.get_short_name()
 
     return Markup(f'<abbr title="{topic_name}">{topic_short_name}</abbr>')
 

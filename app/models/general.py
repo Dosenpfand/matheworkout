@@ -2,6 +2,7 @@ import datetime
 import enum
 import re
 import secrets
+from itertools import groupby
 from urllib.parse import urlparse, parse_qs
 
 from flask import Markup, g, url_for, request
@@ -60,6 +61,20 @@ class Topic(Model):
 
     def __repr__(self):
         return self.name
+
+    def get_short_name(self):
+        topic_name = self.name
+        regex = r"^[a-zA-z]{1,4}\s*\d{1,4}(\.\d{1,4})?"
+        match = re.match(regex, topic_name)
+
+        if match:
+            short_name = match.group()
+        elif len(topic_name) < 6:
+            short_name = topic_name
+        else:
+            short_name = topic_name[0:6]
+
+        return short_name
 
 
 class Category(Model):
@@ -232,21 +247,12 @@ class Question(Model):
 
     # common
     def __repr__(self):
-        topic_name = self.topic.name
-        regex = r"^[a-zA-z]{1,4}\s*\d{1,4}(\.\d{1,4})?"
-        match = re.match(regex, topic_name)
+        topic_short_name = self.topic.get_short_name()
 
         if self.category:
             extended_info = f"{self.category.name} - "
         else:
             extended_info = ""
-
-        if match:
-            topic_short_name = match.group()
-        elif len(topic_name) < 6:
-            topic_short_name = topic_name
-        else:
-            topic_short_name = self.topic.name[0:6]
 
         return f"{self.external_id} ({extended_info}{topic_short_name})"
 
@@ -431,7 +437,10 @@ class ExtendedUser(User):
         "LearningGroup", secondary=assoc_user_learning_group, back_populates="users"
     )
     answered_questions = relationship(
-        "AssocUserQuestion", back_populates="user", lazy="dynamic"
+        "AssocUserQuestion",
+        back_populates="user",
+        lazy="dynamic",
+        order_by="AssocUserQuestion.created_on.asc()",
     )
     password_reset_token = Column(String(255))
     password_reset_expiration = Column(DateTime)
@@ -447,6 +456,79 @@ class ExtendedUser(User):
             return "0 %"
         else:
             return f"{int(round(self.correct_questions() / self.tried_questions(), 2) * 100)} %"
+
+    def answered_by_topic(self):
+        def get_topic_name(answer):
+            return answer.question.topic.get_short_name()
+
+        answers_by_topic = {}
+        correct_count_by_topic = {}
+        incorrect_count_by_topic = {}
+        for topic_name, question_group in groupby(
+            self.answered_questions, get_topic_name
+        ):
+            answers_by_topic[topic_name] = list(question_group)
+            correct_count_by_topic[topic_name] = len(
+                list(
+                    filter(lambda x: x.is_answer_correct, answers_by_topic[topic_name])
+                )
+            )
+            incorrect_count_by_topic[topic_name] = len(
+                list(
+                    filter(
+                        lambda x: not x.is_answer_correct, answers_by_topic[topic_name]
+                    )
+                )
+            )
+
+        return dict(
+            answers=answers_by_topic,
+            correct=correct_count_by_topic,
+            incorrect=incorrect_count_by_topic,
+        )
+
+    def answered_by_week(self):
+        def get_week_index(answer):
+            min_date = self.answered_questions[0].created_on
+            cluster_size = 7
+            return (answer.created_on - min_date).days // cluster_size
+
+        answers_by_week = {}
+        for week_index, question_group in groupby(
+            self.answered_questions, get_week_index
+        ):
+            answers_by_week[week_index] = list(question_group)
+        correct_count_by_week = []
+        incorrect_count_by_week = []
+        week_indices = []
+
+        if answers_by_week:
+            week_indices = list(range(0, max(answers_by_week.keys()) + 1))
+            for week_index in week_indices:
+                if answers_by_week.get(week_index):
+                    correct_count_by_week.append(
+                        len(
+                            list(
+                                filter(
+                                    lambda x: x.is_answer_correct,
+                                    answers_by_week[week_index],
+                                )
+                            )
+                        )
+                    )
+                    incorrect_count_by_week.append(
+                        len(answers_by_week[week_index])
+                        - correct_count_by_week[week_index]
+                    )
+                else:
+                    correct_count_by_week.append(0)
+                    incorrect_count_by_week.append(0)
+        return dict(
+            answers=answers_by_week,
+            correct=correct_count_by_week,
+            incorrect=incorrect_count_by_week,
+            week_indices=week_indices,
+        )
 
 
 class ExtendedRegisterUser(RegisterUser):
