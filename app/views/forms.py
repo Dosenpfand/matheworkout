@@ -1,4 +1,6 @@
-from flask import request, g, url_for, flash
+import datetime
+
+from flask import request, g, url_for, flash, current_app
 from flask_appbuilder import SimpleFormView, expose, has_access
 from markupsafe import Markup
 from sqlalchemy import asc
@@ -161,16 +163,39 @@ class QuestionFormView(SimpleFormView):
     ):
         self.update_redirect()
 
-        # Add entry to answered questions
-        answered_question = AssocUserQuestion(
-            is_answer_correct=is_answer_correct,
-            question=question,
+        # Check if user retries too fast
+        min_retry_time = datetime.datetime.now() - datetime.timedelta(
+            minutes=current_app.config["QUESTION_RETRY_MIN_MINUTES"]
         )
-        g.user.answered_questions.append(answered_question)
-        commit_safely(db.session)
+        min_retry_time_has_passed = (
+            g.user.answered_questions.filter_by(question_id=question.id)
+            .filter(AssocUserQuestion.created_on > min_retry_time)
+            .first()
+            is None
+        )
+
+        if min_retry_time_has_passed:
+            # Add entry to answered questions
+            answered_question = AssocUserQuestion(
+                is_answer_correct=is_answer_correct,
+                question=question,
+            )
+            g.user.answered_questions.append(answered_question)
+            commit_safely(db.session)
+        else:
+            message = (
+                "Da warst du wohl etwas zu schnell!<br>"
+                f"Bitte warte {current_app.config['QUESTION_RETRY_MIN_MINUTES']} Minuten "
+                "bevor du die selbe Frage nochmals beantwortest.<br>"
+                "Die Beantwortung dieser Frage wurde nicht gewertet."
+            )
 
         if message:
-            category = "success" if is_answer_correct else "danger"
+            category = (
+                "success"
+                if (is_answer_correct and min_retry_time_has_passed)
+                else "danger"
+            )
             flash(Markup(message), category)
 
         forward_text, forward_url = self.get_forward_button(question.id)
@@ -186,7 +211,7 @@ class QuestionFormView(SimpleFormView):
                 "assignment_progress": assignment_progress,
                 "options": options,
             },
-            "fire_confetti": is_answer_correct,
+            "fire_confetti": is_answer_correct and min_retry_time_has_passed,
         }
 
         if render:
@@ -628,9 +653,10 @@ class Question2DecimalsFormView(QuestionFormView):
             is_answer_correct = True
         else:
             message = (
-                f"<strong><div>FALSCH! Richtig gewesen wäre:</div>"
-                f"<div>{question.value1_lower_limit} ≤ Ergebnis 1 ≤ {question.value1_upper_limit}</div>"
-                f"<div>{question.value2_lower_limit} ≤ Ergebnis 2 ≤ {question.value2_upper_limit}</div></strong>"
+                "<strong><div>FALSCH! Richtig gewesen"
+                f" wäre:</div><div>{question.value1_lower_limit} ≤ Ergebnis 1 ≤"
+                f" {question.value1_upper_limit}</div><div>{question.value2_lower_limit} ≤"
+                f" Ergebnis 2 ≤ {question.value2_upper_limit}</div></strong>"
             )
             is_answer_correct = False
 
@@ -657,8 +683,9 @@ class Question1DecimalFormView(QuestionFormView):
             is_answer_correct = True
         else:
             message = (
-                "<strong><div>FALSCH! Richtig gewesen wäre:</div>"
-                f"<div>{question.value1_lower_limit} ≤ Ergebnis ≤ {question.value1_upper_limit}</div></strong>"
+                "<strong><div>FALSCH! Richtig gewesen"
+                f" wäre:</div><div>{question.value1_lower_limit} ≤ Ergebnis ≤"
+                f" {question.value1_upper_limit}</div></strong>"
             )
             is_answer_correct = False
 
@@ -753,7 +780,9 @@ class DeleteStatsFormView(SimpleFormView):
     edit_widget = ExtendedEditWidget
     extra_args = {
         "question": {
-            "description": "Die Benutzerstatistik beinhaltet alle bereits gelösten Aufgaben.",
+            "description": (
+                "Die Benutzerstatistik beinhaltet alle bereits gelösten Aufgaben."
+            ),
             "submit_text": "Löschen",
         }
     }

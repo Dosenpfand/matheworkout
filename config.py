@@ -113,3 +113,4 @@ FAB_INDEX_VIEW = "app.views.index.ExtendedIndexView"
 SITE_EMAIL = "info@matheworkout.at"
 
 PASSWORD_RESET_TOKEN_EXPIRATION_HOURS = 12
+QUESTION_RETRY_MIN_MINUTES = 5
