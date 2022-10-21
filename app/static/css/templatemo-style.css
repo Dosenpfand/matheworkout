@@ -185,8 +185,7 @@ a:hover, a:active, a:focus {
     color: #252020;
     width: 50%;
     height: 50px;
-    margin: 30px auto;
-    margin-bottom: 10px;
+    margin: 30px auto 10px;
 }
 
 .entry-form .submit-btn:hover {
@@ -270,7 +269,6 @@ section {
     -webkit-box-shadow: 0 1px 30px rgba(0, 0, 0, 0.1);
     -moz-box-shadow: 0 1px 30px rgba(0, 0, 0, 0.1);
     box-shadow: 0 1px 30px rgba(0, 0, 0, 0.1);
-    padding: 12px 0;
     margin-bottom: 0;
     padding: 0;
 }
@@ -391,20 +389,6 @@ section {
 .caption h3 a:hover {
     color: #FF3;
 }
-
-.home-slider .item-first {
-    background-image: url(../images/slider-image1.jpg);
-    background-position: center;
-}
-
-.home-slider .item-second {
-    background-image: url(../images/slider-image2.jpg);
-}
-
-.home-slider .item-third {
-    background-image: url(../images/slider-image3.jpg);
-}
-
 
 /*---------------------------------------
     FEATURE

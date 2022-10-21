@@ -56,11 +56,11 @@
     {% block confetti %}
     {% if fire_confetti %}
     <script type="text/javascript">
-        var count = 200;
-        var defaults = {
-          origin: { y: 0.7 },
-          ticks: 200,
-          disableForReducedMotion: true
+        const count = 200;
+        const defaults = {
+            origin: {y: 0.7},
+            ticks: 200,
+            disableForReducedMotion: true
         };
 
         function fire(particleRatio, opts) {

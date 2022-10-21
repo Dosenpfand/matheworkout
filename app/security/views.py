@@ -139,6 +139,7 @@ class ExtendedUserDBModelView(UserDBModelView):
             appbuilder=self.appbuilder,
         )
 
+    # noinspection PyUnusedLocal
     @action(
         "delete_user_stats",
         lazy_gettext("Benutzerstatistik löschen"),
@@ -197,8 +198,8 @@ class ForgotPasswordFormView(PublicFormView):
         try:
             mail.send(msg)
         except Exception as e:
-            log = logging.getLogger(__name__)
-            log.error("Send email exception: {0}".format(str(e)))
+            log_instance = logging.getLogger(__name__)
+            log_instance.error("Send email exception: {0}".format(str(e)))
             return False
         return True
 
@@ -258,10 +259,8 @@ class ForgotPasswordFormView(PublicFormView):
         self._init_vars()
         form = self.form.refresh()
         if form.validate_on_submit():
-            response = self.form_post(form)
-            if not response:
-                return redirect(self.get_redirect())
-            return response
+            self.form_post(form)
+            return redirect(self.get_redirect())
         else:
             widgets = self._get_edit_widget(form=form)
             return self.render_template(
@@ -279,6 +278,7 @@ class ResetForgotPasswordView(PublicFormView):
     redirect_url = "/"
     message = lazy_gettext("Password Changed")
 
+    # noinspection PyMethodOverriding
     def form_get(self, form, user_id, token):
         user = (
             db.session.query(ExtendedUser)
@@ -307,6 +307,7 @@ class ResetForgotPasswordView(PublicFormView):
             form=form,
         )
 
+    # noinspection PyMethodOverriding
     def form_post(self, form, user_id, token):
         user = (
             db.session.query(ExtendedUser)
@@ -349,6 +350,7 @@ class ExtendedRegisterUserDBView(RegisterUserDBView):
     form = ExtendedRegisterUserDBForm
     redirect_url = "/"
 
+    # noinspection PyMethodOverriding
     def add_registration(self, username, first_name, last_name, email, password, role):
         register_user = self.appbuilder.sm.add_register_user(
             username, first_name, last_name, email, password, role
@@ -369,6 +371,7 @@ class ExtendedRegisterUserDBView(RegisterUserDBView):
             log.error(const.LOGMSG_ERR_SEC_NO_REGISTER_HASH.format(activation_hash))
             flash(self.false_error_message, "danger")
             return redirect(self.appbuilder.get_url_for_index)
+        # noinspection PyArgumentList
         if not self.appbuilder.sm.add_user(
             username=reg.username,
             email=reg.email,

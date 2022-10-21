@@ -22,6 +22,7 @@ class ExtendedSecurityManager(SecurityManager):
     registeruserdbview = ExtendedRegisterUserDBView
     registeruser_model = ExtendedRegisterUser
 
+    # noinspection PyMethodOverriding
     def add_register_user(self, username, first_name, last_name, email, password, role):
         register_user = self.registeruser_model()
         register_user.username = username

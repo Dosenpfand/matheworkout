@@ -260,6 +260,7 @@ class Question(Model):
 
     def state_user(self, user_id):
         tried_but_incorrect = False
+        # noinspection PyTypeChecker
         for assoc in self.answered_users:
             if assoc.user_id == user_id:
                 if assoc.is_answer_correct:
@@ -395,6 +396,7 @@ class Assignment(Model, AuditMixin):
         return Markup(f'<a href="{url}">{url}</a>')
 
     def duplicate(self):
+        # noinspection PyArgumentList
         return self.__class__(
             name=f"{self.name} (Duplikat)",
             learning_group_id=self.learning_group_id,
@@ -480,6 +482,7 @@ class ExtendedUser(User):
 
     def active_assignments(self):
         # TODO: optimize?
+        # noinspection PyTypeChecker
         return reduce(
             operator.concat,
             map(lambda group: group.active_assignments(), self.learning_groups),
@@ -493,6 +496,7 @@ class ExtendedUser(User):
         answers_by_topic = {}
         correct_count_by_topic = {}
         incorrect_count_by_topic = {}
+        # noinspection PyTypeChecker
         for topic_name, question_group in groupby(
             self.answered_questions, get_topic_name
         ):
@@ -523,6 +527,7 @@ class ExtendedUser(User):
             return (answer.created_on - min_date).days // cluster_size
 
         answers_by_week = {}
+        # noinspection PyTypeChecker
         for week_index, question_group in groupby(
             self.answered_questions, get_week_index
         ):

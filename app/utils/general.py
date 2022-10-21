@@ -1,5 +1,4 @@
 import logging
-import re
 
 from flask import url_for
 from markupsafe import Markup
@@ -27,9 +26,9 @@ def link_formatter_question(q_id, filters=None):
     )
 
 
-def link_formatter_assignment(assignmend_id):
-    name = db.session.query(Assignment).filter_by(id=assignmend_id).first().name
-    url = url_for("AssignmentModelStudentView.show", pk=assignmend_id)
+def link_formatter_assignment(assignment_id):
+    name = db.session.query(Assignment).filter_by(id=assignment_id).first().name
+    url = url_for("AssignmentModelStudentView.show", pk=assignment_id)
     return Markup(
         f'<a class="btn btn-sm btn-primary btn-table" href="{url}">{name}</a>'
     )
@@ -51,6 +50,7 @@ def link_formatter_topic(topic_id):
     )
 
 
+# noinspection PyUnusedLocal
 def link_formatter_topic_abbr(topic, filters=None):
     topic_name = topic.name
     topic_short_name = topic.get_short_name()
@@ -59,6 +59,7 @@ def link_formatter_topic_abbr(topic, filters=None):
 
 
 # TODO: should be in jinja and imported!
+# noinspection PyUnusedLocal
 def state_to_emoji_markup(state, filters=None):
     del filters
     if state is QuestionUserState.solved_success:

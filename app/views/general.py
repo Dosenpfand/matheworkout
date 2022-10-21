@@ -180,7 +180,7 @@ class JoinLearningGroup(BaseView):
         learning_group = db.session.query(LearningGroup).filter_by(id=group_id).first()
         if learning_group:
             if g.user in learning_group.users:
-                flash("Du bist bereits Mitlgied dieser Klasse", "danger")
+                flash("Du bist bereits Mitglied dieser Klasse", "danger")
             elif join_token == learning_group.join_token:
                 learning_group.users.append(g.user)
                 db.session.commit()
