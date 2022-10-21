@@ -569,8 +569,15 @@ class AssocUserQuestion(Model):
     __tablename__ = "assoc_user_question"
     id = Column(Integer, Sequence("assoc_user_question_id_seq"), primary_key=True)
     user_id = Column(ForeignKey("ab_user.id"))
-    question_id = Column(ForeignKey("question.id"))
     user = relationship("ExtendedUser")
+    question_id = Column(ForeignKey("question.id"))
     question = relationship("Question")
     created_on = Column(DateTime, default=datetime.datetime.now, nullable=False)
     is_answer_correct = Column(Boolean, nullable=False)
+
+    def __repr__(self):
+        return (
+            f"AssocUserQuestion(id={self.id}, user_id={self.user_id}, user={self.user},"
+            f" question_id={self.question_id}, question={self.question},"
+            f" created_on={self.created_on}, in_answer_correct={self.is_answer_correct}"
+        )

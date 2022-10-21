@@ -247,7 +247,8 @@ class ForgotPasswordFormView(PublicFormView):
 
         # Flash message
         flash(
-            "Falls dieser Benutzer existiert, haben Sie eine E-Mail mit einem Link zum Zurücksetzen des Passworts erhalten",
+            "Falls dieser Benutzer existiert, haben Sie eine E-Mail mit einem Link zum"
+            " Zurücksetzen des Passworts erhalten",
             "info",
         )
         pass

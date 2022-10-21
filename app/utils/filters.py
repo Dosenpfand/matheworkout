@@ -6,7 +6,10 @@ from app.models.general import Question
 
 
 class FilterInFunctionWithNone(BaseFilter):
-    name = "Filter view where field is in a list returned by a function supporting None being in the list"
+    name = (
+        "Filter view where field is in a list returned by a function supporting None"
+        " being in the list"
+    )
     arg_name = "infwnone"
 
     def apply(self, query, func):
