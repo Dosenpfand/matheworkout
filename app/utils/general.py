@@ -79,10 +79,6 @@ def state_to_emoji_markup(state, filters=None):
     )
 
 
-def get_question(question_type, q_id):
-    return db.session.query(Question).filter_by(id=q_id, type=question_type).first()
-
-
 def safe_math_eval(string):
     string = string.replace(",", ".")
     string = string.replace("%", "*0.01")

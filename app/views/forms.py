@@ -23,7 +23,7 @@ from app.models.general import (
     AssocUserQuestion,
     assoc_assignment_question,
 )
-from app.utils.general import get_question, commit_safely
+from app.utils.general import commit_safely
 from app.views.widgets import ExtendedEditWidget
 
 
@@ -223,9 +223,9 @@ class QuestionFormView(SimpleFormView):
                 appbuilder=self.appbuilder,
             )
 
-    def pre_process_question(self, form, question_type):
+    def pre_process_question(self, form):
         self.update_redirect()
-        question = get_question(question_type, self.id)
+        question = db.session.query(Question).filter_by(id=self.id).first()
 
         if question is None:
             description = "Es existieren keine Fragen zu diesem Thema und Typ."
@@ -248,7 +248,7 @@ class QuestionFormView(SimpleFormView):
             external_id,
             error,
             assignment_progress,
-        ) = self.pre_process_question(form, QuestionType.two_of_five.value)
+        ) = self.pre_process_question(form)
 
         options = (
             self.form_get_additional_processing(form, question_result)
@@ -290,7 +290,7 @@ class QuestionSelfAssessedFormView(QuestionFormView):
             external_id,
             error,
             assignment_progress,
-        ) = self.pre_process_question(form, QuestionType.self_assessed.value)
+        ) = self.pre_process_question(form)
 
         if not error:
             answer_value = request.args.get("answer")
