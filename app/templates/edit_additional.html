@@ -27,7 +27,10 @@
         {% endif %}
         {% if question['external_id'] %}
         <div class="well well-sm">
-            <strong>Frage Nr.: {{question['external_id']}}</strong>
+            <ol class="breadcrumb">
+                <li><strong>Frage Nr.: {{ question['external_id'] }}</strong></li>
+                <li>{{ question['category'] }}</li>
+            </ol>
         </div>
         {% endif %}
         {% if question['assignment_progress'] %}

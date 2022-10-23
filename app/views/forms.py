@@ -204,6 +204,7 @@ class QuestionFormView(SimpleFormView):
             "question": {
                 "description": question.description_image_img(),
                 "external_id": question.external_id,
+                "category": question.category.name,
                 "video_embed_url": question.video_embed_url(),
                 "back_count": back_count,
                 "forward_text": forward_text,
@@ -243,7 +244,7 @@ class QuestionFormView(SimpleFormView):
 
     def form_get(self, form):
         (
-            question_result,
+            question,
             description,
             external_id,
             error,
@@ -251,9 +252,7 @@ class QuestionFormView(SimpleFormView):
         ) = self.pre_process_question(form)
 
         options = (
-            self.form_get_additional_processing(form, question_result)
-            if not error
-            else None
+            self.form_get_additional_processing(form, question) if not error else None
         )
 
         self.extra_args = {
@@ -262,6 +261,7 @@ class QuestionFormView(SimpleFormView):
                 "description": description,
                 "options": options,
                 "external_id": external_id,
+                "category": question.category.name,
                 "submit_text": "Auswerten",
                 "assignment_progress": assignment_progress,
             }
@@ -312,6 +312,7 @@ class QuestionSelfAssessedFormView(QuestionFormView):
                 "question": {
                     "description": description,
                     "external_id": external_id,
+                    "category": question.category.name,
                     "submit_text": submit_text,
                     "back_count": back_count,
                     "forward_text": forward_text,
@@ -353,6 +354,7 @@ class QuestionSelfAssessedFormView(QuestionFormView):
                 "description": description,
                 "after_description": after_description,
                 "external_id": question.external_id,
+                "category": question.category.name,
                 "submit_text": None,
                 "video_embed_url": question.video_embed_url(),
                 "assignment_progress": assignment_progress,
