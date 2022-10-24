@@ -443,6 +443,14 @@ class LearningGroup(Model, AuditMixin):
             Assignment.starts_on < now, Assignment.is_due_on > now
         ).all()
 
+    def position(self, user):
+        return (
+            sorted(self.users, key=lambda u: u.correct_questions(), reverse=True).index(
+                user
+            )
+            + 1
+        )
+
 
 class ExtendedUser(User):
     __tablename__ = "ab_user"

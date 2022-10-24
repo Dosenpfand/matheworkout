@@ -48,21 +48,46 @@
     </div>
 
     <div class="panel panel-primary">
-        <div class="panel-heading"><h3 class="panel-title">Klassen</h3></div>
+        <div class="panel-heading"><h3 class="panel-title">Bestenliste</h3></div>
         <div class="panel-body">
             Du bist Mitglied in
             {%- if current_user.learning_groups|length > 1 -%}
-                &nbsp;den folgenden {{ current_user.learning_groups|length }} Klassen:
+                &nbsp;<b>{{ current_user.learning_groups|length }}</b> Klassen
             {%- else -%}
-                &nbsp;der folgenden Klasse:
+                &nbsp;<b>einer</b> Klasse
             {%- endif -%}
+            &nbsp;und hast insgesamt <b>{{ current_user.correct_questions() }}</b> Fragen richtig gelöst.
+            &nbsp;Damit hast du die folgenden Positionen in der <abbr title="Gewertet wird nach der Anzahl an richtig
+            beantworteter Fragen">Bestenliste</abbr> inne.
         </div>
         <ul class="list-group">
-            {% for learning_group in current_user.learning_groups -%}
-                <li class="list-group-item">{{ learning_group.name }}</li>
-            {% endfor -%}
+            <table class="table table-striped table-responsive">
+                <thead>
+                <tr>
+                    <th>
+                        Klasse
+                    </th>
+                    <th>
+                        Position
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for learning_group in current_user.learning_groups -%}
+                    <tr>
+                        <td>
+                            {{ learning_group.name }}
+                        </td>
+                        <td>
+                            {{ learning_group.position(current_user) }}
+                        </td>
+                    </tr>
+                {% endfor -%}
+                </tbody>
+            </table>
         </ul>
     </div>
+
 </div>
 
 <div class="col-md-6 col-sm-12">
