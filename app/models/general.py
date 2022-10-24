@@ -425,10 +425,6 @@ class LearningGroup(Model, AuditMixin):
         return self.name
 
     def join_url(self):
-        # TODO: check can be eliminated when all old learning groups have been deleted!
-        if not self.join_token:
-            return ""
-
         root_url = request.root_url
         join_path = url_for(
             "JoinLearningGroup.join_learning_group",
