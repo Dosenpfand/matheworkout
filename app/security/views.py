@@ -114,7 +114,6 @@ class ExtendedUserDBModelView(UserDBModelView):
         "email",
         "roles",
         "learning_groups",
-        "answered_questions",
     ]
 
     base_order = ("id", "asc")
