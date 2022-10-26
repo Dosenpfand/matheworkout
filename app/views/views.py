@@ -45,6 +45,7 @@ from app.views.models import (
     LearningGroupModelAdminView,
 )
 
+appbuilder.add_separator(category="Security")
 appbuilder.add_view(
     LearningGroupModelAdminView,
     "all_classes",
@@ -54,18 +55,18 @@ appbuilder.add_view(
     category_icon="fa-book",
 )
 appbuilder.add_view(
-    LearningGroupModelView,
-    "classes",
-    label="Klassen",
-    icon="fa-book",
-    category="Verwaltung",
-    category_icon="fa-book",
-)
-appbuilder.add_view(
     AssocUserQuestionModelView,
     "answered_questions",
     label="Beantwortete Fragen",
     icon="fa-question",
+    category="Security",
+    category_icon="fa-book",
+)
+appbuilder.add_view(
+    LearningGroupModelView,
+    "classes",
+    label="Klassen",
+    icon="fa-book",
     category="Verwaltung",
     category_icon="fa-book",
 )
