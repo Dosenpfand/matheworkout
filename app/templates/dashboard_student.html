@@ -5,267 +5,99 @@
         <div class="panel-heading"><h3 class="panel-title">Hausübungen</h3></div>
         <div class="panel-body">
             Du hast
-            {%- if current_user.active_assignments()|length > 1 -%}
+            {%- if current_user.active_assignments()|length == 0 -%}
+                derzeit keine aktiven Hausübungen.
+            {%- elif current_user.active_assignments()|length > 1 -%}
                 &nbsp;die folgenden {{ current_user.active_assignments()|length }} aktiven Hausübungen:
             {%- else -%}
                 &nbsp;die folgende aktive Hausübung:
             {%- endif -%}
         </div>
-        <ul class="list-group">
-            <table class="table table-striped table-responsive">
-                <thead>
-                <tr>
-                    <th>
-                        Hausübung
-                    </th>
-                    <th>
-                        Klasse
-                    </th>
-                    <th>
-                        Fällig am
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for assignment in current_user.active_assignments() -%}
+        {%- if current_user.active_assignments()|length >= 1 -%}
+            <ul class="list-group">
+                <table class="table table-striped table-responsive">
+                    <thead>
                     <tr>
-                        <td>
-                            <a href="{{ url_for("AssignmentModelStudentView.show", pk=assignment.id) }}">
-                                {{ assignment.name }}
-                            </a>
-                        </td>
-                        <td>
-                            {{ assignment.learning_group.name }}
-                        </td>
-                        <td>
-                            {{ assignment.is_due_on_de }}
-                        </td>
+                        <th>
+                            Hausübung
+                        </th>
+                        <th>
+                            Klasse
+                        </th>
+                        <th>
+                            Fällig am
+                        </th>
                     </tr>
-                {% endfor -%}
-                </tbody>
-            </table>
-        </ul>
+                    </thead>
+                    <tbody>
+                    {% for assignment in current_user.active_assignments() -%}
+                        <tr>
+                            <td>
+                                <a href="{{ url_for("AssignmentModelStudentView.show", pk=assignment.id) }}">
+                                    {{ assignment.name }}
+                                </a>
+                            </td>
+                            <td>
+                                {{ assignment.learning_group.name }}
+                            </td>
+                            <td>
+                                {{ assignment.is_due_on_de }}
+                            </td>
+                        </tr>
+                    {% endfor -%}
+                    </tbody>
+                </table>
+            </ul>
+        {% endif %}
     </div>
 
     <div class="panel panel-primary">
         <div class="panel-heading"><h3 class="panel-title">Bestenliste</h3></div>
         <div class="panel-body">
             Du bist Mitglied in
-            {%- if current_user.learning_groups|length > 1 -%}
-                &nbsp;<b>{{ current_user.learning_groups|length }}</b> Klassen
-            {%- else -%}
-                &nbsp;<b>einer</b> Klasse
-            {%- endif -%}
-            &nbsp;und hast insgesamt <b>{{ current_user.correct_questions() }}</b> Fragen richtig gelöst. Damit hast du die
-            folgenden Positionen in der <abbr title="Gewertet wird nach der Anzahl an richtig
-            beantworteter Fragen">Bestenliste</abbr> inne.
+            {% if current_user.learning_groups|length == 0 -%}
+                keiner Klasse. Trete einer Klasse bei, um deine Platzierung in der Bestenliste zu sehen.
+            {% else %}
+                {% if current_user.learning_groups|length > 1 -%}
+                    <b>{{ current_user.learning_groups|length }}</b> Klassen
+                {% else -%}
+                    <b>einer</b> Klasse
+                {% endif -%}
+                und hast insgesamt <b>{{ current_user.correct_questions() }}</b> Fragen richtig gelöst. Damit hast
+                du die folgenden Positionen in der
+                <abbr title="Gewertet wird nach der Anzahl an richtig beantworteter Fragen">Bestenliste</abbr> inne.
+            {% endif %}
         </div>
-        <ul class="list-group">
-            <table class="table table-striped table-responsive">
-                <thead>
-                <tr>
-                    <th>
-                        Klasse
-                    </th>
-                    <th>
-                        Position
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for learning_group in current_user.learning_groups -%}
+        {%- if current_user.learning_groups|length >= 1 -%}
+            <ul class="list-group">
+                <table class="table table-striped table-responsive">
+                    <thead>
                     <tr>
-                        <td>
-                            {{ learning_group.name }}
-                        </td>
-                        <td>
-                            {{ learning_group.position(current_user) }}
-                        </td>
+                        <th>
+                            Klasse
+                        </th>
+                        <th>
+                            Position
+                        </th>
                     </tr>
-                {% endfor -%}
-                </tbody>
-            </table>
-        </ul>
+                    </thead>
+                    <tbody>
+                    {% for learning_group in current_user.learning_groups -%}
+                        <tr>
+                            <td>
+                                {{ learning_group.name }}
+                            </td>
+                            <td>
+                                {{ learning_group.position(current_user) }}
+                            </td>
+                        </tr>
+                    {% endfor -%}
+                    </tbody>
+                </table>
+            </ul>
+        {% endif %}
     </div>
 
 </div>
 
-<div class="col-md-6 col-sm-12">
-    <div class="panel panel-primary">
-        <div class="panel-heading"><h3 class="panel-title">Statistiken</h3></div>
-        <ul class="list-group">
-            <li class="list-group-item">
-                <div>
-                    <canvas id="chart-weekly"></canvas>
-                </div>
-            </li>
-            <li class="list-group-item">
-                <div>
-                    <canvas id="chart-topic"></canvas>
-                </div>
-            </li>
-            <li class="list-group-item">
-                <div>
-                    <canvas id="chart-total"></canvas>
-                </div>
-            </li>
-
-        </ul>
-    </div>
-    <script>
-        const data_weekly = {
-            labels: {{ current_user.answered_by_week()['week_indices'][::-1] }},
-            datasets: [
-                {
-                    label: 'Richtig',
-                    backgroundColor: '#29ca8e',
-                    borderColor: '#29ca8e',
-                    data: {{ current_user.answered_by_week()['correct'] }}
-                },
-                {
-                    label: 'Falsch',
-                    backgroundColor: '#29ca8e',
-                    borderDash: [5, 5],
-                    borderColor: '#29ca8e',
-                    data: {{ current_user.answered_by_week()['incorrect'] }}
-                }]
-        };
-
-        const config_weekly = {
-            type: 'line',
-            data: data_weekly,
-            options: {
-                scales: {
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'Aufgaben'
-                        }
-                    },
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Vergangene Wochen'
-                        }
-                    },
-                },
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Beantwortete Fragen der vergangenen Wochen'
-                    }
-                }
-            }
-        };
-
-        window.addEventListener('load', function () {
-            const chart_weekly = new Chart(
-                document.getElementById('chart-weekly'),
-                config_weekly
-            );
-        });
-    </script>
-    <script>
-        const data_topic = {
-            labels: [
-                {% for topic in current_user.answered_by_topic()['correct'].keys() -%}
-                    '{{ topic }}',
-                {% endfor -%}
-            ],
-            datasets: [
-                {
-                    label: 'Richtig',
-                    data: [
-                        {% for correct in current_user.answered_by_topic()['correct'].values() -%}
-                            '{{ correct }}',
-                        {% endfor -%}
-                    ],
-                    backgroundColor: '#29ca8e',
-                    borderColor: '#29ca8e',
-                    borderWidth: 1,
-                },
-                {
-                    label: 'Falsch',
-                    data: [
-                        {% for incorrect in current_user.answered_by_topic()['incorrect'].values() -%}
-                            '{{ incorrect }}',
-                        {% endfor -%}
-                    ],
-                    backgroundColor: '#ffffff',
-                    borderColor: '#29ca8e',
-                    borderWidth: 1
-                },
-            ]
-        };
-
-        const config_topic = {
-            type: 'bar',
-            data: data_topic,
-            options: {
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Beantwortete Fragen nach Grundkompetenzbereich'
-                    },
-                },
-                scales: {
-                    x: {
-                        stacked: true,
-                    },
-                    y: {
-                        beginAtZero: true,
-                        stacked: true
-                    }
-                }
-            },
-        };
-
-        window.addEventListener('load', function () {
-            const chart_total = new Chart(
-                document.getElementById('chart-topic'),
-                config_topic
-            );
-        });
-    </script>
-    <script>
-        const data_total = {
-            labels: [
-                'Richtig',
-                'Falsch'
-            ],
-            datasets: [{
-                label: 'Beantwortete Aufgaben',
-                data: [{{ current_user.correct_questions() }}, {{ current_user.tried_questions() - current_user.correct_questions() }}],
-                backgroundColor: [
-                    '#29ca8e',
-                    '#ffffff',
-                ],
-                borderColor: [
-                    '#29ca8e',
-                    '#29ca8e',
-                ],
-                hoverOffset: 4
-            }]
-        };
-
-        const config_total = {
-            type: 'pie',
-            data: data_total,
-            options: {
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Insgesamt beantwortete Fragen'
-                    }
-                }
-            }
-        };
-
-        window.addEventListener('load', function () {
-            const chart_total = new Chart(
-                document.getElementById('chart-total'),
-                config_total
-            );
-        });
-    </script>
-</div>
+{% include "dashboard_stats.html" %}

@@ -1,0 +1,184 @@
+<div class="col-md-6 col-sm-12">
+    <div class="panel panel-primary">
+        <div class="panel-heading"><h3 class="panel-title">Statistiken</h3></div>
+        {% if current_user.tried_questions() > 0 %}
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <div>
+                        <canvas id="chart-weekly"></canvas>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div>
+                        <canvas id="chart-topic"></canvas>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div>
+                        <canvas id="chart-total"></canvas>
+                    </div>
+                </li>
+            </ul>
+            <script>
+                const data_weekly = {
+                    labels: {{ current_user.answered_by_week()['week_indices'][::-1] }},
+                    datasets: [
+                        {
+                            label: 'Richtig',
+                            backgroundColor: '#29ca8e',
+                            borderColor: '#29ca8e',
+                            data: {{ current_user.answered_by_week()['correct'] }}
+                        },
+                        {
+                            label: 'Falsch',
+                            backgroundColor: '#29ca8e',
+                            borderDash: [5, 5],
+                            borderColor: '#29ca8e',
+                            data: {{ current_user.answered_by_week()['incorrect'] }}
+                        }]
+                };
+
+                const config_weekly = {
+                    type: 'line',
+                    data: data_weekly,
+                    options: {
+                        scales: {
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Aufgaben'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Vergangene Wochen'
+                                }
+                            },
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Beantwortete Fragen der vergangenen Wochen'
+                            }
+                        }
+                    }
+                };
+
+                window.addEventListener('load', function () {
+                    const chart_weekly = new Chart(
+                        document.getElementById('chart-weekly'),
+                        config_weekly
+                    );
+                });
+            </script>
+            <script>
+                const data_topic = {
+                    labels: [
+                        {% for topic in current_user.answered_by_topic()['correct'].keys() -%}
+                            '{{ topic }}',
+                        {% endfor -%}
+                    ],
+                    datasets: [
+                        {
+                            label: 'Richtig',
+                            data: [
+                                {% for correct in current_user.answered_by_topic()['correct'].values() -%}
+                                    '{{ correct }}',
+                                {% endfor -%}
+                            ],
+                            backgroundColor: '#29ca8e',
+                            borderColor: '#29ca8e',
+                            borderWidth: 1,
+                        },
+                        {
+                            label: 'Falsch',
+                            data: [
+                                {% for incorrect in current_user.answered_by_topic()['incorrect'].values() -%}
+                                    '{{ incorrect }}',
+                                {% endfor -%}
+                            ],
+                            backgroundColor: '#ffffff',
+                            borderColor: '#29ca8e',
+                            borderWidth: 1
+                        },
+                    ]
+                };
+
+                const config_topic = {
+                    type: 'bar',
+                    data: data_topic,
+                    options: {
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Beantwortete Fragen nach Grundkompetenzbereich'
+                            },
+                        },
+                        scales: {
+                            x: {
+                                stacked: true,
+                            },
+                            y: {
+                                beginAtZero: true,
+                                stacked: true
+                            }
+                        }
+                    },
+                };
+
+                window.addEventListener('load', function () {
+                    const chart_total = new Chart(
+                        document.getElementById('chart-topic'),
+                        config_topic
+                    );
+                });
+            </script>
+            <script>
+                const data_total = {
+                    labels: [
+                        'Richtig',
+                        'Falsch'
+                    ],
+                    datasets: [{
+                        label: 'Beantwortete Aufgaben',
+                        data: [{{ current_user.correct_questions() }}, {{ current_user.tried_questions() - current_user.correct_questions() }}],
+                        backgroundColor: [
+                            '#29ca8e',
+                            '#ffffff',
+                        ],
+                        borderColor: [
+                            '#29ca8e',
+                            '#29ca8e',
+                        ],
+                        hoverOffset: 4
+                    }]
+                };
+
+                const config_total = {
+                    type: 'pie',
+                    data: data_total,
+                    options: {
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Insgesamt beantwortete Fragen'
+                            }
+                        }
+                    }
+                };
+
+                window.addEventListener('load', function () {
+                    const chart_total = new Chart(
+                        document.getElementById('chart-total'),
+                        config_total
+                    );
+                });
+            </script>
+        {% else %}
+            <div class="panel-body">
+                Um deine Statistiken zu sehen, musst du mindestens eine Frage beantworten.
+            </div>
+        {% endif %}
+    </div>
+</div>
