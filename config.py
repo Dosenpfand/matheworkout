@@ -47,8 +47,14 @@ FAB_ROLES = {
         ["assignments_student", "menu_access"],
         [".*", "can_get"],
         [".*", "can_info"],
-        [".*", "can_this_form_get"],
-        [".*", "can_this_form_post"],
+        ["ExtendedUserInfoEditView", "can_this_form_get"],
+        ["ExtendedUserInfoEditView", "can_this_form_post"],
+        ["Question.*", "can_this_form_get"],
+        ["Question.*", "can_this_form_post"],
+        ["ResetMyPasswordView", "can_this_form_get"],
+        ["ResetMyPasswordView", "can_this_form_post"],
+        ["DeleteStatsFormView", "can_this_form_get"],
+        ["DeleteStatsFormView", "can_this_form_post"],
         [".*", "show_question_details_action"],
         ["ExtendedUserDBModelView", "can_userinfo"],
         ["ExtendedUserDBModelView", "userinfoedit"],
@@ -83,6 +89,7 @@ FAB_ROLES = {
         ["Verwaltung", "menu_access"],
         ["classes", "menu_access"],
         ["assignments_admin", "menu_access"],
+        ["import_users", "menu_access"],
         ["LearningGroupModelView", ".*"],
         ["AssignmentModelAdminView", ".*"],
         ["AssignmentModelTeacherView", ".*"],
@@ -112,6 +119,7 @@ FAB_INDEX_VIEW = "app.views.index.ExtendedIndexView"
 
 SITE_EMAIL = "info@matheworkout.at"
 
-PASSWORD_RESET_TOKEN_EXPIRATION_HOURS = 12
+PASSWORD_RESET_TOKEN_EXPIRATION_HOURS = 24
 QUESTION_RETRY_MIN_MINUTES = 5
+MAX_USER_IMPORTS_PER_DAY = 50
 DEBUG_TB_INTERCEPT_REDIRECTS = False

@@ -1,6 +1,7 @@
 import logging
 
 from flask import url_for
+from flask_mail import Mail, Message
 from markupsafe import Markup
 
 from app import db
@@ -99,3 +100,18 @@ def commit_safely(db_session):
     except Exception as e:
         db_session.rollback()
         logging.warning(e, exc_info=True)
+
+
+def send_email(app, subject, html, recipient):
+    mail = Mail(app)
+    msg = Message()
+    msg.subject = subject
+    msg.html = html
+    msg.recipients = [recipient]
+    try:
+        mail.send(msg)
+    except Exception as e:
+        log_instance = logging.getLogger(__name__)
+        log_instance.error("Send email exception: {0}".format(str(e)))
+        return False
+    return True

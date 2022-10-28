@@ -16,6 +16,9 @@
     {% endcall %}
 {% endmacro %}
 
+{% if not question %}
+{% set question = {} %}
+{% endif %}
 {% if question['options'] %}
 {% set additional_col = options_to_additional_col(question['options']) %}
 {% endif %}
@@ -47,7 +50,15 @@
           </div>
         </div>
         {% endif %}
-        <div class="well well-sm"><strong>{{question['description']}}</strong></div>
+        <div class="well well-sm">
+            {% if question['description'] %}
+                <strong>
+                    {{ question['description'] }}
+                </strong>
+            {% elif question['description_include'] %}
+                {% include question['description_include'] %}
+            {% endif %}
+        </div>
         {% if question['after_description'] %}
         <div class="well well-sm">{{question['after_description']}}</div>
         {% endif %}

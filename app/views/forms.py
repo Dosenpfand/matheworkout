@@ -1,11 +1,11 @@
 import datetime
 
-from flask import request, g, url_for, flash, current_app
+from flask import request, g, url_for, flash, current_app, redirect
 from flask_appbuilder import SimpleFormView, expose, has_access
 from markupsafe import Markup
 from sqlalchemy import asc
 
-from app import db
+from app import db, appbuilder
 from app.forms.forms import (
     QuestionSelfAssessedForm,
     Question2of5Form,
@@ -15,6 +15,7 @@ from app.forms.forms import (
     Question1DecimalForm,
     QuestionSelect4Form,
     DeleteStatsForm,
+    ImportUsersForm,
 )
 from app.models.general import (
     QuestionType,
@@ -789,10 +790,18 @@ class DeleteStatsFormView(SimpleFormView):
         }
     }
 
-    def form_get(self, form):
-        pass
-
     def form_post(self, form):
         db.session.query(AssocUserQuestion).filter_by(user_id=g.user.id).delete()
         commit_safely(db.session)
         flash("Benutzerstatistik gelöscht", "info")
+
+
+class ImportUsersFormView(SimpleFormView):
+    form = ImportUsersForm
+    form_title = "Schüler importieren"
+    form_template = "edit_additional.html"
+    extra_args = dict(question=dict(description_include="import_user_description.html"))
+
+    def form_post(self, form):
+        appbuilder.sm.import_users(form.file.data)
+        return redirect(url_for(f"{self.__class__.__name__}.this_form_get"))

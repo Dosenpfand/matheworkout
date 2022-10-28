@@ -16,11 +16,11 @@ from flask_appbuilder.utils.base import get_safe_redirect
 from flask_appbuilder.validators import Unique
 from flask_babel import lazy_gettext
 from flask_login import login_user
-from flask_mail import Mail, Message
 
 from app import db
 from app.models.general import ExtendedUser
 from app.security.forms import ForgotPasswordForm, ExtendedRegisterUserDBForm
+from app.utils.general import send_email
 
 log = logging.getLogger(__name__)
 
@@ -185,30 +185,20 @@ class ForgotPasswordFormView(PublicFormView):
     email_subject = current_app.config["APP_NAME"] + " - Passwort zurücksetzen"
 
     def send_email(self, user):
-        mail = Mail(self.appbuilder.get_app)
-        msg = Message()
-        msg.subject = self.email_subject
         url = url_for(
             "ResetForgotPasswordView.this_form_get",
             _external=True,
             user_id=user.id,
             token=user.password_reset_token,
         )
-        msg.html = self.render_template(
+        html = self.render_template(
             self.email_template,
             url=url,
             username=user.username,
             first_name=user.first_name,
             last_name=user.last_name,
         )
-        msg.recipients = [user.email]
-        try:
-            mail.send(msg)
-        except Exception as e:
-            log_instance = logging.getLogger(__name__)
-            log_instance.error("Send email exception: {0}".format(str(e)))
-            return False
-        return True
+        return send_email(self.appbuilder.get_app, self.email_subject, html, user.email)
 
     @expose("/form", methods=["GET"])
     def this_form_get(self):
@@ -241,16 +231,7 @@ class ForgotPasswordFormView(PublicFormView):
             )
 
         if user:
-            # Generate token
-            token = secrets.token_urlsafe()
-            expiration = datetime.datetime.now() + datetime.timedelta(
-                hours=current_app.config["PASSWORD_RESET_TOKEN_EXPIRATION_HOURS"]
-            )
-            user.password_reset_token = token
-            user.password_reset_expiration = expiration
-            db.session.commit()
-
-            # Send mail
+            self.appbuilder.sm.set_password_reset_token(user)
             self.send_email(user)
 
         # Flash message
@@ -290,10 +271,17 @@ class ResetForgotPasswordView(PublicFormView):
         user = (
             db.session.query(ExtendedUser)
             .filter_by(id=user_id, password_reset_token=token)
-            .filter(ExtendedUser.password_reset_expiration > datetime.datetime.now())
             .first()
         )
-        return user
+        if user:
+            if user.password_reset_expiration > datetime.datetime.now():
+                return user
+            else:
+                flash(
+                    "Der Link zum Passwort setzen ist abgelaufen. Sie können hier einen neuen beantragen.",
+                    category="danger",
+                )
+        return None
 
     @expose("/form/<int:user_id>/<string:token>", methods=["GET"])
     def this_form_get(self, user_id, token):
@@ -302,7 +290,7 @@ class ResetForgotPasswordView(PublicFormView):
 
         response = self.form_get(form, user_id, token)
         if not response:
-            return abort(404)
+            return redirect(url_for("ForgotPasswordFormView.this_form_get"))
 
         widgets = self._get_edit_widget(form=form)
         self.update_redirect()
@@ -319,18 +307,23 @@ class ResetForgotPasswordView(PublicFormView):
         user = (
             db.session.query(ExtendedUser)
             .filter_by(id=user_id, password_reset_token=token)
-            .filter(ExtendedUser.password_reset_expiration > datetime.datetime.now())
             .first()
         )
         if user:
-            self.appbuilder.sm.reset_password(user_id, form.password.data)
-            flash(
-                self.message,
-                "Ihr Passwort wurde geändert, Sie können sich jetzt damit anmelden",
-            )
-            return redirect(url_for("ExtendedAuthDBView.login"))
-        else:
-            return abort(404)
+            if user.password_reset_expiration > datetime.datetime.now():
+                self.appbuilder.sm.reset_password(user_id, form.password.data)
+                user.password_reset_token = user.password_reset_expiration = None
+                flash(
+                    "Ihr Passwort wurde geändert, Sie können sich jetzt damit anmelden",
+                    category="success",
+                )
+                return redirect(url_for("ExtendedAuthDBView.login"))
+            else:
+                flash(
+                    "Der Link zum Passwort setzen ist abgelaufen. Sie können hier einen neuen beantragen.",
+                    category="danger",
+                )
+        return None
 
     @expose("/form/<int:user_id>/<string:token>", methods=["POST"])
     def this_form_post(self, user_id, token):
@@ -339,7 +332,7 @@ class ResetForgotPasswordView(PublicFormView):
         if form.validate_on_submit():
             response = self.form_post(form, user_id, token)
             if not response:
-                return redirect(self.get_redirect())
+                return redirect(url_for("ForgotPasswordFormView.this_form_get"))
             return response
         else:
             widgets = self._get_edit_widget(form=form)
@@ -355,6 +348,7 @@ class ResetForgotPasswordView(PublicFormView):
 class ExtendedRegisterUserDBView(RegisterUserDBView):
     form = ExtendedRegisterUserDBForm
     redirect_url = "/"
+    email_subject = current_app.config["APP_NAME"] + " - Kontoaktivierung"
 
     # noinspection PyMethodOverriding
     def add_registration(self, username, first_name, last_name, email, password, role):

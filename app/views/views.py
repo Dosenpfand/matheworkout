@@ -13,6 +13,7 @@ from app.views.forms import (
     Question1DecimalFormView,
     QuestionSelect4FormView,
     DeleteStatsFormView,
+    ImportUsersFormView,
 )
 from app.views.general import (
     QuestionRandom,
@@ -69,6 +70,14 @@ appbuilder.add_view(
     icon="fa-book",
     category="Verwaltung",
     category_icon="fa-book",
+)
+appbuilder.add_view(
+    ImportUsersFormView,
+    "import_users",
+    label="Schüler importieren",
+    icon="fa-file-import",
+    category="Verwaltung",
+    category_icon="fa-align-justify",
 )
 appbuilder.add_view(
     AssignmentModelAdminView,

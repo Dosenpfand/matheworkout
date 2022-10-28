@@ -1,6 +1,7 @@
 from flask_appbuilder.forms import DynamicForm
+from flask_wtf.file import FileField
 from wtforms import BooleanField, HiddenField, FloatField, SelectField
-from wtforms.validators import NoneOf
+from wtforms.validators import NoneOf, DataRequired
 
 from app.models.general import Select4Enum
 from app.utils.general import safe_math_eval
@@ -68,3 +69,7 @@ class DeleteStatsForm(DynamicForm):
         label="Bist du sicher?",
         validators=[NoneOf([False], message="Muss ausgewählt sein.")],
     )
+
+
+class ImportUsersForm(DynamicForm):
+    file = FileField(label="CSV-Datei", validators=[DataRequired()])

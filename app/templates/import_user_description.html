@@ -1,0 +1,16 @@
+<p>
+    Sie können Schüler aus einer CSV-Datei, die mithilfe eines Texteditors oder eines Tabellenkalukationsprogramms
+    erstellt wurde, importieren.
+    Diese Datei muss die folgenden Spalten enthalten:
+    <pre>Vorname,Nachname,E-Mail-Adresse,Klasse</pre>
+</p>
+<p>
+    Als Vorlage kann <a href="{{ url_for('static', filename='import_user_template.csv') }}">diese Beispieldatei</a>
+    verwendet werden.
+    Die erste Zeile mit den Spaltenbezeichnungen muss erhalten bleiben, die zweite Zeile mit dem Beispieldatensatz muss
+    gelöscht werden.
+    Anschließend können weitere Datensätze von Schülern als Zeilen eingefügt werden.
+</p>
+<p>
+    Schließlich könnnen Sie mit dem folgenden Formular die erstellte CSV-Datei hochladen.
+</p>
