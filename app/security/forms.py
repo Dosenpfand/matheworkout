@@ -7,17 +7,7 @@ from flask_appbuilder.forms import DynamicForm
 from flask_babel import lazy_gettext
 from flask_wtf import RecaptchaField
 from wtforms import StringField, PasswordField, SelectField
-from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
-
-
-def does_not_contain(sub_string="@", message=None):
-    message = message if message else f'Feld darf kein "{sub_string}" enthalten.'
-
-    def _does_not_contain(form, field):
-        if sub_string in field.data:
-            raise ValidationError(message)
-
-    return _does_not_contain
+from wtforms.validators import DataRequired, Email, EqualTo
 
 
 class ForgotPasswordForm(DynamicForm):
@@ -25,11 +15,6 @@ class ForgotPasswordForm(DynamicForm):
 
 
 class ExtendedRegisterUserDBForm(DynamicForm):
-    username = StringField(
-        lazy_gettext("User Name"),
-        validators=[DataRequired(), does_not_contain()],
-        widget=BS3TextFieldWidget(),
-    )
     first_name = StringField(
         lazy_gettext("First Name"),
         validators=[DataRequired()],
@@ -41,7 +26,7 @@ class ExtendedRegisterUserDBForm(DynamicForm):
         widget=BS3TextFieldWidget(),
     )
     email = StringField(
-        lazy_gettext("Email"),
+        "E-Mail-Adresse",
         validators=[DataRequired(), Email()],
         widget=BS3TextFieldWidget(),
     )
@@ -54,7 +39,10 @@ class ExtendedRegisterUserDBForm(DynamicForm):
     conf_password = PasswordField(
         lazy_gettext("Confirm Password"),
         description=lazy_gettext("Please rewrite the password to confirm"),
-        validators=[EqualTo("password", message=lazy_gettext("Passwords must match"))],
+        validators=[
+            DataRequired(),
+            EqualTo("password", message=lazy_gettext("Passwords must match")),
+        ],
         widget=BS3PasswordFieldWidget(),
     )
     # TODO: choices should not be hardcoded
@@ -62,5 +50,6 @@ class ExtendedRegisterUserDBForm(DynamicForm):
         "Rolle",
         choices=[("Student", "Schüler"), ("Teacher", "Lehrer")],
         widget=Select2Widget(),
+        validators=[DataRequired()],
     )
     recaptcha = RecaptchaField()

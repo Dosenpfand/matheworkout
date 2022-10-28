@@ -10,6 +10,7 @@ from app.security.views import (
     ExtendedUserDBModelView,
     ExtendedUserInfoEditView,
     ExtendedRegisterUserDBView,
+    ExtendedAuthDBView,
 )
 
 log = logging.getLogger(__name__)
@@ -21,6 +22,7 @@ class ExtendedSecurityManager(SecurityManager):
     userinfoeditview = ExtendedUserInfoEditView
     registeruserdbview = ExtendedRegisterUserDBView
     registeruser_model = ExtendedRegisterUser
+    authdbview = ExtendedAuthDBView
 
     # noinspection PyMethodOverriding
     def add_register_user(self, username, first_name, last_name, email, password, role):

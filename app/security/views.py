@@ -2,12 +2,20 @@ import logging
 import datetime
 import secrets
 
-from flask import g, redirect, url_for, flash, abort, current_app
+from flask import g, redirect, url_for, flash, abort, current_app, request
 from flask_appbuilder import action, expose, has_access, PublicFormView, const
-from flask_appbuilder.security.forms import ResetPasswordForm
+from flask_appbuilder._compat import as_unicode
+from flask_appbuilder.security.forms import ResetPasswordForm, LoginForm_db
 from flask_appbuilder.security.registerviews import RegisterUserDBView
-from flask_appbuilder.security.views import UserDBModelView, UserInfoEditView
+from flask_appbuilder.security.views import (
+    UserDBModelView,
+    UserInfoEditView,
+    AuthDBView,
+)
+from flask_appbuilder.utils.base import get_safe_redirect
+from flask_appbuilder.validators import Unique
 from flask_babel import lazy_gettext
+from flask_login import login_user
 from flask_mail import Mail, Message
 
 from app import db
@@ -320,7 +328,7 @@ class ResetForgotPasswordView(PublicFormView):
                 self.message,
                 "Ihr Passwort wurde geändert, Sie können sich jetzt damit anmelden",
             )
-            return redirect(url_for("AuthDBView.login"))
+            return redirect(url_for("ExtendedAuthDBView.login"))
         else:
             return abort(404)
 
@@ -345,7 +353,6 @@ class ResetForgotPasswordView(PublicFormView):
 
 
 class ExtendedRegisterUserDBView(RegisterUserDBView):
-
     form = ExtendedRegisterUserDBForm
     redirect_url = "/"
 
@@ -397,10 +404,40 @@ class ExtendedRegisterUserDBView(RegisterUserDBView):
     def form_post(self, form):
         self.add_form_unique_validations(form)
         self.add_registration(
-            username=form.username.data,
+            username=form.email.data,
             first_name=form.first_name.data,
             last_name=form.last_name.data,
             email=form.email.data,
             password=form.password.data,
             role=form.role.data,
+        )
+
+    def add_form_unique_validations(self, form):
+        datamodel_user = self.appbuilder.sm.get_user_datamodel
+        datamodel_register_user = self.appbuilder.sm.get_register_user_datamodel
+        if len(form.email.validators) == 2:
+            form.email.validators.append(Unique(datamodel_user, "email"))
+            form.email.validators.append(Unique(datamodel_register_user, "email"))
+
+
+class ExtendedAuthDBView(AuthDBView):
+    login_template = "extended_login_db.html"
+
+    @expose("/login/", methods=["GET", "POST"])
+    def login(self):
+        if g.user is not None and g.user.is_authenticated:
+            return redirect(self.appbuilder.get_url_for_index)
+        form = LoginForm_db()
+        if form.validate_on_submit():
+            user = self.appbuilder.sm.auth_user_db(
+                form.username.data, form.password.data
+            )
+            if not user:
+                flash(as_unicode(self.invalid_login_message), "warning")
+                return redirect(self.appbuilder.get_url_for_login)
+            login_user(user, remember=False)
+            next_url = request.args.get("next", "")
+            return redirect(get_safe_redirect(next_url))
+        return self.render_template(
+            self.login_template, title=self.title, form=form, appbuilder=self.appbuilder
         )
