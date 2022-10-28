@@ -24,7 +24,7 @@ from sqlalchemy import (
     Sequence,
     Table,
 )
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, validates
 
 
 class Select4Enum(enum.Enum):
@@ -454,6 +454,8 @@ class LearningGroup(Model, AuditMixin):
 
 class ExtendedUser(User):
     __tablename__ = "ab_user"
+    # Duplicated so that validator is executed
+    username = Column(String(64), unique=True, nullable=False)
     learning_groups = relationship(
         "LearningGroup",
         secondary=assoc_user_learning_group,
@@ -468,6 +470,14 @@ class ExtendedUser(User):
     )
     password_reset_token = Column(String(255))
     password_reset_expiration = Column(DateTime)
+
+    @validates("username")
+    def validate_username(self, key, username):
+        print(key)
+        print(username)
+        if "@" in username:
+            raise ValueError('Username can not contain "@"')
+        return username
 
     def role_names(self):
         return map(lambda role: role.name, self.roles)
