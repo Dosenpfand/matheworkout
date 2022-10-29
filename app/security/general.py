@@ -64,9 +64,7 @@ class ExtendedSecurityManager(SecurityManager):
         csv_reader = csv.DictReader(wrapper)
         csv_rows = list(csv_reader)
         is_fatal = False
-        max_imports_per_day_count = self.appbuilder.app.config[
-            "MAX_USER_IMPORTS_PER_DAY"
-        ]
+        max_imports_per_day = self.appbuilder.app.config["MAX_USER_IMPORTS_PER_DAY"]
 
         one_day_ago = datetime.datetime.now() - datetime.timedelta(hours=24)
         count_users_created = (
@@ -76,21 +74,21 @@ class ExtendedSecurityManager(SecurityManager):
             .count()
         )
 
-        if count_users_created > max_imports_per_day_count:
+        if count_users_created > max_imports_per_day:
             flash(
                 (
                     f"Import nicht möglich, "
-                    f"das tägliches Importlimit von {max_imports_per_day_count} wurde bereits erreicht."
+                    f"das tägliches Importlimit von {max_imports_per_day} wurde bereits erreicht."
                 ),
                 category="danger",
             )
             return
 
-        if count_users_created + len(csv_rows) > max_imports_per_day_count:
+        if count_users_created + len(csv_rows) > max_imports_per_day:
             flash(
                 (
                     f"Import nicht möglich, "
-                    f"der Import würde das tägliches Importlimit von {max_imports_per_day_count} überschreiten."
+                    f"der Import würde das tägliches Importlimit von {max_imports_per_day} überschreiten."
                 ),
                 category="danger",
             )

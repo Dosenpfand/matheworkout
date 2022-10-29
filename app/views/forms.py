@@ -800,7 +800,12 @@ class ImportUsersFormView(SimpleFormView):
     form = ImportUsersForm
     form_title = "Schüler importieren"
     form_template = "edit_additional.html"
-    extra_args = dict(question=dict(description_include="import_user_description.html"))
+    extra_args = dict(
+        question=dict(
+            description_include="import_user_description.html",
+            max_imports_per_day=current_app.config["MAX_USER_IMPORTS_PER_DAY"],
+        )
+    )
 
     def form_post(self, form):
         appbuilder.sm.import_users(form.file.data)
