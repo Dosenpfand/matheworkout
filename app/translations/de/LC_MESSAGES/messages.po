@@ -1,14 +1,14 @@
 # German translations for PROJECT.
-# Copyright (C) 2022 ORGANIZATION
+# Copyright (C) 2014 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-04-07 11:05+0200\n"
-"PO-Revision-Date: 2022-04-07 11:04+0200\n"
+"POT-Creation-Date: 2018-04-26 22:56+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: de\n"
 "Language-Team: de <LL@li.org>\n"
@@ -18,18 +18,116 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#~ msgid "User info"
-#~ msgstr ""
+#: flask_appbuilder/models/base.py:30
+msgid "Associated data exists, please delete them first"
+msgstr "Es existieren assoziierte Daten, bitte lösche diese zuerst"
 
-#~ msgid "Personal Info"
-#~ msgstr ""
+#: examples/extendsecurity/app/sec_forms.py:11
+#: examples/extendsecurity2/app/sec_forms.py:11
+#: flask_appbuilder/security/forms.py:22 flask_appbuilder/security/views.py:138
+msgid "Write the user first name or names"
+msgstr "Gib den ersten oder mehrere Vornamen ein"
 
-#~ msgid "Audit Info"
-#~ msgstr ""
+#: examples/extendsecurity/app/sec_forms.py:11
+#: examples/extendsecurity2/app/sec_forms.py:11
+#: flask_appbuilder/security/forms.py:22 flask_appbuilder/security/views.py:138
+msgid "Write the user first name or names"
+msgstr "Gib den ersten oder mehrere Vornamen ein"
 
-#~ msgid "Willkommen"
-#~ msgstr ""
+#: examples/extendsecurity/app/sec_forms.py:13
+#: examples/extendsecurity2/app/sec_forms.py:13
+#: flask_appbuilder/security/forms.py:24 flask_appbuilder/security/views.py:139
+msgid "Write the user last name"
+msgstr "Gib den Nachnamen des Benutzers ein"
 
-#~ msgid "Hier kannst du Grundkompetenzaufgaben üben."
-#~ msgstr ""
+#: flask_appbuilder/security/forms.py:29 flask_appbuilder/security/forms.py:45
+#: flask_appbuilder/security/views.py:142
+#: flask_appbuilder/security/views.py:234
+msgid ""
+"Please use a good password policy, this application does not check this "
+"for you"
+msgstr ""
+"Bitte benutze eine gute Passwortrichtlinie, diese Anwendung "
+"überprüft das nicht für dich"
 
+
+#: flask_appbuilder/security/forms.py:34 flask_appbuilder/security/forms.py:50
+msgid "Please rewrite the password to confirm"
+msgstr "Bitte wiederhole das Passwort zur Bestätigung"
+
+#: flask_appbuilder/security/registerviews.py:55
+msgid "Registration sent to your email"
+msgstr "Eine Registrierungsbestätigung wurde an deine E-Mail-Adresse gesendet"
+
+#: flask_appbuilder/security/registerviews.py:57
+msgid "Not possible to register you at the moment, try again later"
+msgstr ""
+"Es ist nicht möglich, dich im Moment zu registrieren. Versuche es "
+"später erneut."
+
+#: flask_appbuilder/security/registerviews.py:61
+msgid "Fill out the registration form"
+msgstr "Fülle das Anmeldeformular aus"
+
+#: flask_appbuilder/security/views.py:144
+msgid "It's not a good policy to remove a user, just make it inactive"
+msgstr ""
+"Es ist keine gute Richtlinie, einen Benutzer zu entfernen, setze ihn"
+" einfach inaktiv"
+
+#: flask_appbuilder/security/views.py:148
+#: flask_appbuilder/security/views.py:239
+msgid "Please rewrite the user's password to confirm"
+msgstr "Wiederhole bitte das Passwort des Benutzers zur Bestätigung"
+
+#: flask_appbuilder/security/views.py:173
+msgid "Your user information"
+msgstr "Deine Benutzerinformationen"
+
+#: flask_appbuilder/security/views.py:332
+msgid "Copy the selected roles?"
+msgstr "Kopieren der ausgewählten Rollen?"
+
+#: flask_appbuilder/security/views.py:358
+msgid "Invalid login. Please try again."
+msgstr "Ungültige Anmeldedaten. Bitte versuche es nochmal."
+
+#: flask_appbuilder/templates/appbuilder/general/lib.html:338
+msgid "You sure you want to delete this item?"
+msgstr "Bist du sicher, dass du diesen Eintrag löschen möchtest?"
+
+
+#: flask_appbuilder/templates/appbuilder/general/security/activation.html:7
+msgid "Your user is activated you can now proceed to login"
+msgstr "Dein Benutzername ist aktiviert, du kannst dich nun anmelden"
+
+#: flask_appbuilder/templates/appbuilder/general/security/login_db.html:18
+#: flask_appbuilder/templates/appbuilder/general/security/login_ldap.html:16
+msgid "Enter your login and password below"
+msgstr "Gib dein Benutzername und Passwort ein"
+
+#: flask_appbuilder/templates/appbuilder/general/security/login_db.html:49
+#: flask_appbuilder/templates/appbuilder/general/security/login_oauth.html:59
+#: flask_appbuilder/templates/appbuilder/general/security/login_oid.html:121
+msgid "If you are not already a user, please register"
+msgstr "Wenn du noch kein Nutzer bist, registriere dich bitte"
+
+#: flask_appbuilder/templates/appbuilder/general/security/login_oauth.html:44
+msgid "Please choose one of the following providers:"
+msgstr "Bitte wähle eine der folgenden Anbieter:"
+
+#: flask_appbuilder/templates/appbuilder/general/security/login_oid.html:89
+msgid "Click on your OpenID provider below"
+msgstr "Klicke auf deinen OpenID-Provider"
+
+#: flask_appbuilder/templates/appbuilder/general/security/login_oid.html:101
+msgid "Or enter your OpenID here"
+msgstr "Oder gib hier deine OpenID ein"
+
+#: flask_appbuilder/templates/appbuilder/general/security/login_oid.html:105
+msgid "Please choose a provider"
+msgstr "Bitte wähle einen Anbieter"
+
+#: flask_appbuilder/templates/appbuilder/general/security/login_oid.html:107
+msgid "Enter your OpenID Username"
+msgstr "Gib hier deine OpenID ein"

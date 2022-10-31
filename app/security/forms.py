@@ -32,7 +32,7 @@ class ExtendedRegisterUserDBForm(DynamicForm):
     )
     password = PasswordField(
         lazy_gettext("Password"),
-        description=lazy_gettext("Bitte wählen Sie ein sicheres Passwort"),
+        description=lazy_gettext("Bitte wähle ein sicheres Passwort"),
         validators=[DataRequired()],
         widget=BS3PasswordFieldWidget(),
     )

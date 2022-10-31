@@ -236,7 +236,7 @@ class ForgotPasswordFormView(PublicFormView):
 
         # Flash message
         flash(
-            "Falls dieser Benutzer existiert, haben Sie eine E-Mail mit einem Link zum"
+            "Falls dieser Benutzer existiert, hast du eine E-Mail mit einem Link zum"
             " Zurücksetzen des Passworts erhalten",
             "info",
         )
@@ -278,7 +278,7 @@ class ResetForgotPasswordView(PublicFormView):
                 return user
             else:
                 flash(
-                    "Der Link zum Passwort setzen ist abgelaufen. Sie können hier einen neuen beantragen.",
+                    "Der Link zum Passwort setzen ist abgelaufen. Du kannst hier einen neuen beantragen.",
                     category="danger",
                 )
         return None
@@ -314,13 +314,13 @@ class ResetForgotPasswordView(PublicFormView):
                 self.appbuilder.sm.reset_password(user_id, form.password.data)
                 user.password_reset_token = user.password_reset_expiration = None
                 flash(
-                    "Ihr Passwort wurde geändert, Sie können sich jetzt damit anmelden",
+                    "Dein Passwort wurde geändert, du kannst dich jetzt damit anmelden",
                     category="success",
                 )
                 return redirect(url_for("ExtendedAuthDBView.login"))
             else:
                 flash(
-                    "Der Link zum Passwort setzen ist abgelaufen. Sie können hier einen neuen beantragen.",
+                    "Der Link zum Passwort setzen ist abgelaufen. Du kannst hier einen neuen beantragen.",
                     category="danger",
                 )
         return None
