@@ -5,13 +5,13 @@
         <div class="panel-heading"><h3 class="panel-title">Hausübungen</h3></div>
         <div class="panel-body">
             Du hast
-            {%- if current_user.active_assignments()|length == 0 -%}
+            {% if current_user.active_assignments()|length == 0 -%}
                 derzeit keine aktiven Hausübungen.
-            {%- elif current_user.active_assignments()|length > 1 -%}
+            {% elif current_user.active_assignments()|length > 1 -%}
                 &nbsp;die folgenden {{ current_user.active_assignments()|length }} aktiven Hausübungen:
-            {%- else -%}
+            {% else -%}
                 &nbsp;die folgende aktive Hausübung:
-            {%- endif -%}
+            {% endif -%}
         </div>
         {%- if current_user.active_assignments()|length >= 1 -%}
             <ul class="list-group">
