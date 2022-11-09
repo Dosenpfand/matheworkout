@@ -422,13 +422,13 @@ section {
     ABOUT
 -----------------------------------------*/
 
-#about figure {
+.about figure {
     display: inline-block;
     vertical-align: top;
     margin-left: 15px;
 }
 
-#about figure span {
+.about figure span {
     float: left;
     margin-left: -15px;
     padding: 15px 20px;
@@ -436,7 +436,7 @@ section {
     top: 20px;
 }
 
-#about figure span i {
+.about figure span i {
     background: #29ca8e;
     border-radius: 50px;
     color: #ffffff;

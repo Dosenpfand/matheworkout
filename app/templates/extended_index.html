@@ -1,6 +1,6 @@
 {% extends "appbuilder/base.html" %}
 {% block content %}
-    <div class="container" id="about">
+    <div class="container about">
         <div class="row">
             {% if current_user.is_authenticated %}
                 {% if config.STUDENT_ROLE_NAME in current_user.role_names() -%}
