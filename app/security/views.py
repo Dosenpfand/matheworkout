@@ -165,10 +165,7 @@ class ExtendedUserDBModelTeacherView(ExtendedUserDBModelView):
     add_title = title
     edit_title = title
 
-    list_columns = [
-        "first_name",
-        "last_name",
-    ]
+    list_columns = ["first_name", "last_name", "correct_questions"]
 
     base_order = ("last_name", "asc")
 
