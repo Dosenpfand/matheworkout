@@ -47,7 +47,7 @@
       {# TODO: Only include when needed! (also others) #}
       <script src="{{url_for('static',filename='js/confetti.browser.min.js')}}"></script>
       <script src="{{url_for('static',filename='js/chart.min.js')}}"></script>
-      {# TODO: Might need template js? #}
+      <script type="module" src="{{url_for('static',filename='js/js.cookie.min.js')}}"></script>
     {% endblock %}
 
     {% block add_tail_js %}
@@ -56,6 +56,7 @@
     {% block confetti %}
     {% if fire_confetti %}
     <script type="text/javascript">
+        // Confetti
         const count = 200;
         const defaults = {
             origin: {y: 0.7},
@@ -98,6 +99,42 @@
     </script>
     {% endif %}
     {% endblock %}
+    <script>
+        // YouTube embed
+        function activateVideos() {
+            const iframes = document.querySelectorAll('.video__iframe[data-src*="youtube-nocookie.com"]');
+            iframes.forEach((iframe) => {
+                iframe.src = iframe.dataset.src;
+            });
+        }
+
+        function deactivateVideos() {
+            const iframes = document.querySelectorAll('.video__iframe[src*="youtube-nocookie.com"]');
+            iframes.forEach((iframe) => {
+                iframe.removeAttribute('src');
+            });
+        }
+
+        function attachEvents() {
+            const notices = document.querySelectorAll('.video__notice');
+            notices.forEach((notice) => {
+                notice.addEventListener('submit', (event) => {
+                    activateVideos();
+                    // Store consent for one year
+                    Cookies.set('youtube-consent', 'true', {expires: 365});
+                    event.preventDefault();
+                });
+            });
+        }
+
+        window.addEventListener('load', function () {
+            if (Cookies.get('youtube-consent') === 'true') {
+                activateVideos();
+            } else {
+                attachEvents();
+            }
+        })
+    </script>
 
     {% block tail %}
     {% endblock %}

@@ -1,0 +1,26 @@
+{% macro youtube_embed(video_id=None, url=None, width=560, height=315) -%}
+    <div class="video">
+        <iframe
+                class="video__iframe"
+                width="{{ width }}"
+                height="{{ height }}"
+                {% if video_id -%}
+                data-src="https://www.youtube-nocookie.com/embed/{{ video_id }}"
+                {% else -%}
+                data-src="{{ url }}"
+                {% endif -%}
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen="allowfullscreen"
+        ></iframe>
+        <form class="video__notice">
+            <p>
+                Sollen Inhalte von YouTube eingebunden werden? Damit stimmst du den
+                <a href="https://policies.google.com/privacy?hl=de">Datenschutzbestimmungen von Google</a> zu.
+                Die Zustimmung kann jederzeit in unseren <a href="{{ url_for('DataProtectionView.data_protection') }}">Datenschutzbestimmungen</a>
+                widerrufen werden.
+            </p>
+            <button class="btn btn-primary">Inhalt von YouTube laden</button>
+        </form>
+    </div>
+{%- endmacro %}

@@ -978,3 +978,43 @@ footer .social-icon {
         height: inherit;
     }
 }
+
+/*---------------------------------------
+   YOUTUBE EMBED
+-----------------------------------------*/
+
+.video__iframe:not([src]) {
+    display: none;
+}
+
+.video__iframe[src] + .video__notice {
+    display: none;
+}
+
+.video {
+    display: flex;
+    align-items: center;
+    position: relative;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.video::before {
+    display: block;
+    content: '';
+    padding-bottom: 56.25%;
+    width: 0;
+    height: 0;
+}
+
+.video__notice {
+    background-color: rgba(255, 255, 255, 0.9);
+    text-align: center;
+    padding: 1.5rem;
+    width: 100%;
+}
+
+.video__notice > * {
+    max-width: 38rem;
+    margin-left: auto;
+    margin-right: auto;
+}

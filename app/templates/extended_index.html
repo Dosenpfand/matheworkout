@@ -1,4 +1,5 @@
 {% extends "appbuilder/base.html" %}
+{% import "youtube_embed.html" as youtube %}
 {% block content %}
     <div class="container about">
         <div class="row">
@@ -93,22 +94,14 @@
 
                 <div class="col-md-6 col-sm-12">
                     <div class="about-info">
-                        <h2>{{ _("Für Schüler*innen") }}</h2>
+                        <h2>"Für Schüler*innen"</h2>
                         <div style="padding-top: 15px; padding-bottom: 15px;">
-                            <iframe style="width: 100%; aspect-ratio: 1280/720;"
-                                    src="https://www.youtube-nocookie.com/embed/mJFkMYANFfM"
-                                    title="Matheworkout für Schüler*innen" frameborder="0"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowfullscreen></iframe>
+                            {{ youtube.youtube_embed("mJFkMYANFfM") }}
                         </div>
 
-                        <h2>{{ _("Für Lehrer*innen") }}</h2>
+                        <h2>Für Lehrer*innen</h2>
                         <div style="padding-top: 15px; padding-bottom: 15px;">
-                            <iframe style="width: 100%; aspect-ratio: 1280/720;"
-                                    src="https://www.youtube-nocookie.com/embed/dI8IrB1BaEk"
-                                    title=" Matheworkout für Lehrer*innen " frameborder="0"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowfullscreen></iframe>
+                            {{ youtube.youtube_embed("dI8IrB1BaEk") }}
                         </div>
                     </div>
                 </div>
