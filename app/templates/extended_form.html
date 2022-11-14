@@ -1,5 +1,5 @@
-
 {% import 'appbuilder/general/lib.html' as lib %}
+{% import 'youtube_embed.html' as youtube %}
 
 {% macro multiple_lnk_back(count=1) %}
     <a href="{{url_for('UtilExtendedView' + '.back_mult', count=count)}}" class="btn btn-sm btn-default" data-toggle="tooltip" rel="tooltip"
@@ -19,10 +19,6 @@
         {% endif %}
         {{ multiple_lnk_back(back_count) }}
     </div>
-{% endmacro %}
-
-{% macro video_embed_code(url, width=560, height=315) %}
-<iframe width="{{ width }}" height="{{ height }}" src="{{ url }}" title="Video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 {% endmacro %}
 
 {% set begin_sep_label = '<td>' %}
@@ -95,11 +91,11 @@
         </div>
     {% endif %}
 
-    {% if video_embed_url %}
-        {% call lib.accordion_tag('explainer-video-0', 'Video-Erklärung', False) %}
-            {{ video_embed_code(video_embed_url) }}
-        {% endcall %}
-    {% endif %}
-
     {{ extended_render_form_controls(submit_text, back_count) }}
 </form>
+
+{% if video_embed_url %}
+    {% call lib.accordion_tag('explainer-video-0', 'Video-Erklärung', False) %}
+        {{ youtube.youtube_embed(url=video_embed_url) }}
+    {% endcall %}
+{% endif %}

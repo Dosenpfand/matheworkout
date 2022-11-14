@@ -54,12 +54,13 @@
     <div>
         Diese Seite verwendet 1st Party Session Cookies. Das sind Textdateien, die der Dienst an den Browser der
         betroffenen Person sendet und in nachfolgenden Anfragen dieser zurückgesendet werden. Diese sind temporär
-        und können nicht dienstübergeifend ausgelesen werden.
+        und können nicht dienstübergreifend ausgelesen werden.
         In diesen Cookies sind folgende Daten gespeichert:
         <ul>
             <li>Anmelde-Status</li>
             <li>Sprache</li>
             <li>Aufgerufene Ressourcen</li>
+            <li>Einwilligung zur Einbindung von Videos über YouTube</li>
             <li>weitere technische und sicherheitsrelevante Informationen (z.B. <abbr
                     title="Cross Site Request Forgery">CSRF</abbr>-Token und Signatur)
             </li>
@@ -163,10 +164,13 @@
 
     <h3>YouTube</h3>
     <div>
-        Erklärvideos zu bestimmten Aufgaben, sowie zur grundlegenden Bedienung von dieser Seite, werden Inhalte vom
+        Zur Erklärung bestimmter Aufgaben, sowie der grundlegenden Bedienung dieser Seite, stehen Videoinhalte zur
+        Verfügung. Diese werden nach expliziter Einwilligung der betroffenen Person vom
         Videodienst YouTube eingebunden. Diese Inhalte werden auf der Startseite, sowie bei den der Aufgabenauswertung
-        angezeigt.
-        Diese Inhalte werden eingebunden, um die grundlegende Funktionalität des Dienstes zur Verfügung zu stellen.
+        angezeigt. Die Einwilligung zur Einbindung kann jederzeit durch einen Klick auf
+        <button class="btn btn-secondary" onclick="Cookies.remove('youtube-consent')">diesen Button</button>
+        bzw. durch Löschen der gesetzten Cookies, widerrufen werden.
+        Diese Inhalte werden eingebunden, um die erweiterte Funktionalität des Dienstes zur Verfügung zu stellen.
     </div>
     <div>
         Welche Daten und auf welcher Grundlage diese von YouTube erhoben werden, sowie wie lange diese gespeichert
