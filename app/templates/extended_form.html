@@ -95,7 +95,9 @@
 </form>
 
 {% if video_embed_url %}
-    {% call lib.accordion_tag('explainer-video-0', 'Video-Erklärung', False) %}
-        {{ youtube.youtube_embed(url=video_embed_url) }}
-    {% endcall %}
+    <div style="width: 560px;">
+        {% call lib.accordion_tag('explainer-video-0', 'Video-Erklärung', False) %}
+            {{ youtube.youtube_embed(url=video_embed_url) }}
+        {% endcall %}
+    </div>
 {% endif %}
