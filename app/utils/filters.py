@@ -24,12 +24,24 @@ class FilterInFunctionWithNone(BaseFilter):
 
 
 class FilterQuestionByAnsweredCorrectness(BaseFilter):
-    name = "Filters for incorrectly answered questions"
+    name = "Filters for (in)correctly answered questions"
     arg_name = None
 
     def apply(self, query, is_answer_correct):
         return query.filter(
             Question.answered_users.any(
+                user_id=g.user.id, is_answer_correct=is_answer_correct
+            )
+        )
+
+
+class FilterQuestionByNotAnsweredCorrectness(BaseFilter):
+    name = "Filters for not (in)correctly answered questions"
+    arg_name = None
+
+    def apply(self, query, is_answer_correct):
+        return query.filter(
+            ~Question.answered_users.any(
                 user_id=g.user.id, is_answer_correct=is_answer_correct
             )
         )

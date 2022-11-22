@@ -11,7 +11,10 @@ from wtforms import HiddenField, DateField
 
 from app import db
 from app.security.views import ExtendedUserDBModelTeacherView
-from app.utils.filters import FilterQuestionByAnsweredCorrectness
+from app.utils.filters import (
+    FilterQuestionByAnsweredCorrectness,
+    FilterQuestionByNotAnsweredCorrectness,
+)
 from app.models.general import (
     Question,
     QuestionType,
@@ -452,7 +455,10 @@ class TopicModelStudentView(ModelView, ShowQuestionDetailsMixIn):
 
 class QuestionModelIncorrectAnsweredView(ModelView):
     datamodel = SQLAInterface(Question)
-    base_filters = [["", FilterQuestionByAnsweredCorrectness, False]]
+    base_filters = [
+        ["", FilterQuestionByAnsweredCorrectness, False],
+        ["", FilterQuestionByNotAnsweredCorrectness, True],
+    ]
     title = "Aufgaben (falsch beantwortet)"
     list_title = title
     show_title = title
