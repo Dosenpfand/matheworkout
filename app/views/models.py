@@ -236,6 +236,7 @@ class QuestionModelView(ModelView):
 class AssocUserQuestionModelView(ModelView):
     datamodel = SQLAInterface(AssocUserQuestion)
     list_columns = ["user", "question", "created_on", "is_answer_correct"]
+    base_order = ("created_on", "des")
 
 
 class AssignmentModelAdminView(ModelView, ShowQuestionDetailsMixIn):
