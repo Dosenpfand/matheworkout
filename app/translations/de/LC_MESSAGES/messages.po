@@ -57,7 +57,7 @@ msgstr "Bitte wiederhole das Passwort zur Bestätigung"
 
 #: flask_appbuilder/security/registerviews.py:55
 msgid "Registration sent to your email"
-msgstr "Eine Registrierungsbestätigung wurde an deine E-Mail-Adresse gesendet"
+msgstr "Eine Registrierungsbestätigung wurde an deine E-Mail-Adresse gesendet.<br> <b>Falls du sie in deinem Posteingang nicht findest, kontrolliere bitte auch den Spam-Ordner.</b>"
 
 #: flask_appbuilder/security/registerviews.py:57
 msgid "Not possible to register you at the moment, try again later"
