@@ -61,7 +61,7 @@ class ExtendedSecurityManager(SecurityManager):
     def import_users(self, csv_data):
         # TODO: for many rows queue is needed! celery?
         wrapper = io.TextIOWrapper(csv_data, encoding="utf-8")
-        csv_reader = csv.DictReader(wrapper)
+        csv_reader = csv.DictReader(wrapper, delimiter=";")
         csv_rows = list(csv_reader)
         is_fatal = False
         max_imports_per_day = self.appbuilder.app.config["MAX_USER_IMPORTS_PER_DAY"]
