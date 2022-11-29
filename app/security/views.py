@@ -227,6 +227,13 @@ class ForgotPasswordFormView(PublicFormView):
                 .first()
             )
 
+        if not user:
+            user = (
+                db.session.query(ExtendedUser)
+                .filter_by(email=form.username.data.lower())
+                .first()
+            )
+
         if user:
             self.appbuilder.sm.set_password_reset_token(user)
             self.send_email(user)
@@ -428,6 +435,10 @@ class ExtendedAuthDBView(AuthDBView):
             user = self.appbuilder.sm.auth_user_db(
                 form.username.data, form.password.data
             )
+            if not user:
+                user = self.appbuilder.sm.auth_user_db(
+                    form.username.data.lower(), form.password.data
+                )
             if not user:
                 flash(as_unicode(self.invalid_login_message), "warning")
                 return redirect(self.appbuilder.get_url_for_login)
