@@ -1,8 +1,7 @@
 import logging
 import datetime
-import secrets
 
-from flask import g, redirect, url_for, flash, abort, current_app, request
+from flask import g, redirect, url_for, flash, current_app, request
 from flask_appbuilder import action, expose, has_access, PublicFormView, const
 from flask_appbuilder._compat import as_unicode
 from flask_appbuilder.security.forms import ResetPasswordForm, LoginForm_db
@@ -16,6 +15,7 @@ from flask_appbuilder.utils.base import get_safe_redirect
 from flask_appbuilder.validators import Unique
 from flask_babel import lazy_gettext
 from flask_login import login_user
+from flask import Markup
 
 from app import db
 from app.models.general import ExtendedUser
@@ -233,19 +233,24 @@ class ForgotPasswordFormView(PublicFormView):
 
         # Flash message
         flash(
-            "Falls dieser Benutzer existiert, hast du eine E-Mail mit einem Link zum"
-            " Zurücksetzen des Passworts erhalten",
+            Markup(
+                "Falls dieser Benutzer existiert, hast du eine E-Mail mit einem Link zum"
+                " Zurücksetzen des Passworts erhalten. <br> <b>Falls du sie in deinem Posteingang nicht findest,"
+                " kontrolliere bitte auch den Spam-Ordner.</b>"
+            ),
             "info",
         )
-        pass
+        return redirect(self.appbuilder.get_url_for_index)
 
     @expose("/form", methods=["POST"])
     def this_form_post(self):
         self._init_vars()
         form = self.form.refresh()
         if form.validate_on_submit():
-            self.form_post(form)
-            return redirect(self.get_redirect())
+            response = self.form_post(form)
+            if not response:
+                return redirect(self.get_redirect())
+            return response
         else:
             widgets = self._get_edit_widget(form=form)
             return self.render_template(
