@@ -60,6 +60,7 @@ class ExtendedSecurityManager(SecurityManager):
 
     def import_users(self, csv_data):
         # TODO: for many rows queue is needed! celery?
+        # TODO: support UTF-8?
         wrapper = io.TextIOWrapper(csv_data, encoding="iso-8859-1")
         csv_reader = csv.DictReader(wrapper, delimiter=";")
         csv_rows = list(csv_reader)
