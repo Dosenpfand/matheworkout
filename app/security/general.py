@@ -60,9 +60,10 @@ class ExtendedSecurityManager(SecurityManager):
 
     def import_users(self, csv_data):
         # TODO: for many rows queue is needed! celery?
-        wrapper = io.TextIOWrapper(csv_data, encoding="utf-8")
+        wrapper = io.TextIOWrapper(csv_data, encoding="iso-8859-1")
         csv_reader = csv.DictReader(wrapper, delimiter=";")
         csv_rows = list(csv_reader)
+
         is_fatal = False
         max_imports_per_day = self.appbuilder.app.config["MAX_USER_IMPORTS_PER_DAY"]
 
@@ -167,7 +168,7 @@ class ExtendedSecurityManager(SecurityManager):
                             html,
                             user.email,
                         )
-        except UnicodeDecodeError:
+        except:
             flash(
                 "Die Datei konnte nicht dekodiert werden. Ist es eine CSV-Datei?",
                 category="danger",
