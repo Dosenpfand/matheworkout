@@ -92,7 +92,7 @@ appbuilder.add_view(
     "topics",
     label="Grundkompetenzbereiche",
     icon="fa-align-justify",
-    category="Verwaltung",
+    category="Aufgaben-V",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -100,16 +100,15 @@ appbuilder.add_view(
     "categories_admin",
     label="Aufgabenkategorien",
     icon="fa-align-justify",
-    category="Verwaltung",
+    category="Aufgaben-V",
     category_icon="fa-align-justify",
 )
-appbuilder.add_separator("Verwaltung")
 appbuilder.add_view(
     Question2of5ModelView,
     "questions_2_of_5",
     label="2 aus 5",
     icon="fa-align-justify",
-    category="Verwaltung",
+    category="Aufgaben-V",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -117,7 +116,7 @@ appbuilder.add_view(
     "questions_1_of_6",
     label="1 aus 6",
     icon="fa-align-justify",
-    category="Verwaltung",
+    category="Aufgaben-V",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -125,7 +124,7 @@ appbuilder.add_view(
     "questions_3_to_3",
     label="Lückentext",
     icon="fa-align-justify",
-    category="Verwaltung",
+    category="Aufgaben-V",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -133,7 +132,7 @@ appbuilder.add_view(
     "questions_2_decimals",
     label="Werteingabe zwei Zahlen",
     icon="fa-align-justify",
-    category="Verwaltung",
+    category="Aufgaben-V",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -141,7 +140,7 @@ appbuilder.add_view(
     "questions_1_decimals",
     label="Werteingabe eine Zahl",
     icon="fa-align-justify",
-    category="Verwaltung",
+    category="Aufgaben-V",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -149,7 +148,7 @@ appbuilder.add_view(
     "questions_self_assessed",
     label="Selbstkontrolle",
     icon="fa-align-justify",
-    category="Verwaltung",
+    category="Aufgaben-V",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -157,7 +156,7 @@ appbuilder.add_view(
     "questions_select_4",
     label="Zuordnung",
     icon="fa-align-justify",
-    category="Verwaltung",
+    category="Aufgaben-V",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -166,7 +165,7 @@ appbuilder.add_view(
     label="Hausübungen",
     icon="fa-tasks",
     category="questions_category",
-    category_label="Aufgabenlisten",
+    category_label="Aufgaben",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -175,7 +174,7 @@ appbuilder.add_view(
     label="Maturaaufgaben",
     icon="fa-star",
     category="questions_category",
-    category_label="Aufgabenlisten",
+    category_label="Aufgaben",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -184,7 +183,7 @@ appbuilder.add_view(
     label="Falsch beantwortete Aufgaben",
     icon="fa-minus-square",
     category="questions_category",
-    category_label="Aufgabenlisten",
+    category_label="Aufgaben",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -193,7 +192,7 @@ appbuilder.add_view(
     label="Richtig beantwortete Aufgaben",
     icon="fa-plus-square",
     category="questions_category",
-    category_label="Aufgabenlisten",
+    category_label="Aufgaben",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -202,7 +201,7 @@ appbuilder.add_view(
     label="Grundkompetenzbereiche",
     icon="fa-tags",
     category="questions_category",
-    category_label="Aufgabenlisten",
+    category_label="Aufgaben",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -211,7 +210,7 @@ appbuilder.add_view(
     label="Alle Aufgaben",
     icon="fa-align-justify",
     category="questions_category",
-    category_label="Aufgabenlisten",
+    category_label="Aufgaben",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view_no_menu(QuestionRandom())
