@@ -18,9 +18,10 @@ from flask_login import login_user
 from flask import Markup
 
 from app import db
-from app.models.general import ExtendedUser
+from app.models.general import ExtendedUser, LearningGroup
 from app.security.forms import ForgotPasswordForm, ExtendedRegisterUserDBForm
 from app.utils.general import send_email
+from app.views.widgets import ListWithDeleteRelationshipWidget
 
 log = logging.getLogger(__name__)
 
@@ -165,9 +166,29 @@ class ExtendedUserDBModelTeacherView(ExtendedUserDBModelView):
     add_title = title
     edit_title = title
 
+    list_widget = ListWithDeleteRelationshipWidget
+
     list_columns = ["first_name", "last_name", "correct_questions"]
 
     base_order = ("last_name", "asc")
+
+    @expose("/delete_relationship/<int:pk>/<int:fk>", methods=["POST"])
+    @has_access
+    def delete_relationship(self, pk, fk):
+        self.update_redirect()
+        learning_group = (
+            db.session.query(LearningGroup)
+            .filter_by(id=fk, created_by_fk=g.user.id)
+            .first()
+        )
+        user = db.session.query(ExtendedUser).filter_by(id=pk).first()
+        if learning_group and user and (user in learning_group.users):
+            learning_group.users.remove(user)
+            db.session.commit()
+            flash("Erfolgreich entfernt", "success")
+        else:
+            flash("Entfernen fehlgeschlagen", "danger")
+        return self.post_delete_redirect()
 
 
 class ExtendedUserInfoEditView(UserInfoEditView):

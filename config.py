@@ -72,6 +72,7 @@ FAB_ROLES = {
         ["CategoryModelStudentView", "can_show"],
         ["TopicModelStudentView", "can_list"],
         ["TopicModelStudentView", "can_show"],
+        ["ExtendedUserDBModelTeacherView", "can_delete_relationship"],
         ["questions_.*", "menu_access"],
         ["random_.*", "menu_access"],
         ["topics", "menu_access"],

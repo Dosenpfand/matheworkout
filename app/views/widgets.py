@@ -18,6 +18,10 @@ class ExtendedShowWidget(RenderTemplateWidget):
     template = "extended_show.html"
 
 
+class ListWithDeleteRelationshipWidget(RenderTemplateWidget):
+    template = "list_with_delete_relationship.html"
+
+
 class DatePickerWidgetDe(DatePickerWidget):
     data_template = (
         '<div class="input-group date appbuilder_date" id="datepicker">'
