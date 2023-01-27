@@ -360,8 +360,8 @@ class LearningGroupModelView(ModelView):
 
 class LearningGroupModelAdminView(LearningGroupModelView):
     base_filters = None
-    show_columns = LearningGroupModelView.show_columns + ["created_by"]
-    list_columns = LearningGroupModelView.list_columns + ["created_by"]
+    show_columns = LearningGroupModelView.show_columns + ["created_by", "user_count"]
+    list_columns = LearningGroupModelView.list_columns + ["created_by", "user_count"]
 
 
 class AssignmentModelStudentView(ModelView, ShowQuestionDetailsMixIn):

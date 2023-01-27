@@ -451,6 +451,9 @@ class LearningGroup(Model, AuditMixin):
             + 1
         )
 
+    def user_count(self):
+        return len(self.users)
+
 
 class ExtendedUser(User):
     __tablename__ = "ab_user"
