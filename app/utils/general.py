@@ -23,7 +23,7 @@ def link_formatter_question(q_id, filters=None):
         category_id=category_id,
     )
     return Markup(
-        f'<a class="btn btn-sm btn-primary btn-table" href="{url}">{external_id}</a>'
+        f'<a class="btn btn-sm btn-primary btn-table" style="min-width: 30%" href="{url}">{external_id}</a>'
     )
 
 
@@ -39,7 +39,7 @@ def link_formatter_category(category_id):
     name = db.session.query(Category).filter_by(id=category_id).first().name
     url = url_for("CategoryModelStudentView.show", pk=category_id)
     return Markup(
-        f'<a class="btn btn-sm btn-primary btn-table" href="{url}">{name}</a>'
+        f'<a class="btn btn-sm btn-primary btn-table" style="min-width: 15em" href="{url}">{name}</a>'
     )
 
 
@@ -47,7 +47,7 @@ def link_formatter_topic(topic_id):
     name = db.session.query(Topic).filter_by(id=topic_id).first().name
     url = url_for("TopicModelStudentView.show", pk=topic_id)
     return Markup(
-        f'<a class="btn btn-sm btn-primary btn-table" href="{url}">{name}</a>'
+        f'<a class="btn btn-sm btn-primary btn-table" style="min-width: 30%" href="{url}">{name}</a>'
     )
 
 
