@@ -403,6 +403,7 @@ class AssignmentModelStudentView(ModelView, ShowQuestionDetailsMixIn):
 class CategoryModelStudentView(ModelView, ShowQuestionDetailsMixIn):
     datamodel = SQLAInterface(Category)
     base_filters = [["name", FilterNotEqual, "Aufgabenpool"]]
+    base_order = ("name", "desc")
 
     label_columns = {"id": "Titel"}
     list_columns = ["id"]
