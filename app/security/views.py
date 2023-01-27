@@ -21,7 +21,7 @@ from app import db
 from app.models.general import ExtendedUser, LearningGroup
 from app.security.forms import ForgotPasswordForm, ExtendedRegisterUserDBForm
 from app.utils.general import send_email
-from app.views.widgets import ListWithDeleteRelationshipWidget
+from app.views.widgets import ListWithDeleteRelationshipWidget, RegisterFormWidget
 
 log = logging.getLogger(__name__)
 
@@ -379,6 +379,7 @@ class ExtendedRegisterUserDBView(RegisterUserDBView):
     form = ExtendedRegisterUserDBForm
     redirect_url = "/"
     email_subject = current_app.config["APP_NAME"] + " - Kontoaktivierung"
+    edit_widget = RegisterFormWidget
 
     # noinspection PyMethodOverriding
     def add_registration(self, username, first_name, last_name, email, password, role):

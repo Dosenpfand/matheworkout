@@ -22,6 +22,10 @@ class ListWithDeleteRelationshipWidget(RenderTemplateWidget):
     template = "list_with_delete_relationship.html"
 
 
+class RegisterFormWidget(RenderTemplateWidget):
+    template = "form_register.html"
+
+
 class DatePickerWidgetDe(DatePickerWidget):
     data_template = (
         '<div class="input-group date appbuilder_date" id="datepicker">'
