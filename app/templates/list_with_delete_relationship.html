@@ -81,7 +81,7 @@
 
 {% macro lnk_delete(my_href) %}
     <a href="javascript:void(0)" class="btn btn-sm btn-default confirm" rel="tooltip" title="Aus Klasse entfernen"
-       onclick="var a = new AdminActions(); return a.execute_single_delete('{{my_href}}','Bist du sicher, dass du diesen Schüler aus der Klasse entfernen möchtest?');">
+       onclick="var a = new AdminActions(); return a.execute_single_delete('{{my_href}}','Bist du sicher, dass du diese Schüler:in aus der Klasse entfernen möchtest?');">
         <span class="sr-only">{{ _('Delete') }}</span>
         <i class="fa fa-trash"></i>
     </a>

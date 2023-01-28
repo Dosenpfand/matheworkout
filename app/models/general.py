@@ -24,7 +24,7 @@ from sqlalchemy import (
     Sequence,
     Table,
 )
-from sqlalchemy.orm import relationship, validates
+from sqlalchemy.orm import relationship
 
 
 class Select4Enum(enum.Enum):

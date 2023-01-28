@@ -48,7 +48,7 @@ class ExtendedRegisterUserDBForm(DynamicForm):
     # TODO: choices should not be hardcoded
     role = SelectField(
         "Rolle",
-        choices=[("Student", "Schüler"), ("Teacher", "Lehrer")],
+        choices=[("Student", "Schüler:in"), ("Teacher", "Lehrer:in")],
         widget=Select2Widget(),
         validators=[DataRequired()],
     )

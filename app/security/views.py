@@ -160,7 +160,7 @@ class ExtendedUserDBModelView(UserDBModelView):
 
 
 class ExtendedUserDBModelTeacherView(ExtendedUserDBModelView):
-    title = "Schüler"
+    title = "Schüler:innen"
     list_title = title
     show_title = title
     add_title = title

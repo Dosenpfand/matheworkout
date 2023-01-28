@@ -74,7 +74,7 @@ appbuilder.add_view(
 appbuilder.add_view(
     ImportUsersFormView,
     "import_users",
-    label="Schüler importieren",
+    label="Schüler:innen importieren",
     icon="fa-file-import",
     category="Verwaltung",
     category_icon="fa-align-justify",
