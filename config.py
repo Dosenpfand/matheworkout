@@ -94,6 +94,7 @@ FAB_ROLES = {
         ["LearningGroupModelView", ".*"],
         ["AssignmentModelAdminView", ".*"],
         ["AssignmentModelTeacherView", ".*"],
+        ["AddQuestionToAssignmentFormView", ".*"],
         ["TopicModelView", "can_list"],
         ["QuestionRandom", "can_random_question_redirect"],
     ],

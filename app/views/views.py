@@ -14,6 +14,7 @@ from app.views.forms import (
     QuestionSelect4FormView,
     DeleteStatsFormView,
     ImportUsersFormView,
+    AddQuestionToAssignmentFormView,
 )
 from app.views.general import (
     QuestionRandom,
@@ -224,13 +225,14 @@ appbuilder.add_view_no_menu(Question2DecimalsFormView)
 appbuilder.add_view_no_menu(Question1DecimalFormView)
 appbuilder.add_view_no_menu(QuestionSelfAssessedFormView)
 appbuilder.add_view_no_menu(QuestionSelect4FormView)
-appbuilder.add_view_no_menu(IdToForm())
-appbuilder.add_view_no_menu(AssignmentModelTeacherView())
-appbuilder.add_view_no_menu(UtilExtendedView())
-appbuilder.add_view_no_menu(DeleteStatsFormView())
-appbuilder.add_view_no_menu(JoinLearningGroup())
-appbuilder.add_view_no_menu(ExtendedUserDBModelTeacherView())
-appbuilder.add_view_no_menu(ForgotPasswordFormView())
-appbuilder.add_view_no_menu(ResetForgotPasswordView())
-appbuilder.add_view_no_menu(DataProtectionView())
-appbuilder.add_view_no_menu(ImprintView())
+appbuilder.add_view_no_menu(IdToForm)
+appbuilder.add_view_no_menu(AssignmentModelTeacherView)
+appbuilder.add_view_no_menu(AddQuestionToAssignmentFormView)
+appbuilder.add_view_no_menu(UtilExtendedView)
+appbuilder.add_view_no_menu(DeleteStatsFormView)
+appbuilder.add_view_no_menu(JoinLearningGroup)
+appbuilder.add_view_no_menu(ExtendedUserDBModelTeacherView)
+appbuilder.add_view_no_menu(ForgotPasswordFormView)
+appbuilder.add_view_no_menu(ResetForgotPasswordView)
+appbuilder.add_view_no_menu(DataProtectionView)
+appbuilder.add_view_no_menu(ImprintView)

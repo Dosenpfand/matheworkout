@@ -1,5 +1,7 @@
-from flask_appbuilder.fieldwidgets import DatePickerWidget
+from flask_appbuilder.fieldwidgets import DatePickerWidget, Select2AJAXWidget
 from flask_appbuilder.widgets import RenderTemplateWidget
+from jinja2 import Markup
+from wtforms.widgets import html_params
 
 
 class ExtendedEditWidget(RenderTemplateWidget):
@@ -34,3 +36,35 @@ class DatePickerWidgetDe(DatePickerWidget):
         '<input class="form-control" data-format="dd.MM.yyyy" %(text)s />'
         "</div>"
     )
+
+
+class Select2AJAXExtendedWidget(Select2AJAXWidget):
+    data_template = "<input %(text)s />"
+
+    def __init__(self, endpoint, extra_classes=None, style=None, placeholder=None):
+        self.endpoint = endpoint
+        self.extra_classes = extra_classes
+        self.placeholder = placeholder
+        self.style = style or "max-width:100%"
+
+    def __call__(self, field, **kwargs):
+        kwargs.setdefault("id", field.id)
+        kwargs.setdefault("name", field.name)
+        kwargs.setdefault("endpoint", self.endpoint)
+        kwargs.setdefault("style", self.style)
+        kwargs.setdefault("placeholder", self.placeholder)
+        input_classes = "input-group my_select2_ajax"
+        if self.extra_classes:
+            input_classes = input_classes + " " + self.extra_classes
+        kwargs.setdefault("class", input_classes)
+        if not field.data:
+            field.data = ""
+        template = self.data_template
+
+        return Markup(
+            template % {"text": html_params(type="text", value=field.data, **kwargs)}
+        )
+
+
+class FormMinimalInlineWidget(RenderTemplateWidget):
+    template = "form_minimal_inline_widget.html"

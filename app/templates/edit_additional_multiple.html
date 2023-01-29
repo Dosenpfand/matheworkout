@@ -14,12 +14,24 @@
                     {% if question['title'] %}
                     <h2>{{question['title']}}</h2>
                     {% endif %}
-                    {% if question['external_id'] %}
-                    <ol class="breadcrumb">
-                        <li><strong>Frage Nr.: {{ question['external_id'] }}</strong></li>
-                        <li>{{ question['category'] }}</li>
-                    </ol>
-                    {% endif %}
+
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                                {% if question['external_id'] %}
+                                <ol class="breadcrumb">
+                                    <li><strong>Frage Nr.: {{ question['external_id'] }}</strong></li>
+                                    <li>{{ question['category'] }}</li>
+
+                                </ol>
+                                {% endif %}
+                        </div>
+                        {% if config.TEACHER_ROLE_NAME in current_user.role_names() -%}
+                            <div class="col-md-6 col-sm-12 text-right">
+                                    {{ widgets.get('add_question_to_assignment')(form=question['add_to_assignment_form'], form_action=form_action)|safe }}
+                            </div>
+                        {% endif %}
+                    </div>
+
                     <div class="well well-sm"><strong>{{question['description']}}</strong></div>
                     {% if question['after_description'] %}
                     <div class="well well-sm">{{question['after_description']}}</div>

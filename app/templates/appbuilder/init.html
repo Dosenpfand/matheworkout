@@ -134,6 +134,23 @@
                 attachEvents();
             }
         })
+
+        // Add question to assignment
+        window.addEventListener('load', function () {
+            $(".form-inline").submit(function (e) {
+                e.preventDefault(); // avoid to execute the actual submit of the form.
+                var form = $(this);
+                var actionUrl = form.attr('action');
+                $.ajax({
+                    type: "POST",
+                    url: actionUrl,
+                    data: form.serialize(), // serializes the form's elements.
+                    success: function (data) {
+                        form.replaceWith("Hinzugefügt!")
+                    }
+                });
+            });
+        })
     </script>
 
     {% block tail %}

@@ -1,10 +1,14 @@
+from flask_appbuilder.fields import AJAXSelectField
 from flask_appbuilder.forms import DynamicForm
+from flask_appbuilder.models.sqla.interface import SQLAInterface
 from flask_wtf.file import FileField
 from wtforms import BooleanField, HiddenField, FloatField, SelectField
 from wtforms.validators import NoneOf, DataRequired
 
-from app.models.general import Select4Enum
+from app import db
+from app.models.general import Select4Enum, Assignment
 from app.utils.general import safe_math_eval
+from app.views.widgets import Select2AJAXExtendedWidget
 
 
 class FlexibleDecimalField(FloatField):
@@ -73,3 +77,18 @@ class DeleteStatsForm(DynamicForm):
 
 class ImportUsersForm(DynamicForm):
     file = FileField(label="CSV-Datei", validators=[DataRequired()])
+
+
+class AddQuestionToAssignmentForm(DynamicForm):
+    model = SQLAInterface(Assignment, db.session)
+    assignment_id = AJAXSelectField(
+        label="Hausübung",
+        datamodel=model,
+        validators=[DataRequired()],
+        is_related=False,
+        widget=Select2AJAXExtendedWidget(
+            endpoint="/assignmentmodeladminview/api/readvalues",
+            placeholder="Zu Hausübung hinzufügen",
+        ),
+    )
+    question_id = HiddenField()

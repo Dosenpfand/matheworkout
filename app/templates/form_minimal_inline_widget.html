@@ -1,0 +1,32 @@
+{% import 'appbuilder/general/lib.html' as lib %}
+
+{% macro render_field(field) %}
+    {% if (field.id != 'csrf_token') and (field.type != 'HiddenField') %}
+        {{ field(**kwargs)|safe }}
+        {% if field.errors %}
+            <div class="alert alert-danger">
+                {% for error in field.errors %}
+                    {{ _(error) }}
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endif %}
+{% endmacro %}
+
+{% macro render_form_controls() %}
+    <button type="submit" class="btn  btn-sm btn-primary">{{ _("Save") }}<i class="fa fa-save"></i></button>
+{% endmacro %}
+
+{% if form_action is defined %}
+    <form class="form-inline"  action="{{ form_action }}" method="post" enctype="multipart/form-data">
+{% else %}
+    <form class="form-inline" role="form" id="model_form" action="" method="post" enctype="multipart/form-data">
+{% endif %}
+    {{ form.hidden_tag() }}
+    <div>
+        {% for field in form %}
+            {{ render_field(field) }}
+        {% endfor %}
+        {{ render_form_controls() }}
+    </div>
+</form>

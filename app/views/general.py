@@ -1,12 +1,14 @@
 from flask import url_for, Response, flash, g, abort
 from flask_appbuilder import BaseView, has_access, expose, action
+from flask_appbuilder.models.sqla.interface import SQLAInterface
 from sqlalchemy import func
 from sqlalchemy.orm import load_only
 from werkzeug.utils import redirect
 
 from app import db
+from app.forms.forms import AddQuestionToAssignmentForm
 from app.models.general import QuestionType, Question, Assignment, Topic, LearningGroup
-from app.views.widgets import ExtendedShowWidget
+from app.views.widgets import ExtendedShowWidget, FormMinimalInlineWidget
 
 
 class QuestionRandom(BaseView):
@@ -218,6 +220,9 @@ class ImprintView(BaseView):
 class ShowQuestionDetailsMixIn:
     questions_col_name = "questions"
     show_details_widget = ExtendedShowWidget
+    add_question_to_assignment_widget = FormMinimalInlineWidget
+    add_question_to_assignment_form = AddQuestionToAssignmentForm
+    question_model = SQLAInterface(Question, db.session)
 
     def __init__(self):
         if not self.extra_args:
@@ -226,6 +231,9 @@ class ShowQuestionDetailsMixIn:
     def _get_show_details_widget(self, widgets=None):
         widgets = widgets or {}
         widgets["show_details"] = self.show_details_widget(route_base=self.route_base)
+        widgets["add_question_to_assignment"] = self.add_question_to_assignment_widget(
+            route_base=self.route_base
+        )
         return widgets
 
     @has_access
@@ -241,12 +249,15 @@ class ShowQuestionDetailsMixIn:
         widgets = self._get_show_details_widget()
 
         for question in getattr(item, self.questions_col_name):
+            add_to_assignment_form = self.add_question_to_assignment_form.refresh()
+            add_to_assignment_form.question_id.data = question.id
 
             current_question = {
                 "error": False,
                 "description": question.description_image_img(),
                 "external_id": question.external_id,
                 "category": question.category.name,
+                "add_to_assignment_form": add_to_assignment_form,
             }
             # TODO: should be handled in Question class
             if question.type == QuestionType.one_of_six:
@@ -372,7 +383,11 @@ class ShowQuestionDetailsMixIn:
             questions.append(current_question)
 
         self.extra_args = {"questions": questions}
-        return self.render_template("edit_additional_multiple.html", widgets=widgets)
+        return self.render_template(
+            "edit_additional_multiple.html",
+            widgets=widgets,
+            form_action=url_for("AddQuestionToAssignmentFormView.this_form_post"),
+        )
 
     @action(
         "show_question_details_action",

@@ -1,7 +1,18 @@
 import datetime
 
-from flask import request, g, url_for, flash, current_app, redirect
+from flask import (
+    request,
+    g,
+    url_for,
+    flash,
+    current_app,
+    redirect,
+    abort,
+    make_response,
+    jsonify,
+)
 from flask_appbuilder import SimpleFormView, expose, has_access
+from flask_appbuilder.models.sqla.interface import SQLAInterface
 from markupsafe import Markup
 from sqlalchemy import asc
 
@@ -16,6 +27,7 @@ from app.forms.forms import (
     QuestionSelect4Form,
     DeleteStatsForm,
     ImportUsersForm,
+    AddQuestionToAssignmentForm,
 )
 from app.models.general import (
     QuestionType,
@@ -25,7 +37,7 @@ from app.models.general import (
     assoc_assignment_question,
 )
 from app.utils.general import commit_safely
-from app.views.widgets import ExtendedEditWidget
+from app.views.widgets import ExtendedEditWidget, FormMinimalInlineWidget
 
 
 class QuestionFormView(SimpleFormView):
@@ -810,3 +822,28 @@ class ImportUsersFormView(SimpleFormView):
     def form_post(self, form):
         appbuilder.sm.import_users(form.file.data)
         return redirect(url_for(f"{self.__class__.__name__}.this_form_get"))
+
+
+class AddQuestionToAssignmentFormView(SimpleFormView):
+    form = AddQuestionToAssignmentForm
+    edit_widget = FormMinimalInlineWidget
+
+    question_model = SQLAInterface(Question, db.session)
+    assignment_model = SQLAInterface(Assignment, db.session)
+
+    def form_post(self, form):
+        assignment = self.assignment_model.get(form.assignment_id.raw_data[0])
+        if not assignment or assignment.created_by == g.user:
+            abort(404)
+
+        question_id = form.question_id.data
+        if not question_id:
+            abort(404)
+
+        question = self.question_model.get(question_id)
+        if not question:
+            abort(404)
+
+        assignment.assigned_questions.append(question)
+        if self.assignment_model.edit(assignment):
+            return make_response(jsonify(""))
