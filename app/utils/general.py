@@ -1,8 +1,11 @@
+import ast
 import logging
+from math import pi
 
 from flask import url_for
 from flask_mail import Mail, Message
 from markupsafe import Markup
+import simpleeval
 
 from app import db
 from app.models.general import Question, Topic, QuestionUserState, Assignment, Category
@@ -81,17 +84,20 @@ def state_to_emoji_markup(state, filters=None):
 
 
 def safe_math_eval(string):
+    s = simpleeval.SimpleEval(names={"pi": pi, "π": pi})
+    s.operators.pop(ast.Pow)
     string = string.replace(",", ".")
     string = string.replace("%", "*0.01")
-    allowed_chars = "0123456789+-*(). /"
     string = string.replace(" ", "")
+    string = string.lower()
     if string == "":
         return ""
 
-    for char in string:
-        if char not in allowed_chars:
-            return ""
-    return eval(string)
+    try:
+        evald = s.eval(string)
+    except:
+        evald = ""
+    return evald
 
 
 def commit_safely(db_session):
