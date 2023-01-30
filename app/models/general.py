@@ -363,7 +363,7 @@ class Assignment(Model, AuditMixin):
     is_due_on = Column(DateTime, nullable=False)
 
     def __repr__(self):
-        return self.name
+        return f"{self.name} ({self.learning_group.name})"
 
     @property
     def starts_on_de(self):
