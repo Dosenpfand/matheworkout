@@ -70,8 +70,37 @@
             additional_col=additional_col,
             video_embed_url=question.get('video_embed_url', None),
             forward_text=question.get('forward_text', None),
-            forward_url=question.get('forward_url', None)
+            forward_url=question.get('forward_url', None),
+            show_help_button=(question.get('options', False) and question['options'].get('show_help_button', False))
             )|safe }}
         {% endif %}
+    </div>
+
+    <div class="modal fade" id="modal-help-math-eval" tabindex="-1" role="dialog" aria-labelledby="modal-help-math-eval-label">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="modal-help-math-eval-label">Hilfe: Mathematische Ausdrücke</h4>
+                </div>
+                <div class="modal-body">
+                    Bei der Eingabe gilt es Folgendes zu beachten:
+                    <ul>
+                        <li>Erlaubt sind Rechenausdrücke die aus reellen Zahlen und den Operatoren <kbd>+</kbd>, <kbd>-</kbd>, <kbd>*</kbd>, <kbd>/</kbd> bestehen.</li>
+                        <li>Als Dezimaltrennzeichen kann sowohl der Punkt <kbd>.</kbd> als auch das Komma <kbd>,</kbd> verwendet werden.</li>
+                        <li>Für die Kreiszahl π kann der Text <kbd>pi</kbd> verwendet werden.</li>
+                        <li>Die Eulersche Zahl wird mit <kbd>e</kbd> erkannt.</li>
+                        <li>Für Hochzahlen kann das Zeichen <kbd>^</kbd> verwendet werden.</li>
+                        <li><kbd>ln(x)</kbd> bezeichnet den natürlichen, <kbd>log(x)</kbd> den Zehnerlogarithmus von x.</li>
+                        <li><kbd>sin(x)</kbd>, <kbd>cos(x)</kbd> und <kbd>tan(x)</kbd> sowie <kbd>acrsin(x)</kbd>, <kbd>arccos(x)</kbd> und <kbd>arctan(x)</kbd> liefern Ausdrücke im Bogenmaß.</li>
+                    </ul>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}

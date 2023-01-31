@@ -633,6 +633,9 @@ class Question2DecimalsFormView(QuestionFormView):
     form = Question2DecimalsForm
     form_title = "Werteingabe zwei Zahlen"
 
+    def form_get_additional_processing(self, form, question):
+        return {"show_help_button": True}
+
     def form_post(self, form):
         question_id = int(form.id.data)
         question = (
@@ -681,6 +684,9 @@ class Question2DecimalsFormView(QuestionFormView):
 class Question1DecimalFormView(QuestionFormView):
     form = Question1DecimalForm
     form_title = "Werteingabe eine Zahl"
+
+    def form_get_additional_processing(self, form, question):
+        return {"show_help_button": True}
 
     def form_post(self, form):
         question_id = int(form.id.data)
