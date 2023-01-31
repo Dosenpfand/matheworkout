@@ -1,6 +1,6 @@
 import ast
 import logging
-from math import pi
+from math import pi, exp, log, log10, sin, cos, tan, asin, acos, atan
 
 from flask import url_for
 from flask_mail import Mail, Message
@@ -84,12 +84,27 @@ def state_to_emoji_markup(state, filters=None):
 
 
 def safe_math_eval(string):
-    s = simpleeval.SimpleEval(names={"pi": pi, "π": pi})
+    s = simpleeval.SimpleEval(names={"pi": pi, "π": pi, "e": exp(1)})
     s.operators.pop(ast.Pow)
+    s.operators[ast.BitXor] = simpleeval.safe_power
+    s.functions.update(
+        dict(
+            ln=log,
+            log=log10,
+            sin=sin,
+            cos=cos,
+            tan=tan,
+            arcsin=asin,
+            arccos=acos,
+            arctan=atan,
+        )
+    )
+
     string = string.replace(",", ".")
     string = string.replace("%", "*0.01")
     string = string.replace(" ", "")
     string = string.lower()
+
     if string == "":
         return ""
 
