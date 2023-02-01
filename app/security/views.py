@@ -11,7 +11,7 @@ from flask_appbuilder.security.views import (
     UserInfoEditView,
     AuthDBView,
 )
-from flask_appbuilder.utils.base import get_safe_redirect
+from flask_appbuilder.utils.base import is_safe_redirect_url
 from flask_appbuilder.validators import Unique
 from flask_babel import lazy_gettext
 from flask_login import login_user
@@ -470,3 +470,10 @@ class ExtendedAuthDBView(AuthDBView):
         return self.render_template(
             self.login_template, title=self.title, form=form, appbuilder=self.appbuilder
         )
+
+
+def get_safe_redirect(url):
+    if url and is_safe_redirect_url(url):
+        return url
+    log.warning("Invalid redirect to '{url}' detected, falling back to index")
+    return current_app.appbuilder.get_url_for_index
