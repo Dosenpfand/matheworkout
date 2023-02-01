@@ -475,5 +475,5 @@ class ExtendedAuthDBView(AuthDBView):
 def get_safe_redirect(url):
     if url and is_safe_redirect_url(url):
         return url
-    log.warning("Invalid redirect to '{url}' detected, falling back to index")
+    log.warning(f"Invalid redirect to '{url}' detected, falling back to index")
     return current_app.appbuilder.get_url_for_index
