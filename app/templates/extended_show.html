@@ -15,8 +15,12 @@
             <table class="table table-responsive table-bordered">
                 {% for item in cellset_item[1].get('fields') %}
                     <tr>
-                        <td style="width: 1.5cm">
+                        <td style="width: 1cm">
+                            {%  if cells[item][0] %}
                             {{ cells[item][0] }}
+                            {% else %}
+                            <input type="checkbox">
+                            {% endif %}
                         </td>
                         <td>
                             {{ cells[item][1] }}
@@ -39,6 +43,7 @@
                         {{ cell }}
                     </td>
                     <td style="width: 1.5cm">
+                        <input type="checkbox">
                     </td>
                 </tr>
             {% endfor %}

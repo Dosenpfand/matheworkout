@@ -363,19 +363,19 @@ class ShowQuestionDetailsMixIn:
                         question.get_option_small_image(question.option6_image),
                     ),
                     "selection1": (
-                        "",
+                        " ",
                         question.get_option_small_image(question.selection1_image),
                     ),
                     "selection2": (
-                        "",
+                        " ",
                         question.get_option_small_image(question.selection2_image),
                     ),
                     "selection3": (
-                        "",
+                        " ",
                         question.get_option_small_image(question.selection3_image),
                     ),
                     "selection4": (
-                        "",
+                        " ",
                         question.get_option_small_image(question.selection4_image),
                     ),
                 }
