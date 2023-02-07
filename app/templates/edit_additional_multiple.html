@@ -45,5 +45,28 @@
                 </div>
             </div>
         {% endfor %}
+        {% if config.TEACHER_ROLE_NAME in current_user.role_names() -%}
+            {% for question in questions %}
+            <div class="panel panel-default" style="page-break-after: always;">
+                <div class="panel-body">
+                    {% if question['title'] %}
+                    <h2>{{question['title']}}</h2>
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                                {% if question['external_id'] %}
+                                <ol class="breadcrumb">
+                                    <li><strong>Frage Nr.: {{ question['external_id'] }}</strong></li>
+                                    <li>{{ question['category'] }}</li>
+                                </ol>
+                                {% endif %}
+                        </div>
+                    </div>
+                    TODO: Lösung
+                </div>
+            </div>
+            {% endfor %}
+        {% endif %}
     </div>
 {% endblock %}
