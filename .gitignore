@@ -158,5 +158,5 @@ app/static/uploads/**
 # VSCode
 .vscode/settings.json
 
-# PyCharm
-.idea/
+# Pycharm
+.idea/**
