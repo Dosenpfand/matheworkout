@@ -45,7 +45,8 @@
                 </div>
             </div>
         {% endfor %}
-        {% if config.TEACHER_ROLE_NAME in current_user.role_names() -%}
+        {% if config.ADMIN_ROLE_NAME in current_user.role_names() -%}
+            <h2>Lösungen</h2>
             {% for question in questions %}
             <div class="panel panel-default" style="page-break-after: always;">
                 <div class="panel-body">
@@ -63,7 +64,7 @@
                                 {% endif %}
                         </div>
                     </div>
-                    TODO: Lösung
+                    {{ question['solution'] }}
                 </div>
             </div>
             {% endfor %}

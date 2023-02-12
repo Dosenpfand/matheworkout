@@ -258,6 +258,7 @@ class ShowQuestionDetailsMixIn:
                 "external_id": question.external_id,
                 "category": question.category.name,
                 "add_to_assignment_form": add_to_assignment_form,
+                "solution": question.get_solution(),
             }
             # TODO: should be handled in Question class
             if question.type == QuestionType.one_of_six:
