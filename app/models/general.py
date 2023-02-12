@@ -258,6 +258,44 @@ class Question(Model):
 
         return f"{self.external_id} ({extended_info}{topic_short_name})"
 
+    def get_solution(self):
+        if self.type == QuestionType.self_assessed.value:
+            return self.get_option_image()
+        elif self.type == QuestionType.select_four.value:
+            # TODO
+            return ""
+        elif self.type == QuestionType.one_decimal.value:
+            return Markup(
+                f"<div>{self.value1_lower_limit} ≤ Ergebnis 1 ≤ {self.value1_upper_limit}</div>"
+            )
+        elif self.type == QuestionType.two_decimals.value:
+            return Markup(
+                f"<div>{self.value1_lower_limit} ≤ Ergebnis 1 ≤ {self.value1_upper_limit}</div>"
+                f"<div>{self.value2_lower_limit} ≤ Ergebnis 2 ≤ {self.value2_upper_limit}</div>"
+            )
+        elif self.type in [
+            QuestionType.one_of_six.value,
+            QuestionType.two_of_five.value,
+        ]:
+            # TODO: image, not text
+            correct_list = []
+            if self.option1_is_correct:
+                correct_list.append("A")
+            if self.option2_is_correct:
+                correct_list.append("B")
+            if self.option3_is_correct:
+                correct_list.append("C")
+            if self.option4_is_correct:
+                correct_list.append("D")
+            if self.option5_is_correct:
+                correct_list.append("E")
+            if self.option6_is_correct:
+                correct_list.append("F")
+            ", ".format(correct_list)
+        elif self.type == QuestionType.three_to_three.value:
+            # TODO:
+            return ""
+
     def state_user(self, user_id):
         tried_but_incorrect = False
         # noinspection PyTypeChecker
