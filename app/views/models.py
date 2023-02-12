@@ -31,6 +31,8 @@ from app.utils.general import (
     link_formatter_category,
     link_formatter_topic,
     link_formatter_topic_abbr,
+    link_formatter_learning_group,
+    link_formatter_assignment_admin,
 )
 from app.views.general import ShowQuestionDetailsMixIn
 from app.views.widgets import (
@@ -243,7 +245,10 @@ class AssignmentModelAdminView(ModelView, ShowQuestionDetailsMixIn):
     datamodel = SQLAInterface(Assignment)
     base_filters = [["created_by", FilterEqualFunction, lambda: g.user]]
 
-    list_columns = ["name", "learning_group", "additional_links"]
+    list_columns = ["id", "learning_group", "additional_links"]
+
+    formatters_columns = {"id": link_formatter_assignment_admin}
+
     add_columns = [
         "name",
         "learning_group",
@@ -283,6 +288,7 @@ class AssignmentModelAdminView(ModelView, ShowQuestionDetailsMixIn):
     edit_form_extra_fields = extra_fields
 
     label_columns = {
+        "id": "Titel",
         "name": "Titel",
         "learning_group": "Klasse",
         "starts_on": "Erhalten am",
@@ -336,15 +342,18 @@ class LearningGroupModelView(ModelView):
     base_filters = [["created_by", FilterEqualFunction, lambda: g.user]]
 
     label_columns = {
+        "id": "Name",
         "name": "Name",
         "users": "Schüler",
         "join_url": "Link zum Beitreten",
     }
 
-    list_columns = ["name"]
+    list_columns = ["id"]
     add_columns = ["name"]
     edit_columns = ["name"]
     show_columns = ["name", "join_url"]
+
+    formatters_columns = {"id": link_formatter_learning_group}
 
     title = "Klassen"
     list_title = title

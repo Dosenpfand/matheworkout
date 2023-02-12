@@ -8,7 +8,14 @@ from markupsafe import Markup
 import simpleeval
 
 from app import db
-from app.models.general import Question, Topic, QuestionUserState, Assignment, Category
+from app.models.general import (
+    Question,
+    Topic,
+    QuestionUserState,
+    Assignment,
+    Category,
+    LearningGroup,
+)
 
 
 def link_formatter_question(q_id, filters=None):
@@ -60,6 +67,23 @@ def link_formatter_topic_abbr(topic, filters=None):
     topic_short_name = topic.get_short_name()
 
     return Markup(f'<abbr title="{topic_name}">{topic_short_name}</abbr>')
+
+
+def link_formatter_learning_group(learning_group_id):
+    name = db.session.query(LearningGroup).filter_by(id=learning_group_id).first().name
+    url = url_for("LearningGroupModelView.show", pk=learning_group_id)
+
+    return Markup(
+        f'<a class="btn btn-sm btn-primary btn-table" style="min-width: 30%" href="{url}">{name}</a>'
+    )
+
+
+def link_formatter_assignment_admin(assignment_id):
+    name = db.session.query(Assignment).filter_by(id=assignment_id).first().name
+    url = url_for("AssignmentModelAdminView.show", pk=assignment_id)
+    return Markup(
+        f'<a class="btn btn-sm btn-primary btn-table" style="min-width: 30%" href="{url}">{name}</a>'
+    )
 
 
 # TODO: should be in jinja and imported!
