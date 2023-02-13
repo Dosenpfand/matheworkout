@@ -6,38 +6,38 @@
         {% for question in questions %}
 
             {% if question['options'] %}
-            {% set additional_col = options_to_additional_col(question['options']) %}
+                {% set additional_col = options_to_additional_col(question['options']) %}
             {% endif %}
 
             <div class="panel panel-default" style="page-break-after: always;">
                 <div class="panel-body">
                     {% if question['title'] %}
-                    <h2>{{question['title']}}</h2>
+                        <h2>{{ question['title'] }}</h2>
                     {% endif %}
 
                     <div class="row">
                         <div class="col-md-6 col-sm-12">
-                                {% if question['external_id'] %}
+                            {% if question['external_id'] %}
                                 <ol class="breadcrumb">
                                     <li><strong>Frage Nr.: {{ question['external_id'] }}</strong></li>
                                     <li>{{ question['category'] }}</li>
 
                                 </ol>
-                                {% endif %}
+                            {% endif %}
                         </div>
                         {% if config.TEACHER_ROLE_NAME in current_user.role_names() -%}
                             <div class="col-md-6 col-sm-12 text-right hidden-print">
-                                    {{ widgets.get('add_question_to_assignment')(form=question['add_to_assignment_form'], form_action=form_action)|safe }}
+                                {{ widgets.get('add_question_to_assignment')(form=question['add_to_assignment_form'], form_action=form_action)|safe }}
                             </div>
                         {% endif %}
                     </div>
 
-                    <div class="well well-sm"><strong>{{question['description']}}</strong></div>
+                    <div class="well well-sm"><strong>{{ question['description'] }}</strong></div>
                     {% if question['after_description'] %}
-                    <div class="well well-sm">{{question['after_description']}}</div>
+                        <div class="well well-sm">{{ question['after_description'] }}</div>
                     {% endif %}
                     {% if not question['error'] %}
-                    {{ widgets.get('show_details')(
+                        {{ widgets.get('show_details')(
                         cells=question['cells'],
                         cellsets=question['cellsets']
                         )|safe }}
@@ -48,25 +48,25 @@
         {% if config.ADMIN_ROLE_NAME in current_user.role_names() -%}
             <h2>Lösungen</h2>
             {% for question in questions %}
-            <div class="panel panel-default" style="page-break-after: always;">
-                <div class="panel-body">
-                    {% if question['title'] %}
-                    <h2>{{question['title']}}</h2>
-                    {% endif %}
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        {% if question['title'] %}
+                            <h2>{{ question['title'] }}</h2>
+                        {% endif %}
 
-                    <div class="row">
-                        <div class="col-md-6 col-sm-12">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
                                 {% if question['external_id'] %}
-                                <ol class="breadcrumb">
-                                    <li><strong>Frage Nr.: {{ question['external_id'] }}</strong></li>
-                                    <li>{{ question['category'] }}</li>
-                                </ol>
+                                    <ol class="breadcrumb">
+                                        <li><strong>Frage Nr.: {{ question['external_id'] }}</strong></li>
+                                        <li>{{ question['category'] }}</li>
+                                    </ol>
                                 {% endif %}
+                            </div>
                         </div>
+                        {{ question['solution'] }}
                     </div>
-                    {{ question['solution'] }}
                 </div>
-            </div>
             {% endfor %}
         {% endif %}
     </div>
