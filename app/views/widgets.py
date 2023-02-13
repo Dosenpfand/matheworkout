@@ -1,7 +1,10 @@
+import re
+
 from flask_appbuilder.fieldwidgets import DatePickerWidget, Select2AJAXWidget
 from flask_appbuilder.widgets import RenderTemplateWidget
 from jinja2 import Markup
 from wtforms.widgets import html_params
+from re import search
 
 
 class ExtendedEditWidget(RenderTemplateWidget):
@@ -36,6 +39,25 @@ class DatePickerWidgetDe(DatePickerWidget):
         '<input class="form-control" data-format="dd.MM.yyyy" %(text)s />'
         "</div>"
     )
+
+    def __call__(self, field, **kwargs):
+        kwargs.setdefault("id", field.id)
+        kwargs.setdefault("name", field.name)
+        if not field.data:
+            field.data = ""
+        match = re.search(
+            r"^(?P<year>\d+)-(?P<month>\d+)-(?P<day>\d+)( \d+:\d+:\d+)?$",
+            str(field.data),
+        )
+        if match:
+            field.data = (
+                f"{match.group('day')}.{match.group('month')}.{match.group('year')}"
+            )
+        template = self.data_template
+
+        return Markup(
+            template % {"text": html_params(type="text", value=field.data, **kwargs)}
+        )
 
 
 class Select2AJAXExtendedWidget(Select2AJAXWidget):
