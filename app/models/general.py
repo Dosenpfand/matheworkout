@@ -405,7 +405,7 @@ class Question(Model):
         return Markup(
             '<img src="'
             + im.get_url(selection)
-            + '" alt="Photo" class="img-rounded img-responsive">'
+            + '" alt="Photo" class="img-rounded img-responsive selection-image">'
         )
 
 
