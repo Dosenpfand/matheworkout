@@ -378,7 +378,7 @@ class Question(Model):
         return Markup(
             '<img src="'
             + im.get_url(option)
-            + '" alt="Photo" class="img-rounded img-responsive">'
+            + '" alt="Photo" class="img-rounded img-responsive option-small-image">'
         )
 
     # self_assessed only
