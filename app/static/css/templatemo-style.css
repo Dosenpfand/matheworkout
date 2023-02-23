@@ -245,7 +245,7 @@ section {
 
 .navbar-header > a.navbar-brand {
     min-height: 70px;
-    padding: 0px 15px;
+    padding: 5px 15px;
 }
 
 .navbar-header > a.navbar-brand > img {
@@ -256,7 +256,7 @@ section {
 .navbar-header > a.navbar-brand > img {
     height: 100%;
     vertical-align: middle;
-    line-height: 70px;
+    line-height: 60px;
 }
 
 .navbar-header > .navbar-toggle {
