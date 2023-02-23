@@ -263,14 +263,14 @@ class Question(Model):
             return Markup(self.solution_image_img())
         elif self.type == QuestionType.select_four:
             return Markup(
-                f"<div>{self.get_selection_image(self.selection1_image)}"
-                f"{self.get_select_image(self.selection1_solution)}</div>"
-                f"<div>{self.get_selection_image(self.selection2_image)}"
-                f"{self.get_select_image(self.selection2_solution)}</div>"
-                f"<div>{self.get_selection_image(self.selection3_image)}"
-                f"{self.get_select_image(self.selection3_solution)}</div>"
-                f"<div>{self.get_selection_image(self.selection4_image)}"
-                f"{self.get_select_image(self.selection4_solution)}</div>"
+                f"<div>"
+                f"1{self.selection1_solution}</div>"
+                f"<div>"
+                f"2{self.selection2_solution}</div>"
+                f"<div>"
+                f"3{self.selection3_solution}</div>"
+                f"<div>"
+                f"4{self.selection4_solution}</div>"
             )
         elif self.type == QuestionType.one_decimal:
             return Markup(
@@ -287,32 +287,32 @@ class Question(Model):
         ]:
             correct_list = []
             if self.option1_is_correct:
-                correct_list.append(self.get_option_image(self.option1_image))
+                correct_list.append("1")
             if self.option2_is_correct:
-                correct_list.append(self.get_option_image(self.option2_image))
+                correct_list.append("2")
             if self.option3_is_correct:
-                correct_list.append(self.get_option_image(self.option3_image))
+                correct_list.append("3")
             if self.option4_is_correct:
-                correct_list.append(self.get_option_image(self.option4_image))
+                correct_list.append("4")
             if self.option5_is_correct:
-                correct_list.append(self.get_option_image(self.option5_image))
+                correct_list.append("5")
             if self.option6_is_correct:
-                correct_list.append(self.get_option_image(self.option6_image))
+                correct_list.append("6")
             return Markup("<div>{}</div>".format("<div></div>".join(correct_list)))
         elif self.type == QuestionType.three_to_three:
             correct_list = []
             if self.option1a_is_correct:
-                correct_list.append(self.get_option_image(self.option1a_image))
+                correct_list.append("1A")
             if self.option1b_is_correct:
-                correct_list.append(self.get_option_image(self.option1b_image))
+                correct_list.append("1B")
             if self.option1c_is_correct:
-                correct_list.append(self.get_option_image(self.option1c_image))
+                correct_list.append("1C")
             if self.option2a_is_correct:
-                correct_list.append(self.get_option_image(self.option2a_image))
+                correct_list.append("2A")
             if self.option2b_is_correct:
-                correct_list.append(self.get_option_image(self.option2b_image))
+                correct_list.append("2B")
             if self.option2c_is_correct:
-                correct_list.append(self.get_option_image(self.option2c_image))
+                correct_list.append("2C")
             return Markup("<div>{}</div>".format("<div></div>".join(correct_list)))
 
     def state_user(self, user_id):
@@ -403,21 +403,6 @@ class Question(Model):
             + im.get_url(selection)
             + '" alt="Photo" class="img-rounded img-responsive">'
         )
-
-    # select 4 only
-    def get_select_image(self, select):
-        if select == Select4Enum.A:
-            return self.get_selection_image(self.option1_image)
-        elif select == Select4Enum.B:
-            return self.get_selection_image(self.option2_image)
-        elif select == Select4Enum.C:
-            return self.get_selection_image(self.option3_image)
-        elif select == Select4Enum.D:
-            return self.get_selection_image(self.option4_image)
-        elif select == Select4Enum.E:
-            return self.get_selection_image(self.option5_image)
-        elif select == Select4Enum.F:
-            return self.get_selection_image(self.option6_image)
 
 
 class Assignment(Model, AuditMixin):
