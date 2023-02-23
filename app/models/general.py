@@ -260,7 +260,7 @@ class Question(Model):
 
     def get_solution(self):
         if self.type == QuestionType.self_assessed:
-            return Markup(self.solution_image_img())
+            return Markup(self.solution_image_print())
         elif self.type == QuestionType.select_four:
             return Markup(
                 f"1{self.selection1_solution}, "
@@ -274,7 +274,7 @@ class Question(Model):
             )
         elif self.type == QuestionType.two_decimals:
             return Markup(
-                f"<div>{self.value1_lower_limit} ≤ Ergebnis 1 ≤ {self.value1_upper_limit}, "
+                f"<div>{self.value1_lower_limit} ≤ Ergebnis 1 ≤ {self.value1_upper_limit} | "
                 f"{self.value2_lower_limit} ≤ Ergebnis 2 ≤ {self.value2_upper_limit}</div>"
             )
         elif self.type in [
@@ -294,7 +294,7 @@ class Question(Model):
                 correct_list.append("5")
             if self.option6_is_correct:
                 correct_list.append("6")
-            return Markup("Richtig: {}".format(" ,".join(correct_list)))
+            return Markup("Richtig: {}".format(", ".join(correct_list)))
         elif self.type == QuestionType.three_to_three:
             correct_list = []
             if self.option1a_is_correct:
@@ -388,6 +388,14 @@ class Question(Model):
             '<img src="'
             + im.get_url(self.solution_image)
             + '" alt="Photo" class="img-rounded img-responsive">'
+        )
+
+    def solution_image_print(self):
+        im = ImageManager()
+        return Markup(
+            '<img src="'
+            + im.get_url(self.solution_image)
+            + '" alt="Photo" style="max-height: 20em" class="img-rounded img-responsive">'
         )
 
     # select_four only
