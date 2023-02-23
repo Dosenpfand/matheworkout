@@ -263,14 +263,10 @@ class Question(Model):
             return Markup(self.solution_image_img())
         elif self.type == QuestionType.select_four:
             return Markup(
-                f"<div>"
-                f"1{self.selection1_solution}</div>"
-                f"<div>"
-                f"2{self.selection2_solution}</div>"
-                f"<div>"
-                f"3{self.selection3_solution}</div>"
-                f"<div>"
-                f"4{self.selection4_solution}</div>"
+                f"1{self.selection1_solution}, "
+                f"2{self.selection2_solution}, "
+                f"3{self.selection3_solution}, "
+                f"4{self.selection4_solution}, "
             )
         elif self.type == QuestionType.one_decimal:
             return Markup(
@@ -278,8 +274,8 @@ class Question(Model):
             )
         elif self.type == QuestionType.two_decimals:
             return Markup(
-                f"<div>{self.value1_lower_limit} ≤ Ergebnis 1 ≤ {self.value1_upper_limit}</div>"
-                f"<div>{self.value2_lower_limit} ≤ Ergebnis 2 ≤ {self.value2_upper_limit}</div>"
+                f"<div>{self.value1_lower_limit} ≤ Ergebnis 1 ≤ {self.value1_upper_limit}, "
+                f"{self.value2_lower_limit} ≤ Ergebnis 2 ≤ {self.value2_upper_limit}</div>"
             )
         elif self.type in [
             QuestionType.one_of_six,
@@ -298,7 +294,7 @@ class Question(Model):
                 correct_list.append("5")
             if self.option6_is_correct:
                 correct_list.append("6")
-            return Markup("<div>{}</div>".format("<div></div>".join(correct_list)))
+            return Markup("Richtig: {}".format(" ,".join(correct_list)))
         elif self.type == QuestionType.three_to_three:
             correct_list = []
             if self.option1a_is_correct:
@@ -313,7 +309,7 @@ class Question(Model):
                 correct_list.append("2B")
             if self.option2c_is_correct:
                 correct_list.append("2C")
-            return Markup("<div>{}</div>".format("<div></div>".join(correct_list)))
+            return Markup("Richtig: {}".format(", ".join(correct_list)))
 
     def state_user(self, user_id):
         tried_but_incorrect = False
