@@ -3,6 +3,8 @@
 
 {% block edit_form %}
     <div id="Home" class="tab-pane active">
+        <button id="print-button" type="button" class="btn btn-primary" style="margin: 1em"  onclick="window.print()">Drucken</button>
+
         {% for question in questions %}
 
             {% if question['options'] %}
@@ -45,7 +47,7 @@
                 </div>
             </div>
         {% endfor %}
-        {% if config.ADMIN_ROLE_NAME in current_user.role_names() -%}
+        {% if config.TEACHER_ROLE_NAME in current_user.role_names() -%}
             <h2>Lösungen</h2>
             {% for question in questions %}
                 <div class="panel panel-default">
