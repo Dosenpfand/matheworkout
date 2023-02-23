@@ -245,6 +245,7 @@ section {
 
 .navbar-header > a.navbar-brand {
     min-height: 70px;
+    padding: 0px 15px;
 }
 
 .navbar-header > a.navbar-brand > img {
@@ -252,10 +253,10 @@ section {
     margin-right: 5px;
 }
 
-.navbar-header > a.navbar-brand > span {
+.navbar-header > a.navbar-brand > img {
     height: 100%;
     vertical-align: middle;
-    line-height: 40px;
+    line-height: 70px;
 }
 
 .navbar-header > .navbar-toggle {
@@ -277,7 +278,7 @@ section {
     color: #454545;
     font-size: 18px;
     font-weight: bold;
-    line-height: 40px;
+    line-height: 70px;
 }
 
 .custom-navbar .navbar-nav.navbar-nav-first {
