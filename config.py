@@ -114,7 +114,7 @@ AUTH_USER_REGISTRATION_ROLE = STUDENT_ROLE_NAME
 
 AUTH_ROLE_ADMIN = "Admin"
 AUTH_ROLE_PUBLIC = "Public"
-APP_NAME = "MatheWorkout"
+APP_NAME = "matheworkout"
 APP_THEME = ""
 FAB_SECURITY_MANAGER_CLASS = "app.security.general.ExtendedSecurityManager"
 FAB_BASE_TEMPLATE = "extended_base.html"

@@ -260,17 +260,13 @@ class Question(Model):
 
     def get_solution(self):
         if self.type == QuestionType.self_assessed:
-            return Markup(self.solution_image_img())
+            return Markup(self.solution_image_print())
         elif self.type == QuestionType.select_four:
             return Markup(
-                f"<div>{self.get_selection_image(self.selection1_image)}"
-                f"{self.get_select_image(self.selection1_solution)}</div>"
-                f"<div>{self.get_selection_image(self.selection2_image)}"
-                f"{self.get_select_image(self.selection2_solution)}</div>"
-                f"<div>{self.get_selection_image(self.selection3_image)}"
-                f"{self.get_select_image(self.selection3_solution)}</div>"
-                f"<div>{self.get_selection_image(self.selection4_image)}"
-                f"{self.get_select_image(self.selection4_solution)}</div>"
+                f"1{self.selection1_solution}, "
+                f"2{self.selection2_solution}, "
+                f"3{self.selection3_solution}, "
+                f"4{self.selection4_solution}, "
             )
         elif self.type == QuestionType.one_decimal:
             return Markup(
@@ -278,8 +274,8 @@ class Question(Model):
             )
         elif self.type == QuestionType.two_decimals:
             return Markup(
-                f"<div>{self.value1_lower_limit} ≤ Ergebnis 1 ≤ {self.value1_upper_limit}</div>"
-                f"<div>{self.value2_lower_limit} ≤ Ergebnis 2 ≤ {self.value2_upper_limit}</div>"
+                f"<div>{self.value1_lower_limit} ≤ Ergebnis 1 ≤ {self.value1_upper_limit} | "
+                f"{self.value2_lower_limit} ≤ Ergebnis 2 ≤ {self.value2_upper_limit}</div>"
             )
         elif self.type in [
             QuestionType.one_of_six,
@@ -287,33 +283,33 @@ class Question(Model):
         ]:
             correct_list = []
             if self.option1_is_correct:
-                correct_list.append(self.get_option_image(self.option1_image))
+                correct_list.append("1")
             if self.option2_is_correct:
-                correct_list.append(self.get_option_image(self.option2_image))
+                correct_list.append("2")
             if self.option3_is_correct:
-                correct_list.append(self.get_option_image(self.option3_image))
+                correct_list.append("3")
             if self.option4_is_correct:
-                correct_list.append(self.get_option_image(self.option4_image))
+                correct_list.append("4")
             if self.option5_is_correct:
-                correct_list.append(self.get_option_image(self.option5_image))
+                correct_list.append("5")
             if self.option6_is_correct:
-                correct_list.append(self.get_option_image(self.option6_image))
-            return Markup("<div>{}</div>".format("<div></div>".join(correct_list)))
+                correct_list.append("6")
+            return Markup("Richtig: {}".format(", ".join(correct_list)))
         elif self.type == QuestionType.three_to_three:
             correct_list = []
             if self.option1a_is_correct:
-                correct_list.append(self.get_option_image(self.option1a_image))
+                correct_list.append("1A")
             if self.option1b_is_correct:
-                correct_list.append(self.get_option_image(self.option1b_image))
+                correct_list.append("1B")
             if self.option1c_is_correct:
-                correct_list.append(self.get_option_image(self.option1c_image))
+                correct_list.append("1C")
             if self.option2a_is_correct:
-                correct_list.append(self.get_option_image(self.option2a_image))
+                correct_list.append("2A")
             if self.option2b_is_correct:
-                correct_list.append(self.get_option_image(self.option2b_image))
+                correct_list.append("2B")
             if self.option2c_is_correct:
-                correct_list.append(self.get_option_image(self.option2c_image))
-            return Markup("<div>{}</div>".format("<div></div>".join(correct_list)))
+                correct_list.append("2C")
+            return Markup("Richtig: {}".format(", ".join(correct_list)))
 
     def state_user(self, user_id):
         tried_but_incorrect = False
@@ -382,7 +378,7 @@ class Question(Model):
         return Markup(
             '<img src="'
             + im.get_url(option)
-            + '" alt="Photo" class="img-rounded img-responsive">'
+            + '" alt="Photo" class="img-rounded img-responsive option-small-image">'
         )
 
     # self_assessed only
@@ -394,6 +390,14 @@ class Question(Model):
             + '" alt="Photo" class="img-rounded img-responsive">'
         )
 
+    def solution_image_print(self):
+        im = ImageManager()
+        return Markup(
+            '<img src="'
+            + im.get_url(self.solution_image)
+            + '" alt="Photo" style="max-height: 20em" class="img-rounded img-responsive">'
+        )
+
     # select_four only
     @staticmethod
     def get_selection_image(selection):
@@ -401,23 +405,8 @@ class Question(Model):
         return Markup(
             '<img src="'
             + im.get_url(selection)
-            + '" alt="Photo" class="img-rounded img-responsive">'
+            + '" alt="Photo" class="img-rounded img-responsive selection-image">'
         )
-
-    # select 4 only
-    def get_select_image(self, select):
-        if select == Select4Enum.A:
-            return self.get_selection_image(self.option1_image)
-        elif select == Select4Enum.B:
-            return self.get_selection_image(self.option2_image)
-        elif select == Select4Enum.C:
-            return self.get_selection_image(self.option3_image)
-        elif select == Select4Enum.D:
-            return self.get_selection_image(self.option4_image)
-        elif select == Select4Enum.E:
-            return self.get_selection_image(self.option5_image)
-        elif select == Select4Enum.F:
-            return self.get_selection_image(self.option6_image)
 
 
 class Assignment(Model, AuditMixin):
