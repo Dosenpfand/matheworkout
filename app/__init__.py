@@ -4,6 +4,8 @@ from flask import Flask
 from flask_appbuilder import AppBuilder, SQLA
 from flask_migrate import Migrate
 from flask_debugtoolbar import DebugToolbarExtension
+import sentry_sdk
+from sentry_sdk.integrations.flask import FlaskIntegration
 
 db = SQLA()
 appbuilder = AppBuilder()
@@ -14,6 +16,7 @@ toolbar = DebugToolbarExtension()
 def create_app(config="config"):
     logging.basicConfig(format="%(asctime)s:%(levelname)s:%(name)s:%(message)s")
     logging.getLogger().setLevel(logging.WARNING)
+    sentry_sdk.init(integrations=[FlaskIntegration()])
 
     app = Flask(__name__)
 
