@@ -1,11 +1,15 @@
 import ast
 import logging
 from math import pi, exp, log, log10, sin, cos, tan, asin, acos, atan
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from datetime import datetime
+
+import simpleeval
 from flask import url_for
 from flask_mail import Mail, Message
 from markupsafe import Markup
-import simpleeval
 
 from app import db
 from app.models.general import (
@@ -84,6 +88,10 @@ def link_formatter_assignment_admin(assignment_id):
     return Markup(
         f'<a class="btn btn-sm btn-primary btn-table" style="min-width: 30%" href="{url}">{name}</a>'
     )
+
+
+def date_formatter_de(dtime: "datetime") -> str:
+    return dtime.strftime("%d.%m.%Y")
 
 
 # TODO: should be in jinja and imported!

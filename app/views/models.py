@@ -10,11 +10,6 @@ from flask_appbuilder.models.sqla.interface import SQLAInterface
 from wtforms import HiddenField, DateField
 
 from app import db
-from app.security.views import ExtendedUserDBModelTeacherView
-from app.utils.filters import (
-    FilterQuestionByAnsweredCorrectness,
-    FilterQuestionByNotAnsweredCorrectness,
-)
 from app.models.general import (
     Question,
     QuestionType,
@@ -23,6 +18,11 @@ from app.models.general import (
     Topic,
     Category,
     AssocUserQuestion,
+)
+from app.security.views import ExtendedUserDBModelTeacherView
+from app.utils.filters import (
+    FilterQuestionByAnsweredCorrectness,
+    FilterQuestionByNotAnsweredCorrectness,
 )
 from app.utils.general import (
     link_formatter_question,
@@ -33,6 +33,7 @@ from app.utils.general import (
     link_formatter_topic_abbr,
     link_formatter_learning_group,
     link_formatter_assignment_admin,
+    date_formatter_de,
 )
 from app.views.general import ShowQuestionDetailsMixIn
 from app.views.widgets import (
@@ -388,8 +389,10 @@ class AssignmentModelStudentView(ModelView, ShowQuestionDetailsMixIn):
         "learning_group": "Klasse",
         "starts_on_de": "Erhalten am",
         "is_due_on_de": "Fällig am",
+        "starts_on": "Erhalten am",
+        "is_due_on": "Fällig am",
     }
-    list_columns = ["id", "starts_on_de", "is_due_on_de"]
+    list_columns = ["id", "starts_on", "is_due_on"]
     show_columns = ["name", "starts_on_de", "is_due_on_de"]
 
     title = "Hausübungen"
@@ -404,7 +407,11 @@ class AssignmentModelStudentView(ModelView, ShowQuestionDetailsMixIn):
     edit_template = "appbuilder/general/model/edit_cascade.html"
     list_widget = ExtendedListNoButtonsWidget
 
-    formatters_columns = {"id": link_formatter_assignment}
+    formatters_columns = {
+        "id": link_formatter_assignment,
+        "is_due_on": date_formatter_de,
+        "starts_on": date_formatter_de,
+    }
 
     questions_col_name = "assigned_questions"
 
