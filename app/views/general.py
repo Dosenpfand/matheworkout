@@ -98,7 +98,7 @@ class IdToForm(BaseView):
         return redirect(url)
 
 
-class AssignmentModelTeacherView(BaseView):
+class AssignmentModelEvaluationView(BaseView):
     default_view = "show"
 
     @expose("/show/<int:assignment_id>")

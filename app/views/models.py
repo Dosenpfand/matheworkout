@@ -243,7 +243,7 @@ class AssocUserQuestionModelView(ModelView):
     base_order = ("created_on", "des")
 
 
-class AssignmentModelAdminView(ModelView, ShowQuestionDetailsMixIn):
+class AssignmentModelTeacherView(ModelView, ShowQuestionDetailsMixIn):
     datamodel = SQLAInterface(Assignment)
     base_filters = [["created_by", FilterEqualFunction, lambda: g.user]]
 
@@ -339,6 +339,10 @@ class AssignmentModelAdminView(ModelView, ShowQuestionDetailsMixIn):
         return redirect(url)
 
 
+class AssignmentModelAdminView(AssignmentModelTeacherView):
+    base_filters = None
+
+
 class LearningGroupModelView(ModelView):
     datamodel = SQLAInterface(LearningGroup)
     base_filters = [["created_by", FilterEqualFunction, lambda: g.user]]
@@ -363,7 +367,7 @@ class LearningGroupModelView(ModelView):
     add_title = title
     edit_title = title
 
-    related_views = [AssignmentModelAdminView, ExtendedUserDBModelTeacherView]
+    related_views = [AssignmentModelTeacherView, ExtendedUserDBModelTeacherView]
 
     show_template = "show_cascade_expanded.html"
     edit_template = "appbuilder/general/model/edit_cascade.html"

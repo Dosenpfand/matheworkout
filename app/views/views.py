@@ -18,7 +18,7 @@ from app.views.forms import (
 )
 from app.views.general import (
     QuestionRandom,
-    AssignmentModelTeacherView,
+    AssignmentModelEvaluationView,
     UtilExtendedView,
     IdToForm,
     JoinLearningGroup,
@@ -35,7 +35,7 @@ from app.views.models import (
     QuestionSelect4ModelView,
     QuestionModelView,
     AssocUserQuestionModelView,
-    AssignmentModelAdminView,
+    AssignmentModelTeacherView,
     AssignmentModelStudentView,
     QuestionModelIncorrectAnsweredView,
     QuestionModelCorrectAnsweredView,
@@ -45,6 +45,7 @@ from app.views.models import (
     CategoryModelAdminView,
     TopicModelStudentView,
     LearningGroupModelAdminView,
+    AssignmentModelAdminView,
 )
 
 appbuilder.add_separator(category="Security")
@@ -52,6 +53,14 @@ appbuilder.add_view(
     LearningGroupModelAdminView,
     "all_classes",
     label="Alle Klassen",
+    icon="fa-book",
+    category="Security",
+    category_icon="fa-book",
+)
+appbuilder.add_view(
+    AssignmentModelAdminView,
+    "all_classes",
+    label="Alle Hausübungen",
     icon="fa-book",
     category="Security",
     category_icon="fa-book",
@@ -81,7 +90,7 @@ appbuilder.add_view(
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
-    AssignmentModelAdminView,
+    AssignmentModelTeacherView,
     "assignments_admin",
     label="Hausübungen",
     icon="fa-tasks",
@@ -226,7 +235,7 @@ appbuilder.add_view_no_menu(Question1DecimalFormView)
 appbuilder.add_view_no_menu(QuestionSelfAssessedFormView)
 appbuilder.add_view_no_menu(QuestionSelect4FormView)
 appbuilder.add_view_no_menu(IdToForm)
-appbuilder.add_view_no_menu(AssignmentModelTeacherView)
+appbuilder.add_view_no_menu(AssignmentModelEvaluationView)
 appbuilder.add_view_no_menu(AddQuestionToAssignmentFormView)
 appbuilder.add_view_no_menu(UtilExtendedView)
 appbuilder.add_view_no_menu(DeleteStatsFormView)

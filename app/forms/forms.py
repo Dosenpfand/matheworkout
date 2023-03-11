@@ -87,7 +87,7 @@ class AddQuestionToAssignmentForm(DynamicForm):
         validators=[DataRequired()],
         is_related=False,
         widget=Select2AJAXExtendedWidget(
-            endpoint="/assignmentmodeladminview/api/readvalues",
+            endpoint="/assignmentmodelteacherview/api/readvalues",
             placeholder="Zu Hausübung hinzufügen",
         ),
     )

@@ -441,8 +441,10 @@ class Assignment(Model, AuditMixin):
         return self.is_due_on.strftime("%d.%m.%Y")
 
     def additional_links(self):
-        show_url = url_for("AssignmentModelTeacherView.show", assignment_id=self.id)
-        export_url = url_for("AssignmentModelTeacherView.export", assignment_id=self.id)
+        show_url = url_for("AssignmentModelEvaluationView.show", assignment_id=self.id)
+        export_url = url_for(
+            "AssignmentModelEvaluationView.export", assignment_id=self.id
+        )
 
         return Markup(
             f"""
