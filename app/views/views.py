@@ -61,7 +61,7 @@ appbuilder.add_view(
     AssignmentModelAdminView,
     "all_classes",
     label="Alle Hausübungen",
-    icon="fa-book",
+    icon="fa-tasks",
     category="Security",
     category_icon="fa-book",
 )
