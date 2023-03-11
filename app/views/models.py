@@ -34,6 +34,7 @@ from app.utils.general import (
     link_formatter_learning_group,
     link_formatter_assignment_admin,
     date_formatter_de,
+    link_formatter_learning_group_admin,
 )
 from app.views.general import ShowQuestionDetailsMixIn
 from app.views.widgets import (
@@ -372,6 +373,7 @@ class LearningGroupModelAdminView(LearningGroupModelView):
     base_filters = None
     show_columns = LearningGroupModelView.show_columns + ["created_by", "user_count"]
     list_columns = LearningGroupModelView.list_columns + ["created_by", "user_count"]
+    formatters_columns = {"id": link_formatter_learning_group_admin}
 
 
 class AssignmentModelStudentView(ModelView, ShowQuestionDetailsMixIn):

@@ -82,6 +82,15 @@ def link_formatter_learning_group(learning_group_id):
     )
 
 
+def link_formatter_learning_group_admin(learning_group_id):
+    name = db.session.query(LearningGroup).filter_by(id=learning_group_id).first().name
+    url = url_for("LearningGroupModelAdminView.show", pk=learning_group_id)
+
+    return Markup(
+        f'<a class="btn btn-sm btn-primary btn-table" style="min-width: 30%" href="{url}">{name}</a>'
+    )
+
+
 def link_formatter_assignment_admin(assignment_id):
     name = db.session.query(Assignment).filter_by(id=assignment_id).first().name
     url = url_for("AssignmentModelAdminView.show", pk=assignment_id)

@@ -2,7 +2,7 @@ import re
 
 from flask_appbuilder.fieldwidgets import DatePickerWidget, Select2AJAXWidget
 from flask_appbuilder.widgets import RenderTemplateWidget
-from jinja2 import Markup
+from markupsafe import Markup
 from wtforms.widgets import html_params
 from re import search
 
