@@ -59,6 +59,8 @@ def link_formatter_category(category_id):
 
 def link_formatter_topic(topic_id):
     name = db.session.query(Topic).filter_by(id=topic_id).first().name
+    if len(name) > 150:
+        name = name[:147] + "..."
     url = url_for("TopicModelStudentView.show", pk=topic_id)
     return Markup(
         f'<a class="btn btn-sm btn-primary btn-table" style="min-width: 30%" href="{url}">{name}</a>'

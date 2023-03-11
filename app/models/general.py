@@ -78,6 +78,9 @@ class Topic(Model):
 
         return short_name
 
+    def count(self):
+        return len(self.questions)
+
 
 class Category(Model):
     id = Column(Integer, primary_key=True)

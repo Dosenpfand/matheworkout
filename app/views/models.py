@@ -443,8 +443,8 @@ class CategoryModelStudentView(ModelView, ShowQuestionDetailsMixIn):
 class TopicModelStudentView(ModelView, ShowQuestionDetailsMixIn):
     datamodel = SQLAInterface(Topic)
 
-    label_columns = {"id": "Titel"}
-    list_columns = ["id"]
+    label_columns = {"id": "Titel", "count": "Anzahl"}
+    list_columns = ["count", "id"]
     show_columns = ["name"]
     title = "Grundkompetenzbereiche"
     list_title = title
