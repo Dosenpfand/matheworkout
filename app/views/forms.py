@@ -157,10 +157,11 @@ class QuestionFormView(SimpleFormView):
                     break
 
             question_count = questions.count()
+            percentage = 0 if question_count == 0 else round(i / question_count * 100)
             assignment_progress = {
                 "done": i,
                 "total": question_count,
-                "percentage": round(i / question_count * 100),
+                "percentage": percentage,
             }
         return assignment_progress
 
