@@ -217,6 +217,17 @@ class ImprintView(BaseView):
         return self.render_template(self.template, appbuilder=self.appbuilder)
 
 
+class SupportView(BaseView):
+    route_base = ""
+    default_view = "support"
+    template = "support.html"
+
+    @expose("/support")
+    def support(self):
+        self.update_redirect()
+        return self.render_template(self.template, appbuilder=self.appbuilder)
+
+
 class ShowQuestionDetailsMixIn:
     questions_col_name = "questions"
     show_details_widget = ExtendedShowWidget

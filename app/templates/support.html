@@ -1,0 +1,27 @@
+{% extends "appbuilder/base.html" %}
+
+{% block content %}
+    <h1>Unterstützung</h1>
+    <div>
+        Falls du matheworkout.at unterstützen möchtest, kannst du dies mit einer finanziellen Spende an den "Verein zur
+        Förderung des digital gestützten Mathematikunterrichts" tun. Das ermöglicht uns Betrieb, Wartung, Pflege
+        und Weiterentwicklung der Plattform.
+        <br/>
+        Derzeit ist eine Spende über PayPal mit dem nachfolgenden Button möglich. Falls du anderweitig eine Spende
+        tätigen möchtest, kontaktiere uns bitte per Mail an <a
+            href="mailto:{{ config['SITE_EMAIL'] }}">{{ config['SITE_EMAIL'] }}</a>.
+        <br/>
+        Vielen Dank!
+        <br/>
+        <br/>
+    </div>
+    <div>
+        <form action="https://www.paypal.com/donate" method="post" target="_top">
+            <input type="hidden" name="hosted_button_id" value="ABZNFTZA9Q4HG"/>
+            <input type="image" src="https://www.paypalobjects.com/de_DE/AT/i/btn/btn_donateCC_LG.gif" border="0"
+                   name="submit" title="PayPal - The safer, easier way to pay online!"
+                   alt="Spenden mit dem PayPal-Button"/>
+            <img alt="" border="0" src="https://www.paypal.com/de_AT/i/scr/pixel.gif" width="1" height="1"/>
+        </form>
+    </div>
+{% endblock %}

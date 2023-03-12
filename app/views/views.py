@@ -24,6 +24,7 @@ from app.views.general import (
     JoinLearningGroup,
     DataProtectionView,
     ImprintView,
+    SupportView,
 )
 from app.views.models import (
     Question2of5ModelView,
@@ -245,3 +246,4 @@ appbuilder.add_view_no_menu(ForgotPasswordFormView)
 appbuilder.add_view_no_menu(ResetForgotPasswordView)
 appbuilder.add_view_no_menu(DataProtectionView)
 appbuilder.add_view_no_menu(ImprintView)
+appbuilder.add_view_no_menu(SupportView)
