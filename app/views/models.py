@@ -232,6 +232,15 @@ class QuestionModelView(ModelView):
         "state": state_to_emoji_markup,
         "topic": link_formatter_topic_abbr,
     }
+    common_col_count = len(Question.cols_common)
+    edit_columns = (
+        Question.cols_common
+        + Question.cols_self_assessed[common_col_count:]
+        + Question.cols_two_decimals[common_col_count:]
+        + Question.cols_one_of_six[common_col_count:]
+        + Question.cols_select_four[common_col_count:]
+        + Question.cols_three_to_three[common_col_count:]
+    )
 
     page_size = 100
     list_widget = ExtendedListWidget
