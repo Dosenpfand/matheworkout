@@ -58,14 +58,15 @@ appbuilder.add_view(
     category="Security",
     category_icon="fa-book",
 )
-appbuilder.add_view(
-    AssignmentModelAdminView,
-    "all_classes",
-    label="Alle Hausübungen",
-    icon="fa-tasks",
-    category="Security",
-    category_icon="fa-book",
-)
+# TODO: Activating this results in double injection of its super if its is a related view (e.g. in LearningGroupModelView)
+# appbuilder.add_view(
+#     AssignmentModelAdminView,
+#     "all_classes",
+#     label="Alle Hausübungen",
+#     icon="fa-tasks",
+#     category="Security",
+#     category_icon="fa-book",
+# )
 appbuilder.add_view(
     AssocUserQuestionModelView,
     "answered_questions",
