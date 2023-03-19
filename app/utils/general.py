@@ -25,16 +25,19 @@ from app.models.general import (
 def link_formatter_question(q_id, filters=None):
     assignment_id = None
     category_id = None
+    topic_id = None
     external_id = db.session.query(Question).filter_by(id=q_id).first().external_id
     if filters:
         assignment_id = filters.get_filter_value("assignments")
         category_id = filters.get_filter_value("category")
+        topic_id = filters.get_filter_value("topic")
 
     url = url_for(
         f"IdToForm.id_to_form",
         q_id=q_id,
         assignment_id=assignment_id,
         category_id=category_id,
+        topic_id=topic_id
     )
     return Markup(
         f'<a class="btn btn-sm btn-primary btn-table" style="min-width: 30%" href="{url}">{external_id}</a>'

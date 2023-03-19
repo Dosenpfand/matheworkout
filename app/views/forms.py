@@ -48,28 +48,37 @@ class QuestionFormView(SimpleFormView):
         super().__init__()
         self.assignment_id = None
         self.category_id = None
+        self.topic_id = None
         self.id = None
 
     @expose("/form")
     @expose("/form/<int:q_id>")
     @expose("/form/<int:q_id>/assignment/<int:assignment_id>")
     @expose("/form/<int:q_id>/category/<int:category_id>")
+    @expose("/form/<int:q_id>/topic/<int:topic_id>")
     @has_access
-    def this_form_get(self, q_id=None, assignment_id=None, category_id=None):
+    def this_form_get(
+        self, q_id=None, assignment_id=None, category_id=None, topic_id=None
+    ):
         self.id = q_id
         self.assignment_id = assignment_id
         self.category_id = category_id
+        self.topic_id = topic_id
         return super().this_form_get()
 
     @expose("/form", methods=["POST"])
     @expose("/form/<int:q_id>", methods=["POST"])
     @expose("/form/<int:q_id>/assignment/<int:assignment_id>", methods=["POST"])
     @expose("/form/<int:q_id>/category/<int:category_id>", methods=["POST"])
+    @expose("/form/<int:q_id>/topic/<int:topic_id>", methods=["POST"])
     @has_access
-    def this_form_post(self, q_id=None, assignment_id=None, category_id=None):
+    def this_form_post(
+        self, q_id=None, assignment_id=None, category_id=None, topic_id=None
+    ):
         self.id = q_id
         self.assignment_id = assignment_id
         self.category_id = category_id
+        self.topic_id = topic_id
         return super().this_form_post()
 
     def get_forward_button(self, question_id):
@@ -105,12 +114,19 @@ class QuestionFormView(SimpleFormView):
                 forward_url = url_for(
                     "AssignmentModelStudentView.show", pk=self.assignment_id
                 )
-        elif self.category_id:
-            questions = (
-                db.session.query(Question)
-                .filter_by(category_id=self.category_id)
-                .order_by(asc(Question.external_id))
-            )
+        elif self.category_id or self.topic_id:
+            if self.category_id:
+                questions = (
+                    db.session.query(Question)
+                    .filter_by(category_id=self.category_id)
+                    .order_by(asc(Question.external_id))
+                )
+            else:
+                questions = (
+                    db.session.query(Question)
+                    .filter_by(topic_id=self.topic_id)
+                    .order_by(asc(Question.external_id))
+                )
             take_next = False
             next_id = None
             # TODO: optimize
@@ -123,19 +139,30 @@ class QuestionFormView(SimpleFormView):
 
             if next_id:
                 forward_text = "Nächste Aufgabe"
-                forward_url = url_for(
-                    "IdToForm.id_to_form", q_id=next_id, category_id=self.category_id
-                )
+                if self.category_id:
+                    forward_url = url_for(
+                        "IdToForm.id_to_form", q_id=next_id, category_id=self.category_id
+                    )
+                else:
+                    forward_url = url_for(
+                        "IdToForm.id_to_form", q_id=next_id, topic_id=self.topic_id
+                    )
             else:
                 forward_text = "Zur Übungsübersicht"
-                forward_url = url_for(
-                    "CategoryModelStudentView.show", pk=self.category_id
-                )
+                if self.category_id:
+                    forward_url = url_for(
+                        "CategoryModelStudentView.show", pk=self.category_id
+                    )
+                else:
+                    forward_url = url_for(
+                        "TopicModelStudentView.show", pk=self.topic_id
+                    )
+
         return forward_text, forward_url
 
     def get_assignment_progress(self, question_id):
         assignment_progress = None
-        if self.assignment_id or self.category_id:
+        if self.assignment_id or self.category_id or self.topic_id:
             if self.assignment_id:
                 questions = (
                     db.session.query(Question)
@@ -144,10 +171,16 @@ class QuestionFormView(SimpleFormView):
                     .filter(Assignment.id == self.assignment_id)
                     .order_by(asc(Question.external_id))
                 )
-            else:
+            elif self.category_id:
                 questions = (
                     db.session.query(Question)
                     .filter_by(category_id=self.category_id)
+                    .order_by(asc(Question.external_id))
+                )
+            else:
+                questions = (
+                    db.session.query(Question)
+                    .filter_by(topic_id=self.topic_id)
                     .order_by(asc(Question.external_id))
                 )
             # TODO: optimize
