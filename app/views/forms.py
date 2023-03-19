@@ -383,6 +383,7 @@ class QuestionSelfAssessedFormView(QuestionFormView):
             q_id=question.id,
             assignment_id=self.assignment_id,
             category_id=self.category_id,
+            topic_id=self.topic_id,
         )
 
         solution_img = question.solution_image_img()
