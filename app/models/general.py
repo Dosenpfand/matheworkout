@@ -366,6 +366,11 @@ class Question(Model):
             return video_embed_url
         return None
 
+    def video_link_url(self):
+        if self.video_embed_url():
+            return None
+        return self.video_url.strip()
+
     @staticmethod
     def get_option_image(option):
         im = ImageManager()

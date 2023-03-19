@@ -220,6 +220,7 @@ class QuestionFormView(SimpleFormView):
                 "external_id": question.external_id,
                 "category": question.category.name,
                 "video_embed_url": question.video_embed_url(),
+                "video_link_url": question.video_link_url(),
                 "back_count": back_count,
                 "forward_text": forward_text,
                 "forward_url": forward_url,
@@ -371,6 +372,7 @@ class QuestionSelfAssessedFormView(QuestionFormView):
                 "category": question.category.name,
                 "submit_text": None,
                 "video_embed_url": question.video_embed_url(),
+                "video_link_url": question.video_link_url(),
                 "assignment_progress": assignment_progress,
             }
         }
