@@ -17,7 +17,7 @@ class FlexibleDecimalField(FloatField):
             valuelist[0] = safe_math_eval(valuelist[0])
             try:
                 self.data = float(valuelist[0])
-            except ValueError:
+            except ValueError or TypeError:
                 self.data = None
 
 
