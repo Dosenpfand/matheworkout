@@ -1,4 +1,4 @@
-Flask-AppBuilder~=4.1
+git+https://github.com/Dosenpfand/Flask-AppBuilder.git@multiple-actions-fix#egg=Flask-AppBuilder
 flask-mail~=0.9
 Pillow~=9.3
 psycopg2-binary~=2.9 # for postgresql

@@ -10,6 +10,7 @@ from flask import (
     abort,
     make_response,
     jsonify,
+    session,
 )
 from flask_appbuilder import SimpleFormView, expose, has_access
 from flask_appbuilder.models.sqla.interface import SQLAInterface
@@ -141,7 +142,9 @@ class QuestionFormView(SimpleFormView):
                 forward_text = "Nächste Aufgabe"
                 if self.category_id:
                     forward_url = url_for(
-                        "IdToForm.id_to_form", q_id=next_id, category_id=self.category_id
+                        "IdToForm.id_to_form",
+                        q_id=next_id,
+                        category_id=self.category_id,
                     )
                 else:
                     forward_url = url_for(
@@ -869,15 +872,19 @@ class AddQuestionToAssignmentFormView(SimpleFormView):
         assignment = self.assignment_model.get(form.assignment_id.raw_data[0])
         if not assignment or assignment.created_by == g.user:
             abort(404)
+        question_ids = session.pop("question_ids_to_add_to_assignment", None)
 
-        question_id = form.question_id.data
-        if not question_id:
+        if not question_ids:
+            question_ids = [form.question_id.data]
+
+        if not question_ids:
             abort(404)
 
-        question = self.question_model.get(question_id)
-        if not question:
-            abort(404)
+        for question_id in question_ids:
+            question = self.question_model.get(question_id)
+            if not question:
+                abort(404)
 
-        assignment.assigned_questions.append(question)
+            assignment.assigned_questions.append(question)
         if self.assignment_model.edit(assignment):
             return make_response(jsonify(""))

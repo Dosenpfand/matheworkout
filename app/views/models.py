@@ -1,4 +1,4 @@
-from flask import g, redirect, url_for, flash
+from flask import g, redirect, url_for, flash, session
 from flask_appbuilder import ModelView, action
 from flask_appbuilder.models.sqla.filters import (
     FilterEqual,
@@ -244,6 +244,19 @@ class QuestionModelView(ModelView):
 
     page_size = 100
     list_widget = ExtendedListWidget
+
+    @action(
+        "add_questions_to_assignment",
+        "Auswahl zu Hausübung hinzufügen",
+        confirmation=None,
+        icon="fa-tasks",
+        multiple=True,
+        single=False,
+    )
+    def add_questions_to_assignment(self, items):
+        question_ids = [question.id for question in items]
+        session["question_ids_to_add_to_assignment"] = question_ids
+        return redirect(url_for("AddQuestionToAssignmentFormView.this_form_get"))
 
 
 class AssocUserQuestionModelView(ModelView):
