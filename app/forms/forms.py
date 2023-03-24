@@ -15,7 +15,10 @@ class FlexibleDecimalField(FloatField):
     def process_formdata(self, valuelist):
         if valuelist:
             valuelist[0] = safe_math_eval(valuelist[0])
-        return super(FlexibleDecimalField, self).process_formdata(valuelist)
+            try:
+                self.data = float(valuelist[0])
+            except ValueError:
+                self.data = None
 
 
 class QuestionForm(DynamicForm):
