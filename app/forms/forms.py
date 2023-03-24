@@ -19,7 +19,7 @@ class FlexibleDecimalField(FloatField):
                 self.data = float(valuelist[0])
             except (ValueError, TypeError):
                 self.data = None
-                raise ValueError(self.gettext("Not a valid float value"))
+                raise ValueError("Kein gültiger Ausdruck")
 
 
 class QuestionForm(DynamicForm):
