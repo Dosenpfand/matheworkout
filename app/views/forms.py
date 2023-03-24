@@ -872,10 +872,11 @@ class AddQuestionToAssignmentFormView(SimpleFormView):
         assignment = self.assignment_model.get(form.assignment_id.raw_data[0])
         if not assignment or assignment.created_by == g.user:
             abort(404)
-        question_ids = session.pop("question_ids_to_add_to_assignment", None)
 
-        if not question_ids:
+        if form.question_id.data:
             question_ids = [form.question_id.data]
+        else:
+            question_ids = session.pop("question_ids_to_add_to_assignment", None)
 
         if not question_ids:
             abort(404)

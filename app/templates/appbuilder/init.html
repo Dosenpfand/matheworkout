@@ -148,6 +148,9 @@
                     data: form.serialize(), // serializes the form's elements.
                     success: function (data) {
                         form.replaceWith("<b>Erfolgreich hinzugefügt</b>")
+                    },
+                    error: function (data) {
+                        form.replaceWith("<b>Fehler beim Hinzufügen</b>")
                     }
                 });
             });
