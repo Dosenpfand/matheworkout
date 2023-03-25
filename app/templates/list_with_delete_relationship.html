@@ -15,7 +15,7 @@
     </th>
     {% endif %}
 
-    <th class="col-md-1 col-lg-1 col-sm-1" >Aktionen</th>
+    <th class="col-md-1 col-lg-1 col-sm-1" ></th>
 
     {% for item in include_columns %}
         {% if item in order_columns %}
@@ -74,14 +74,14 @@
     {% set endpoint = modelview_name + '.delete_relationship' %}
     {% set path = endpoint | safe_url_for(pk=pk, fk=filters.get_filter_value('learning_groups')) %}
     {% if path %}
-        {{ lnk_delete(path) }}
+        {{ lnk_delete(path, modelview_name) }}
     {% endif %}
     </div>
 {% endmacro %}
 
-{% macro lnk_delete(my_href) %}
+{% macro lnk_delete(my_href, modelview_name) %}
     <a href="javascript:void(0)" class="btn btn-sm btn-default confirm" rel="tooltip" title="Aus Klasse entfernen"
-       onclick="var a = new AdminActions(); return a.execute_single_delete('{{my_href}}','Bist du sicher, dass du diese Schüler:in aus der Klasse entfernen möchtest?');">
+       onclick="var a = new AdminActions('action_form_{{ modelview_name }}'); return a.execute_single_delete('{{my_href}}','Bist du sicher, dass du diese Schüler:in aus der Klasse entfernen möchtest?');">
         <span class="sr-only">{{ _('Delete') }}</span>
         <i class="fa fa-trash"></i>
     </a>

@@ -1,5 +1,4 @@
 from flask_appbuilder.fields import QuerySelectField
-from flask_appbuilder.fieldwidgets import Select2Widget
 from flask_appbuilder.forms import DynamicForm
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from flask_wtf.file import FileField
