@@ -1,4 +1,5 @@
-from flask_appbuilder.fields import AJAXSelectField
+from flask_appbuilder.fields import QuerySelectField
+from flask_appbuilder.fieldwidgets import Select2Widget
 from flask_appbuilder.forms import DynamicForm
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from flask_wtf.file import FileField
@@ -8,7 +9,8 @@ from wtforms.validators import NoneOf, DataRequired
 from app import db
 from app.models.general import Select4Enum, Assignment
 from app.utils.general import safe_math_eval
-from app.views.widgets import Select2AJAXExtendedWidget
+from app.views.queries import assignment_query
+from app.views.widgets import Select2WidgetExtended
 
 
 class FlexibleDecimalField(FloatField):
@@ -85,14 +87,13 @@ class ImportUsersForm(DynamicForm):
 
 class AddQuestionToAssignmentForm(DynamicForm):
     model = SQLAInterface(Assignment, db.session)
-    assignment_id = AJAXSelectField(
+    assignment_id = QuerySelectField(
         label="Hausübung",
-        datamodel=model,
+        query_func=assignment_query,
+        get_pk_func=lambda x: x.id,
         validators=[DataRequired()],
-        is_related=False,
-        widget=Select2AJAXExtendedWidget(
-            endpoint="/assignmentmodelteacherview/api/readvalues",
-            placeholder="Zu Hausübung hinzufügen",
+        widget=Select2WidgetExtended(
+            style="width: 70%;", data_placeholder="Zu Hausübung hinzufügen"
         ),
     )
     question_id = HiddenField()

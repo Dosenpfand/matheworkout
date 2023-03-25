@@ -29,7 +29,7 @@
                         </div>
                         {% if config.TEACHER_ROLE_NAME in current_user.role_names() -%}
                             <div class="col-md-6 col-sm-12 text-right hidden-print">
-                                {{ widgets.get('add_question_to_assignment')(form=question['add_to_assignment_form'], form_action=form_action)|safe }}
+                                {{ widgets.get('add_question_to_assignment')(form=question['add_to_assignment_form'], form_action=form_action, save_text="Zu HÜ hinzufügen")|safe }}
                             </div>
                         {% endif %}
                     </div>

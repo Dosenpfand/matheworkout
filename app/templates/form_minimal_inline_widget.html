@@ -14,7 +14,7 @@
 {% endmacro %}
 
 {% macro render_form_controls() %}
-    <button type="submit" class="btn  btn-sm btn-primary">{{ _("Save") }}<i class="fa fa-save"></i></button>
+    <button type="submit" class="btn  btn-sm btn-primary">{{ save_text|default(_("Save"), true) }}<i class="fa fa-save"></i></button>
 {% endmacro %}
 
 {% if form_action is defined %}

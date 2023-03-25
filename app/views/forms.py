@@ -868,6 +868,20 @@ class AddQuestionToAssignmentFormView(SimpleFormView):
     question_model = SQLAInterface(Question, db.session)
     assignment_model = SQLAInterface(Assignment, db.session)
 
+    @expose("/form", methods=["POST"])
+    @has_access
+    def this_form_post(self):
+        self._init_vars()
+        form = self.form.refresh()
+
+        if form.validate_on_submit():
+            response = self.form_post(form)
+            if not response:
+                return redirect(self.get_redirect())
+            return response
+        else:
+            abort(404)
+
     def form_post(self, form):
         assignment = self.assignment_model.get(form.assignment_id.raw_data[0])
         if not assignment or assignment.created_by == g.user:

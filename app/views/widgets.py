@@ -1,10 +1,9 @@
 import re
 
-from flask_appbuilder.fieldwidgets import DatePickerWidget, Select2AJAXWidget
+from flask_appbuilder.fieldwidgets import DatePickerWidget
 from flask_appbuilder.widgets import RenderTemplateWidget
 from markupsafe import Markup
-from wtforms.widgets import html_params
-from re import search
+from wtforms.widgets import html_params, Select
 
 
 class ExtendedEditWidget(RenderTemplateWidget):
@@ -60,32 +59,28 @@ class DatePickerWidgetDe(DatePickerWidget):
         )
 
 
-class Select2AJAXExtendedWidget(Select2AJAXWidget):
-    data_template = "<input %(text)s />"
+class Select2WidgetExtended(Select):
+    extra_classes = None
 
-    def __init__(self, endpoint, extra_classes=None, style=None, placeholder=None):
-        self.endpoint = endpoint
+    def __init__(self, extra_classes=None, style=None, data_placeholder=None):
         self.extra_classes = extra_classes
-        self.placeholder = placeholder
-        self.style = style or "max-width:100%"
+        self.style = style
+        self.data_placeholder = data_placeholder
+        super(Select2WidgetExtended, self).__init__()
 
     def __call__(self, field, **kwargs):
-        kwargs.setdefault("id", field.id)
-        kwargs.setdefault("name", field.name)
-        kwargs.setdefault("endpoint", self.endpoint)
-        kwargs.setdefault("style", self.style)
-        kwargs.setdefault("placeholder", self.placeholder)
-        input_classes = "input-group my_select2_ajax"
+        kwargs["class"] = "my_select2 form-control"
         if self.extra_classes:
-            input_classes = input_classes + " " + self.extra_classes
-        kwargs.setdefault("class", input_classes)
-        if not field.data:
-            field.data = ""
-        template = self.data_template
-
-        return Markup(
-            template % {"text": html_params(type="text", value=field.data, **kwargs)}
-        )
+            kwargs["class"] = kwargs["class"] + " " + self.extra_classes
+        if self.style:
+            kwargs["style"] = self.style
+        if self.data_placeholder:
+            kwargs["data-placeholder"] = self.data_placeholder
+        else:
+            kwargs["data-placeholder"] = "Wert auswählen"
+        if "name_" in kwargs:
+            field.name = kwargs["name_"]
+        return super(Select2WidgetExtended, self).__call__(field, **kwargs)
 
 
 class FormMinimalInlineWidget(RenderTemplateWidget):
