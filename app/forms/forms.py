@@ -10,7 +10,7 @@ from app import db
 from app.models.general import Select4Enum, Assignment
 from app.utils.general import safe_math_eval
 from app.views.queries import assignment_query
-from app.views.widgets import Select2WidgetExtended
+from app.views.widgets import SelectWidgetExtended
 
 
 class FlexibleDecimalField(FloatField):
@@ -92,7 +92,7 @@ class AddQuestionToAssignmentForm(DynamicForm):
         query_func=assignment_query,
         get_pk_func=lambda x: x.id,
         validators=[DataRequired()],
-        widget=Select2WidgetExtended(
+        widget=SelectWidgetExtended(
             style="width: 70%;", data_placeholder="Zu Hausübung hinzufügen"
         ),
     )

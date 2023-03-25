@@ -59,17 +59,17 @@ class DatePickerWidgetDe(DatePickerWidget):
         )
 
 
-class Select2WidgetExtended(Select):
+class SelectWidgetExtended(Select):
     extra_classes = None
 
     def __init__(self, extra_classes=None, style=None, data_placeholder=None):
         self.extra_classes = extra_classes
         self.style = style
         self.data_placeholder = data_placeholder
-        super(Select2WidgetExtended, self).__init__()
+        super().__init__()
 
     def __call__(self, field, **kwargs):
-        kwargs["class"] = "my_select2 form-control"
+        kwargs["class"] = "form-control"
         if self.extra_classes:
             kwargs["class"] = kwargs["class"] + " " + self.extra_classes
         if self.style:
@@ -80,7 +80,7 @@ class Select2WidgetExtended(Select):
             kwargs["data-placeholder"] = "Wert auswählen"
         if "name_" in kwargs:
             field.name = kwargs["name_"]
-        return super(Select2WidgetExtended, self).__call__(field, **kwargs)
+        return super().__call__(field, **kwargs)
 
 
 class FormMinimalInlineWidget(RenderTemplateWidget):
