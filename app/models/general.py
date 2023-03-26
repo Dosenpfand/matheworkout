@@ -123,7 +123,9 @@ class Question(Model):
     category = relationship("Category", back_populates="questions")
     description_image = Column(ImageColumn(size=(10000, 10000, True)))
     type = Column(Enum(QuestionType), index=True)
-    answered_users = relationship("AssocUserQuestion", back_populates="question")
+    answered_users = relationship(
+        "AssocUserQuestion", back_populates="question", cascade="all, delete"
+    )
     assignments = relationship(
         "Assignment",
         secondary=assoc_assignment_question,
@@ -491,7 +493,10 @@ class LearningGroup(Model, AuditMixin):
         order_by="ExtendedUser.last_name.asc()",
     )
     assignments = relationship(
-        "Assignment", back_populates="learning_group", lazy="dynamic"
+        "Assignment",
+        back_populates="learning_group",
+        lazy="dynamic",
+        cascade="all, delete",
     )
     join_token = Column(String(255), default=secrets.token_urlsafe())
 
@@ -542,9 +547,11 @@ class ExtendedUser(User):
         back_populates="user",
         lazy="dynamic",
         order_by="AssocUserQuestion.created_on.asc()",
+        cascade="all, delete",
     )
     password_reset_token = Column(String(255))
     password_reset_expiration = Column(DateTime)
+    # TODO: Model relation to owned learning groups explicitly? and cascade?
 
     def role_names(self):
         return map(lambda role: role.name, self.roles)
@@ -654,9 +661,9 @@ class ExtendedRegisterUser(RegisterUser):
 class AssocUserQuestion(Model):
     __tablename__ = "assoc_user_question"
     id = Column(Integer, Sequence("assoc_user_question_id_seq"), primary_key=True)
-    user_id = Column(ForeignKey("ab_user.id"))
+    user_id = Column(ForeignKey("ab_user.id"), nullable=False)
     user = relationship("ExtendedUser")
-    question_id = Column(ForeignKey("question.id"))
+    question_id = Column(ForeignKey("question.id"), nullable=False)
     question = relationship("Question")
     created_on = Column(DateTime, default=datetime.datetime.now, nullable=False)
     is_answer_correct = Column(Boolean, nullable=False)
