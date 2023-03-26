@@ -22,8 +22,15 @@ class ExtendedShowWidget(RenderTemplateWidget):
     template = "extended_show.html"
 
 
-class ListWithDeleteRelationshipWidget(RenderTemplateWidget):
-    template = "list_with_delete_relationship.html"
+def list_with_delete_relationship_widget_factory(relation_col_name):
+    class ListWithDeleteRelationshipWidgetFactory(RenderTemplateWidget):
+        template = "list_with_delete_relationship.html"
+        template_args = {"relation_col_name": relation_col_name}
+
+        def __init__(self, **kwargs):
+            self.template_args.update(kwargs)
+
+    return ListWithDeleteRelationshipWidgetFactory
 
 
 class RegisterFormWidget(RenderTemplateWidget):

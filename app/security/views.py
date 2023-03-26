@@ -21,7 +21,10 @@ from app import db
 from app.models.general import ExtendedUser, LearningGroup
 from app.security.forms import ForgotPasswordForm, ExtendedRegisterUserDBForm
 from app.utils.general import send_email
-from app.views.widgets import ListWithDeleteRelationshipWidget, RegisterFormWidget
+from app.views.widgets import (
+    RegisterFormWidget,
+    list_with_delete_relationship_widget_factory,
+)
 
 log = logging.getLogger(__name__)
 
@@ -166,7 +169,7 @@ class ExtendedUserDBModelTeacherView(ExtendedUserDBModelView):
     add_title = title
     edit_title = title
 
-    list_widget = ListWithDeleteRelationshipWidget
+    list_widget = list_with_delete_relationship_widget_factory("learning_groups")
 
     list_columns = ["first_name", "last_name", "correct_questions"]
 

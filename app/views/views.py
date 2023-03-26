@@ -47,6 +47,7 @@ from app.views.models import (
     TopicModelStudentView,
     LearningGroupModelAdminView,
     AssignmentModelAdminView,
+    QuestionModelViewForAssignment,
 )
 
 appbuilder.add_separator(category="Security")
@@ -248,3 +249,4 @@ appbuilder.add_view_no_menu(ResetForgotPasswordView)
 appbuilder.add_view_no_menu(DataProtectionView)
 appbuilder.add_view_no_menu(ImprintView)
 appbuilder.add_view_no_menu(SupportView)
+appbuilder.add_view_no_menu(QuestionModelViewForAssignment)

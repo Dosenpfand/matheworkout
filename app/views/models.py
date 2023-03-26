@@ -1,5 +1,5 @@
 from flask import g, redirect, url_for, flash, session
-from flask_appbuilder import ModelView, action
+from flask_appbuilder import ModelView, action, expose, has_access
 from flask_appbuilder.models.sqla.filters import (
     FilterEqual,
     FilterEqualFunction,
@@ -38,9 +38,10 @@ from app.utils.general import (
 )
 from app.views.general import ShowQuestionDetailsMixIn
 from app.views.widgets import (
-    ExtendedListWidget,
     ExtendedListNoButtonsWidget,
     DatePickerWidgetDe,
+    ExtendedListWidget,
+    list_with_delete_relationship_widget_factory,
 )
 
 
@@ -210,53 +211,85 @@ class QuestionSelect4ModelView(ModelView):
     page_size = 100
 
 
-class QuestionModelView(ModelView):
-    datamodel = SQLAInterface(Question)
-    base_filters = []
-    base_order = ("external_id", "asc")
-    title = "Aufgaben"
-    list_title = title
-    show_title = title
-    add_title = title
-    edit_title = title
-    label_columns = {
-        "description_image": "Beschreibung",
-        "id": "Frage Nr.",
-        "topic": "Grundkompetenzbereich",
-        "category": "Kategorie",
-        "state": "Status",
-    }
-    list_columns = ["id", "topic", "category", "state"]
-    formatters_columns = {
-        "id": link_formatter_question,
-        "state": state_to_emoji_markup,
-        "topic": link_formatter_topic_abbr,
-    }
-    common_col_count = len(Question.cols_common)
-    edit_columns = (
-        Question.cols_common
-        + Question.cols_self_assessed[common_col_count:]
-        + Question.cols_two_decimals[common_col_count:]
-        + Question.cols_one_of_six[common_col_count:]
-        + Question.cols_select_four[common_col_count:]
-        + Question.cols_three_to_three[common_col_count:]
-    )
+def question_model_view_factory(relation_col_name=None):
+    class QuestionModelViewFactory(ModelView):
+        datamodel = SQLAInterface(Question)
+        base_filters = []
+        base_order = ("external_id", "asc")
+        title = "Aufgaben"
+        list_title = title
+        show_title = title
+        add_title = title
+        edit_title = title
+        label_columns = {
+            "description_image": "Beschreibung",
+            "id": "Frage Nr.",
+            "topic": "Grundkompetenzbereich",
+            "category": "Kategorie",
+            "state": "Status",
+        }
+        list_columns = ["id", "topic", "category", "state"]
+        formatters_columns = {
+            "id": link_formatter_question,
+            "state": state_to_emoji_markup,
+            "topic": link_formatter_topic_abbr,
+        }
+        common_col_count = len(Question.cols_common)
+        edit_columns = (
+            Question.cols_common
+            + Question.cols_self_assessed[common_col_count:]
+            + Question.cols_two_decimals[common_col_count:]
+            + Question.cols_one_of_six[common_col_count:]
+            + Question.cols_select_four[common_col_count:]
+            + Question.cols_three_to_three[common_col_count:]
+        )
 
-    page_size = 100
-    list_widget = ExtendedListWidget
+        page_size = 100
 
-    @action(
-        "add_questions_to_assignment",
-        "Auswahl zu Hausübung hinzufügen",
-        confirmation=None,
-        icon="fa-tasks",
-        multiple=True,
-        single=False,
-    )
-    def add_questions_to_assignment(self, items):
-        question_ids = [question.id for question in items]
-        session["question_ids_to_add_to_assignment"] = question_ids
-        return redirect(url_for("AddQuestionToAssignmentFormView.this_form_get"))
+        if relation_col_name:
+            list_widget = list_with_delete_relationship_widget_factory(
+                relation_col_name
+            )
+        else:
+            list_widget = ExtendedListWidget
+
+        @action(
+            "add_questions_to_assignment",
+            "Auswahl zu Hausübung hinzufügen",
+            confirmation=None,
+            icon="fa-tasks",
+            multiple=True,
+            single=False,
+        )
+        def add_questions_to_assignment(self, items):
+            question_ids = [question.id for question in items]
+            session["question_ids_to_add_to_assignment"] = question_ids
+            return redirect(url_for("AddQuestionToAssignmentFormView.this_form_get"))
+
+        @expose("/delete_relationship/<int:pk>/<int:fk>", methods=["POST"])
+        @has_access
+        def delete_relationship(self, pk, fk):
+            self.update_redirect()
+            assignment = (
+                db.session.query(Assignment)
+                .filter_by(id=fk, created_by_fk=g.user.id)
+                .first()
+            )
+            question = db.session.query(Question).filter_by(id=pk).first()
+            if assignment and question and (question in assignment.assigned_questions):
+                assignment.assigned_questions.remove(question)
+                db.session.commit()
+                flash("Erfolgreich entfernt", "success")
+            else:
+                flash("Entfernen fehlgeschlagen", "danger")
+            return self.post_delete_redirect()
+
+    return QuestionModelViewFactory
+
+
+QuestionModelView = question_model_view_factory()
+
+QuestionModelViewForAssignment = question_model_view_factory()
 
 
 class AssocUserQuestionModelView(ModelView):
@@ -283,7 +316,6 @@ class AssignmentModelTeacherView(ModelView, ShowQuestionDetailsMixIn):
     edit_columns = [
         "name",
         "learning_group",
-        "assigned_questions",
         "starts_on",
         "is_due_on",
     ]
@@ -319,7 +351,7 @@ class AssignmentModelTeacherView(ModelView, ShowQuestionDetailsMixIn):
         "is_due_on": "Fällig am",
         "starts_on_de": "Erhalten am",
         "is_due_on_de": "Fällig am",
-        "assigned_questions": "Fragen",
+        "assigned_questions": "Aufgaben",
         "additional_links": "Auswertung",
         "student_link": "Link für Schüler",
     }
@@ -330,7 +362,7 @@ class AssignmentModelTeacherView(ModelView, ShowQuestionDetailsMixIn):
     add_title = title
     edit_title = title
 
-    related_views = [QuestionModelView]
+    related_views = [QuestionModelViewForAssignment]
 
     show_template = "show_cascade_expanded.html"
     edit_template = "appbuilder/general/model/edit_cascade.html"
