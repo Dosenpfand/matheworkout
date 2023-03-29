@@ -280,7 +280,7 @@ class QuestionFormView(SimpleFormView):
         question = db.session.query(Question).filter_by(id=self.id).first()
 
         if question is None:
-            description = "Es existieren keine Fragen zu diesem Thema und Typ."
+            description = "Diese Frage existiert nicht."
             external_id = None
             error = True
             assignment_progress = None
