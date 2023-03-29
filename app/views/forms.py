@@ -284,14 +284,16 @@ class QuestionFormView(SimpleFormView):
             external_id = None
             error = True
             assignment_progress = None
+            category = None
         else:
             form.id.data = question.id
             description = question.description_image_img()
             external_id = question.external_id
             error = False
             assignment_progress = self.get_assignment_progress(question.id)
+            category = question.category.name
 
-        return question, description, external_id, error, assignment_progress
+        return question, description, external_id, error, assignment_progress, category
 
     def form_get(self, form):
         (
@@ -300,6 +302,7 @@ class QuestionFormView(SimpleFormView):
             external_id,
             error,
             assignment_progress,
+            category,
         ) = self.pre_process_question(form)
 
         options = (
@@ -312,7 +315,7 @@ class QuestionFormView(SimpleFormView):
                 "description": description,
                 "options": options,
                 "external_id": external_id,
-                "category": question.category.name,
+                "category": category,
                 "submit_text": "Auswerten",
                 "assignment_progress": assignment_progress,
             }
@@ -341,6 +344,7 @@ class QuestionSelfAssessedFormView(QuestionFormView):
             external_id,
             error,
             assignment_progress,
+            category,
         ) = self.pre_process_question(form)
 
         if not error:
@@ -363,7 +367,7 @@ class QuestionSelfAssessedFormView(QuestionFormView):
                 "question": {
                     "description": description,
                     "external_id": external_id,
-                    "category": question.category.name,
+                    "category": category,
                     "submit_text": submit_text,
                     "back_count": back_count,
                     "forward_text": forward_text,
