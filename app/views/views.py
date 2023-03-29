@@ -46,7 +46,6 @@ from app.views.models import (
     CategoryModelAdminView,
     TopicModelStudentView,
     LearningGroupModelAdminView,
-    AssignmentModelAdminView,
 )
 
 appbuilder.add_separator(category="Security")

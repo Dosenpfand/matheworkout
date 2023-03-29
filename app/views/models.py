@@ -3,7 +3,6 @@ from flask_appbuilder import ModelView, action
 from flask_appbuilder.models.sqla.filters import (
     FilterEqual,
     FilterEqualFunction,
-    FilterNotEqual,
     FilterInFunction,
 )
 from flask_appbuilder.models.sqla.interface import SQLAInterface
