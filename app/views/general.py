@@ -76,6 +76,8 @@ class IdToForm(BaseView):
     @expose("idtoform/<int:q_id>/topic/<int:topic_id>")
     def id_to_form(self, q_id, assignment_id=None, category_id=None, topic_id=None):
         question = db.session.query(Question).filter_by(id=q_id).first()
+        if not question:
+            abort(404)
         question_type = question.type.value
 
         type_to_form = {
