@@ -116,7 +116,7 @@ class QuestionUserState(enum.Enum):
 class Question(Model):
     # common
     id = Column(Integer, primary_key=True)
-    external_id = Column(Integer, nullable=False, index=True)
+    external_id = Column(String, nullable=False, index=True)
     topic_id = Column(Integer, ForeignKey("topic.id"), nullable=False)
     topic = relationship("Topic", back_populates="questions")
     category_id = Column(Integer, ForeignKey("category.id"), nullable=False)
