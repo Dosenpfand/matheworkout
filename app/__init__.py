@@ -33,7 +33,7 @@ def create_app(config="config"):
         result = db.session.execute(
             "SELECT * FROM pg_collation WHERE collname = 'numeric';"
         )
-        if not result:
+        if not result.first():
             db.session.execute(
                 "CREATE COLLATION numeric (provider = icu, locale = 'de_DE@colNumeric=yes');"
             )
