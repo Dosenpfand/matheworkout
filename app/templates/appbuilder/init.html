@@ -1,165 +1,169 @@
 {% import 'appbuilder/baselib.html' as baselib with context %}
 
 {% if appbuilder %}
-  {% set app_name = appbuilder.app_name %}
+    {% set app_name = appbuilder.app_name %}
 {% endif %}
 
 <!DOCTYPE html>
 <html lang="de">
-  <head>
-    <title>{% block page_title %}{{app_name}}{% endblock %}</title>
+<head>
+    <title>{% block page_title %}{{ app_name }}{% endblock %}</title>
+    {% if canonical %}
+        <link rel="canonical" href="{{ canonical }}"/>
+    {% endif %}
 
     {% block head_meta %}
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-      <meta name="description" content="Diese Seite dient zur Unterstützung bei der Vorbereitung auf die österreichische AHS-Mathematik-Zentralmatura. Dazu stehen alle Grundkompetenzaufgaben aus dem Aufgabenpool, sowie Matura-Aufgaben (Teil 1) der letzten Jahre nach Themen sortiert zur Verfügung.">
-      {# TODO #}
-      <meta name="author" content="">
-      <meta name="keywords" content="">
+        <meta name="description"
+              content="Diese Seite dient zur Unterstützung bei der Vorbereitung auf die österreichische AHS-Mathematik-Zentralmatura. Dazu stehen alle Grundkompetenzaufgaben aus dem Aufgabenpool, sowie Matura-Aufgaben (Teil 1) der letzten Jahre nach Themen sortiert zur Verfügung.">
+        {# TODO #}
+        <meta name="author" content="">
+        <meta name="keywords" content="">
     {% endblock %}
 
     {% block head_css %}
-      <link href="{{url_for('static',filename='css/bootstrap.min.css')}}" rel="stylesheet">
-      <link href="{{url_for('static',filename='css/all.min.css')}}" rel="stylesheet">
-      <link href="{{url_for('static',filename='css/v4-shims.min.css')}}" rel="stylesheet">
-      <link href="{{url_for('static',filename='css/bootstrap-theme.css' )}}" rel="stylesheet">
-      <link href="{{url_for('static', filename='css/templatemo-style.css')}}" rel="stylesheet" >
-      <link href="{{url_for('appbuilder.static',filename='datepicker/bootstrap-datepicker.css')}}" rel="stylesheet">
-      <link href="{{url_for('appbuilder.static',filename='select2/select2.css')}}" rel="stylesheet">
-      <link href="{{url_for('appbuilder.static',filename='select2/select2-bootstrap-theme.css')}}" rel="stylesheet">
-      <link href="{{url_for('appbuilder.static',filename='css/ab.css')}}" rel="stylesheet">
+        <link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static',filename='css/all.min.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static',filename='css/v4-shims.min.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static',filename='css/bootstrap-theme.css' ) }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/templatemo-style.css') }}" rel="stylesheet">
+        <link href="{{ url_for('appbuilder.static',filename='datepicker/bootstrap-datepicker.css') }}" rel="stylesheet">
+        <link href="{{ url_for('appbuilder.static',filename='select2/select2.css') }}" rel="stylesheet">
+        <link href="{{ url_for('appbuilder.static',filename='select2/select2-bootstrap-theme.css') }}" rel="stylesheet">
+        <link href="{{ url_for('appbuilder.static',filename='css/ab.css') }}" rel="stylesheet">
     {% endblock %}
 
     {% block head_js %}
-      <script src="{{url_for('appbuilder.static',filename='js/jquery-latest.js')}}"></script>
-      <script src="{{url_for('appbuilder.static',filename='js/ab_filters.js')}}"></script>
-      <script src="{{url_for('appbuilder.static',filename='js/ab_actions.js')}}"></script>
+        <script src="{{ url_for('appbuilder.static',filename='js/jquery-latest.js') }}"></script>
+        <script src="{{ url_for('appbuilder.static',filename='js/ab_filters.js') }}"></script>
+        <script src="{{ url_for('appbuilder.static',filename='js/ab_actions.js') }}"></script>
     {% endblock %}
-  </head>
-  <body id="top" data-spy="scroll" data-target=".navbar-collapse" data-offset="50">
-    {% block body %}
-    {% endblock %}
+</head>
+<body id="top" data-spy="scroll" data-target=".navbar-collapse" data-offset="50">
+{% block body %}
+{% endblock %}
 
-    {% block tail_js %}
-      <script src="{{url_for('appbuilder.static',filename='js/bootstrap.min.js')}}"></script>
-      <script src="{{url_for('appbuilder.static',filename='datepicker/bootstrap-datepicker.js')}}"></script>
-      <script src="{{url_for('appbuilder.static',filename='select2/select2.js')}}"></script>
-      <script src="{{url_for('appbuilder.static',filename='js/ab.js')}}"></script>
-      {# TODO: Only include when needed! (also others) #}
-      <script src="{{url_for('static',filename='js/confetti.browser.min.js')}}"></script>
-      <script src="{{url_for('static',filename='js/chart.min.js')}}"></script>
-      <script type="module" src="{{url_for('static',filename='js/js.cookie.min.js')}}"></script>
-    {% endblock %}
+{% block tail_js %}
+    <script src="{{ url_for('appbuilder.static',filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('appbuilder.static',filename='datepicker/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ url_for('appbuilder.static',filename='select2/select2.js') }}"></script>
+    <script src="{{ url_for('appbuilder.static',filename='js/ab.js') }}"></script>
+    {# TODO: Only include when needed! (also others) #}
+    <script src="{{ url_for('static',filename='js/confetti.browser.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/chart.min.js') }}"></script>
+    <script type="module" src="{{ url_for('static',filename='js/js.cookie.min.js') }}"></script>
+{% endblock %}
 
-    {% block add_tail_js %}
-    {% endblock %}
+{% block add_tail_js %}
+{% endblock %}
 
-    {% block confetti %}
+{% block confetti %}
     {% if fire_confetti %}
-    <script type="text/javascript">
-        // Confetti
-        const count = 200;
-        const defaults = {
-            origin: {y: 0.7},
-            ticks: 200,
-            disableForReducedMotion: true
-        };
+        <script type="text/javascript">
+            // Confetti
+            const count = 200;
+            const defaults = {
+                origin: {y: 0.7},
+                ticks: 200,
+                disableForReducedMotion: true
+            };
 
-        function fire(particleRatio, opts) {
-          confetti(Object.assign({}, defaults, opts, {
-            particleCount: Math.floor(count * particleRatio)
-          }));
-        }
-
-        window.addEventListener('load', function () {
-          setTimeout(function() {
-            fire(0.25, {
-              spread: 26,
-              startVelocity: 55,
-            });
-            fire(0.2, {
-              spread: 60,
-            });
-            fire(0.35, {
-              spread: 100,
-              decay: 0.91,
-              scalar: 0.8
-            });
-            fire(0.1, {
-              spread: 120,
-              startVelocity: 25,
-              decay: 0.92,
-              scalar: 1.2
-            });
-            fire(0.1, {
-              spread: 120,
-              startVelocity: 45,
-            });
-          }, 500);
-        })
-    </script>
-    {% endif %}
-    {% endblock %}
-    <script>
-        // YouTube embed
-        function activateVideos() {
-            const iframes = document.querySelectorAll('.video__iframe[data-src*="youtube-nocookie.com"]');
-            iframes.forEach((iframe) => {
-                iframe.src = iframe.dataset.src;
-            });
-        }
-
-        function deactivateVideos() {
-            const iframes = document.querySelectorAll('.video__iframe[src*="youtube-nocookie.com"]');
-            iframes.forEach((iframe) => {
-                iframe.removeAttribute('src');
-            });
-        }
-
-        function attachEvents() {
-            const notices = document.querySelectorAll('.video__notice');
-            notices.forEach((notice) => {
-                notice.addEventListener('submit', (event) => {
-                    activateVideos();
-                    // Store consent for one year
-                    Cookies.set('youtube-consent', 'true', {expires: 365});
-                    event.preventDefault();
-                });
-            });
-        }
-
-        window.addEventListener('load', function () {
-            if (Cookies.get('youtube-consent') === 'true') {
-                activateVideos();
-            } else {
-                attachEvents();
+            function fire(particleRatio, opts) {
+                confetti(Object.assign({}, defaults, opts, {
+                    particleCount: Math.floor(count * particleRatio)
+                }));
             }
-        })
 
-        // Add question to assignment
-        window.addEventListener('load', function () {
-            $(".form-inline").submit(function (e) {
-                e.preventDefault(); // avoid to execute the actual submit of the form.
-                var form = $(this);
-                var actionUrl = form.attr('action');
-                $.ajax({
-                    type: "POST",
-                    url: actionUrl,
-                    data: form.serialize(), // serializes the form's elements.
-                    success: function (data) {
-                        form.replaceWith("<b>Erfolgreich hinzugefügt</b>")
-                    },
-                    error: function (data) {
-                        form.replaceWith("<b>Fehler beim Hinzufügen</b>")
-                    }
-                });
+            window.addEventListener('load', function () {
+                setTimeout(function () {
+                    fire(0.25, {
+                        spread: 26,
+                        startVelocity: 55,
+                    });
+                    fire(0.2, {
+                        spread: 60,
+                    });
+                    fire(0.35, {
+                        spread: 100,
+                        decay: 0.91,
+                        scalar: 0.8
+                    });
+                    fire(0.1, {
+                        spread: 120,
+                        startVelocity: 25,
+                        decay: 0.92,
+                        scalar: 1.2
+                    });
+                    fire(0.1, {
+                        spread: 120,
+                        startVelocity: 45,
+                    });
+                }, 500);
+            })
+        </script>
+    {% endif %}
+{% endblock %}
+<script>
+    // YouTube embed
+    function activateVideos() {
+        const iframes = document.querySelectorAll('.video__iframe[data-src*="youtube-nocookie.com"]');
+        iframes.forEach((iframe) => {
+            iframe.src = iframe.dataset.src;
+        });
+    }
+
+    function deactivateVideos() {
+        const iframes = document.querySelectorAll('.video__iframe[src*="youtube-nocookie.com"]');
+        iframes.forEach((iframe) => {
+            iframe.removeAttribute('src');
+        });
+    }
+
+    function attachEvents() {
+        const notices = document.querySelectorAll('.video__notice');
+        notices.forEach((notice) => {
+            notice.addEventListener('submit', (event) => {
+                activateVideos();
+                // Store consent for one year
+                Cookies.set('youtube-consent', 'true', {expires: 365});
+                event.preventDefault();
             });
-        })
-    </script>
+        });
+    }
 
-    {% block tail %}
-    {% endblock %}
+    window.addEventListener('load', function () {
+        if (Cookies.get('youtube-consent') === 'true') {
+            activateVideos();
+        } else {
+            attachEvents();
+        }
+    })
 
-  </body>
+    // Add question to assignment
+    window.addEventListener('load', function () {
+        $(".form-inline").submit(function (e) {
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            var actionUrl = form.attr('action');
+            $.ajax({
+                type: "POST",
+                url: actionUrl,
+                data: form.serialize(), // serializes the form's elements.
+                success: function (data) {
+                    form.replaceWith("<b>Erfolgreich hinzugefügt</b>")
+                },
+                error: function (data) {
+                    form.replaceWith("<b>Fehler beim Hinzufügen</b>")
+                }
+            });
+        });
+    })
+</script>
+
+{% block tail %}
+{% endblock %}
+
+</body>
 </html>
