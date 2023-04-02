@@ -15,7 +15,8 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 # FLASK_MAIL_USERNAME
 # FLASK_MAIL_PASSWORD
 # FLASK_MAIL_DEFAULT_SENDER
-# SENTRY_DSN (optional, for sentry.io tracing)
+# SENTRY_DSN (optional, for sentry.io error tracing)
+# SENTRY_TRACES_SAMPLE_RATE (optional, for sentry.io performance tracing)
 
 CSRF_ENABLED = True
 SQLALCHEMY_POOL_RECYCLE = 3

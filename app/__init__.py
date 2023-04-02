@@ -1,4 +1,5 @@
 import logging
+from os import environ
 
 from flask import Flask
 from flask_appbuilder import AppBuilder, SQLA
@@ -18,7 +19,13 @@ toolbar = DebugToolbarExtension()
 def create_app(config="config"):
     logging.basicConfig(format="%(asctime)s:%(levelname)s:%(name)s:%(message)s")
     logging.getLogger().setLevel(logging.WARNING)
-    sentry_sdk.init(integrations=[FlaskIntegration()])
+
+    traces_sample_rate = environ.get("SENTRY_TRACES_SAMPLE_RATE")
+    traces_sample_rate = float(traces_sample_rate) if traces_sample_rate else None
+    sentry_sdk.init(
+        integrations=[FlaskIntegration()],
+        traces_sample_rate=traces_sample_rate,
+    )
 
     app = Flask(__name__)
 
