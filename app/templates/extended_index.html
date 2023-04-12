@@ -18,9 +18,9 @@
                             <figcaption>
                                 <h3>Maturavorbereitung</h3>
                                 <p>
-                                    {{ question_count }} interaktive Aufgabenpool- und
+                                    {{ question_count }} interaktive
                                     AHS-Matura-Aufgaben, {{ matura_count }}
-                                    standardisierte Reifeprüfungen aus Teil 1.
+                                    standardisierte Reifeprüfungen.
                                 </p>
                             </figcaption>
                         </figure>
@@ -56,10 +56,8 @@
                         <p>
                             Diese Seite dient zur Unterstützung bei der Vorbereitung auf die österreichische
                             AHS-Mathematik-Zentralmatura.
-                            Dazu stehen alle Grundkompetenzaufgaben aus dem <a
-                                href="{{ url_for('QuestionModelView.list') }}">Aufgabenpool</a>,
-                            sowie <a href="{{ url_for('CategoryModelStudentView.list') }}">Matura-Aufgaben (Teil
-                            1)</a>
+                            Dazu stehen alle
+                            <a href="{{ url_for('CategoryModelStudentView.list') }}">Matura-Aufgaben</a>
                             der
                             letzten Jahre nach Themen sortiert zur Verfügung.
                         </p>
