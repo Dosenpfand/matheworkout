@@ -36,7 +36,7 @@ def create_app(config="config"):
 
         db.init_app(app)
 
-        # TODO: Only necessary until SQLAlcchemy 2 is used.
+        # TODO: Only necessary until SQLAlchemy 2 is used.
         result = db.session.execute(
             "SELECT * FROM pg_collation WHERE collname = 'numeric';"
         )

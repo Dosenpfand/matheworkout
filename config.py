@@ -115,6 +115,9 @@ AUTH_TYPE = AUTH_DB
 AUTH_USER_REGISTRATION = True
 AUTH_USER_REGISTRATION_ROLE = STUDENT_ROLE_NAME
 
+RECAPTCHA_SCRIPT = "https://hcaptcha.com/1/api.js"
+RECAPTCHA_VERIFY_SERVER = "https://hcaptcha.com/siteverify"
+
 AUTH_ROLE_ADMIN = "Admin"
 AUTH_ROLE_PUBLIC = "Public"
 APP_NAME = "matheworkout"
