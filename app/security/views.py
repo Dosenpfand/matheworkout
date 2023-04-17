@@ -1,8 +1,10 @@
-import logging
 import datetime
+import logging
+import secrets
 
+from flask import Markup
 from flask import g, redirect, url_for, flash, current_app, request
-from flask_appbuilder import action, expose, has_access, PublicFormView, const
+from flask_appbuilder import action, expose, has_access, PublicFormView
 from flask_appbuilder._compat import as_unicode
 from flask_appbuilder.security.forms import ResetPasswordForm, LoginForm_db
 from flask_appbuilder.security.registerviews import RegisterUserDBView
@@ -15,7 +17,7 @@ from flask_appbuilder.utils.base import is_safe_redirect_url
 from flask_appbuilder.validators import Unique
 from flask_babel import lazy_gettext
 from flask_login import login_user
-from flask import Markup
+from flask_mail import Mail, Message
 
 from app import db
 from app.models.general import ExtendedUser, LearningGroup
@@ -255,16 +257,16 @@ class ForgotPasswordFormView(PublicFormView):
                 .first()
             )
 
-        if user:
+        if user and not user.email_confirmation_token:
             self.appbuilder.sm.set_password_reset_token(user)
             self.send_email(user)
 
         # Flash message
         flash(
             Markup(
-                "Falls dieser Benutzer existiert, hast du eine E-Mail mit einem Link zum"
-                " Zurücksetzen des Passworts erhalten. <br> <b>Falls du sie in deinem Posteingang nicht findest,"
-                " kontrolliere bitte auch den Spam-Ordner.</b>"
+                "Falls dieser Benutzer existiert, "
+                "hast du eine E-Mail mit einem Link zum Zurücksetzen des Passworts erhalten. <br>"
+                "<b>Falls du sie in deinem Posteingang nicht findest, kontrolliere bitte auch den Spam-Ordner.</b>"
             ),
             "info",
         )
@@ -308,7 +310,7 @@ class ResetForgotPasswordView(PublicFormView):
                 return user
             else:
                 flash(
-                    "Der Link zum Passwort setzen ist abgelaufen. Du kannst hier einen neuen beantragen.",
+                    "Der Link zum Passwort setzen ist abgelaufen. Du kannst hier einen neuen anfordern.",
                     category="danger",
                 )
         return None
@@ -381,47 +383,110 @@ class ExtendedRegisterUserDBView(RegisterUserDBView):
     email_subject = current_app.config["APP_NAME"] + " - Kontoaktivierung"
     edit_widget = RegisterFormWidget
 
-    # noinspection PyMethodOverriding
-    def add_registration(self, username, first_name, last_name, email, password, role):
-        register_user = self.appbuilder.sm.add_register_user(
-            username, first_name, last_name, email, password, role
-        )
-        if register_user:
-            if self.send_email(register_user):
-                flash(self.message, "info")
-                return register_user
-            else:
-                flash(self.error_message, "danger")
-                self.appbuilder.sm.del_register_user(register_user)
-                return None
+    @expose("/resend_email")
+    @has_access
+    def resend_email(self):
+        email_is_sent = self.send_email(g.user)
 
-    @expose("/activation/<string:activation_hash>")
-    def activation(self, activation_hash):
-        reg = self.appbuilder.sm.find_register_user(activation_hash)
-        if not reg:
-            log.error(const.LOGMSG_ERR_SEC_NO_REGISTER_HASH.format(activation_hash))
-            flash(self.false_error_message, "danger")
-            return redirect(self.appbuilder.get_url_for_index)
-        # noinspection PyArgumentList
-        if not self.appbuilder.sm.add_user(
-            username=reg.username,
-            email=reg.email,
-            first_name=reg.first_name,
-            last_name=reg.last_name,
-            role=self.appbuilder.sm.find_role(reg.role),
-            hashed_password=reg.password,
-        ):
-            flash(self.error_message, "danger")
+        if email_is_sent:
+            flash(
+                Markup(
+                    "Du solltest die Bestätigungs-Mail erhalten haben.<br>"
+                    "<b>Falls du keine E-Mail in deinem Posteingang findest, "
+                    "kontrolliere bitte auch den Spam-Ordner.</b>"
+                ),
+                category="info",
+            )
+        else:
+            flash(
+                "Senden der E-Mail fehlgeschlagen. Bitte versuche es später erneut.",
+                category="danger",
+            )
+        return redirect(self.appbuilder.get_url_for_index)
+
+    @expose("/confirm_email/<int:user_id>/<string:token>", methods=["GET"])
+    def confirm_email(self, user_id, token):
+        user = (
+            db.session.query(ExtendedUser)
+            .filter_by(id=user_id, email_confirmation_token=token)
+            .first()
+        )
+        if user:
+            user.email_confirmation_token = None
+            db.session.commit()
+            flash(
+                "Du hast deine E-Mail-Adresse erfolgreich bestätigt!",
+                category="success",
+            )
+        else:
+            flash(
+                "Bestätigung fehlgeschlagen!",
+                category="danger",
+            )
+
+        if g.user:
             return redirect(self.appbuilder.get_url_for_index)
         else:
-            self.appbuilder.sm.del_register_user(reg)
-            return self.render_template(
-                self.activation_template,
-                username=reg.username,
-                first_name=reg.first_name,
-                last_name=reg.last_name,
-                appbuilder=self.appbuilder,
+            return redirect(self.appbuilder.get_url_for_login)
+
+    def send_email(self, user: ExtendedUser):
+        mail = Mail(self.appbuilder.get_app)
+        msg = Message()
+        msg.subject = self.email_subject
+        url = url_for(
+            ".confirm_email",
+            _external=True,
+            user_id=user.id,
+            token=user.email_confirmation_token,
+        )
+        msg.html = self.render_template(
+            self.email_template,
+            url=url,
+            username=user.username,
+            first_name=user.first_name,
+            last_name=user.last_name,
+        )
+        msg.recipients = [user.email]
+        try:
+            mail.send(msg)
+        except Exception as e:
+            log.error("Send email exception: {0}".format(str(e)))
+            return False
+        return True
+
+    # noinspection PyMethodOverriding
+    def add_registration(self, username, first_name, last_name, email, password, role):
+        user = self.appbuilder.sm.add_user(
+            username=username,
+            email=email,
+            first_name=first_name,
+            last_name=last_name,
+            role=self.appbuilder.sm.find_role(role),
+            password=password,
+        )
+
+        if not user:
+            flash(self.error_message, "danger")
+            return redirect(self.appbuilder.get_url_for_index)
+
+        user.email_confirmation_token = secrets.token_urlsafe()
+        self.appbuilder.session.commit()
+        self.send_email(user)
+        is_logged_in = login_user(user)
+
+        if is_logged_in:
+            flash(
+                Markup(
+                    "Um den vollen Funktionsumfang zu nutzen, bestätige deine E-Mail-Adresse.<br>"
+                    "<b>Falls du keine E-Mail in deinem Posteingang findest, "
+                    "kontrolliere bitte auch den Spam-Ordner.</b>"
+                ),
+                "info",
             )
+        else:
+            flash("Bitte logge dich ein.", category="info")
+
+        return redirect(current_app.appbuilder.get_url_for_index)
 
     def form_get(self, form):
         self.add_form_unique_validations(form)
@@ -454,7 +519,7 @@ class ExtendedAuthDBView(AuthDBView):
             return redirect(self.appbuilder.get_url_for_index)
         form = LoginForm_db()
         if form.validate_on_submit():
-            user = self.appbuilder.sm.auth_user_db(
+            user: ExtendedUser = self.appbuilder.sm.auth_user_db(
                 form.username.data, form.password.data
             )
             if not user:
@@ -464,7 +529,22 @@ class ExtendedAuthDBView(AuthDBView):
             if not user:
                 flash(as_unicode(self.invalid_login_message), "warning")
                 return redirect(self.appbuilder.get_url_for_login)
-            login_user(user, remember=False)
+
+            login_user(user)
+
+            if user.email_confirmation_token:
+                url = url_for("ExtendedRegisterUserDBView.resend_email")
+                link = Markup(f'<a href="{url}">klicke bitte hier</a>')
+                flash(
+                    Markup(
+                        "Um den vollen Funktionsumfang zu nutzen, bestätige deine E-Mail-Adresse.<br>"
+                        "<b>Falls du keine E-Mail in deinem Posteingang findest, "
+                        "kontrolliere bitte auch den Spam-Ordner.</b><br>"
+                        f"Um die Bestätigungs-Mail erneut zu erhalten {link}."
+                    ),
+                    "info",
+                )
+
             next_url = request.args.get("next", False)
             if next_url:
                 return redirect(get_safe_redirect(next_url))

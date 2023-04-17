@@ -65,6 +65,7 @@ FAB_ROLES = {
         ["ExtendedUserDBModelView", "delete_user_stats"],
         ["QuestionRandom", "can_random_question_redirect"],
         ["IdToForm", "can_id_to_form"],
+        ["ExtendedRegisterUserDBView", "can_resend_email"],
         ["JoinLearningGroup", "can_join_learning_group"],
     ],
     TEACHER_ROLE_NAME: [
@@ -101,6 +102,7 @@ FAB_ROLES = {
         ["QuestionModelView", "add_questions_to_assignment"],
         ["TopicModelView", "can_list"],
         ["QuestionRandom", "can_random_question_redirect"],
+        ["ExtendedRegisterUserDBView", "can_resend_email"],
     ],
 }
 

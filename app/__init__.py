@@ -45,7 +45,8 @@ def create_app(config="config"):
                 "CREATE COLLATION numeric (provider = icu, locale = 'de_DE@colNumeric=yes');"
             )
         db.session.execute(
-            f'ALTER TABLE "{Question.__tablename__}" ALTER COLUMN "{Question.external_id.name}" type VARCHAR COLLATE numeric;'
+            f'ALTER TABLE "{Question.__tablename__}" '
+            f'ALTER COLUMN "{Question.external_id.name}" type VARCHAR COLLATE numeric;'
         )
 
         migrate.init_app(app, db)

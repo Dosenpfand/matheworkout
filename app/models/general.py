@@ -11,7 +11,7 @@ from flask import Markup, g, url_for, request
 from flask_appbuilder import Model
 from flask_appbuilder.filemanager import ImageManager
 from flask_appbuilder.models.mixins import ImageColumn, AuditMixin
-from flask_appbuilder.security.sqla.models import User, RegisterUser
+from flask_appbuilder.security.sqla.models import User
 from sqlalchemy import (
     Column,
     ForeignKey,
@@ -64,7 +64,7 @@ class Topic(Model):
     def __repr__(self):
         return self.name
 
-    def get_short_name(self):
+    def get_short_name(self) -> str:
         topic_name = self.name
         regex = r"^[a-zA-z]{1,4}\s*\d{1,4}(\.\d{1,4})?"
         match = re.match(regex, topic_name)
@@ -78,7 +78,7 @@ class Topic(Model):
 
         return short_name
 
-    def count(self):
+    def count(self) -> int:
         return len(self.questions)
 
 
@@ -551,6 +551,8 @@ class ExtendedUser(User):
     )
     password_reset_token = Column(String(255))
     password_reset_expiration = Column(DateTime)
+    email_confirmation_token = Column(String(255))
+
     # TODO: Model relation to owned learning groups explicitly? and cascade?
 
     def role_names(self):
@@ -651,11 +653,6 @@ class ExtendedUser(User):
             incorrect=incorrect_count_by_week,
             week_indices=week_indices,
         )
-
-
-class ExtendedRegisterUser(RegisterUser):
-    __tablename__ = "ab_register_user"
-    role = Column(String(255))  # TODO: should be relation
 
 
 class AssocUserQuestion(Model):

@@ -10,7 +10,7 @@ from flask_appbuilder import const
 from flask_appbuilder.security.sqla.manager import SecurityManager
 from werkzeug.security import generate_password_hash
 
-from app.models.general import ExtendedUser, ExtendedRegisterUser, LearningGroup
+from app.models.general import ExtendedUser, LearningGroup
 from app.security.views import (
     ExtendedUserDBModelView,
     ExtendedUserInfoEditView,
@@ -27,7 +27,6 @@ class ExtendedSecurityManager(SecurityManager):
     userdbmodelview = ExtendedUserDBModelView
     userinfoeditview = ExtendedUserInfoEditView
     registeruserdbview = ExtendedRegisterUserDBView
-    registeruser_model = ExtendedRegisterUser
     authdbview = ExtendedAuthDBView
 
     # noinspection PyMethodOverriding
@@ -49,7 +48,7 @@ class ExtendedSecurityManager(SecurityManager):
             self.appbuilder.get_session.rollback()
             return None
 
-    def set_password_reset_token(self, user):
+    def set_password_reset_token(self, user: ExtendedUser):
         token = secrets.token_urlsafe()
         expiration = datetime.datetime.now() + datetime.timedelta(
             hours=self.appbuilder.app.config["PASSWORD_RESET_TOKEN_EXPIRATION_HOURS"]
@@ -61,6 +60,13 @@ class ExtendedSecurityManager(SecurityManager):
     def import_users(self, csv_data):
         # TODO: for many rows queue is needed! celery?
         # TODO: support UTF-8?
+        if g.user.email_confirmation_token:
+            flash(
+                "Um diese Funktionalität zu nutzen, musst du zuerst deine eigene E-Mail-Adresse bestätigen.",
+                category="danger",
+            )
+            return
+
         wrapper = io.TextIOWrapper(csv_data, encoding="iso-8859-1")
         csv_reader = csv.DictReader(wrapper, delimiter=";")
         try:
