@@ -199,7 +199,6 @@
         von Sentry</a> eingesehen werden.
     </div>
 
-
     <h2>Auskunftsrecht</h2>
     Die betroffenen Person hat die Möglichkeit, alle sie betreffenden personenbezogenen Daten einzusehen. Dazu kann
     eine E-Mail an <a
@@ -237,15 +236,22 @@
     <h2 id="right_to_delete">Recht auf Löschung</h2>
     <div>
         Die betroffene Person hat die Möglichkeit, alle sie betreffenden personenbezogenen Daten löschen zu lassen.
-        Dazu kann eine E-Mail an <a
-            href="mailto:{{ config['SITE_EMAIL'] }}">{{ config['SITE_EMAIL'] }}</a> gesendet werden. Eine
-        Wiederherstellung jeglicher Daten ist nach erfolgter Löschung nicht mehr möglich.
+        Dies kann durch die entsprechende Aktion im
+        <a href="{{ url_for("ExtendedUserDBModelView.userinfo") }}">Benutzerprofil</a>
+        oder durch direkten Besuch der Seite
+        <a href="{{ url_for("DeleteStatsFormView.this_form_get") }}">"Benutzerkonto löschen"</a>
+        durchgeführt werden.
+        Eine Wiederherstellung jeglicher Daten ist nach erfolgter Löschung nicht mehr möglich.
     </div>
 
     <h2>Recht auf Datenübertragbarkeit</h2>
     <div>
         Die betroffene Person hat die Möglichkeit, alle sie betreffenden personenbezogenen Daten bereitgestellt zu
-        bekommen. Dazu kann eine E-Mail an <a
-            href="mailto:{{ config['SITE_EMAIL'] }}">{{ config['SITE_EMAIL'] }}</a> gesendet werden.
+        bekommen.
+        Dies kann durch die entsprechende Aktion im
+        <a href="{{ url_for("ExtendedUserDBModelView.userinfo") }}">Benutzerprofil</a>
+        oder durch direkten Besuch der Seite
+        <a href="{{ url_for("ExtendedUserDBModelView.export_data") }}">"Daten exportieren"</a>
+        durchgeführt werden.
     </div>
 {% endblock %}
