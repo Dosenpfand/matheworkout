@@ -58,11 +58,15 @@ FAB_ROLES = {
         ["ResetMyPasswordView", "can_this_form_post"],
         ["DeleteStatsFormView", "can_this_form_get"],
         ["DeleteStatsFormView", "can_this_form_post"],
+        ["DeleteAccountFormView", "can_this_form_get"],
+        ["DeleteAccountFormView", "can_this_form_post"],
         [".*", "show_question_details_action"],
         ["ExtendedUserDBModelView", "can_userinfo"],
         ["ExtendedUserDBModelView", "userinfoedit"],
         ["ExtendedUserDBModelView", "resetmypassword"],
         ["ExtendedUserDBModelView", "delete_user_stats"],
+        ["ExtendedUserDBModelView", "delete_account"],
+        ["ExtendedUserDBModelView", "can_confirm_account_delete"],
         ["QuestionRandom", "can_random_question_redirect"],
         ["IdToForm", "can_id_to_form"],
         ["ExtendedRegisterUserDBView", "can_resend_email"],
@@ -89,6 +93,8 @@ FAB_ROLES = {
         ["ExtendedUserDBModelView", "userinfoedit"],
         ["ExtendedUserDBModelView", "resetmypassword"],
         ["ExtendedUserDBModelView", "delete_user_stats"],
+        ["ExtendedUserDBModelView", "delete_account"],
+        ["ExtendedUserDBModelView", "can_confirm_account_delete"],
         ["QuestionRandom", "can_random_question_redirect"],
         ["IdToForm", "can_id_to_form"],
         ["Verwaltung", "menu_access"],
@@ -131,6 +137,7 @@ FAB_INDEX_VIEW = "app.views.index.ExtendedIndexView"
 SITE_EMAIL = "info@matheworkout.at"
 
 PASSWORD_RESET_TOKEN_EXPIRATION_HOURS = 168
+ACCOUNT_DELETE_TOKEN_EXPIRATION_HOURS = 24
 QUESTION_RETRY_MIN_MINUTES = 5
 MAX_USER_IMPORTS_PER_DAY = 50
 DEBUG_TB_INTERCEPT_REDIRECTS = False

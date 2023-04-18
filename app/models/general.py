@@ -552,6 +552,8 @@ class ExtendedUser(User):
     password_reset_token = Column(String(255))
     password_reset_expiration = Column(DateTime)
     email_confirmation_token = Column(String(255))
+    account_delete_token = Column(String(255))
+    account_delete_expiration = Column(DateTime)
 
     # TODO: Model relation to owned learning groups explicitly? and cascade?
 

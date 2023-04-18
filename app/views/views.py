@@ -14,7 +14,7 @@ from app.views.forms import (
     QuestionSelect4FormView,
     DeleteStatsFormView,
     ImportUsersFormView,
-    AddQuestionToAssignmentFormView,
+    AddQuestionToAssignmentFormView, DeleteAccountFormView,
 )
 from app.views.general import (
     QuestionRandom,
@@ -241,6 +241,7 @@ appbuilder.add_view_no_menu(AssignmentModelEvaluationView)
 appbuilder.add_view_no_menu(AddQuestionToAssignmentFormView)
 appbuilder.add_view_no_menu(UtilExtendedView)
 appbuilder.add_view_no_menu(DeleteStatsFormView)
+appbuilder.add_view_no_menu(DeleteAccountFormView)
 appbuilder.add_view_no_menu(JoinLearningGroup)
 appbuilder.add_view_no_menu(ExtendedUserDBModelTeacherView)
 appbuilder.add_view_no_menu(ForgotPasswordFormView)

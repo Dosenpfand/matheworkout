@@ -135,6 +135,7 @@ class ExtendedUserDBModelView(UserDBModelView):
         actions = dict()
         actions["resetmypassword"] = self.actions.get("resetmypassword")
         actions["delete_user_stats"] = self.actions.get("delete_user_stats")
+        actions["delete_account"] = self.actions.get("delete_account")
         actions["userinfoedit"] = self.actions.get("userinfoedit")
 
         item = self.datamodel.get(g.user.id, self._base_filters)
@@ -149,16 +150,55 @@ class ExtendedUserDBModelView(UserDBModelView):
             appbuilder=self.appbuilder,
         )
 
+    @expose("/confirm_account_delete/<int:user_id>/<string:token>")
+    @has_access
+    def confirm_account_delete(self, user_id: int, token: str):
+        if user_id != g.user.id:
+            return redirect(self.appbuilder.get_url_for_index)
+
+        user = (
+            db.session.query(ExtendedUser)
+            .filter_by(id=user_id, account_delete_token=token)
+            .first()
+        )
+
+        if user:
+            if user.account_delete_expiration > datetime.datetime.now():
+                db.session.delete(user)
+                db.session.commit()
+                flash(
+                    "Dein Benutzerkonto inklusive aller Daten wurde erfolgreich gelöscht.",
+                    category="success",
+                )
+            else:
+                flash(
+                    "Der Link zum Löschen des Benutzerkontos ist abgelaufen. Du kannst hier einen neuen anfordern.",
+                    category="danger",
+                )
+                return redirect(url_for("DeleteAccountFormView.this_form_get"))
+        return redirect(self.appbuilder.get_url_for_index)
+
     # noinspection PyUnusedLocal
     @action(
         "delete_user_stats",
-        lazy_gettext("Benutzerstatistik löschen"),
+        "Benutzerstatistik löschen",
         "",
-        "fa-user",
+        "fa-user-gear",
         multiple=False,
     )
     def delete_user_stats(self, item):
         return redirect(url_for("DeleteStatsFormView.this_form_get"))
+
+    # noinspection PyUnusedLocal
+    @action(
+        "delete_account",
+        "Benutzerkonto löschen",
+        "",
+        "fa-user-slash",
+        multiple=False,
+    )
+    def delete_account(self, item):
+        return redirect(url_for("DeleteAccountFormView.this_form_get"))
 
 
 class ExtendedUserDBModelTeacherView(ExtendedUserDBModelView):

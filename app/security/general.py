@@ -57,6 +57,15 @@ class ExtendedSecurityManager(SecurityManager):
         user.password_reset_expiration = expiration
         self.appbuilder.session.commit()
 
+    def set_account_delete_token(self, user: ExtendedUser):
+        token = secrets.token_urlsafe()
+        expiration = datetime.datetime.now() + datetime.timedelta(
+            hours=self.appbuilder.app.config["ACCOUNT_DELETE_TOKEN_EXPIRATION_HOURS"]
+        )
+        user.account_delete_token = token
+        user.account_delete_expiration = expiration
+        self.appbuilder.session.commit()
+
     def import_users(self, csv_data):
         # TODO: for many rows queue is needed! celery?
         # TODO: support UTF-8?

@@ -80,6 +80,13 @@ class DeleteStatsForm(DynamicForm):
     )
 
 
+class DeleteAccountForm(DynamicForm):
+    user_is_sure = BooleanField(
+        label="Bist du sicher?",
+        validators=[NoneOf([False], message="Muss ausgewählt sein.")],
+    )
+
+
 class ImportUsersForm(DynamicForm):
     file = FileField(label="CSV-Datei", validators=[DataRequired()])
 

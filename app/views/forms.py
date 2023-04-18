@@ -29,6 +29,7 @@ from app.forms.forms import (
     DeleteStatsForm,
     ImportUsersForm,
     AddQuestionToAssignmentForm,
+    DeleteAccountForm,
 )
 from app.models.general import (
     QuestionType,
@@ -37,7 +38,7 @@ from app.models.general import (
     AssocUserQuestion,
     assoc_assignment_question,
 )
-from app.utils.general import commit_safely
+from app.utils.general import commit_safely, send_email
 from app.views.widgets import ExtendedEditWidget, FormMinimalInlineWidget
 
 
@@ -847,6 +848,59 @@ class DeleteStatsFormView(SimpleFormView):
         db.session.query(AssocUserQuestion).filter_by(user_id=g.user.id).delete()
         commit_safely(db.session)
         flash("Benutzerstatistik gelöscht", "info")
+
+
+class DeleteAccountFormView(SimpleFormView):
+    form = DeleteAccountForm
+    form_title = "Benutzerkonto löschen"
+    email_subject = current_app.config["APP_NAME"] + " - Benutzerkonto löschen"
+    form_template = "edit_additional.html"
+    edit_widget = ExtendedEditWidget
+    extra_args = {
+        "question": {
+            "description": (
+                "Nach dem Löschen des Benutzerkontos ist keine weitere Nutzung der Seite mehr möglich, "
+                "ohne sich erneut zu registrieren."
+            ),
+            "submit_text": "Löschen",
+        }
+    }
+    email_template = "account_delete_mail.html"
+
+    def send_email(self, user):
+        url = url_for(
+            "ExtendedUserDBModelView.confirm_account_delete",
+            _external=True,
+            user_id=user.id,
+            token=user.account_delete_token,
+        )
+        html = self.render_template(
+            self.email_template,
+            url=url,
+            username=user.username,
+            first_name=user.first_name,
+            last_name=user.last_name,
+        )
+        return send_email(self.appbuilder.get_app, self.email_subject, html, user.email)
+
+    def form_post(self, form):
+        if g.user.email_confirmation_token:
+            flash("Bitte bestätige zuerst deine E-Mail-Adresse.", category="danger")
+            return
+
+        appbuilder.sm.set_account_delete_token(g.user)
+        mail_is_sent = self.send_email(g.user)
+        if mail_is_sent:
+            flash(
+                "Um die Löschung zu bestätigen, wurde eine E-Mail an dich gesendet.",
+                category="info",
+            )
+        else:
+            flash(
+                "Versenden der E-Mail zur Bestätigung der Löschung des Benutzerkontos fehlgeschlagen. "
+                "Bitte versuche es später erneut",
+                category="danger",
+            )
 
 
 class ImportUsersFormView(SimpleFormView):
