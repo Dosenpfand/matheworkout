@@ -255,13 +255,15 @@ class Question(Model):
     # common
     def __repr__(self):
         topic_short_name = self.topic.get_short_name()
+        category = f"{self.category.name} - "
+        return f"{self.external_id} ({category}{topic_short_name})"
 
-        if self.category:
-            extended_info = f"{self.category.name} - "
-        else:
-            extended_info = ""
-
-        return f"{self.external_id} ({extended_info}{topic_short_name})"
+    def as_export_dict(self):
+        return {
+            "topic": self.topic.get_short_name(),
+            "category": self.category.name,
+            "id": self.external_id,
+        }
 
     def get_solution(self):
         if self.type == QuestionType.self_assessed:
@@ -503,6 +505,10 @@ class LearningGroup(Model, AuditMixin):
     def __repr__(self):
         return self.name
 
+    def as_export_dict(self):
+        # TODO: assignments?
+        return {"name": self.name}
+
     def join_url(self):
         root_url = request.root_url
         join_path = url_for(
@@ -542,6 +548,18 @@ class ExtendedUser(User):
         back_populates="users",
         order_by="LearningGroup.name.asc()",
     )
+    created_learning_groups = relationship(
+        "LearningGroup",
+        back_populates="created_by",
+        foreign_keys="LearningGroup.created_by_fk",
+        cascade="all, delete",
+    )
+    changed_learning_groups = relationship(
+        "LearningGroup",
+        back_populates="changed_by",
+        foreign_keys="LearningGroup.changed_by_fk",
+        cascade="all, delete",
+    )
     answered_questions = relationship(
         "AssocUserQuestion",
         back_populates="user",
@@ -555,7 +573,19 @@ class ExtendedUser(User):
     account_delete_token = Column(String(255))
     account_delete_expiration = Column(DateTime)
 
-    # TODO: Model relation to owned learning groups explicitly? and cascade?
+    def as_export_dict(self):
+        return {
+            "common": {
+                "first_name": self.first_name,
+                "last_name": self.last_name,
+                "username": self.username,
+            },
+            "learning_groups": [lq.as_export_dict() for lq in self.learning_groups],
+            "created_learning_groups": [lq.as_export_dict() for lq in self.created_learning_groups],
+            "answered_questions": [
+                aq.as_export_dict() for aq in self.answered_questions
+            ],
+        }
 
     def role_names(self):
         return map(lambda role: role.name, self.roles)
@@ -673,3 +703,10 @@ class AssocUserQuestion(Model):
             f" question_id={self.question_id}, question={self.question},"
             f" created_on={self.created_on}, in_answer_correct={self.is_answer_correct}"
         )
+
+    def as_export_dict(self):
+        return {
+            "question": self.question.as_export_dict(),
+            "created_on": self.created_on,
+            "is_answer_correct": self.is_answer_correct,
+        }

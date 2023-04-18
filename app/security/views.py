@@ -2,7 +2,7 @@ import datetime
 import logging
 import secrets
 
-from flask import Markup
+from flask import Markup, jsonify
 from flask import g, redirect, url_for, flash, current_app, request
 from flask_appbuilder import action, expose, has_access, PublicFormView
 from flask_appbuilder._compat import as_unicode
@@ -136,6 +136,7 @@ class ExtendedUserDBModelView(UserDBModelView):
         actions["resetmypassword"] = self.actions.get("resetmypassword")
         actions["delete_user_stats"] = self.actions.get("delete_user_stats")
         actions["delete_account"] = self.actions.get("delete_account")
+        actions["export_data_action"] = self.actions.get("export_data_action")
         actions["userinfoedit"] = self.actions.get("userinfoedit")
 
         item = self.datamodel.get(g.user.id, self._base_filters)
@@ -178,6 +179,11 @@ class ExtendedUserDBModelView(UserDBModelView):
                 return redirect(url_for("DeleteAccountFormView.this_form_get"))
         return redirect(self.appbuilder.get_url_for_index)
 
+    @expose("/export_data")
+    @has_access
+    def export_data(self):
+        return jsonify(g.user.as_export_dict())
+
     # noinspection PyUnusedLocal
     @action(
         "delete_user_stats",
@@ -199,6 +205,17 @@ class ExtendedUserDBModelView(UserDBModelView):
     )
     def delete_account(self, item):
         return redirect(url_for("DeleteAccountFormView.this_form_get"))
+
+    # noinspection PyUnusedLocal
+    @action(
+        "export_data_action",
+        "Daten exportieren",
+        "",
+        "fa-download",
+        multiple=False,
+    )
+    def export_data_action(self, item):
+        return redirect(url_for(".export_data"))
 
 
 class ExtendedUserDBModelTeacherView(ExtendedUserDBModelView):
