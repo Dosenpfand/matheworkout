@@ -139,6 +139,7 @@ FAB_BASE_TEMPLATE = "extended_base.html"
 FAB_INDEX_VIEW = "app.views.index.ExtendedIndexView"
 
 SITE_EMAIL = "info@matheworkout.at"
+MAIL_MAX_EMAILS = 10
 
 PASSWORD_RESET_TOKEN_EXPIRATION_HOURS = 168
 ACCOUNT_DELETE_TOKEN_EXPIRATION_HOURS = 24

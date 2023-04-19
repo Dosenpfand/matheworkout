@@ -1,14 +1,17 @@
 import logging
 from os import environ
 
-from flask import Flask
-from flask_appbuilder import AppBuilder, SQLA
-from flask_migrate import Migrate
-from flask_debugtoolbar import DebugToolbarExtension
+import click
 import sentry_sdk
+from flask import Flask
+from flask.cli import with_appcontext
+from flask_appbuilder import AppBuilder, SQLA
+from flask_debugtoolbar import DebugToolbarExtension
+from flask_migrate import Migrate
 from sentry_sdk.integrations.flask import FlaskIntegration
 
 from app.models.general import Question
+from app.tools.mail import send_mail
 
 db = SQLA()
 appbuilder = AppBuilder()
@@ -55,5 +58,13 @@ def create_app(config="config"):
         from app.models import general  # noqa
         from app.views import views  # noqa
 
+        app.cli.add_command(send_mail_command)
+
         appbuilder.post_init()
     return app
+
+
+@click.command("send-mail")
+@with_appcontext
+def send_mail_command():
+    send_mail()
