@@ -102,7 +102,7 @@
 </form>
 
 {% if video_embed_url %}
-    <div style="width: 560px;">
+    <div style="max-width: 560px;">
         {% call lib.accordion_tag('explainer-video-0', 'Video-Erklärung', False) %}
             {{ youtube.youtube_embed(url=video_embed_url) }}
         {% endcall %}
