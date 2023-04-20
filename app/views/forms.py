@@ -48,21 +48,29 @@ class QuestionFormView(SimpleFormView):
 
     def __init__(self):
         super().__init__()
+        self.id = None
+        self.is_random = None
         self.assignment_id = None
         self.category_id = None
         self.topic_id = None
-        self.id = None
 
     @expose("/form")
     @expose("/form/<int:q_id>")
+    @expose("/form/<int:q_id>/random/<int:is_random>")
     @expose("/form/<int:q_id>/assignment/<int:assignment_id>")
     @expose("/form/<int:q_id>/category/<int:category_id>")
     @expose("/form/<int:q_id>/topic/<int:topic_id>")
     @has_access
     def this_form_get(
-        self, q_id=None, assignment_id=None, category_id=None, topic_id=None
+        self,
+        q_id=None,
+        is_random=None,
+        assignment_id=None,
+        category_id=None,
+        topic_id=None,
     ):
         self.id = q_id
+        self.is_random = is_random
         self.assignment_id = assignment_id
         self.category_id = category_id
         self.topic_id = topic_id
@@ -70,14 +78,21 @@ class QuestionFormView(SimpleFormView):
 
     @expose("/form", methods=["POST"])
     @expose("/form/<int:q_id>", methods=["POST"])
+    @expose("/form/<int:q_id>/random/<int:is_random>", methods=["POST"])
     @expose("/form/<int:q_id>/assignment/<int:assignment_id>", methods=["POST"])
     @expose("/form/<int:q_id>/category/<int:category_id>", methods=["POST"])
     @expose("/form/<int:q_id>/topic/<int:topic_id>", methods=["POST"])
     @has_access
     def this_form_post(
-        self, q_id=None, assignment_id=None, category_id=None, topic_id=None
+        self,
+        q_id=None,
+        is_random=None,
+        assignment_id=None,
+        category_id=None,
+        topic_id=None,
     ):
         self.id = q_id
+        self.is_random = is_random
         self.assignment_id = assignment_id
         self.category_id = category_id
         self.topic_id = topic_id
@@ -86,7 +101,13 @@ class QuestionFormView(SimpleFormView):
     def get_forward_button(self, question_id):
         forward_text = None
         forward_url = None
-        if self.assignment_id:
+
+        if self.is_random:
+            forward_text = "Nächste Zufallsaufgabe"
+            forward_url = url_for(
+                "QuestionRandom.random_question_redirect", topic_id=self.topic_id
+            )
+        elif self.assignment_id:
             questions = (
                 db.session.query(Question)
                 .join(assoc_assignment_question)
@@ -389,6 +410,7 @@ class QuestionSelfAssessedFormView(QuestionFormView):
         url = url_for(
             "QuestionSelfAssessedFormView.this_form_get",
             q_id=question.id,
+            is_random=self.is_random,
             assignment_id=self.assignment_id,
             category_id=self.category_id,
             topic_id=self.topic_id,
