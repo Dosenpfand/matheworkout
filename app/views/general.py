@@ -64,7 +64,12 @@ class QuestionRandom(BaseView):
         }
         form = type_to_form[question.type]
         return redirect(
-            url_for(f"{form}.this_form_get", q_id=question.id, is_random=True)
+            url_for(
+                f"{form}.this_form_get",
+                q_id=question.id,
+                topic_id=topic_id,
+                is_random=True,
+            )
         )
 
 

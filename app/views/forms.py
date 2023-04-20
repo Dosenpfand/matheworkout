@@ -60,6 +60,7 @@ class QuestionFormView(SimpleFormView):
     @expose("/form/<int:q_id>/assignment/<int:assignment_id>")
     @expose("/form/<int:q_id>/category/<int:category_id>")
     @expose("/form/<int:q_id>/topic/<int:topic_id>")
+    @expose("/form/<int:q_id>/topic/<int:topic_id>/random/<int:is_random>")
     @has_access
     def this_form_get(
         self,
@@ -82,6 +83,7 @@ class QuestionFormView(SimpleFormView):
     @expose("/form/<int:q_id>/assignment/<int:assignment_id>", methods=["POST"])
     @expose("/form/<int:q_id>/category/<int:category_id>", methods=["POST"])
     @expose("/form/<int:q_id>/topic/<int:topic_id>", methods=["POST"])
+    @expose("/form/<int:q_id>/topic/<int:topic_id>/random/<int:is_random>", methods=["POST"])
     @has_access
     def this_form_post(
         self,
@@ -187,6 +189,9 @@ class QuestionFormView(SimpleFormView):
 
     def get_assignment_progress(self, question_id):
         assignment_progress = None
+        if self.is_random:
+            return
+
         if self.assignment_id or self.category_id or self.topic_id:
             if self.assignment_id:
                 questions = (
