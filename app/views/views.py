@@ -1,4 +1,4 @@
-from app import appbuilder
+from app.app_factory import appbuilder
 from app.security.views import (
     ExtendedUserDBModelTeacherView,
     ForgotPasswordFormView,

@@ -8,7 +8,7 @@ from flask_appbuilder.models.sqla.filters import (
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from wtforms import HiddenField, DateField
 
-from app import db
+from app.app_factory import db
 from app.models.general import (
     Question,
     QuestionType,

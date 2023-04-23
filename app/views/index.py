@@ -1,6 +1,6 @@
 from flask_appbuilder import IndexView, expose
 
-from app import db
+from app.app_factory import db
 from app.models.general import Question, Category
 
 

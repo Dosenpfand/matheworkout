@@ -120,8 +120,8 @@ FAB_ROLES = {
 # GLOBALS FOR GENERAL APP
 # ------------------------------
 
-UPLOAD_FOLDER = basedir + "/app/static/uploads/"
-IMG_UPLOAD_FOLDER = basedir + "/app/static/uploads/"
+UPLOAD_FOLDER = basedir + "/static/uploads/"
+IMG_UPLOAD_FOLDER = basedir + "/static/uploads/"
 IMG_UPLOAD_URL = "/static/uploads/"
 AUTH_TYPE = AUTH_DB
 AUTH_USER_REGISTRATION = True

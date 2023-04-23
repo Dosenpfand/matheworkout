@@ -5,7 +5,7 @@ from flask_wtf.file import FileField
 from wtforms import BooleanField, HiddenField, FloatField, SelectField
 from wtforms.validators import NoneOf, DataRequired
 
-from app import db
+from app.app_factory import db
 from app.models.general import Select4Enum, Assignment
 from app.utils.general import safe_math_eval
 from app.views.queries import assignment_query

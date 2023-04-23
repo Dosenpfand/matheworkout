@@ -19,7 +19,7 @@ from flask_babel import lazy_gettext
 from flask_login import login_user
 from flask_mail import Mail, Message
 
-from app import db
+from app.app_factory import db
 from app.models.general import ExtendedUser, LearningGroup
 from app.security.forms import ForgotPasswordForm, ExtendedRegisterUserDBForm
 from app.utils.general import send_email
