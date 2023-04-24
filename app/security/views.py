@@ -70,6 +70,11 @@ class ExtendedUserDBModelView(UserDBModelView):
                     "created_by",
                     "changed_on",
                     "changed_by",
+                    "password_reset_token",
+                    "password_reset_expiration",
+                    "email_confirmation_token",
+                    "account_delete_token",
+                    "account_delete_expiration"
                 ],
                 "expanded": False,
             },
@@ -109,7 +114,6 @@ class ExtendedUserDBModelView(UserDBModelView):
     list_columns = [
         "first_name",
         "last_name",
-        "username",
         "email",
         "learning_groups",
         "tried_questions",
@@ -127,7 +131,7 @@ class ExtendedUserDBModelView(UserDBModelView):
         "learning_groups",
     ]
 
-    base_order = ("id", "asc")
+    base_order = ("id", "desc")
 
     @expose("/userinfo/")
     @has_access
