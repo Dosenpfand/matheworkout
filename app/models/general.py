@@ -24,7 +24,7 @@ from sqlalchemy import (
     Sequence,
     Table,
 )
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, joinedload
 
 
 class Select4Enum(enum.Enum):
@@ -614,26 +614,29 @@ class ExtendedUser(User):
         )
 
     def answered_by_topic(self):
-        def get_topic_name(answer):
-            return answer.question.topic.get_short_name()
-
         answers_by_topic = {}
         correct_count_by_topic = {}
         incorrect_count_by_topic = {}
+        answered_questions = (
+            self.answered_questions.join(Question.topic)
+            .options(joinedload(AssocUserQuestion.question).joinedload(Question.topic))
+            .all()
+        )
+
+        groups = groupby(
+            answered_questions, lambda answer: answer.question.topic.get_short_name()
+        )
+
         # noinspection PyTypeChecker
-        for topic_name, question_group in groupby(
-            self.answered_questions, get_topic_name
-        ):
-            answers_by_topic[topic_name] = list(question_group)
-            correct_count_by_topic[topic_name] = len(
-                list(
-                    filter(lambda x: x.is_answer_correct, answers_by_topic[topic_name])
-                )
+        for topic_id, question_group in groups:
+            answers_by_topic[topic_id] = list(question_group)
+            correct_count_by_topic[topic_id] = len(
+                list(filter(lambda x: x.is_answer_correct, answers_by_topic[topic_id]))
             )
-            incorrect_count_by_topic[topic_name] = len(
+            incorrect_count_by_topic[topic_id] = len(
                 list(
                     filter(
-                        lambda x: not x.is_answer_correct, answers_by_topic[topic_name]
+                        lambda x: not x.is_answer_correct, answers_by_topic[topic_id]
                     )
                 )
             )
