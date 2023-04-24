@@ -11,7 +11,7 @@ from flask import url_for
 from flask_mail import Mail, Message
 from markupsafe import Markup
 
-from app.app_factory import db
+from app import db
 from app.models.general import (
     Question,
     Topic,

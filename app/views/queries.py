@@ -1,6 +1,6 @@
 from flask import g
 
-from app.app_factory import db
+from app import db
 from app.models.general import Assignment
 
 

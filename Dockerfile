@@ -13,7 +13,9 @@ COPY ./start.sh /start.sh
 RUN chmod +x /start.sh
 
 COPY ./app /app
-WORKDIR /app/
+COPY ./wsgi.py /wsgi.py
+
+WORKDIR /
 
 ENV PYTHONPATH=/app
 

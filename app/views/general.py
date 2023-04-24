@@ -5,7 +5,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import load_only
 from werkzeug.utils import redirect
 
-from app.app_factory import db
+from app import db
 from app.forms.forms import AddQuestionToAssignmentForm
 from app.models.general import QuestionType, Question, Assignment, Topic, LearningGroup
 from app.views.widgets import ExtendedShowWidget, FormMinimalInlineWidget
