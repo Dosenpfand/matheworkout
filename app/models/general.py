@@ -581,7 +581,9 @@ class ExtendedUser(User):
                 "username": self.username,
             },
             "learning_groups": [lq.as_export_dict() for lq in self.learning_groups],
-            "created_learning_groups": [lq.as_export_dict() for lq in self.created_learning_groups],
+            "created_learning_groups": [
+                lq.as_export_dict() for lq in self.created_learning_groups
+            ],
             "answered_questions": [
                 aq.as_export_dict() for aq in self.answered_questions
             ],
@@ -644,10 +646,10 @@ class ExtendedUser(User):
 
     def answered_by_week(self):
         def get_week_index(answer):
-            min_date = self.answered_questions[0].created_on
             cluster_size = 7
             return (answer.created_on - min_date).days // cluster_size
 
+        min_date = self.answered_questions[0].created_on
         answers_by_week = {}
         # noinspection PyTypeChecker
         for week_index, question_group in groupby(
@@ -699,9 +701,11 @@ class AssocUserQuestion(Model):
 
     def __repr__(self):
         return (
-            f"AssocUserQuestion(id={self.id}, user_id={self.user_id}, user={self.user},"
-            f" question_id={self.question_id}, question={self.question},"
-            f" created_on={self.created_on}, in_answer_correct={self.is_answer_correct}"
+            f"AssocUserQuestion(id={self.id},"
+            f" user_id={self.user_id},"
+            f" question_id={self.question_id},"
+            f" created_on={self.created_on},"
+            f" in_answer_correct={self.is_answer_correct}"
         )
 
     def as_export_dict(self):
