@@ -628,15 +628,15 @@ class ExtendedUser(User):
         )
 
         # noinspection PyTypeChecker
-        for topic_id, question_group in groups:
-            answers_by_topic[topic_id] = list(question_group)
-            correct_count_by_topic[topic_id] = len(
-                list(filter(lambda x: x.is_answer_correct, answers_by_topic[topic_id]))
+        for topic_name, question_group in groups:
+            answers_by_topic[topic_name] = list(question_group)
+            correct_count_by_topic[topic_name] = len(
+                list(filter(lambda x: x.is_answer_correct, answers_by_topic[topic_name]))
             )
-            incorrect_count_by_topic[topic_id] = len(
+            incorrect_count_by_topic[topic_name] = len(
                 list(
                     filter(
-                        lambda x: not x.is_answer_correct, answers_by_topic[topic_id]
+                        lambda x: not x.is_answer_correct, answers_by_topic[topic_name]
                     )
                 )
             )
