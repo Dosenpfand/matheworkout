@@ -72,11 +72,10 @@
                     );
                 });
             </script>
-            {% set answered_by_topic = current_user.answered_by_topic() %}
             <script>
                 const data_topic = {
                     labels: [
-                        {% for topic in answered_by_topic['correct'].keys() -%}
+                        {% for topic in current_user.answered_by_topic()['correct'].keys() -%}
                             '{{ topic }}',
                         {% endfor -%}
                     ],
@@ -84,7 +83,7 @@
                         {
                             label: 'Richtig',
                             data: [
-                                {% for correct in answered_by_topic['correct'].values() -%}
+                                {% for correct in current_user.answered_by_topic()['correct'].values() -%}
                                     '{{ correct }}',
                                 {% endfor -%}
                             ],
@@ -95,7 +94,7 @@
                         {
                             label: 'Falsch',
                             data: [
-                                {% for incorrect in answered_by_topic['incorrect'].values() -%}
+                                {% for incorrect in current_user.answered_by_topic()['incorrect'].values() -%}
                                     '{{ incorrect }}',
                                 {% endfor -%}
                             ],
