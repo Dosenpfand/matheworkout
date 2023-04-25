@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <title>{% block page_title %}{{ app_name }}{% endblock %}</title>
+    <title>{% if title %}{{ title }} - {% endif %}{{ app_name }}</title>
     {% if canonical %}
         <link rel="canonical" href="{{ canonical }}"/>
     {% endif %}

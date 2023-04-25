@@ -128,6 +128,7 @@ class AssignmentModelEvaluationView(BaseView):
             users=users,
             questions=questions,
             state_users_questions=state_users_questions,
+            title="Auswertung",
         )
 
     @expose("/export/<int:assignment_id>")
@@ -146,6 +147,7 @@ class AssignmentModelEvaluationView(BaseView):
             users=users,
             questions=questions,
             state_users_questions=state_users_questions,
+            title="Export",
         )
 
         return Response(content, content_type="text/csv")
@@ -214,7 +216,9 @@ class DataProtectionView(BaseView):
     @expose("/data_protection")
     def data_protection(self):
         self.update_redirect()
-        return self.render_template(self.template, appbuilder=self.appbuilder)
+        return self.render_template(
+            self.template, appbuilder=self.appbuilder, title="Datenschutz"
+        )
 
 
 class ImprintView(BaseView):
@@ -225,7 +229,9 @@ class ImprintView(BaseView):
     @expose("/imprint")
     def imprint(self):
         self.update_redirect()
-        return self.render_template(self.template, appbuilder=self.appbuilder)
+        return self.render_template(
+            self.template, appbuilder=self.appbuilder, title="Impressum"
+        )
 
 
 class SupportView(BaseView):
@@ -236,7 +242,9 @@ class SupportView(BaseView):
     @expose("/support")
     def support(self):
         self.update_redirect()
-        return self.render_template(self.template, appbuilder=self.appbuilder)
+        return self.render_template(
+            self.template, appbuilder=self.appbuilder, title="Unterstützung"
+        )
 
 
 class ShowQuestionDetailsMixIn:
@@ -410,6 +418,7 @@ class ShowQuestionDetailsMixIn:
             "edit_additional_multiple.html",
             widgets=widgets,
             form_action=url_for("AddQuestionToAssignmentFormView.this_form_post"),
+            title="Aufgaben",
         )
 
     @action(
