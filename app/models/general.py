@@ -614,35 +614,29 @@ class ExtendedUser(User):
         )
 
     def answered_by_topic(self):
-        answers_by_topic = {}
         correct_count_by_topic = {}
         incorrect_count_by_topic = {}
-        answered_questions = (
-            self.answered_questions.join(Question.topic)
-            .options(joinedload(AssocUserQuestion.question).joinedload(Question.topic))
-            .all()
-        )
 
-        groups = groupby(
+        # NOTE: group_by directly in query is somehow much slower
+        answered_questions = self.answered_questions.options(
+            joinedload(AssocUserQuestion.question).joinedload(Question.topic)
+        ).all()
+
+        answer_groups = groupby(
             answered_questions, lambda answer: answer.question.topic.get_short_name()
         )
 
         # noinspection PyTypeChecker
-        for topic_name, question_group in groups:
-            answers_by_topic[topic_name] = list(question_group)
+        for topic_name, answer_group in answer_groups:
+            answers_by_topic = list(answer_group)
             correct_count_by_topic[topic_name] = len(
-                list(filter(lambda x: x.is_answer_correct, answers_by_topic[topic_name]))
+                [answer for answer in answers_by_topic if answer.is_answer_correct]
             )
             incorrect_count_by_topic[topic_name] = len(
-                list(
-                    filter(
-                        lambda x: not x.is_answer_correct, answers_by_topic[topic_name]
-                    )
-                )
+                [answer for answer in answers_by_topic if not answer.is_answer_correct]
             )
 
         return dict(
-            answers=answers_by_topic,
             correct=correct_count_by_topic,
             incorrect=incorrect_count_by_topic,
         )

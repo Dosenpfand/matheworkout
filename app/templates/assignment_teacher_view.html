@@ -8,30 +8,32 @@
     {% elif state.name == 'solved_success' %}
         <span class="label label-success"><i class="bi bi-emoji-sunglasses"></i></span>
     {% else %}
-        {{state}}
+        {{ state }}
     {% endif %}
 {%- endmacro %}
 
 {% block content %}
-<h1>{{ name }}</h1>
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col"></th>
-{% for question in questions %}
-            <th scope="col">{{ question }}</th>
-{% endfor %}
-        </tr>
-    </thead>
-    <tbody>
-{% for user in users %}
-        <tr>
-            <th scope="row">{{ user }}</th>
-{% for question in questions %}
-            <td>{{ state_to_markup(state_users_questions[user.id][question.id]) }}</td>
-{% endfor %}
-        </tr>
-{% endfor %}
-    </tbody>
-</table>
+    <h1>{{ name }}</h1>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col"></th>
+                {% for question in questions %}
+                    <th scope="col">{{ question }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr>
+                    <th scope="row">{{ user }}</th>
+                    {% for question in questions %}
+                        <td>{{ state_to_markup(state_users_questions[user.id][question.id]) }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}

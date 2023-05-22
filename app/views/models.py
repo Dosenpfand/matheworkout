@@ -503,7 +503,7 @@ class QuestionModelIncorrectAnsweredView(ModelView):
         ["", FilterQuestionByAnsweredCorrectness, False],
         ["", FilterQuestionByNotAnsweredCorrectness, True],
     ]
-    title = "Aufgaben (falsch beantwortet)"
+    title = "Falsch beantwortete Aufgaben"
     list_title = title
     show_title = title
     add_title = title
@@ -525,7 +525,7 @@ class QuestionModelIncorrectAnsweredView(ModelView):
 class QuestionModelCorrectAnsweredView(ModelView):
     datamodel = SQLAInterface(Question)
     base_filters = [["", FilterQuestionByAnsweredCorrectness, True]]
-    title = "Aufgaben (richtig beantwortet)"
+    title = "Richtig beantwortete Aufgaben"
     list_title = title
     show_title = title
     add_title = title

@@ -17,4 +17,5 @@ class ExtendedIndexView(IndexView):
             appbuilder=self.appbuilder,
             question_count=question_count,
             matura_count=matura_count,
+            title="Willkommen",
         )
