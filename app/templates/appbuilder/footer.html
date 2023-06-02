@@ -12,8 +12,8 @@
             <div class="copyright-text">
                 <p>
                     Aufgabenquellen: <a href="https://prod.aufgabenpool.at/ahs/">prod.aufgabenpool.at</a> und
-                    <a href="https://www.matura.gv.at">matura.gv.at</a>.<br/>
-                    Design: <a rel="nofollow" href="https://templatemo.com" target="_parent">TemplateMo</a><br/>
+                    <a href="https://www.matura.gv.at">matura.gv.at</a>.<br />
+                    Design: <a rel="nofollow" href="https://templatemo.com" target="_parent">TemplateMo</a><br />
                     Distribution: <a href="https://themewagon.com/">ThemeWagon</a>
                 </p>
             </div>
@@ -24,14 +24,25 @@
         <div class="footer-info">
             <div class="section-title">
                 <h2>Info</h2>
-                <a href="mailto:info@matheworkout.at">info@matheworkout.at</a><br/>
-                <a href="{{ url_for('SupportView.support') }}">Unterstützung</a><br/>
+                <a href="mailto:info@matheworkout.at">info@matheworkout.at</a><br />
+                <a href="{{ url_for('SupportView.support') }}">Unterstützung</a><br />
                 <a href="https://github.com/Dosenpfand/matheworkout">Quellcode</a>
             </div>
             <div class="footer_menu">
                 <h2>Rechtlich</h2>
-                <a href="{{ url_for('ImprintView.imprint') }}">Impressum</a><br/>
+                <a href="{{ url_for('ImprintView.imprint') }}">Impressum</a><br />
                 <a href="{{ url_for('DataProtectionView.data_protection') }}">Datenschutz</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 col-sm-6">
+        <div class="footer-info">
+            <div class="section-title">
+                <h2>Zertifizierung</h2>
+                <a href="https://guetesiegel-lernapps.at/8-apps/79-matheworkout-at">
+                    <img style="margin-top: 10px; width: 308px; height: 119px;" src="{{ url_for('static',filename='guetesiegel_lernapps.svg') }}" />
+                </a>
             </div>
         </div>
     </div>
