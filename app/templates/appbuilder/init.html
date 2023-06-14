@@ -158,6 +158,16 @@
             });
         });
     })
+
+    // Achievements
+    window.addEventListener('load', function () {
+            var modalElement = document.getElementById('achievement-modal');
+            if (modalElement !== null) {
+                modalElement.addEventListener('animationend', function (event) {
+                    modalElement.style.display = 'none';
+                }, false);
+            }
+        })
 </script>
 
 {% block tail %}
