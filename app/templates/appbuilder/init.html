@@ -57,6 +57,23 @@
 {% block add_tail_js %}
 {% endblock %}
 
+{% block achievement %}
+    {%if achievement %}
+        <div id="achievement-modal" class="simple-modal">
+            <div class="simple-modal-content fadeout">
+                <div style="text-align: center;">
+                    <h2>Achievement Unlocked</h2>
+                    <img class="spinner" src="{{ 
+                        url_for('static',filename='img/achievements/' ~ achievement.name ~ '.png') 
+                    }}" height="200">
+                    <h3>{{ achievement.title }}</h3>
+                    <div>{{ achievement.description }}</div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
 {% block confetti %}
     {% if fire_confetti %}
         <script type="text/javascript">

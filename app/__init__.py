@@ -10,14 +10,13 @@ from flask_debugtoolbar import DebugToolbarExtension
 from flask_migrate import Migrate
 from sentry_sdk.integrations.flask import FlaskIntegration
 
-from app.models.general import Question
+from app.models.general import Achievement, Question
 from app.tools.mail import send_mail
 
 db = SQLA()
 appbuilder = AppBuilder()
 migrate = Migrate()
 toolbar = DebugToolbarExtension()
-
 
 def create_app(config="config"):
     logging.basicConfig(format="%(asctime)s:%(levelname)s:%(name)s:%(message)s")
@@ -51,6 +50,20 @@ def create_app(config="config"):
             f'ALTER TABLE "{Question.__tablename__}" '
             f'ALTER COLUMN "{Question.external_id.name}" type VARCHAR COLLATE numeric;'
         )
+
+        # Init achievements
+        # TODO: move to config?
+        achievements = [
+            Achievement(name="beginner", title="Anfänger", description="Eine Frage richtig beantwortet")
+        ]
+
+        for achievement in achievements:
+            result = db.session.query(Achievement).filter_by(name=achievement.name).first()
+            if not result:
+                db.session.add(achievement)
+            else:
+                # TODO: Update
+                pass
 
         migrate.init_app(app, db)
         appbuilder.init_app(app, db.session)

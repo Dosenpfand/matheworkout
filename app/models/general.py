@@ -46,6 +46,12 @@ assoc_user_learning_group = Table(
     Column("user_id", ForeignKey("ab_user.id"), primary_key=True),
     Column("learning_group_id", ForeignKey("learning_group.id"), primary_key=True),
 )
+assoc_user_achievement = Table(
+    "assoc_user_achievement",
+    Model.metadata,
+    Column("user_id", ForeignKey("ab_user.id"), primary_key=True),
+    Column("achievement_id", ForeignKey("achievement.id"), primary_key=True),
+)
 assoc_assignment_question = Table(
     "assoc_assignment_question",
     Model.metadata,
@@ -567,6 +573,11 @@ class ExtendedUser(User):
         order_by="AssocUserQuestion.created_on.asc()",
         cascade="all, delete",
     )
+    achievements = relationship(
+        "Achievement",
+        secondary=assoc_user_achievement,
+        back_populates="users",
+    )
     password_reset_token = Column(String(255))
     password_reset_expiration = Column(DateTime)
     email_confirmation_token = Column(String(255))
@@ -684,6 +695,18 @@ class ExtendedUser(User):
             incorrect=incorrect_count_by_week,
             week_indices=week_indices,
         )
+
+
+class Achievement(Model):
+    id = Column(Integer, primary_key=True)
+    name = Column(String(150), nullable=False, unique=True, index=True)
+    title = Column(String(150), nullable=False)
+    description = Column(String(150), nullable=False)
+    users = relationship(
+        "ExtendedUser",
+        secondary=assoc_user_achievement,
+        back_populates="achievements",
+    )
 
 
 class AssocUserQuestion(Model):

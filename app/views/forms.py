@@ -32,6 +32,7 @@ from app.forms.forms import (
     DeleteAccountForm,
 )
 from app.models.general import (
+    Achievement,
     QuestionType,
     Question,
     Assignment,
@@ -83,7 +84,9 @@ class QuestionFormView(SimpleFormView):
     @expose("/form/<int:q_id>/assignment/<int:assignment_id>", methods=["POST"])
     @expose("/form/<int:q_id>/category/<int:category_id>", methods=["POST"])
     @expose("/form/<int:q_id>/topic/<int:topic_id>", methods=["POST"])
-    @expose("/form/<int:q_id>/topic/<int:topic_id>/random/<int:is_random>", methods=["POST"])
+    @expose(
+        "/form/<int:q_id>/topic/<int:topic_id>/random/<int:is_random>", methods=["POST"]
+    )
     @has_access
     def this_form_post(
         self,
@@ -250,6 +253,7 @@ class QuestionFormView(SimpleFormView):
             .first()
             is None
         )
+        achievement = None
 
         if min_retry_time_has_passed:
             # Add entry to answered questions
@@ -258,6 +262,23 @@ class QuestionFormView(SimpleFormView):
                 question=question,
             )
             g.user.answered_questions.append(answered_question)
+
+            # Achievements
+            if is_answer_correct:
+                beginner_name = "beginner"
+                if not beginner_name in [
+                    achievement.name for achievement in g.user.achievements
+                ]:
+                    achievement = db.session.query(Achievement).filter_by(
+                        name=beginner_name
+                    ).one()
+            # TODO: remaining achievements
+            elif False:
+                pass
+
+            if achievement:
+                g.user.achievements.append(achievement)
+
             commit_safely(db.session)
         else:
             message = (
@@ -291,6 +312,7 @@ class QuestionFormView(SimpleFormView):
                 "options": options,
             },
             "fire_confetti": is_answer_correct and min_retry_time_has_passed,
+            "achievement": achievement,
         }
 
         if render:
@@ -402,6 +424,7 @@ class QuestionSelfAssessedFormView(QuestionFormView):
                     "assignment_progress": assignment_progress,
                 },
                 "fire_confetti": is_answer_correct,
+                # TODO: achievement
             }
 
     def form_post(self, form):
