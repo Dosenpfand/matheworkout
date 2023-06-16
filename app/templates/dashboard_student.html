@@ -103,18 +103,19 @@
     </div>
 
     <div class="panel panel-primary">
-        <div class="panel-heading"><h3 class="panel-title">Achievements</h3></div>
+        <div class="panel-heading"><h3 class="panel-title">Errungenschaften</h3></div>
         <ul class="list-group">
         {%- for achievement in current_user.achievements -%}
             <li class="list-group-item">
                 <img src="{{ 
                     url_for('static',filename='img/achievements/' ~ achievement.name ~ '.png') 
-                }}" height="70"> <abbr title="{{ achievement.description }}"><strong>{{ achievement.title }}</strong></abbr>
+                }}" height="80"> <abbr title="{{ achievement.description }}"><strong>{{ achievement.title }}</strong></abbr>
             </li>
         {% endfor %}
         {%- if not current_user.achievements -%}
         <li class="list-group-item">
-            Hier gibt es nichts zu sehen.
+            Löse Aufgaben um Errungeschaften freizuschalten.
+            {# TODO: Link to list of achievements #}
         </li>
         {% endif %}
         </ul>
