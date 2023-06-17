@@ -40,6 +40,7 @@ from app.models.general import (
     assoc_assignment_question,
 )
 from app.utils.general import commit_safely, send_email
+from app.views.achievements import process_achievement
 from app.views.widgets import ExtendedEditWidget, FormMinimalInlineWidget
 
 
@@ -262,21 +263,14 @@ class QuestionFormView(SimpleFormView):
                 question=question,
             )
             g.user.answered_questions.append(answered_question)
+            # TODO: needed?
+            commit_safely(db.session)
 
-            # Achievements
-            if is_answer_correct:
-                beginner_name = "beginner"
-                if not beginner_name in [
-                    achievement.name for achievement in g.user.achievements
-                ]:
-                    achievement = db.session.query(Achievement).filter_by(
-                        name=beginner_name
-                    ).one()
-            # TODO: remaining achievements
-            elif False:
-                pass
-
-            if achievement:
+            achievement_name = process_achievement()
+            if achievement_name:
+                achievement = (
+                    db.session.query(Achievement).filter_by(name=achievement_name).one()
+                )
                 g.user.achievements.append(achievement)
 
             commit_safely(db.session)
