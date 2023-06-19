@@ -7,6 +7,7 @@ from werkzeug.utils import redirect
 
 from app import db
 from app.forms.forms import AddQuestionToAssignmentForm
+from app.models.achievements import achievements
 from app.models.general import QuestionType, Question, Assignment, Topic, LearningGroup
 from app.views.widgets import ExtendedShowWidget, FormMinimalInlineWidget
 
@@ -244,6 +245,22 @@ class SupportView(BaseView):
         self.update_redirect()
         return self.render_template(
             self.template, appbuilder=self.appbuilder, title="Unterstützung"
+        )
+
+
+class AchievementsView(BaseView):
+    route_base = ""
+    default_view = "achievements"
+    template = "achievements.html"
+
+    @expose("/achievements")
+    def achievements(self):
+        self.update_redirect()
+        return self.render_template(
+            self.template,
+            appbuilder=self.appbuilder,
+            title="Errungenschaften",
+            achievements=achievements,
         )
 
 

@@ -17,6 +17,7 @@ from app.views.forms import (
     AddQuestionToAssignmentFormView, DeleteAccountFormView,
 )
 from app.views.general import (
+    AchievementsView,
     QuestionRandom,
     AssignmentModelEvaluationView,
     UtilExtendedView,
@@ -249,3 +250,4 @@ appbuilder.add_view_no_menu(ResetForgotPasswordView)
 appbuilder.add_view_no_menu(DataProtectionView)
 appbuilder.add_view_no_menu(ImprintView)
 appbuilder.add_view_no_menu(SupportView)
+appbuilder.add_view_no_menu(AchievementsView)
