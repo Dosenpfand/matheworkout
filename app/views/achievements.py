@@ -23,7 +23,7 @@ def process_achievement() -> Optional[str]:
 
     if not names.BAD_LUCK in users_achievements:
         answers = (
-            g.user.answered_questions.oder_by(AssocUserQuestion.created_on.desc())
+            g.user.answered_questions.order_by(AssocUserQuestion.created_on.desc())
             .limit(5)
             .all()
         )
@@ -56,6 +56,8 @@ def process_achievement() -> Optional[str]:
     if not names.BRAIN in users_achievements:
         correct_question_count = (
             g.user.answered_questions.filter_by(is_answer_correct=True)
+            .order_by(None)
+            .order_by(AssocUserQuestion.question_id)
             .distinct(AssocUserQuestion.question_id)
             .count()
         )

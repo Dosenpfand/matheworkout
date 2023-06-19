@@ -27,7 +27,7 @@ achievements = [
     Achievement(
         name=names.INTERMEDIATE,
         title="Fortgeschritten???",
-        description="100 Aufgaben richtig beantwortet",
+        description="10 Aufgaben richtig beantwortet",
     ),
     Achievement(
         name=names.PRO,
