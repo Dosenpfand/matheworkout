@@ -14,7 +14,8 @@ class names:
     INFINITY_RAT = "infinity-rat"
     SEE_NO_EVIL = "see-no-evil"
     SPEED = "speed"
-    STAR = "star"
+    # TODO
+    # STAR = "star"
     MATH = "math"
 
 achievements = [
@@ -71,7 +72,7 @@ achievements = [
     Achievement(
         name=names.INFINITY_RAT,
         title="Matheratte",
-        description="Alle Aufgaben einer Matura als erstes richtig beantwortet",
+        description="Eine Frage 10 mal richtig beantwortet",
     ),
     Achievement(
         name=names.SEE_NO_EVIL,
@@ -83,11 +84,12 @@ achievements = [
         title="Marathon",
         description="50 Aufgaben innerhalb von 24 Stunden richtig beantwortet",
     ),
-    Achievement(
-        name=names.STAR,
-        title="Top 1 %",
-        description="Unter den Top 1 Prozent auf matheworkout, gewertet nach richtig beantworteten Aufgaben",
-    ),
+    # TODO
+    # Achievement(
+    #     name=names.STAR,
+    #     title="Top 1 %",
+    #     description="Unter den Top 1 Prozent auf matheworkout, gewertet nach richtig beantworteten Fragen",
+    # ),
     Achievement(
         name=names.MATH,
         title="Alter Hase",
