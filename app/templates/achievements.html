@@ -1,0 +1,29 @@
+{% extends "appbuilder/base.html" %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+
+<p class="lead">
+    Löse Aufgaben um die folgenden Errungenschaften freizuschalten.
+</p>
+<p>
+    Wenn du Ideen für weitere Errungenschaften hast, melde dich per E-Mail an <a href="mailto:{{ config['SITE_EMAIL'] }}">{{ config['SITE_EMAIL'] }}</a> 
+</p>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <tbody>
+            {% for achievement in achievements %}
+            <tr>
+                <th scope="row">
+                    <img src="{{ 
+                        url_for('static',filename='img/achievements/' ~ achievement.name ~ '.png') 
+                    }}" height="120">
+                </th>
+                <td><strong>{{ achievement.title }}</strong></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
