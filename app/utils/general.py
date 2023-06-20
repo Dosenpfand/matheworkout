@@ -1,4 +1,5 @@
 import ast
+from collections import defaultdict
 import logging
 from math import pi, exp, log, log10, sin, cos, tan, asin, acos, atan
 from typing import TYPE_CHECKING
@@ -191,3 +192,11 @@ def send_email(app, subject, html, recipient):
         log_instance.error("Send email exception: {0}".format(str(e)))
         return False
     return True
+
+
+def groupby_unsorted(seq, key=lambda x: x):
+    indexes = defaultdict(list)
+    for i, elem in enumerate(seq):
+        indexes[key(elem)].append(i)
+    for k, idxs in indexes.items():
+        yield k, (seq[i] for i in idxs)

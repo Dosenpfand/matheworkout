@@ -26,6 +26,8 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship, joinedload
 
+from app.utils.general import groupby_unsorted
+
 
 class Select4Enum(enum.Enum):
     A = "A"
@@ -622,7 +624,7 @@ class ExtendedUser(User):
             joinedload(AssocUserQuestion.question).joinedload(Question.topic)
         ).all()
 
-        answer_groups = groupby(
+        answer_groups = groupby_unsorted(
             answered_questions, lambda answer: answer.question.topic.get_short_name()
         )
 
