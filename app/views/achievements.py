@@ -32,7 +32,8 @@ def check_for_new_achievement_name() -> Optional[str]:
 
     if not names.BAD_LUCK in users_achievements:
         answers = (
-            g.user.answered_questions.order_by(AssocUserQuestion.created_on.desc())
+            g.user.answered_questions.order_by(None)
+            .order_by(AssocUserQuestion.created_on.desc())
             .limit(5)
             .all()
         )
@@ -115,7 +116,8 @@ def check_for_new_achievement_name() -> Optional[str]:
 
     if not names.SEE_NO_EVIL in users_achievements:
         last_answers = (
-            g.user.answered_questions.order_by(AssocUserQuestion.created_on.desc())
+            g.user.answered_questions.order_by(None)
+            .order_by(AssocUserQuestion.created_on.desc())
             .limit(5)
             .all()
         )
