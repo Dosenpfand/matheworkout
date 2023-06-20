@@ -7,7 +7,7 @@ from werkzeug.utils import redirect
 
 from app import db
 from app.forms.forms import AddQuestionToAssignmentForm
-from app.models.achievements import achievements
+from app.models.general import Achievement
 from app.models.general import QuestionType, Question, Assignment, Topic, LearningGroup
 from app.views.widgets import ExtendedShowWidget, FormMinimalInlineWidget
 
@@ -256,6 +256,9 @@ class AchievementsView(BaseView):
     @expose("/achievements")
     def achievements(self):
         self.update_redirect()
+
+        achievements = db.session.query(Achievement).all()
+
         return self.render_template(
             self.template,
             appbuilder=self.appbuilder,
