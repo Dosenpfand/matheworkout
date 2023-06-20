@@ -37,6 +37,7 @@ sudo -u postgres psql
 # create database matheueben;
 # create user mathesuper with encrypted password '123456';
 # grant all privileges on database matheueben to mathesuper;
+# alter database matheueben owner to mathesuper;
 ```
 
 Import database backup:

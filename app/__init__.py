@@ -9,8 +9,9 @@ from flask_appbuilder import AppBuilder, SQLA
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_migrate import Migrate
 from sentry_sdk.integrations.flask import FlaskIntegration
+from app.models.achievements import achievements
 
-from app.models.general import Question
+from app.models.general import Achievement, Question
 from app.tools.mail import send_mail
 
 db = SQLA()
@@ -51,6 +52,18 @@ def create_app(config="config"):
             f'ALTER TABLE "{Question.__tablename__}" '
             f'ALTER COLUMN "{Question.external_id.name}" type VARCHAR COLLATE numeric;'
         )
+
+        # Init achievements
+        for achievement in achievements:
+            result = (
+                db.session.query(Achievement).filter_by(name=achievement.name).first()
+            )
+            if not result:
+                db.session.add(achievement)
+            else:
+                result.title = achievement.title
+                result.description = achievement.description
+            db.session.commit()
 
         migrate.init_app(app, db)
         appbuilder.init_app(app, db.session)

@@ -5,7 +5,7 @@ from flask_mail import Mail, Message
 
 
 def send_mail():
-    sender = ("Team matheworkout.at", "info@matheworkout.at")
+    sender = ("Team matheworkout.at", current_app.config["SITE_EMAIL"])
     subject = "Freie Mathematik-Übungsseite"
 
     recipients = []

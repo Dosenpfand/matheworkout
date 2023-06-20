@@ -32,6 +32,7 @@ from app.forms.forms import (
     DeleteAccountForm,
 )
 from app.models.general import (
+    Achievement,
     QuestionType,
     Question,
     Assignment,
@@ -39,6 +40,7 @@ from app.models.general import (
     assoc_assignment_question,
 )
 from app.utils.general import commit_safely, send_email
+from app.views.achievements import check_for_new_achievement
 from app.views.widgets import ExtendedEditWidget, FormMinimalInlineWidget
 
 
@@ -83,7 +85,9 @@ class QuestionFormView(SimpleFormView):
     @expose("/form/<int:q_id>/assignment/<int:assignment_id>", methods=["POST"])
     @expose("/form/<int:q_id>/category/<int:category_id>", methods=["POST"])
     @expose("/form/<int:q_id>/topic/<int:topic_id>", methods=["POST"])
-    @expose("/form/<int:q_id>/topic/<int:topic_id>/random/<int:is_random>", methods=["POST"])
+    @expose(
+        "/form/<int:q_id>/topic/<int:topic_id>/random/<int:is_random>", methods=["POST"]
+    )
     @has_access
     def this_form_post(
         self,
@@ -250,6 +254,7 @@ class QuestionFormView(SimpleFormView):
             .first()
             is None
         )
+        achievement = None
 
         if min_retry_time_has_passed:
             # Add entry to answered questions
@@ -259,6 +264,11 @@ class QuestionFormView(SimpleFormView):
             )
             g.user.answered_questions.append(answered_question)
             commit_safely(db.session)
+
+            achievement = check_for_new_achievement()
+            if achievement:
+                g.user.achievements.append(achievement)
+                commit_safely(db.session)
         else:
             message = (
                 "Da warst du wohl etwas zu schnell!<br>"
@@ -291,6 +301,7 @@ class QuestionFormView(SimpleFormView):
                 "options": options,
             },
             "fire_confetti": is_answer_correct and min_retry_time_has_passed,
+            "achievement": achievement,
         }
 
         if render:
@@ -865,7 +876,7 @@ class DeleteStatsFormView(SimpleFormView):
     extra_args = {
         "question": {
             "description": (
-                "Die Benutzerstatistik beinhaltet alle bereits gelösten Aufgaben."
+                "Die Benutzerstatistik beinhaltet alle bereits gelösten Aufgaben und freigeschalteten Errungenschaften."
             ),
             "submit_text": "Löschen",
         }
@@ -873,6 +884,7 @@ class DeleteStatsFormView(SimpleFormView):
 
     def form_post(self, form):
         db.session.query(AssocUserQuestion).filter_by(user_id=g.user.id).delete()
+        g.user.achievements.clear()
         commit_safely(db.session)
         flash("Benutzerstatistik gelöscht", "info")
 

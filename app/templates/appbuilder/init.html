@@ -57,6 +57,35 @@
 {% block add_tail_js %}
 {% endblock %}
 
+{% block achievement %}
+    {%if achievement %}
+        <div class="modal fade" id="modal-achievement" tabindex="-1" role="dialog" aria-labelledby="modal-achievement-label">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="modal-achievement-label">Errungenschaft</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div style="text-align: center;">
+                            <h2>Errungenschaft freigeschaltet</h2>
+                            <img class="spinner" src="{{ 
+                                url_for('static',filename='img/achievements/' ~ achievement.name ~ '.png') 
+                            }}" height="200">
+                            <h3>{{ achievement.title }}</h3>
+                            <div>{{ achievement.description }}</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
 {% block confetti %}
     {% if fire_confetti %}
         <script type="text/javascript">
@@ -158,6 +187,13 @@
             });
         });
     })
+
+    // Achievements
+{%if achievement %}
+    window.addEventListener('load', function () {
+        $('#modal-achievement').modal('show');
+    });
+{% endif %}
 </script>
 
 {% block tail %}
