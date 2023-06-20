@@ -26,7 +26,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship, joinedload
 
-from app.utils.general import groupby_unsorted
+from app.utils.iter import groupby_unsorted
 
 
 class Select4Enum(enum.Enum):
