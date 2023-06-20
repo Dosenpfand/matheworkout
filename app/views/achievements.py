@@ -56,7 +56,7 @@ def check_for_new_achievement_name() -> Optional[str]:
 
         if last_answer.is_answer_correct:
             count_answer_correct = (
-                g.user.answered_question.filter_by(is_answer_correct=True)
+                g.user.answered_questions.filter_by(is_answer_correct=True)
                 .distinct(AssocUserQuestion.question_id)
                 .join(AssocUserQuestion.question)
                 .filter(Question.category_id == category_id)
