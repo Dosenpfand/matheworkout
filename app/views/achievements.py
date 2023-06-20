@@ -29,7 +29,7 @@ def check_for_new_achievement_name() -> Optional[str]:
 
     if not names.PRO in users_achievements and correct_question_count >= 100:
         return names.PRO
-    
+
     if not names.STAR in users_achievements:
         if correct_question_count > 500:
             if g.user.correct_percentage_int() >= 90:
@@ -43,7 +43,9 @@ def check_for_new_achievement_name() -> Optional[str]:
             .all()
         )
 
-        if all(not answer.is_answer_correct for answer in answers):
+        if (len(answers) == 5) and all(
+            not answer.is_answer_correct for answer in answers
+        ):
             return names.BAD_LUCK
 
     if not names.BOARD in users_achievements:
