@@ -40,7 +40,7 @@ from app.models.general import (
     assoc_assignment_question,
 )
 from app.utils.general import commit_safely, send_email
-from app.views.achievements import process_achievement
+from app.views.achievements import check_for_new_achievement
 from app.views.widgets import ExtendedEditWidget, FormMinimalInlineWidget
 
 
@@ -263,17 +263,12 @@ class QuestionFormView(SimpleFormView):
                 question=question,
             )
             g.user.answered_questions.append(answered_question)
-            # TODO: needed?
             commit_safely(db.session)
 
-            achievement_name = process_achievement()
-            if achievement_name:
-                achievement = (
-                    db.session.query(Achievement).filter_by(name=achievement_name).one()
-                )
+            achievement = check_for_new_achievement()
+            if achievement:
                 g.user.achievements.append(achievement)
-
-            commit_safely(db.session)
+                commit_safely(db.session)
         else:
             message = (
                 "Da warst du wohl etwas zu schnell!<br>"

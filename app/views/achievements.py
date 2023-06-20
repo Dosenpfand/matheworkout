@@ -5,10 +5,19 @@ from sqlalchemy import Time, cast
 
 from app import db
 from app.models.achievements import names
-from app.models.general import AssocUserQuestion, Question, QuestionType
+from app.models.general import Achievement, AssocUserQuestion, Question, QuestionType
 
 
-def process_achievement() -> Optional[str]:
+def check_for_new_achievement() -> Optional[Achievement]:
+    achievement_name = check_for_new_achievement_name()
+    if achievement_name:
+        achievement = (
+            db.session.query(Achievement).filter_by(name=achievement_name).one()
+        )
+        return achievement
+
+
+def check_for_new_achievement_name() -> Optional[str]:
     users_achievements = [achievement.name for achievement in g.user.achievements]
     correct_question_count = g.user.correct_questions()
 
