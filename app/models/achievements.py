@@ -20,17 +20,17 @@ class names:
 achievements = [
     Achievement(
         name=names.BEGINNER,
-        title="Anfänger(in)???",
+        title="Volksschule",
         description="Eine Aufgabe richtig beantwortet",
     ),
     Achievement(
         name=names.INTERMEDIATE,
-        title="Fortgeschritten???",
+        title="Unterstufe",
         description="10 Aufgaben richtig beantwortet",
     ),
     Achievement(
         name=names.PRO,
-        title="Profi???",
+        title="Oberstufe",
         description="100 Aufgaben richtig beantwortet",
     ),
     Achievement(
