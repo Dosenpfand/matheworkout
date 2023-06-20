@@ -50,7 +50,7 @@ achievements = [
     ),
     Achievement(
         name=names.FIRST,
-        title="Klassenbeste(r)",
+        title="Klassenbeste",
         description="Platz 1 in deiner Klasse, gewertet nach richtig beantworteten Fragen",
     ),
     Achievement(
