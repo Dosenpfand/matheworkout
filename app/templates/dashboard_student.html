@@ -104,6 +104,10 @@
 
     <div class="panel panel-primary">
         <div class="panel-heading"><h3 class="panel-title">Errungenschaften</h3></div>
+        {%- if current_user.achievements -%}
+        <div class="panel-body">
+            Du hast bereits folgende <a href="{{ url_for('AchievementsView.achievements') }}">Errungenschaften</a> freigeschaltet:
+        </div>
         <ul class="list-group">
         {%- for achievement in current_user.achievements -%}
             <li class="list-group-item">
@@ -112,11 +116,10 @@
                 }}" height="80"> <abbr title="{{ achievement.description }}"><strong>{{ achievement.title }}</strong></abbr>
             </li>
         {% endfor %}
-        {%- if not current_user.achievements -%}
-        <li class="list-group-item">
-            Löse Aufgaben um Errungeschaften freizuschalten.
-            {# TODO: Link to list of achievements #}
-        </li>
+        {% else %}
+        <div class="panel-body">
+            Löse Aufgaben um <a href="{{ url_for('AchievementsView.achievements') }}">Errungenschaften</a> freizuschalten.
+        </div>
         {% endif %}
         </ul>
     </div>
