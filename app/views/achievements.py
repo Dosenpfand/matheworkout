@@ -48,7 +48,7 @@ def check_for_new_achievement_name() -> Optional[str]:
         ):
             return names.BAD_LUCK
 
-    if not names.BOARD in users_achievements:
+    if False : # TODO: Fixme! not names.BOARD in users_achievements:
         last_answer = g.user.answered_questions.order_by(
             AssocUserQuestion.created_on.desc()
         ).first()
