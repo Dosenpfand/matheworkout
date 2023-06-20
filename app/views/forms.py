@@ -413,7 +413,6 @@ class QuestionSelfAssessedFormView(QuestionFormView):
                     "assignment_progress": assignment_progress,
                 },
                 "fire_confetti": is_answer_correct,
-                # TODO: achievement
             }
 
     def form_post(self, form):
