@@ -515,7 +515,6 @@ class LearningGroup(Model, AuditMixin):
 
     def as_export_dict(self):
         # TODO: assignments?
-        # TODO: achievements!
         return {"name": self.name}
 
     def join_url(self):
@@ -596,10 +595,13 @@ class ExtendedUser(User):
             },
             "learning_groups": [lq.as_export_dict() for lq in self.learning_groups],
             "created_learning_groups": [
-                lq.as_export_dict() for lq in self.created_learning_groups
+                lg.as_export_dict() for lg in self.created_learning_groups
             ],
             "answered_questions": [
                 aq.as_export_dict() for aq in self.answered_questions
+            ],
+            "achievements": [
+                achievement.as_export_dict() for achievement in self.achievements
             ],
         }
 
@@ -712,6 +714,13 @@ class Achievement(Model):
         secondary=assoc_user_achievement,
         back_populates="achievements",
     )
+
+    def as_export_dict(self):
+        return {
+            "name": self.name,
+            "title": self.title,
+            "description": self.description,
+        }
 
 
 class AssocUserQuestion(Model):

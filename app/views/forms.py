@@ -877,7 +877,7 @@ class DeleteStatsFormView(SimpleFormView):
     extra_args = {
         "question": {
             "description": (
-                "Die Benutzerstatistik beinhaltet alle bereits gelösten Aufgaben."
+                "Die Benutzerstatistik beinhaltet alle bereits gelösten Aufgaben und freigeschalteten Errungenschaften."
             ),
             "submit_text": "Löschen",
         }
@@ -885,6 +885,7 @@ class DeleteStatsFormView(SimpleFormView):
 
     def form_post(self, form):
         db.session.query(AssocUserQuestion).filter_by(user_id=g.user.id).delete()
+        g.user.achievements.clear()
         commit_safely(db.session)
         flash("Benutzerstatistik gelöscht", "info")
 
