@@ -29,6 +29,11 @@ def check_for_new_achievement_name() -> Optional[str]:
 
     if not names.PRO in users_achievements and correct_question_count >= 100:
         return names.PRO
+    
+    if not names.STAR in users_achievements:
+        if correct_question_count > 500:
+            if g.user.correct_percentage_int() >= 90:
+                return names.STAR
 
     if not names.BAD_LUCK in users_achievements:
         answers = (
@@ -161,8 +166,6 @@ def check_for_new_achievement_name() -> Optional[str]:
 
         if answers_count >= 50:
             return names.SPEED
-
-    # TODO: star
 
     if not names.MATH in users_achievements:
         one_year_ago = datetime.datetime.now() - datetime.timedelta(days=365)

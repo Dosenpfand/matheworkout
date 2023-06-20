@@ -515,6 +515,7 @@ class LearningGroup(Model, AuditMixin):
 
     def as_export_dict(self):
         # TODO: assignments?
+        # TODO: achievements!
         return {"name": self.name}
 
     def join_url(self):
@@ -611,11 +612,13 @@ class ExtendedUser(User):
     def correct_questions(self):
         return self.answered_questions.filter_by(is_answer_correct=True).count()
 
-    def correct_percentage(self):
+    def correct_percentage_int(self):
         if self.tried_questions() == 0:
-            return "0 %"
-        else:
-            return f"{int(round(self.correct_questions() / self.tried_questions(), 2) * 100)} %"
+            return 0
+        return int(round(self.correct_questions() / self.tried_questions(), 2) * 100)
+
+    def correct_percentage(self):
+        return f"{self.correct_percentage_int()} %"
 
     def active_assignments(self):
         # TODO: optimize?
