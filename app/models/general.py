@@ -645,18 +645,26 @@ class ExtendedUser(User):
         )
 
         # noinspection PyTypeChecker
+        counts = {}
         for topic_name, answer_group in answer_groups:
             answers_by_topic = list(answer_group)
-            correct_count_by_topic[topic_name] = len(
+            correct_count_by_topic = len(
                 [answer for answer in answers_by_topic if answer.is_answer_correct]
             )
-            incorrect_count_by_topic[topic_name] = len(
+            incorrect_count_by_topic = len(
                 [answer for answer in answers_by_topic if not answer.is_answer_correct]
+            )
+            counts[topic_name] = dict(
+                correct=correct_count_by_topic,
+                incorrect=incorrect_count_by_topic,
             )
 
         return dict(
-            correct=correct_count_by_topic,
-            incorrect=incorrect_count_by_topic,
+            sorted(
+                counts.items(),
+                key=lambda item: item[1]["correct"] + item[1]["incorrect"],
+                reverse=True
+            )
         )
 
     def answered_by_week(self):

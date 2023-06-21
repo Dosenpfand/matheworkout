@@ -76,7 +76,7 @@
             <script>
                 const data_topic = {
                     labels: [
-                        {% for topic in answered_by_topic['correct'].keys() -%}
+                        {% for topic in answered_by_topic.keys() -%}
                             '{{ topic }}',
                         {% endfor -%}
                     ],
@@ -84,8 +84,8 @@
                         {
                             label: 'Richtig',
                             data: [
-                                {% for correct in answered_by_topic['correct'].values() -%}
-                                    '{{ correct }}',
+                                {% for count in answered_by_topic.values() -%}
+                                    '{{ count['correct'] }}',
                                 {% endfor -%}
                             ],
                             backgroundColor: '#29ca8e',
@@ -95,8 +95,8 @@
                         {
                             label: 'Falsch',
                             data: [
-                                {% for incorrect in answered_by_topic['incorrect'].values() -%}
-                                    '{{ incorrect }}',
+                                {% for count in answered_by_topic.values() -%}
+                                    '{{ count['incorrect'] }}',
                                 {% endfor -%}
                             ],
                             backgroundColor: '#ffffff',
