@@ -16,6 +16,7 @@ class names:
     SPEED = "speed"
     STAR = "star"
     MATH = "math"
+    HIBERNATION = "hibernation"
 
 achievements = [
     Achievement(
@@ -93,6 +94,12 @@ achievements = [
         title="Alter Hase",
         description="Benutzer für über ein Jahr",
     ),
+    Achievement(
+        name=names.HIBERNATION,
+        title="Winterschlaf",
+        description="Nach einer Pause von mehr als 90 Tagen wieder geübt"
+
+    )
 ]
 
 achievements_map = {achievement.name: achievement for achievement in achievements}

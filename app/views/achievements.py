@@ -21,6 +21,22 @@ def check_for_new_achievement_name() -> Optional[str]:
     users_achievements = [achievement.name for achievement in g.user.achievements]
     correct_question_count = g.user.correct_questions()
 
+    if not names.HIBERNATION in users_achievements:
+        answers = (
+            g.user.answered_questions.order_by(None)
+            .order_by(AssocUserQuestion.created_on.desc())
+            .limit(2)
+            .all()
+        )
+        print(answers)
+        if len(answers) == 2:
+            print("AAA")
+            minimum_ago = datetime.datetime.now() - datetime.timedelta(days=90)
+            print(minimum_ago)
+            if answers[1].created_on <= minimum_ago:
+                print("bbb")
+                return names.HIBERNATION
+
     if not names.BEGINNER in users_achievements and correct_question_count >= 1:
         return names.BEGINNER
 
