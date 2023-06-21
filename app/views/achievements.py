@@ -48,15 +48,19 @@ def check_for_new_achievement_name() -> Optional[str]:
         ):
             return names.BAD_LUCK
 
-    if False : # TODO: Fixme! not names.BOARD in users_achievements:
-        last_answer = g.user.answered_questions.order_by(
-            AssocUserQuestion.created_on.desc()
-        ).first()
+    if not names.BOARD in users_achievements:
+        last_answer = (
+            g.user.answered_questions.order_by(None)
+            .order_by(AssocUserQuestion.created_on.desc())
+            .first()
+        )
         category_id = last_answer.question.category_id
 
         if last_answer.is_answer_correct:
             count_answer_correct = (
                 g.user.answered_questions.filter_by(is_answer_correct=True)
+                .order_by(None)
+                .order_by(AssocUserQuestion.question_id)
                 .distinct(AssocUserQuestion.question_id)
                 .join(AssocUserQuestion.question)
                 .filter(Question.category_id == category_id)
@@ -108,9 +112,11 @@ def check_for_new_achievement_name() -> Optional[str]:
                 return names.NIGHT_OWL
 
     if not names.INFINITY_RAT in users_achievements:
-        last_answer = g.user.answered_questions.order_by(
-            AssocUserQuestion.created_on.desc()
-        ).first()
+        last_answer = (
+            g.user.answered_questions.order_by(None)
+            .order_by(AssocUserQuestion.created_on.desc())
+            .first()
+        )
 
         if last_answer.is_answer_correct:
             count_answered = g.user.answered_questions.filter(
@@ -141,9 +147,11 @@ def check_for_new_achievement_name() -> Optional[str]:
             return names.SEE_NO_EVIL
 
     if not names.NTH_ROOT in users_achievements:
-        last_answer = g.user.answered_questions.order_by(
-            AssocUserQuestion.created_on.desc()
-        ).first()
+        last_answer = (
+            g.user.answered_questions.order_by(None)
+            .order_by(AssocUserQuestion.created_on.desc())
+            .first()
+        )
 
         if last_answer.is_answer_correct:
             is_first_correct = (
