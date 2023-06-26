@@ -63,6 +63,7 @@ class ExtendedRegisterUserDBForm(DynamicForm):
     )
     recaptcha = RecaptchaField()
 
+
 class ExtendedUserInfoEdit(DynamicForm):
     first_name = StringField(
         lazy_gettext("First Name"),
@@ -74,12 +75,9 @@ class ExtendedUserInfoEdit(DynamicForm):
         validators=[DataRequired()],
         widget=BS3TextFieldWidget(),
     )
-    # TODO: choices should not be hardcoded
-    # TODO: pre-select current choice!
     school_type = SelectField(
         "Schultyp",
-        choices=[("ahs", "AHS"), ("bhs", "BHS")],
-        default="bhs",
+        choices=[(st.name, st.value) for st in SchoolType],
         widget=Select2Widget(),
         validators=[DataRequired()],
     )
