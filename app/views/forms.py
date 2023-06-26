@@ -123,7 +123,6 @@ class QuestionFormView(SimpleFormView):
             )
             take_next = False
             next_id = None
-            # TODO: optimize
             for assigned_question in questions:
                 if take_next:
                     next_id = assigned_question.id
@@ -158,7 +157,6 @@ class QuestionFormView(SimpleFormView):
                 )
             take_next = False
             next_id = None
-            # TODO: optimize
             for question in questions:
                 if take_next:
                     next_id = question.id
@@ -217,7 +215,6 @@ class QuestionFormView(SimpleFormView):
                     .filter_by(topic_id=self.topic_id)
                     .order_by(asc(Question.external_id))
                 )
-            # TODO: optimize
             i = 0
             for i, assigned_question in enumerate(questions, 1):
                 if assigned_question.id == question_id:

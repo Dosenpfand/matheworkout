@@ -5,6 +5,7 @@ import secrets
 from flask import Markup, jsonify
 from flask import g, redirect, url_for, flash, current_app, request
 from flask_appbuilder import action, expose, has_access, PublicFormView
+from flask_appbuilder.forms import DynamicForm
 from flask_appbuilder._compat import as_unicode
 from flask_appbuilder.security.forms import ResetPasswordForm, LoginForm_db
 from flask_appbuilder.security.registerviews import RegisterUserDBView
@@ -21,7 +22,11 @@ from flask_mail import Mail, Message
 
 from app import db
 from app.models.general import ExtendedUser, LearningGroup
-from app.security.forms import ExtendedUserInfoEdit, ForgotPasswordForm, ExtendedRegisterUserDBForm
+from app.security.forms import (
+    ExtendedUserInfoEdit,
+    ForgotPasswordForm,
+    ExtendedRegisterUserDBForm,
+)
 from app.utils.general import send_email
 from app.views.widgets import ListWithDeleteRelationshipWidget, RegisterFormWidget
 
@@ -263,6 +268,19 @@ class ExtendedUserDBModelTeacherView(ExtendedUserDBModelView):
 class ExtendedUserInfoEditView(UserInfoEditView):
     form = ExtendedUserInfoEdit
     form_title = "Benutzerinformationen bearbeiten"
+
+    def form_get(self, form: DynamicForm) -> None:
+        user = self.appbuilder.sm.get_user_by_id(g.user.id)
+
+        for field_name, _ in form.data.items():
+            if field_name == "csrf_token":
+                continue
+            elif field_name == "school_type":
+                form_field = getattr(form, field_name)
+                form_field.data = getattr(user, field_name).name
+            else:
+                form_field = getattr(form, field_name)
+                form_field.data = getattr(user, field_name)
 
 
 class ForgotPasswordFormView(PublicFormView):
@@ -533,6 +551,7 @@ class ExtendedRegisterUserDBView(RegisterUserDBView):
             last_name=last_name,
             role=self.appbuilder.sm.find_role(role),
             password=password,
+            school_type=school_type,
         )
 
         if not user:
@@ -540,7 +559,6 @@ class ExtendedRegisterUserDBView(RegisterUserDBView):
             return redirect(self.appbuilder.get_url_for_index)
 
         user.email_confirmation_token = secrets.token_urlsafe()
-        user.school_type = self.appbuilder.sm.find_school_type(school_type)
         self.appbuilder.session.commit()
         self.send_email(user)
         is_logged_in = login_user(user)
