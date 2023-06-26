@@ -35,13 +35,11 @@ class ExtendedRegisterUserDBForm(DynamicForm):
     )
     password = PasswordField(
         lazy_gettext("Password"),
-        description=lazy_gettext("Bitte wähle ein sicheres Passwort"),
         validators=[DataRequired()],
         widget=BS3PasswordFieldWidget(),
     )
     conf_password = PasswordField(
         lazy_gettext("Confirm Password"),
-        description=lazy_gettext("Please rewrite the password to confirm"),
         validators=[
             DataRequired(),
             EqualTo("password", message=lazy_gettext("Passwords must match")),
