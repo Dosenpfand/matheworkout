@@ -445,6 +445,7 @@ class AssignmentModelStudentView(ModelView, ShowQuestionDetailsMixIn):
 class CategoryModelStudentView(ModelView, ShowQuestionDetailsMixIn):
     datamodel = SQLAInterface(Category)
     base_order = ("name", "desc")
+    base_filters = [["school_type", FilterEqualFunction, lambda: g.user.school_type]]
 
     label_columns = {"id": "Titel"}
     list_columns = ["id"]
@@ -465,6 +466,7 @@ class CategoryModelStudentView(ModelView, ShowQuestionDetailsMixIn):
 
 class TopicModelStudentView(ModelView, ShowQuestionDetailsMixIn):
     datamodel = SQLAInterface(Topic)
+    base_filters = [["school_type", FilterEqualFunction, lambda: g.user.school_type]]
 
     label_columns = {"id": "Titel", "count": "Anzahl"}
     list_columns = ["count", "id"]
@@ -495,7 +497,7 @@ class TopicModelStudentView(ModelView, ShowQuestionDetailsMixIn):
         url = url_for("QuestionRandom.random_question_redirect", topic_id=item.id)
         return redirect(url)
 
-
+# TODO: Slow!
 class QuestionModelIncorrectAnsweredView(ModelView):
     datamodel = SQLAInterface(Question)
     base_filters = [

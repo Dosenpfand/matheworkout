@@ -43,8 +43,8 @@ class Select4Enum(enum.Enum):
 
 
 class SchoolType(enum.Enum):
-    ahs = 1
-    bhs = 2
+    ahs = "AHS"
+    bhs = "BHS"
 
 
 assoc_user_learning_group = Table(

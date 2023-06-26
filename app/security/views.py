@@ -21,7 +21,7 @@ from flask_mail import Mail, Message
 
 from app import db
 from app.models.general import ExtendedUser, LearningGroup
-from app.security.forms import ForgotPasswordForm, ExtendedRegisterUserDBForm
+from app.security.forms import ExtendedUserInfoEdit, ForgotPasswordForm, ExtendedRegisterUserDBForm
 from app.utils.general import send_email
 from app.views.widgets import ListWithDeleteRelationshipWidget, RegisterFormWidget
 
@@ -38,6 +38,7 @@ class ExtendedUserDBModelView(UserDBModelView):
         "last_name": "Nachname",
         "email": "E-Mail",
         "correct_percentage": "Anteil richtig",
+        "school_type": "Schultyp",
     }
 
     show_fieldsets = [
@@ -48,6 +49,7 @@ class ExtendedUserDBModelView(UserDBModelView):
                     "username",
                     "active",
                     "roles",
+                    "school_type",
                     "login_count",
                     "learning_groups",
                     "tried_questions",
@@ -87,6 +89,7 @@ class ExtendedUserDBModelView(UserDBModelView):
             {
                 "fields": [
                     "username",
+                    "school_type",
                     "learning_groups",
                     "tried_questions",
                     "correct_questions",
@@ -107,6 +110,7 @@ class ExtendedUserDBModelView(UserDBModelView):
         "active",
         "email",
         "roles",
+        "school_type",
         "learning_groups",
         "password",
         "conf_password",
@@ -115,6 +119,7 @@ class ExtendedUserDBModelView(UserDBModelView):
         "first_name",
         "last_name",
         "email",
+        "school_type",
         "learning_groups",
         "tried_questions",
         "correct_questions",
@@ -128,6 +133,7 @@ class ExtendedUserDBModelView(UserDBModelView):
         "active",
         "email",
         "roles",
+        "school_type",
         "learning_groups",
     ]
 
@@ -255,6 +261,7 @@ class ExtendedUserDBModelTeacherView(ExtendedUserDBModelView):
 
 
 class ExtendedUserInfoEditView(UserInfoEditView):
+    form = ExtendedUserInfoEdit
     form_title = "Benutzerinformationen bearbeiten"
 
 

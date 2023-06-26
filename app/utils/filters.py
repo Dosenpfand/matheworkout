@@ -30,9 +30,10 @@ class FilterQuestionByAnsweredCorrectness(BaseFilter):
     def apply(self, query, is_answer_correct):
         return query.filter(
             Question.answered_users.any(
-                user_id=g.user.id, is_answer_correct=is_answer_correct
+                user_id=g.user.id,
+                is_answer_correct=is_answer_correct,
             )
-        )
+        ).filter_by(school_type=g.user.school_type)
 
 
 class FilterQuestionByNotAnsweredCorrectness(BaseFilter):
