@@ -40,6 +40,7 @@ from app.views.widgets import (
     ExtendedListWidget,
     ExtendedListNoButtonsWidget,
     DatePickerWidgetDe,
+    NoSearchWidget,
 )
 
 
@@ -213,6 +214,9 @@ class QuestionModelView(ModelView):
     datamodel = SQLAInterface(Question)
     base_filters = []
     base_order = ("external_id", "asc")
+    search_widget = NoSearchWidget
+    list_template = "list_no_search.html"
+    
     title = "Aufgaben"
     list_title = title
     show_title = title
@@ -503,6 +507,9 @@ class QuestionModelIncorrectAnsweredView(ModelView):
         ["", FilterQuestionByAnsweredCorrectness, False],
         ["", FilterQuestionByNotAnsweredCorrectness, True],
     ]
+    search_widget = NoSearchWidget
+    list_template = "list_no_search.html"
+
     title = "Falsch beantwortete Aufgaben"
     list_title = title
     show_title = title
@@ -525,6 +532,9 @@ class QuestionModelIncorrectAnsweredView(ModelView):
 class QuestionModelCorrectAnsweredView(ModelView):
     datamodel = SQLAInterface(Question)
     base_filters = [["", FilterQuestionByAnsweredCorrectness, True]]
+    search_widget = NoSearchWidget
+    list_template = "list_no_search.html"
+
     title = "Richtig beantwortete Aufgaben"
     list_title = title
     show_title = title
