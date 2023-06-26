@@ -211,7 +211,6 @@ class QuestionSelect4ModelView(ModelView):
 
 
 class QuestionModelView(ModelView):
-
     def get_topic_ids_for_school_type():
         topics = db.session.query(Topic).filter_by(school_type=g.user.school_type).all()
         return [topic.id for topic in topics]
@@ -222,7 +221,7 @@ class QuestionModelView(ModelView):
     base_order = ("external_id", "asc")
     search_widget = NoSearchWidget
     list_template = "list_no_search.html"
-    
+
     title = "Aufgaben"
     list_title = title
     show_title = title
@@ -565,6 +564,10 @@ class QuestionModelCorrectAnsweredView(ModelView):
 class TopicModelView(ModelView):
     datamodel = SQLAInterface(Topic)
 
+    list_columns = ["name", "school_type"]
+
 
 class CategoryModelAdminView(ModelView):
     datamodel = SQLAInterface(Category)
+
+    list_columns = ["name", "school_type"]
