@@ -211,12 +211,16 @@ class QuestionSelect4ModelView(ModelView):
 
 
 class QuestionModelView(ModelView):
+    def get_topic_ids_for_school_type():
+        topics = db.session.query(Topic).filter_by(school_type=g.user.school_type).all()
+        return [topic.id for topic in topics]
+
     datamodel = SQLAInterface(Question)
-    base_filters = []
+    base_filters = [["topic_id", FilterInFunction, get_topic_ids_for_school_type]]
+
     base_order = ("external_id", "asc")
     search_widget = NoSearchWidget
     list_template = "list_no_search.html"
-    
     title = "Aufgaben"
     list_title = title
     show_title = title
@@ -245,7 +249,7 @@ class QuestionModelView(ModelView):
         + Question.cols_three_to_three[common_col_count:]
     )
 
-    page_size = 100
+    page_size = 50
     list_widget = ExtendedListWidget
 
     @action(
@@ -450,6 +454,7 @@ class AssignmentModelStudentView(ModelView, ShowQuestionDetailsMixIn):
 class CategoryModelStudentView(ModelView, ShowQuestionDetailsMixIn):
     datamodel = SQLAInterface(Category)
     base_order = ("name", "desc")
+    base_filters = [["school_type", FilterEqualFunction, lambda: g.user.school_type]]
 
     label_columns = {"id": "Titel"}
     list_columns = ["id"]
@@ -470,6 +475,7 @@ class CategoryModelStudentView(ModelView, ShowQuestionDetailsMixIn):
 
 class TopicModelStudentView(ModelView, ShowQuestionDetailsMixIn):
     datamodel = SQLAInterface(Topic)
+    base_filters = [["school_type", FilterEqualFunction, lambda: g.user.school_type]]
 
     label_columns = {"id": "Titel", "count": "Anzahl"}
     list_columns = ["count", "id"]
@@ -557,6 +563,10 @@ class QuestionModelCorrectAnsweredView(ModelView):
 class TopicModelView(ModelView):
     datamodel = SQLAInterface(Topic)
 
+    list_columns = ["name", "school_type"]
+
 
 class CategoryModelAdminView(ModelView):
     datamodel = SQLAInterface(Category)
+
+    list_columns = ["name", "school_type"]

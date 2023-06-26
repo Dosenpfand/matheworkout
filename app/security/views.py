@@ -5,6 +5,7 @@ import secrets
 from flask import Markup, jsonify
 from flask import g, redirect, url_for, flash, current_app, request
 from flask_appbuilder import action, expose, has_access, PublicFormView
+from flask_appbuilder.forms import DynamicForm
 from flask_appbuilder._compat import as_unicode
 from flask_appbuilder.security.forms import ResetPasswordForm, LoginForm_db
 from flask_appbuilder.security.registerviews import RegisterUserDBView
@@ -21,7 +22,11 @@ from flask_mail import Mail, Message
 
 from app import db
 from app.models.general import ExtendedUser, LearningGroup
-from app.security.forms import ForgotPasswordForm, ExtendedRegisterUserDBForm
+from app.security.forms import (
+    ExtendedUserInfoEdit,
+    ForgotPasswordForm,
+    ExtendedRegisterUserDBForm,
+)
 from app.utils.general import send_email
 from app.views.widgets import ListWithDeleteRelationshipWidget, RegisterFormWidget
 
@@ -38,6 +43,7 @@ class ExtendedUserDBModelView(UserDBModelView):
         "last_name": "Nachname",
         "email": "E-Mail",
         "correct_percentage": "Anteil richtig",
+        "school_type": "Schultyp",
     }
 
     show_fieldsets = [
@@ -48,6 +54,7 @@ class ExtendedUserDBModelView(UserDBModelView):
                     "username",
                     "active",
                     "roles",
+                    "school_type",
                     "login_count",
                     "learning_groups",
                     "tried_questions",
@@ -74,7 +81,7 @@ class ExtendedUserDBModelView(UserDBModelView):
                     "password_reset_expiration",
                     "email_confirmation_token",
                     "account_delete_token",
-                    "account_delete_expiration"
+                    "account_delete_expiration",
                 ],
                 "expanded": False,
             },
@@ -87,6 +94,7 @@ class ExtendedUserDBModelView(UserDBModelView):
             {
                 "fields": [
                     "username",
+                    "school_type",
                     "learning_groups",
                     "tried_questions",
                     "correct_questions",
@@ -107,6 +115,7 @@ class ExtendedUserDBModelView(UserDBModelView):
         "active",
         "email",
         "roles",
+        "school_type",
         "learning_groups",
         "password",
         "conf_password",
@@ -115,6 +124,7 @@ class ExtendedUserDBModelView(UserDBModelView):
         "first_name",
         "last_name",
         "email",
+        "school_type",
         "learning_groups",
         "tried_questions",
         "correct_questions",
@@ -128,6 +138,7 @@ class ExtendedUserDBModelView(UserDBModelView):
         "active",
         "email",
         "roles",
+        "school_type",
         "learning_groups",
     ]
 
@@ -255,7 +266,21 @@ class ExtendedUserDBModelTeacherView(ExtendedUserDBModelView):
 
 
 class ExtendedUserInfoEditView(UserInfoEditView):
+    form = ExtendedUserInfoEdit
     form_title = "Benutzerinformationen bearbeiten"
+
+    def form_get(self, form: DynamicForm) -> None:
+        user = self.appbuilder.sm.get_user_by_id(g.user.id)
+
+        for field_name, _ in form.data.items():
+            if field_name == "csrf_token":
+                continue
+            elif field_name == "school_type":
+                form_field = getattr(form, field_name)
+                form_field.data = getattr(user, field_name).name
+            else:
+                form_field = getattr(form, field_name)
+                form_field.data = getattr(user, field_name)
 
 
 class ForgotPasswordFormView(PublicFormView):
@@ -516,7 +541,9 @@ class ExtendedRegisterUserDBView(RegisterUserDBView):
         return True
 
     # noinspection PyMethodOverriding
-    def add_registration(self, username, first_name, last_name, email, password, role):
+    def add_registration(
+        self, username, first_name, last_name, email, password, role, school_type
+    ):
         user = self.appbuilder.sm.add_user(
             username=username,
             email=email,
@@ -524,6 +551,7 @@ class ExtendedRegisterUserDBView(RegisterUserDBView):
             last_name=last_name,
             role=self.appbuilder.sm.find_role(role),
             password=password,
+            school_type=school_type,
         )
 
         if not user:
@@ -561,6 +589,7 @@ class ExtendedRegisterUserDBView(RegisterUserDBView):
             email=form.email.data,
             password=form.password.data,
             role=form.role.data,
+            school_type=form.school_type.data,
         )
 
     def add_form_unique_validations(self, form):

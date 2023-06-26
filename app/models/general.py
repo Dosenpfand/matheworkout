@@ -42,6 +42,11 @@ class Select4Enum(enum.Enum):
         return [el.value for el in Select4Enum]
 
 
+class SchoolType(enum.Enum):
+    ahs = "AHS"
+    bhs = "BHS"
+
+
 assoc_user_learning_group = Table(
     "assoc_user_learning_group",
     Model.metadata,
@@ -68,6 +73,7 @@ class Topic(Model):
     questions = relationship(
         "Question", back_populates="topic", order_by="Question.external_id.asc()"
     )
+    school_type = Column(Enum(SchoolType), nullable=False)
 
     def __repr__(self):
         return self.name
@@ -96,6 +102,7 @@ class Category(Model):
     questions = relationship(
         "Question", back_populates="category", order_by="Question.external_id.asc()"
     )
+    school_type = Column(Enum(SchoolType), nullable=False)
 
     def __repr__(self):
         return self.name
@@ -132,7 +139,10 @@ class Question(Model):
     description_image = Column(ImageColumn(size=(10000, 10000, True)))
     type = Column(Enum(QuestionType), index=True)
     answered_users = relationship(
-        "AssocUserQuestion", back_populates="question", cascade="all, delete"
+        "AssocUserQuestion",
+        back_populates="question",
+        lazy="dynamic",
+        cascade="all, delete",
     )
     assignments = relationship(
         "Assignment",
@@ -140,6 +150,7 @@ class Question(Model):
         back_populates="assigned_questions",
     )
     video_url = Column(String(), nullable=True)
+
     cols_common = [
         "external_id",
         "topic",
@@ -328,18 +339,17 @@ class Question(Model):
 
     def state_user(self, user_id):
         tried_but_incorrect = False
-        # noinspection PyTypeChecker
-        for assoc in self.answered_users:
-            if assoc.user_id == user_id:
-                if assoc.is_answer_correct:
-                    return QuestionUserState.solved_success
-                else:
-                    tried_but_incorrect = True
 
-        if tried_but_incorrect:
-            return QuestionUserState.tried_failed
-        else:
+        answers = self.answered_users.filter_by(user_id=user_id).all()
+
+        if not answers:
             return QuestionUserState.not_tried
+
+        if any([answer.is_answer_correct for answer in answers]):
+            return QuestionUserState.solved_success
+        else:
+            return QuestionUserState.tried_failed
+            
 
     def state(self):
         return self.state_user(g.user.id)
@@ -514,7 +524,6 @@ class LearningGroup(Model, AuditMixin):
         return self.name
 
     def as_export_dict(self):
-        # TODO: assignments?
         return {"name": self.name}
 
     def join_url(self):
@@ -585,6 +594,7 @@ class ExtendedUser(User):
     email_confirmation_token = Column(String(255))
     account_delete_token = Column(String(255))
     account_delete_expiration = Column(DateTime)
+    school_type = Column(Enum(SchoolType), nullable=False)
 
     def as_export_dict(self):
         return {
@@ -592,6 +602,7 @@ class ExtendedUser(User):
                 "first_name": self.first_name,
                 "last_name": self.last_name,
                 "username": self.username,
+                "school_type": self.school_type,
             },
             "learning_groups": [lq.as_export_dict() for lq in self.learning_groups],
             "created_learning_groups": [
@@ -623,7 +634,6 @@ class ExtendedUser(User):
         return f"{self.correct_percentage_int()} %"
 
     def active_assignments(self):
-        # TODO: optimize?
         # noinspection PyTypeChecker
         return reduce(
             operator.concat,
@@ -663,7 +673,7 @@ class ExtendedUser(User):
             sorted(
                 counts.items(),
                 key=lambda item: item[1]["correct"] + item[1]["incorrect"],
-                reverse=True
+                reverse=True,
             )
         )
 

@@ -1,3 +1,4 @@
+from flask import g
 from flask_appbuilder.fieldwidgets import (
     BS3TextFieldWidget,
     BS3PasswordFieldWidget,
@@ -8,6 +9,8 @@ from flask_babel import lazy_gettext
 from flask_wtf import RecaptchaField
 from wtforms import StringField, PasswordField, SelectField
 from wtforms.validators import DataRequired, Email, EqualTo
+
+from app.models.general import SchoolType
 
 
 class ForgotPasswordForm(DynamicForm):
@@ -52,4 +55,29 @@ class ExtendedRegisterUserDBForm(DynamicForm):
         widget=Select2Widget(),
         validators=[DataRequired()],
     )
+    school_type = SelectField(
+        "Schultyp",
+        choices=[(st.name, st.value) for st in SchoolType],
+        widget=Select2Widget(),
+        validators=[DataRequired()],
+    )
     recaptcha = RecaptchaField()
+
+
+class ExtendedUserInfoEdit(DynamicForm):
+    first_name = StringField(
+        lazy_gettext("First Name"),
+        validators=[DataRequired()],
+        widget=BS3TextFieldWidget(),
+    )
+    last_name = StringField(
+        lazy_gettext("Last Name"),
+        validators=[DataRequired()],
+        widget=BS3TextFieldWidget(),
+    )
+    school_type = SelectField(
+        "Schultyp",
+        choices=[(st.name, st.value) for st in SchoolType],
+        widget=Select2Widget(),
+        validators=[DataRequired()],
+    )
