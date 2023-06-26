@@ -147,7 +147,6 @@ class Question(Model):
         back_populates="assigned_questions",
     )
     video_url = Column(String(), nullable=True)
-    school_type = Column(Enum(SchoolType), nullable=False)
 
     cols_common = [
         "external_id",
@@ -156,7 +155,6 @@ class Question(Model):
         "description_image",
         "type",
         "video_url",
-        "school_type",
     ]
 
     # self_assessed only
