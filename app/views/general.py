@@ -20,6 +20,8 @@ class QuestionRandom(BaseView):
         if not topic:
             return (
                 db.session.query(Question)
+                .join(Topic)
+                .filter(Topic.school_type == g.user.school_type)
                 .options(load_only("id"))
                 .offset(
                     func.floor(
@@ -54,6 +56,10 @@ class QuestionRandom(BaseView):
             topic = None
 
         question = self.get_random_question(topic)
+        if not question:
+            flash("Keine Aufgabe gefunden.", category="danger")
+            return redirect(self.appbuilder.get_url_for_index)
+
         type_to_form = {
             QuestionType.two_of_five: "Question2of5FormView",
             QuestionType.one_of_six: "Question1of6FormView",

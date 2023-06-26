@@ -47,6 +47,40 @@ class ExtendedSecurityManager(SecurityManager):
             log.error(const.LOGMSG_ERR_SEC_ADD_REGISTER_USER.format(str(e)))
             self.appbuilder.get_session.rollback()
             return None
+        
+    def add_user(
+        self,
+        username,
+        first_name,
+        last_name,
+        email,
+        role,
+        school_type,
+        password="",
+        hashed_password="",
+    ):
+        try:
+            user = self.user_model()
+            user.first_name = first_name
+            user.last_name = last_name
+            user.username = username
+            user.email = email
+            user.active = True
+            user.roles = role if isinstance(role, list) else [role]
+            user.school_type = self.appbuilder.sm.find_school_type(school_type)
+
+            if hashed_password:
+                user.password = hashed_password
+            else:
+                user.password = generate_password_hash(password)
+            self.get_session.add(user)
+            self.get_session.commit()
+            log.info(const.LOGMSG_INF_SEC_ADD_USER.format(username))
+            return user
+        except Exception as e:
+            log.error(const.LOGMSG_ERR_SEC_ADD_USER.format(str(e)))
+            self.get_session.rollback()
+            return False
 
     def set_password_reset_token(self, user: ExtendedUser):
         token = secrets.token_urlsafe()
@@ -203,4 +237,4 @@ class ExtendedSecurityManager(SecurityManager):
                 flash("Import abgeschlossen.", category="info")
 
     def find_school_type(self, name):
-        return SchoolType['name']
+        return SchoolType[name]

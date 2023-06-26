@@ -211,7 +211,14 @@ class QuestionSelect4ModelView(ModelView):
 
 
 class QuestionModelView(ModelView):
+
+    def get_topic_ids_for_school_type():
+        topics = db.session.query(Topic).filter_by(school_type=g.user.school_type).all()
+        return [topic.id for topic in topics]
+
     datamodel = SQLAInterface(Question)
+    base_filters = [["topic_id", FilterInFunction, get_topic_ids_for_school_type]]
+
     base_order = ("external_id", "asc")
     search_widget = NoSearchWidget
     list_template = "list_no_search.html"
@@ -244,7 +251,7 @@ class QuestionModelView(ModelView):
         + Question.cols_three_to_three[common_col_count:]
     )
 
-    page_size = 100
+    page_size = 50
     list_widget = ExtendedListWidget
 
     @action(
