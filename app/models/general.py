@@ -139,7 +139,10 @@ class Question(Model):
     description_image = Column(ImageColumn(size=(10000, 10000, True)))
     type = Column(Enum(QuestionType), index=True)
     answered_users = relationship(
-        "AssocUserQuestion", back_populates="question", cascade="all, delete"
+        "AssocUserQuestion",
+        back_populates="question",
+        lazy="dynamic",
+        cascade="all, delete",
     )
     assignments = relationship(
         "Assignment",
@@ -336,18 +339,17 @@ class Question(Model):
 
     def state_user(self, user_id):
         tried_but_incorrect = False
-        # noinspection PyTypeChecker
-        for assoc in self.answered_users:
-            if assoc.user_id == user_id:
-                if assoc.is_answer_correct:
-                    return QuestionUserState.solved_success
-                else:
-                    tried_but_incorrect = True
 
-        if tried_but_incorrect:
-            return QuestionUserState.tried_failed
-        else:
+        answers = self.answered_users.filter_by(user_id=user_id).all()
+
+        if not answers:
             return QuestionUserState.not_tried
+
+        if any([answer.is_answer_correct for answer in answers]):
+            return QuestionUserState.solved_success
+        else:
+            return QuestionUserState.tried_failed
+            
 
     def state(self):
         return self.state_user(g.user.id)
@@ -522,7 +524,6 @@ class LearningGroup(Model, AuditMixin):
         return self.name
 
     def as_export_dict(self):
-        # TODO: assignments?
         return {"name": self.name}
 
     def join_url(self):
@@ -601,6 +602,7 @@ class ExtendedUser(User):
                 "first_name": self.first_name,
                 "last_name": self.last_name,
                 "username": self.username,
+                "school_type": self.school_type,
             },
             "learning_groups": [lq.as_export_dict() for lq in self.learning_groups],
             "created_learning_groups": [
