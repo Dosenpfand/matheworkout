@@ -40,6 +40,7 @@ from app.views.widgets import (
     ExtendedListWidget,
     ExtendedListNoButtonsWidget,
     DatePickerWidgetDe,
+    NoSearchWidget,
 )
 
 
@@ -212,6 +213,9 @@ class QuestionSelect4ModelView(ModelView):
 class QuestionModelView(ModelView):
     datamodel = SQLAInterface(Question)
     base_order = ("external_id", "asc")
+    search_widget = NoSearchWidget
+    list_template = "list_no_search.html"
+    
     title = "Aufgaben"
     list_title = title
     show_title = title
@@ -497,13 +501,16 @@ class TopicModelStudentView(ModelView, ShowQuestionDetailsMixIn):
         url = url_for("QuestionRandom.random_question_redirect", topic_id=item.id)
         return redirect(url)
 
-# TODO: Slow!
+
 class QuestionModelIncorrectAnsweredView(ModelView):
     datamodel = SQLAInterface(Question)
     base_filters = [
         ["", FilterQuestionByAnsweredCorrectness, False],
         ["", FilterQuestionByNotAnsweredCorrectness, True],
     ]
+    search_widget = NoSearchWidget
+    list_template = "list_no_search.html"
+
     title = "Falsch beantwortete Aufgaben"
     list_title = title
     show_title = title
@@ -526,6 +533,9 @@ class QuestionModelIncorrectAnsweredView(ModelView):
 class QuestionModelCorrectAnsweredView(ModelView):
     datamodel = SQLAInterface(Question)
     base_filters = [["", FilterQuestionByAnsweredCorrectness, True]]
+    search_widget = NoSearchWidget
+    list_template = "list_no_search.html"
+
     title = "Richtig beantwortete Aufgaben"
     list_title = title
     show_title = title
