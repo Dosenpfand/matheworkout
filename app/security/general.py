@@ -10,7 +10,7 @@ from flask_appbuilder import const
 from flask_appbuilder.security.sqla.manager import SecurityManager
 from werkzeug.security import generate_password_hash
 
-from app.models.general import ExtendedUser, LearningGroup
+from app.models.general import ExtendedUser, LearningGroup, SchoolType
 from app.security.views import (
     ExtendedUserDBModelView,
     ExtendedUserInfoEditView,
@@ -168,6 +168,7 @@ class ExtendedSecurityManager(SecurityManager):
                                 self.appbuilder.session.add(learning_group)
 
                             user.learning_groups.append(learning_group)
+                            user.school_type = g.user.school_type
                             self.appbuilder.session.commit()
 
                             self.set_password_reset_token(user)
@@ -200,3 +201,6 @@ class ExtendedSecurityManager(SecurityManager):
 
             if not is_fatal:
                 flash("Import abgeschlossen.", category="info")
+
+    def find_school_type(self, name):
+        return SchoolType['name']

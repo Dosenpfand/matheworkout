@@ -74,7 +74,7 @@ class ExtendedUserDBModelView(UserDBModelView):
                     "password_reset_expiration",
                     "email_confirmation_token",
                     "account_delete_token",
-                    "account_delete_expiration"
+                    "account_delete_expiration",
                 ],
                 "expanded": False,
             },
@@ -516,7 +516,9 @@ class ExtendedRegisterUserDBView(RegisterUserDBView):
         return True
 
     # noinspection PyMethodOverriding
-    def add_registration(self, username, first_name, last_name, email, password, role):
+    def add_registration(
+        self, username, first_name, last_name, email, password, role, school_type
+    ):
         user = self.appbuilder.sm.add_user(
             username=username,
             email=email,
@@ -531,6 +533,7 @@ class ExtendedRegisterUserDBView(RegisterUserDBView):
             return redirect(self.appbuilder.get_url_for_index)
 
         user.email_confirmation_token = secrets.token_urlsafe()
+        user.school_type = self.appbuilder.sm.find_school_type(school_type)
         self.appbuilder.session.commit()
         self.send_email(user)
         is_logged_in = login_user(user)
@@ -561,6 +564,7 @@ class ExtendedRegisterUserDBView(RegisterUserDBView):
             email=form.email.data,
             password=form.password.data,
             role=form.role.data,
+            school_type=form.school_type.data,
         )
 
     def add_form_unique_validations(self, form):

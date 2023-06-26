@@ -42,6 +42,11 @@ class Select4Enum(enum.Enum):
         return [el.value for el in Select4Enum]
 
 
+class SchoolType(enum.Enum):
+    ahs = 1
+    bhs = 2
+
+
 assoc_user_learning_group = Table(
     "assoc_user_learning_group",
     Model.metadata,
@@ -68,6 +73,7 @@ class Topic(Model):
     questions = relationship(
         "Question", back_populates="topic", order_by="Question.external_id.asc()"
     )
+    school_type = Column(Enum(SchoolType), nullable=False)
 
     def __repr__(self):
         return self.name
@@ -96,6 +102,7 @@ class Category(Model):
     questions = relationship(
         "Question", back_populates="category", order_by="Question.external_id.asc()"
     )
+    school_type = Column(Enum(SchoolType), nullable=False)
 
     def __repr__(self):
         return self.name
@@ -140,6 +147,8 @@ class Question(Model):
         back_populates="assigned_questions",
     )
     video_url = Column(String(), nullable=True)
+    school_type = Column(Enum(SchoolType), nullable=False)
+
     cols_common = [
         "external_id",
         "topic",
@@ -147,6 +156,7 @@ class Question(Model):
         "description_image",
         "type",
         "video_url",
+        "school_type",
     ]
 
     # self_assessed only
@@ -585,6 +595,7 @@ class ExtendedUser(User):
     email_confirmation_token = Column(String(255))
     account_delete_token = Column(String(255))
     account_delete_expiration = Column(DateTime)
+    school_type = Column(Enum(SchoolType), nullable=False)
 
     def as_export_dict(self):
         return {
@@ -663,7 +674,7 @@ class ExtendedUser(User):
             sorted(
                 counts.items(),
                 key=lambda item: item[1]["correct"] + item[1]["incorrect"],
-                reverse=True
+                reverse=True,
             )
         )
 

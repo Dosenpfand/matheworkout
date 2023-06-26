@@ -52,4 +52,11 @@ class ExtendedRegisterUserDBForm(DynamicForm):
         widget=Select2Widget(),
         validators=[DataRequired()],
     )
+    # TODO: choices should not be hardcoded
+    school_type = SelectField(
+        "Schultyp",
+        choices=[("ahs", "AHS"), ("bhs", "BHS")],
+        widget=Select2Widget(),
+        validators=[DataRequired()],
+    )
     recaptcha = RecaptchaField()
