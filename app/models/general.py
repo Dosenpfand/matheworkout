@@ -634,7 +634,6 @@ class ExtendedUser(User):
         return f"{self.correct_percentage_int()} %"
 
     def active_assignments(self):
-        # TODO: optimize?
         # noinspection PyTypeChecker
         return reduce(
             operator.concat,

@@ -101,7 +101,6 @@ class ExtendedSecurityManager(SecurityManager):
         self.appbuilder.session.commit()
 
     def import_users(self, csv_data):
-        # TODO: for many rows queue is needed! celery?
         # TODO: support UTF-8?
         if g.user.email_confirmation_token:
             flash(
