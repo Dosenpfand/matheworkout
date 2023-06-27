@@ -141,6 +141,16 @@ class ExtendedUserDBModelView(UserDBModelView):
         "school_type",
         "learning_groups",
     ]
+    search_columns = [
+        "first_name",
+        "last_name",
+        "email",
+        "learning_groups",
+        "school_type",
+        "roles",
+        "last_login",
+        "created_on",
+    ]
 
     base_order = ("id", "desc")
 
