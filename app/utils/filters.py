@@ -2,7 +2,7 @@ from flask import g
 from flask_appbuilder.models.filters import BaseFilter
 from flask_appbuilder.models.sqla.filters import get_field_setup_query
 
-from app.models.general import Question
+from app.models.general import Question, Topic
 
 
 class FilterInFunctionWithNone(BaseFilter):
@@ -28,11 +28,15 @@ class FilterQuestionByAnsweredCorrectness(BaseFilter):
     arg_name = None
 
     def apply(self, query, is_answer_correct):
-        return query.filter(
-            Question.answered_users.any(
-                user_id=g.user.id,
-                is_answer_correct=is_answer_correct,
+        return (
+            query.filter(
+                Question.answered_users.any(
+                    user_id=g.user.id,
+                    is_answer_correct=is_answer_correct,
+                )
             )
+            .join(Topic)
+            .filter_by(school_type=g.user.school_type)
         )
 
 
@@ -45,4 +49,6 @@ class FilterQuestionByNotAnsweredCorrectness(BaseFilter):
             ~Question.answered_users.any(
                 user_id=g.user.id, is_answer_correct=is_answer_correct
             )
+            .join(Topic)
+            .filter_by(school_type=g.user.school_type)
         )
