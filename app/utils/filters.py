@@ -35,7 +35,7 @@ class FilterQuestionByAnsweredCorrectness(BaseFilter):
                     is_answer_correct=is_answer_correct,
                 )
             )
-            .join(Topic)
+            .join(Topic, aliased=True)
             .filter_by(school_type=g.user.school_type)
         )
 
@@ -51,6 +51,6 @@ class FilterQuestionByNotAnsweredCorrectness(BaseFilter):
                     user_id=g.user.id, is_answer_correct=is_answer_correct
                 )
             )
-            .join(Topic)
+            .join(Topic, aliased=True)
             .filter_by(school_type=g.user.school_type)
         )
