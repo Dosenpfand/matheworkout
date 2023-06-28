@@ -80,7 +80,7 @@ class Topic(Model):
 
     def get_short_name(self) -> str:
         topic_name = self.name
-        regex = r"^[a-zA-z]{1,4}\s*\d{1,4}(\.\d{1,4})?"
+        regex = r"^([a-zA-z]{1,4}\s*)?\d{1,4}(\.\d{1,4})?"
         match = re.match(regex, topic_name)
 
         if match:
