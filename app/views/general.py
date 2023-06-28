@@ -23,11 +23,7 @@ class QuestionRandom(BaseView):
                 .join(Topic)
                 .filter(Topic.school_type == g.user.school_type)
                 .options(load_only("id"))
-                .offset(
-                    func.floor(
-                        func.random() * db.session.query(func.count(Question.id))
-                    )
-                )
+                .order_by(func.random())
                 .first()
             )
         else:
