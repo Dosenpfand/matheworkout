@@ -140,8 +140,7 @@ def state_to_emoji_markup(state, filters=None):
 
 def safe_math_eval(string):
     s = simpleeval.SimpleEval(names={"pi": pi, "π": pi, "e": exp(1)})
-    s.operators.pop(ast.Pow)
-    s.operators[ast.BitXor] = simpleeval.safe_power
+    s.operators[ast.Pow] = simpleeval.safe_power
     s.functions.update(
         dict(
             ln=log,
@@ -158,6 +157,7 @@ def safe_math_eval(string):
     string = string.replace(",", ".")
     string = string.replace("%", "*0.01")
     string = string.replace(" ", "")
+    string = string.replace("^", "**")
     string = string.lower()
 
     if string == "":
