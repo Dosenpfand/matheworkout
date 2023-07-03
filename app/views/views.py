@@ -5,6 +5,7 @@ from app.security.views import (
     ResetForgotPasswordView,
 )
 from app.views.forms import (
+    QuestionSelect2FormView,
     QuestionSelfAssessedFormView,
     Question2of5FormView,
     Question1of6FormView,
@@ -33,6 +34,7 @@ from app.views.models import (
     Question3to3ModelView,
     Question2DecimalsModelView,
     Question1DecimalModelView,
+    QuestionSelect2ModelView,
     QuestionSelfAssessedModelView,
     QuestionSelect4ModelView,
     QuestionModelView,
@@ -167,7 +169,15 @@ appbuilder.add_view(
 appbuilder.add_view(
     QuestionSelect4ModelView,
     "questions_select_4",
-    label="Zuordnung",
+    label="Zuordnung 4 aus 6",
+    icon="fa-align-justify",
+    category="Aufgaben-V",
+    category_icon="fa-align-justify",
+)
+appbuilder.add_view(
+    QuestionSelect2ModelView,
+    "questions_select_2",
+    label="Zuordnung 2 aus 4",
     icon="fa-align-justify",
     category="Aufgaben-V",
     category_icon="fa-align-justify",
@@ -237,6 +247,7 @@ appbuilder.add_view_no_menu(Question2DecimalsFormView)
 appbuilder.add_view_no_menu(Question1DecimalFormView)
 appbuilder.add_view_no_menu(QuestionSelfAssessedFormView)
 appbuilder.add_view_no_menu(QuestionSelect4FormView)
+appbuilder.add_view_no_menu(QuestionSelect2FormView)
 appbuilder.add_view_no_menu(IdToForm)
 appbuilder.add_view_no_menu(AssignmentModelEvaluationView)
 appbuilder.add_view_no_menu(AddQuestionToAssignmentFormView)

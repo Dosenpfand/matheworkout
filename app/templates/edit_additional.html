@@ -9,8 +9,12 @@
             <tr><td><strong>B</strong></td><td>{{options['B']}}</td></tr>
             <tr><td><strong>C</strong></td><td>{{options['C']}}</td></tr>
             <tr><td><strong>D</strong></td><td>{{options['D']}}</td></tr>
+            {% if options['E'] %}
             <tr><td><strong>E</strong></td><td>{{options['E']}}</td></tr>
+            {% endif %}
+            {% if options['F'] %}
             <tr><td><strong>F</strong></td><td>{{options['F']}}</td></tr>
+            {% endif %}
         </table>
     </div>
     {% endcall %}

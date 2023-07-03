@@ -19,6 +19,7 @@ from sqlalchemy import asc
 
 from app import db, appbuilder
 from app.forms.forms import (
+    QuestionSelect2Form,
     QuestionSelfAssessedForm,
     Question2of5Form,
     Question1of6Form,
@@ -794,7 +795,7 @@ class Question1DecimalFormView(QuestionFormView):
 
 class QuestionSelect4FormView(QuestionFormView):
     form = QuestionSelect4Form
-    form_title = "Zuordnung"
+    form_title = "Zuordnung 4 aus 6"
 
     form_fieldsets = [
         (
@@ -861,6 +862,64 @@ class QuestionSelect4FormView(QuestionFormView):
             "D": result.get_option_small_image(result.option4_image),
             "E": result.get_option_small_image(result.option5_image),
             "F": result.get_option_small_image(result.option6_image),
+        }
+        return options
+
+
+class QuestionSelect2FormView(QuestionFormView):
+    form = QuestionSelect2Form
+    form_title = "Zuordnung 2 aus 4"
+
+    form_fieldsets = [
+        (
+            "Antworten",
+            {"fields": ["selection1", "selection2"]},
+        ),
+    ]
+
+    def form_get_additional_processing(self, form, question):
+        return self.set_and_get_option_labels(form, question)
+
+    def form_post(self, form):
+        question_id = int(form.id.data)
+        question = (
+            db.session.query(Question)
+            .filter_by(id=question_id, type=QuestionType.select_two.value)
+            .first()
+        )
+        options = self.set_and_get_option_labels(form, question)
+
+        if form.selection1.data == question.selection1_solution.value:
+            form.selection1.description = "Richtig"
+        else:
+            form.selection1.description = "Falsch"
+        if form.selection2.data == question.selection2_solution.value:
+            form.selection2.description = "Richtig"
+        else:
+            form.selection2.description = "Falsch"
+
+        if (form.selection1.data == question.selection1_solution.value) and (
+            form.selection2.data == question.selection2_solution.value
+        ):
+            message = "<strong>RICHTIG!</strong>"
+            is_answer_correct = True
+        else:
+            message = "<strong>FALSCH!</strong>"
+            is_answer_correct = False
+
+        return self.post_process_answer(
+            form, is_answer_correct, question, message, options
+        )
+
+    @staticmethod
+    def set_and_get_option_labels(form, result):
+        form.selection1.label.text = result.get_selection_image(result.selection1_image)
+        form.selection2.label.text = result.get_selection_image(result.selection2_image)
+        options = {
+            "A": result.get_option_small_image(result.option1_image),
+            "B": result.get_option_small_image(result.option2_image),
+            "C": result.get_option_small_image(result.option3_image),
+            "D": result.get_option_small_image(result.option4_image),
         }
         return options
 

@@ -53,6 +53,7 @@ class Question2of5ModelView(ModelView):
     add_title = title
     edit_title = title
     add_columns = Question.cols_two_of_five
+    search_columns = Question.cols_two_of_five
     add_form_extra_fields = {
         "type": HiddenField(default=QuestionType.two_of_five.value)
     }
@@ -77,6 +78,7 @@ class Question1of6ModelView(ModelView):
     add_title = title
     edit_title = title
     add_columns = Question.cols_one_of_six
+    search_columns = Question.cols_one_of_six
     add_form_extra_fields = {"type": HiddenField(default=QuestionType.one_of_six.value)}
     label_columns = {
         "description_image": "Beschreibung",
@@ -99,6 +101,7 @@ class Question3to3ModelView(ModelView):
     add_title = title
     edit_title = title
     add_columns = Question.cols_three_to_three
+    search_columns = Question.cols_three_to_three
     add_form_extra_fields = {
         "type": HiddenField(default=QuestionType.three_to_three.value)
     }
@@ -123,6 +126,7 @@ class Question2DecimalsModelView(ModelView):
     add_title = title
     edit_title = title
     add_columns = Question.cols_two_decimals
+    search_columns = Question.cols_two_decimals
     add_form_extra_fields = {
         "type": HiddenField(default=QuestionType.two_decimals.value)
     }
@@ -147,6 +151,7 @@ class Question1DecimalModelView(ModelView):
     add_title = title
     edit_title = title
     add_columns = Question.cols_one_decimal
+    search_columns = Question.cols_one_decimal
     add_form_extra_fields = {
         "type": HiddenField(default=QuestionType.one_decimal.value)
     }
@@ -171,6 +176,7 @@ class QuestionSelfAssessedModelView(ModelView):
     add_title = title
     edit_title = title
     add_columns = Question.cols_self_assessed
+    search_columns = Question.cols_self_assessed
     add_form_extra_fields = {
         "type": HiddenField(default=QuestionType.self_assessed.value)
     }
@@ -189,15 +195,39 @@ class QuestionSelfAssessedModelView(ModelView):
 class QuestionSelect4ModelView(ModelView):
     datamodel = SQLAInterface(Question)
     base_filters = [["type", FilterEqual, QuestionType.select_four.value]]
-    title = "Zuordnung"
+    title = "Zuordnung 4 aus 6"
     list_title = title
     show_title = title
     add_title = title
     edit_title = title
     add_columns = Question.cols_select_four
+    search_columns = Question.cols_select_four
     add_form_extra_fields = {
         "type": HiddenField(default=QuestionType.select_four.value)
     }
+    label_columns = {
+        "description_image": "Beschreibung",
+        "id": "Frage Nr.",
+        "topic": "Grundkompetenzbereich",
+        "category": "Kategorie",
+    }
+    list_columns = ["id", "topic"]
+    show_columns = ["description_image_img", "solution_image_img"]
+    formatters_columns = {"id": link_formatter_question}
+    page_size = 100
+
+
+class QuestionSelect2ModelView(ModelView):
+    datamodel = SQLAInterface(Question)
+    base_filters = [["type", FilterEqual, QuestionType.select_two.value]]
+    title = "Zuordnung 2 aus 4"
+    list_title = title
+    show_title = title
+    add_title = title
+    edit_title = title
+    add_columns = Question.cols_select_two
+    search_columns = Question.cols_select_two
+    add_form_extra_fields = {"type": HiddenField(default=QuestionType.select_two.value)}
     label_columns = {
         "description_image": "Beschreibung",
         "id": "Frage Nr.",
@@ -246,6 +276,7 @@ class QuestionModelView(ModelView):
         + Question.cols_two_decimals[common_col_count:]
         + Question.cols_one_of_six[common_col_count:]
         + Question.cols_select_four[common_col_count:]
+        + Question.cols_select_two[common_col_count:]
         + Question.cols_three_to_three[common_col_count:]
     )
 

@@ -6,7 +6,7 @@ from wtforms import BooleanField, HiddenField, FloatField, SelectField
 from wtforms.validators import NoneOf, DataRequired
 
 from app import db
-from app.models.general import Select4Enum, Assignment
+from app.models.general import Select2Enum, Select4Enum, Assignment
 from app.utils.general import safe_math_eval
 from app.views.queries import assignment_query
 from app.views.widgets import SelectWidgetExtended
@@ -67,6 +67,11 @@ class QuestionSelect4Form(QuestionForm):
     selection2 = SelectField(choices=Select4Enum.get_values())
     selection3 = SelectField(choices=Select4Enum.get_values())
     selection4 = SelectField(choices=Select4Enum.get_values())
+
+
+class QuestionSelect2Form(QuestionForm):
+    selection1 = SelectField(choices=Select2Enum.get_values())
+    selection2 = SelectField(choices=Select2Enum.get_values())
 
 
 class QuestionSelfAssessedForm(QuestionForm):

@@ -64,6 +64,7 @@ class QuestionRandom(BaseView):
             QuestionType.one_decimal: "Question1DecimalFormView",
             QuestionType.self_assessed: "QuestionSelfAssessedFormView",
             QuestionType.select_four: "QuestionSelect4FormView",
+            QuestionType.select_two: "QuestionSelect2FormView",
         }
         form = type_to_form[question.type]
         return redirect(
@@ -98,6 +99,7 @@ class IdToForm(BaseView):
             QuestionType.one_decimal.value: "Question1DecimalFormView",
             QuestionType.self_assessed.value: "QuestionSelfAssessedFormView",
             QuestionType.select_four.value: "QuestionSelect4FormView",
+            QuestionType.select_two.value: "QuestionSelect2FormView",
         }
 
         form = type_to_form[question_type]
@@ -430,6 +432,56 @@ class ShowQuestionDetailsMixIn:
                     "selection4": (
                         " ",
                         question.get_option_small_image(question.selection4_image),
+                    ),
+                }
+            elif question.type == QuestionType.select_two:
+                current_question["cellsets"] = [
+                    (
+                        "Antworten",
+                        {
+                            "fields": [
+                                "selection1",
+                                "selection2",
+                            ]
+                        },
+                    ),
+                    (
+                        "Optionen",
+                        {
+                            "fields": [
+                                "option1",
+                                "option2",
+                                "option3",
+                                "option4",
+                            ]
+                        },
+                    ),
+                ]
+
+                current_question["cells"] = {
+                    "option1": (
+                        "A",
+                        question.get_option_small_image(question.option1_image),
+                    ),
+                    "option2": (
+                        "B",
+                        question.get_option_small_image(question.option2_image),
+                    ),
+                    "option3": (
+                        "C",
+                        question.get_option_small_image(question.option3_image),
+                    ),
+                    "option4": (
+                        "D",
+                        question.get_option_small_image(question.option4_image),
+                    ),
+                    "selection1": (
+                        " ",
+                        question.get_option_small_image(question.selection1_image),
+                    ),
+                    "selection2": (
+                        " ",
+                        question.get_option_small_image(question.selection2_image),
                     ),
                 }
 

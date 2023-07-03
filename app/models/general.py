@@ -42,6 +42,17 @@ class Select4Enum(enum.Enum):
         return [el.value for el in Select4Enum]
 
 
+class Select2Enum(enum.Enum):
+    A = "A"
+    B = "B"
+    C = "C"
+    D = "D"
+
+    @staticmethod
+    def get_values():
+        return [el.value for el in Select2Enum]
+
+
 class SchoolType(enum.Enum):
     ahs = "AHS"
     bhs = "BHS"
@@ -111,6 +122,7 @@ class Category(Model):
 class QuestionType(enum.Enum):
     self_assessed = "self_assessed"
     select_four = "select_four"
+    select_two = "select_two"
     one_decimal = "one_decimal"
     two_decimals = "two_decimals"
     one_of_six = "one_of_six"
@@ -177,7 +189,7 @@ class Question(Model):
         "value2_lower_limit",
     ]
 
-    # 1 / 2 of 5 / 6 and select 4 only
+    # 1 / 2 of 5 / 6 and select 2 / 4 only
     option1_image = Column(ImageColumn(size=(10000, 10000, True)))
     option1_is_correct = Column(Boolean())
     option2_image = Column(ImageColumn(size=(10000, 10000, True)))
@@ -217,7 +229,7 @@ class Question(Model):
         "option5_is_correct",
     ]
 
-    # select 4 only
+    # select 2 / 4 only
     selection1_image = Column(ImageColumn(size=(10000, 10000, True)))
     selection1_solution = Column(Enum(Select4Enum))
     selection2_image = Column(ImageColumn(size=(10000, 10000, True)))
@@ -241,6 +253,16 @@ class Question(Model):
         "option4_image",
         "option5_image",
         "option6_image",
+    ]
+    cols_select_two = cols_common + [
+        "selection1_image",
+        "selection1_solution",
+        "selection2_image",
+        "selection2_solution",
+        "option1_image",
+        "option2_image",
+        "option3_image",
+        "option4_image",
     ]
 
     # 3 to 3 only
@@ -293,6 +315,10 @@ class Question(Model):
                 f"2{self.selection2_solution}, "
                 f"3{self.selection3_solution}, "
                 f"4{self.selection4_solution}, "
+            )
+        elif self.type == QuestionType.select_two:
+            return Markup(
+                f"1{self.selection1_solution}, " f"2{self.selection2_solution}, "
             )
         elif self.type == QuestionType.one_decimal:
             return Markup(
@@ -349,7 +375,6 @@ class Question(Model):
             return QuestionUserState.solved_success
         else:
             return QuestionUserState.tried_failed
-            
 
     def state(self):
         return self.state_user(g.user.id)
@@ -428,7 +453,7 @@ class Question(Model):
             + '" alt="Photo" style="max-height: 20em" class="img-rounded img-responsive">'
         )
 
-    # select_four only
+    # select_four / select_two only
     @staticmethod
     def get_selection_image(selection):
         im = ImageManager()
