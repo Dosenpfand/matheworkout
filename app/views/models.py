@@ -1,10 +1,12 @@
 from flask import g, redirect, url_for, flash, session
 from flask_appbuilder import ModelView, action
+from flask_appbuilder.fields import QuerySelectField
 from flask_appbuilder.models.sqla.filters import (
     FilterEqual,
     FilterEqualFunction,
     FilterInFunction,
 )
+from flask_appbuilder.fieldwidgets import Select2Widget
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from wtforms import HiddenField, DateField
 
@@ -44,202 +46,93 @@ from app.views.widgets import (
 )
 
 
-class Question2of5ModelView(ModelView):
+class QuestionBaseModelView(ModelView):
     datamodel = SQLAInterface(Question)
-    base_filters = [["type", FilterEqual, QuestionType.two_of_five.value]]
+    label_columns = {
+        "description_image": "Beschreibung",
+        "id": "Frage Nr.",
+        "topic": "Grundkompetenzbereich",
+        "category": "Kategorie",
+    }
+    list_columns = ["id", "topic"]
+    show_columns = ["description_image_img", "title"]
+    formatters_columns = {"id": link_formatter_question}
+    page_size = 100
+    add_form_query_rel_fields = {
+        "category": [["school_type", FilterEqualFunction, lambda: g.user.school_type]],
+        "topic": [["school_type", FilterEqualFunction, lambda: g.user.school_type]],
+    }
+    edit_form_query_rel_fields = add_form_query_rel_fields
+
+    def __init__(self, **kwargs):
+        self.list_title = self.title
+        self.show_title = self.title
+        self.add_title = self.title
+        self.edit_title = self.title
+
+        self.add_columns = self.columns
+        self.edit_columns = self.columns
+        self.search_columns = self.columns
+
+        self.add_form_extra_fields = {
+            "type": HiddenField(default=self.question_type),
+        }
+        self.edit_form_extra_fields = self.add_form_extra_fields
+
+        self.base_filters = [["type", FilterEqual, self.question_type]]
+
+        super().__init__(**kwargs)
+
+
+class Question2of5ModelView(QuestionBaseModelView):
     title = "2 aus 5"
-    list_title = title
-    show_title = title
-    add_title = title
-    edit_title = title
-    add_columns = Question.cols_two_of_five
-    search_columns = Question.cols_two_of_five
-    add_form_extra_fields = {
-        "type": HiddenField(default=QuestionType.two_of_five.value)
-    }
-    label_columns = {
-        "description_image": "Beschreibung",
-        "id": "Frage Nr.",
-        "topic": "Grundkompetenzbereich",
-        "category": "Kategorie",
-    }
-    list_columns = ["id", "topic"]
-    show_columns = ["description_image_img", "title"]
-    formatters_columns = {"id": link_formatter_question}
-    page_size = 100
+    columns = Question.cols_two_of_five
+    question_type = QuestionType.two_of_five.value
 
 
-class Question1of6ModelView(ModelView):
-    datamodel = SQLAInterface(Question)
-    base_filters = [["type", FilterEqual, QuestionType.one_of_six.value]]
+class Question1of6ModelView(QuestionBaseModelView):
     title = "1 aus 6"
-    list_title = title
-    show_title = title
-    add_title = title
-    edit_title = title
-    add_columns = Question.cols_one_of_six
-    search_columns = Question.cols_one_of_six
-    add_form_extra_fields = {"type": HiddenField(default=QuestionType.one_of_six.value)}
-    label_columns = {
-        "description_image": "Beschreibung",
-        "id": "Frage Nr.",
-        "topic": "Grundkompetenzbereich",
-        "category": "Kategorie",
-    }
-    list_columns = ["id", "topic"]
-    show_columns = ["description_image_img", "title"]
-    formatters_columns = {"id": link_formatter_question}
-    page_size = 100
+    columns = Question.cols_one_of_six
+    question_type = QuestionType.one_of_six.value
 
 
-class Question3to3ModelView(ModelView):
-    datamodel = SQLAInterface(Question)
-    base_filters = [["type", FilterEqual, QuestionType.three_to_three.value]]
+class Question3to3ModelView(QuestionBaseModelView):
     title = "Lückentext"
-    list_title = title
-    show_title = title
-    add_title = title
-    edit_title = title
-    add_columns = Question.cols_three_to_three
-    search_columns = Question.cols_three_to_three
-    add_form_extra_fields = {
-        "type": HiddenField(default=QuestionType.three_to_three.value)
-    }
-    label_columns = {
-        "description_image": "Beschreibung",
-        "id": "Frage Nr.",
-        "topic": "Grundkompetenzbereich",
-        "category": "Kategorie",
-    }
-    list_columns = ["id", "topic"]
-    show_columns = ["description_image_img", "title"]
-    formatters_columns = {"id": link_formatter_question}
-    page_size = 100
+    columns = Question.cols_three_to_three
+    question_type = QuestionType.three_to_three.value
 
 
-class Question2DecimalsModelView(ModelView):
-    datamodel = SQLAInterface(Question)
-    base_filters = [["type", FilterEqual, QuestionType.two_decimals.value]]
+class Question2DecimalsModelView(QuestionBaseModelView):
     title = "Werteingabe zwei Zahlen"
-    list_title = title
-    show_title = title
-    add_title = title
-    edit_title = title
-    add_columns = Question.cols_two_decimals
-    search_columns = Question.cols_two_decimals
-    add_form_extra_fields = {
-        "type": HiddenField(default=QuestionType.two_decimals.value)
-    }
-    label_columns = {
-        "description_image": "Beschreibung",
-        "id": "Frage Nr.",
-        "topic": "Grundkompetenzbereich",
-        "category": "Kategorie",
-    }
-    list_columns = ["id", "topic"]
-    show_columns = ["description_image_img", "title"]
-    formatters_columns = {"id": link_formatter_question}
-    page_size = 100
+    columns = Question.cols_two_decimals
+    question_type = QuestionType.two_decimals.value
 
 
-class Question1DecimalModelView(ModelView):
-    datamodel = SQLAInterface(Question)
-    base_filters = [["type", FilterEqual, QuestionType.one_decimal.value]]
+class Question1DecimalModelView(QuestionBaseModelView):
     title = "Werteingabe eine Zahl"
-    list_title = title
-    show_title = title
-    add_title = title
-    edit_title = title
-    add_columns = Question.cols_one_decimal
-    search_columns = Question.cols_one_decimal
-    add_form_extra_fields = {
-        "type": HiddenField(default=QuestionType.one_decimal.value)
-    }
-    label_columns = {
-        "description_image": "Beschreibung",
-        "id": "Frage Nr.",
-        "topic": "Grundkompetenzbereich",
-        "category": "Kategorie",
-    }
-    list_columns = ["id", "topic"]
-    show_columns = ["description_image_img", "title"]
-    formatters_columns = {"id": link_formatter_question}
-    page_size = 100
+    columns = Question.cols_one_decimal
+    question_type = QuestionType.one_decimal.value
 
 
-class QuestionSelfAssessedModelView(ModelView):
-    datamodel = SQLAInterface(Question)
-    base_filters = [["type", FilterEqual, QuestionType.self_assessed.value]]
+class QuestionSelfAssessedModelView(QuestionBaseModelView):
     title = "Selbstkontrolle"
-    list_title = title
-    show_title = title
-    add_title = title
-    edit_title = title
-    add_columns = Question.cols_self_assessed
-    search_columns = Question.cols_self_assessed
-    add_form_extra_fields = {
-        "type": HiddenField(default=QuestionType.self_assessed.value)
-    }
-    label_columns = {
-        "description_image": "Beschreibung",
-        "id": "Frage Nr.",
-        "topic": "Grundkompetenzbereich",
-        "category": "Kategorie",
-    }
-    list_columns = ["id", "topic"]
-    show_columns = ["description_image_img", "solution_image_img"]
-    formatters_columns = {"id": link_formatter_question}
-    page_size = 100
+    columns = Question.cols_self_assessed
+    question_type = QuestionType.self_assessed.value
 
 
-class QuestionSelect4ModelView(ModelView):
-    datamodel = SQLAInterface(Question)
-    base_filters = [["type", FilterEqual, QuestionType.select_four.value]]
+class QuestionSelect4ModelView(QuestionBaseModelView):
     title = "Zuordnung 4 aus 6"
-    list_title = title
-    show_title = title
-    add_title = title
-    edit_title = title
-    add_columns = Question.cols_select_four
-    search_columns = Question.cols_select_four
-    add_form_extra_fields = {
-        "type": HiddenField(default=QuestionType.select_four.value)
-    }
-    label_columns = {
-        "description_image": "Beschreibung",
-        "id": "Frage Nr.",
-        "topic": "Grundkompetenzbereich",
-        "category": "Kategorie",
-    }
-    list_columns = ["id", "topic"]
-    show_columns = ["description_image_img", "solution_image_img"]
-    formatters_columns = {"id": link_formatter_question}
-    page_size = 100
+    columns = Question.cols_select_four
+    question_type = QuestionType.select_four.value
 
 
-class QuestionSelect2ModelView(ModelView):
-    datamodel = SQLAInterface(Question)
-    base_filters = [["type", FilterEqual, QuestionType.select_two.value]]
+class QuestionSelect2ModelView(QuestionBaseModelView):
     title = "Zuordnung 2 aus 4"
-    list_title = title
-    show_title = title
-    add_title = title
-    edit_title = title
-    add_columns = Question.cols_select_two
-    search_columns = Question.cols_select_two
-    add_form_extra_fields = {"type": HiddenField(default=QuestionType.select_two.value)}
-    label_columns = {
-        "description_image": "Beschreibung",
-        "id": "Frage Nr.",
-        "topic": "Grundkompetenzbereich",
-        "category": "Kategorie",
-    }
-    list_columns = ["id", "topic"]
-    show_columns = ["description_image_img", "solution_image_img"]
-    formatters_columns = {"id": link_formatter_question}
-    page_size = 100
+    columns = Question.cols_select_two
+    question_type = QuestionType.select_two.value
 
 
+# TODO: Inherit from QuestionBaseModelView?
 class QuestionModelView(ModelView):
     def get_topic_ids_for_school_type():
         topics = db.session.query(Topic).filter_by(school_type=g.user.school_type).all()
