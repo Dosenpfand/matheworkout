@@ -99,7 +99,6 @@ FAB_ROLES = {
         ["ExtendedUserDBModelView", "can_confirm_account_delete"],
         ["ExtendedUserDBModelView", "can_export_data"],
         ["ExtendedUserDBModelView", "export_data_action"],
-        ["QuestionRandom", "can_random_question_redirect"],
         ["IdToForm", "can_id_to_form"],
         ["Verwaltung", "menu_access"],
         ["classes", "menu_access"],
