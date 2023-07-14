@@ -41,17 +41,21 @@ def create_app(config="config"):
         db.init_app(app)
 
         # TODO: Only necessary until SQLAlchemy 2 is used.
-        result = db.session.execute(
-            "SELECT * FROM pg_collation WHERE collname = 'numeric';"
-        )
-        if not result.first():
-            db.session.execute(
-                "CREATE COLLATION numeric (provider = icu, locale = 'de_DE@colNumeric=yes');"
+        table_exists = db.session.execute(
+            f"SELECT EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = '{Question.__tablename__}');"
+        ).all()[0][0]
+        if table_exists:
+            result = db.session.execute(
+                "SELECT * FROM pg_collation WHERE collname = 'numeric';"
             )
-        db.session.execute(
-            f'ALTER TABLE "{Question.__tablename__}" '
-            f'ALTER COLUMN "{Question.external_id.name}" type VARCHAR COLLATE numeric;'
-        )
+            if not result.first():
+                db.session.execute(
+                    "CREATE COLLATION numeric (provider = icu, locale = 'de_DE@colNumeric=yes');"
+                )
+            db.session.execute(
+                f'ALTER TABLE "{Question.__tablename__}" '
+                f'ALTER COLUMN "{Question.external_id.name}" type VARCHAR COLLATE numeric;'
+            )
 
         # Init achievements
         for achievement in achievements:
