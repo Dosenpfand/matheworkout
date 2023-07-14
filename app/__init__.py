@@ -9,6 +9,7 @@ from flask_appbuilder import AppBuilder, SQLA
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_migrate import Migrate
 from sentry_sdk.integrations.flask import FlaskIntegration
+from sqlalchemy import inspect
 from app.models.achievements import achievements
 
 from app.models.general import Achievement, Question
@@ -41,10 +42,7 @@ def create_app(config="config"):
         db.init_app(app)
 
         # TODO: Only necessary until SQLAlchemy 2 is used.
-        table_exists = db.session.execute(
-            f"SELECT EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = '{Question.__tablename__}');"
-        ).all()[0][0]
-        if table_exists:
+        if inspect(db.engine).has_table(Question.__tablename__):
             result = db.session.execute(
                 "SELECT * FROM pg_collation WHERE collname = 'numeric';"
             )
@@ -58,16 +56,17 @@ def create_app(config="config"):
             )
 
         # Init achievements
-        for achievement in achievements:
-            result = (
-                db.session.query(Achievement).filter_by(name=achievement.name).first()
-            )
-            if not result:
-                db.session.add(achievement)
-            else:
-                result.title = achievement.title
-                result.description = achievement.description
-            db.session.commit()
+        if inspect(db.engine).has_table(Achievement.__tablename__):
+            for achievement in achievements:
+                result = (
+                    db.session.query(Achievement).filter_by(name=achievement.name).first()
+                )
+                if not result:
+                    db.session.add(achievement)
+                else:
+                    result.title = achievement.title
+                    result.description = achievement.description
+                db.session.commit()
 
         migrate.init_app(app, db)
         appbuilder.init_app(app, db.session)
