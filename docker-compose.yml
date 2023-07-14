@@ -8,6 +8,8 @@ services:
       - 5000:80
     environment:
       - MODULE_NAME=wsgi
+    env_file:
+      - app.env
     depends_on:
       - postgres
 
@@ -15,6 +17,6 @@ services:
     image: postgres:alpine
     restart: always
     environment:
-      - POSTGRES_PASSWORD=zug
-      - POSTGRES_DB=zug
-      - POSTGRES_USER=zug
+      - POSTGRES_PASSWORD=pg_password
+      - POSTGRES_DB=pg_db
+      - POSTGRES_USER=pg_user
