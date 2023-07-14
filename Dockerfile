@@ -10,5 +10,5 @@ WORKDIR /app
 
 ENV PYTHONPATH=/app
 EXPOSE 80
-ENTRYPOINT ["entrypoint.sh"]
-CMD ["start.sh"]
+ENTRYPOINT ["./entrypoint.sh"]
+CMD ["./start.sh"]
