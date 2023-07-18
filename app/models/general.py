@@ -627,7 +627,7 @@ class ExtendedUser(User):
                 "first_name": self.first_name,
                 "last_name": self.last_name,
                 "username": self.username,
-                "school_type": self.school_type,
+                "school_type": self.school_type.value,
             },
             "learning_groups": [lq.as_export_dict() for lq in self.learning_groups],
             "created_learning_groups": [
