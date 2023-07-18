@@ -4,4 +4,3 @@ services:
     volumes:
       - .:/app:cached
     command: flask run --debug --host=0.0.0.0 -p 80
- 
