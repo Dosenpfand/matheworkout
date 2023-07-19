@@ -156,7 +156,7 @@ cython_debug/
 app/static/uploads/**
 
 # VSCode
-.vscode/settings.json
+.vscode/**
 
 # Pycharm
 .idea/**
