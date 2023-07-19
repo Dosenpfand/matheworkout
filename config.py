@@ -18,6 +18,8 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 # SENTRY_DSN (optional, for sentry.io error tracing)
 # SENTRY_TRACES_SAMPLE_RATE (optional, for sentry.io performance tracing)
 
+DEBUG = False
+TESTING = False
 CSRF_ENABLED = True
 SQLALCHEMY_POOL_RECYCLE = 3
 SQLALCHEMY_TRACK_MODIFICATIONS = False

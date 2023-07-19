@@ -17,7 +17,7 @@ from flask_appbuilder.models.sqla.interface import SQLAInterface
 from markupsafe import Markup
 from sqlalchemy import asc
 
-from app import db, appbuilder
+from app import db
 from app.forms.forms import (
     QuestionSelect2Form,
     QuestionSelfAssessedForm,
@@ -983,7 +983,7 @@ class DeleteAccountFormView(SimpleFormView):
             flash("Bitte bestätige zuerst deine E-Mail-Adresse.", category="danger")
             return
 
-        appbuilder.sm.set_account_delete_token(g.user)
+        self.appbuilder.sm.set_account_delete_token(g.user)
         mail_is_sent = self.send_email(g.user)
         if mail_is_sent:
             flash(
@@ -1010,7 +1010,7 @@ class ImportUsersFormView(SimpleFormView):
     )
 
     def form_post(self, form):
-        appbuilder.sm.import_users(form.file.data)
+        self.appbuilder.sm.import_users(form.file.data)
         return redirect(url_for(f"{self.__class__.__name__}.this_form_get"))
 
 

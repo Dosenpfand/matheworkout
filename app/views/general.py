@@ -54,7 +54,7 @@ class QuestionRandom(BaseView):
         question = self.get_random_question(topic)
         if not question:
             flash("Keine Aufgabe gefunden.", category="danger")
-            return redirect(self.appbuilder.get_url_for_index)
+            return redirect(url_for("ExtendedIndexView.index"))
 
         type_to_form = {
             QuestionType.two_of_five: "Question2of5FormView",

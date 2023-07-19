@@ -180,7 +180,7 @@ class ExtendedUserDBModelView(UserDBModelView):
     @has_access
     def confirm_account_delete(self, user_id: int, token: str):
         if user_id != g.user.id:
-            return redirect(self.appbuilder.get_url_for_index)
+            return redirect(url_for("ExtendedIndexView.index"))
 
         user = (
             db.session.query(ExtendedUser)
@@ -202,7 +202,7 @@ class ExtendedUserDBModelView(UserDBModelView):
                     category="danger",
                 )
                 return redirect(url_for("DeleteAccountFormView.this_form_get"))
-        return redirect(self.appbuilder.get_url_for_index)
+        return redirect(url_for("ExtendedIndexView.index"))
 
     @expose("/export_data")
     @has_access
@@ -366,7 +366,7 @@ class ForgotPasswordFormView(PublicFormView):
             ),
             "info",
         )
-        return redirect(self.appbuilder.get_url_for_index)
+        return redirect(url_for("ExtendedIndexView.index"))
 
     @expose("/form", methods=["POST"])
     def this_form_post(self):
@@ -498,7 +498,7 @@ class ExtendedRegisterUserDBView(RegisterUserDBView):
                 "Senden der E-Mail fehlgeschlagen. Bitte versuche es später erneut.",
                 category="danger",
             )
-        return redirect(self.appbuilder.get_url_for_index)
+        return redirect(url_for("ExtendedIndexView.index"))
 
     @expose("/confirm_email/<int:user_id>/<string:token>", methods=["GET"])
     def confirm_email(self, user_id, token):
@@ -521,7 +521,7 @@ class ExtendedRegisterUserDBView(RegisterUserDBView):
             )
 
         if g.user:
-            return redirect(self.appbuilder.get_url_for_index)
+            return redirect(url_for("ExtendedIndexView.index"))
         else:
             return redirect(self.appbuilder.get_url_for_login)
 
@@ -566,7 +566,7 @@ class ExtendedRegisterUserDBView(RegisterUserDBView):
 
         if not user:
             flash(self.error_message, "danger")
-            return redirect(self.appbuilder.get_url_for_index)
+            return redirect(url_for("ExtendedIndexView.index"))
 
         user.email_confirmation_token = secrets.token_urlsafe()
         self.appbuilder.session.commit()
@@ -616,7 +616,7 @@ class ExtendedAuthDBView(AuthDBView):
     @expose("/login/", methods=["GET", "POST"])
     def login(self):
         if g.user is not None and g.user.is_authenticated:
-            return redirect(self.appbuilder.get_url_for_index)
+            return redirect(url_for("ExtendedIndexView.index"))
         form = LoginForm_db()
         if form.validate_on_submit():
             user: ExtendedUser = self.appbuilder.sm.auth_user_db(

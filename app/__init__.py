@@ -15,10 +15,8 @@ from app.models.achievements import achievements
 from app.models.general import Achievement, Question
 from app.tools.mail import send_mail
 
+# TODO: Move to models.py? https://flask.palletsprojects.com/en/2.3.x/patterns/appfactories/
 db = SQLA()
-appbuilder = AppBuilder()
-migrate = Migrate()
-toolbar = DebugToolbarExtension()
 
 
 def create_app(config="config"):
@@ -32,12 +30,16 @@ def create_app(config="config"):
         traces_sample_rate=traces_sample_rate,
     )
 
+    # Flask and extensions
     app = Flask(__name__)
+    appbuilder = AppBuilder()
+    toolbar = DebugToolbarExtension()
+    migrate = Migrate()
 
     with app.app_context():
         app.config.from_object(config)
         app.config.from_envvar("APPLICATION_SETTINGS", silent=True)
-        app.config.from_prefixed_env(loads=str)
+        app.config.from_prefixed_env()
 
         db.init_app(app)
 
@@ -59,7 +61,9 @@ def create_app(config="config"):
         if inspect(db.engine).has_table(Achievement.__tablename__):
             for achievement in achievements:
                 result = (
-                    db.session.query(Achievement).filter_by(name=achievement.name).first()
+                    db.session.query(Achievement)
+                    .filter_by(name=achievement.name)
+                    .first()
                 )
                 if not result:
                     db.session.add(achievement)
@@ -74,8 +78,11 @@ def create_app(config="config"):
         from app.models import general  # noqa
         from app.views import views  # noqa
 
+        views.add_views(appbuilder)
+
         app.cli.add_command(send_mail_command)
 
+        # TODO: why needed?
         appbuilder.post_init()
     return app
 
