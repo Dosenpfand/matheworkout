@@ -10,7 +10,7 @@ from flask_appbuilder.fieldwidgets import Select2Widget
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from wtforms import HiddenField, DateField
 
-from app import db
+from app.models.general import db
 from app.models.general import (
     Question,
     QuestionType,

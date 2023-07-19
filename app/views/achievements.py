@@ -3,7 +3,7 @@ from typing import Optional
 from flask import g
 from sqlalchemy import Time, cast
 
-from app import db
+from app.models.general import db
 from app.models.achievements import names
 from app.models.general import Achievement, AssocUserQuestion, Question, QuestionType
 

@@ -24,9 +24,12 @@ from sqlalchemy import (
     Sequence,
     Table,
 )
+from flask_appbuilder import SQLA
 from sqlalchemy.orm import relationship, joinedload
 
 from app.utils.iter import groupby_unsorted
+
+db = SQLA()
 
 
 class Select4Enum(enum.Enum):

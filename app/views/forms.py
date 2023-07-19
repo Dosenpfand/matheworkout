@@ -17,7 +17,7 @@ from flask_appbuilder.models.sqla.interface import SQLAInterface
 from markupsafe import Markup
 from sqlalchemy import asc
 
-from app import db
+from app.models.general import db
 from app.forms.forms import (
     QuestionSelect2Form,
     QuestionSelfAssessedForm,

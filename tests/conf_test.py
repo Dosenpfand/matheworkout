@@ -1,7 +1,8 @@
 import pytest
 from dotenv import load_dotenv
 
-from app import create_app, db
+from app import create_app
+from app.models.general import db
 
 from typing import TYPE_CHECKING
 

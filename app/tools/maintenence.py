@@ -1,4 +1,4 @@
-from app import db
+from app.models.general import db
 from app.models.general import Category, Question
 
 
