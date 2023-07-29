@@ -5,7 +5,7 @@ import click
 import sentry_sdk
 from flask import Flask
 from flask.cli import with_appcontext
-from flask_appbuilder import AppBuilder, SQLA
+from flask_appbuilder import AppBuilder
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_migrate import Migrate
 from sentry_sdk.integrations.flask import FlaskIntegration
@@ -14,9 +14,6 @@ from app.models.achievements import achievements
 
 from app.models.general import Achievement, Question
 from app.tools.mail import send_mail
-
-# TODO: Move to models.py? https://flask.palletsprojects.com/en/2.3.x/patterns/appfactories/
-db = SQLA()
 
 
 def create_app(config="config"):
@@ -41,6 +38,7 @@ def create_app(config="config"):
         app.config.from_envvar("APPLICATION_SETTINGS", silent=True)
         app.config.from_prefixed_env()
 
+        from app.models.general import db
         db.init_app(app)
 
         # TODO: Only necessary until SQLAlchemy 2 is used.
