@@ -34,15 +34,15 @@ flask db upgrade
 Create database and user:
 ```bash
 sudo -u postgres psql
-# create database matheueben;
-# create user mathesuper with encrypted password '123456';
-# grant all privileges on database matheueben to mathesuper;
-# alter database matheueben owner to mathesuper;
+# create database matheworkout;
+# create user matheworkout with encrypted password '123456';
+# grant all privileges on database matheworkout to matheworkout;
+# alter database matheworkout owner to matheworkout;
 ```
 
 Import database backup:
 ```bash
-sudo -u postgres psql matheueben < backup.sql
+sudo -u postgres psql matheworkout < backup.sql
 ```
 
 Clean up database:
