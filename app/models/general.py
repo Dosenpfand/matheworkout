@@ -24,6 +24,7 @@ from sqlalchemy import (
     Sequence,
     Table,
 )
+import sqlalchemy
 from sqlalchemy.orm import relationship, joinedload
 
 from app.utils.iter import groupby_unsorted
@@ -533,6 +534,7 @@ class LearningGroup(Model, AuditMixin):
     name = Column(String(150), nullable=False)
     users = relationship(
         "ExtendedUser",
+        lazy="dynamic",
         secondary=assoc_user_learning_group,
         back_populates="learning_groups",
         order_by="ExtendedUser.last_name.asc()",
@@ -570,13 +572,26 @@ class LearningGroup(Model, AuditMixin):
             Assignment.starts_on < now, Assignment.is_due_on > now
         ).all()
 
-    def position(self, user):
-        return (
-            sorted(self.users, key=lambda u: u.correct_questions(), reverse=True).index(
-                user
+    def ranking(self):
+        users_ranked = (
+            self.users.outerjoin(
+                AssocUserQuestion,
+                sqlalchemy.and_(
+                    AssocUserQuestion.user_id == ExtendedUser.id,
+                    AssocUserQuestion.is_answer_correct == True,
+                ),
             )
-            + 1
+            .order_by(None)
+            .group_by(ExtendedUser.id)
+            .order_by(sqlalchemy.func.count(AssocUserQuestion.id).desc())
+            .all()
         )
+        # NOTE: Currently does not consider tied positions
+        ranking = {user: position + 1 for position, user in enumerate(users_ranked)}
+        return ranking
+
+    def position(self, user):
+        return self.ranking()[user]
 
     def user_count(self):
         return len(self.users)
