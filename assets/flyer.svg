@@ -30,7 +30,7 @@
      showgrid="true"
      inkscape:zoom="1"
      inkscape:cx="163"
-     inkscape:cy="493"
+     inkscape:cy="253"
      inkscape:window-width="1920"
      inkscape:window-height="1176"
      inkscape:window-x="0"
@@ -2373,9 +2373,6 @@
          x="107.47377"
          y="7.6777411"
          id="tspan17971-2" /></text><path
-       style="fill:#616161;stroke-width:19.844;stroke-linecap:round"
-       d="M 5.9999998,5.9999999 6.5291664,210"
-       id="path1" /><path
        style="display:inline;fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
        d="M 3,2.9999999 H 150.99999 L 151,213 H 3 Z"
        id="path2"
