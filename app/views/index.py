@@ -16,8 +16,6 @@ class ExtendedIndexView(IndexView):
             .filter(Topic.school_type == SchoolType.ahs)
             .count()
         )
-        print(SchoolType.ahs)
-        print(db.session.query(Question).first())
         question_count_bhs = (
             db.session.query(Question)
             .join(Topic)

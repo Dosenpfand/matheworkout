@@ -28,13 +28,9 @@ def check_for_new_achievement_name() -> Optional[str]:
             .limit(2)
             .all()
         )
-        print(answers)
         if len(answers) == 2:
-            print("AAA")
             minimum_ago = datetime.datetime.now() - datetime.timedelta(days=90)
-            print(minimum_ago)
             if answers[1].created_on <= minimum_ago:
-                print("bbb")
                 return names.HIBERNATION
 
     if not names.BEGINNER in users_achievements and correct_question_count >= 1:
