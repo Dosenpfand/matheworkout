@@ -165,7 +165,7 @@ class AssignmentModelEvaluationView(BaseView):
             .first()
         )
 
-        if not assignment:
+        if not assignment or not assignment.learning_group:
             return [], [], []
 
         users = assignment.learning_group.users
