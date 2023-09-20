@@ -594,7 +594,7 @@ class LearningGroup(Model, AuditMixin):
         return self.ranking()[user]
 
     def user_count(self):
-        return len(self.users)
+        return self.users.count()
 
 
 class ExtendedUser(User):
