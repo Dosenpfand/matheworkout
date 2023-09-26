@@ -200,8 +200,8 @@ class AssignmentModelTeacherView(ModelView, ShowQuestionDetailsMixIn):
     datamodel = SQLAInterface(Assignment)
     base_filters = [["created_by", FilterEqualFunction, lambda: g.user]]
 
+    base_order = ("id", "desc")
     list_columns = ["id", "learning_group", "additional_links"]
-
     formatters_columns = {"id": link_formatter_assignment_admin}
 
     add_columns = [
