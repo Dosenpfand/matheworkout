@@ -1,5 +1,6 @@
 from app.models.general import Achievement
 
+
 class names:
     BEGINNER = "beginner"
     INTERMEDIATE = "intermediate"
@@ -17,6 +18,7 @@ class names:
     STAR = "star"
     MATH = "math"
     HIBERNATION = "hibernation"
+
 
 achievements = [
     Achievement(
@@ -97,9 +99,8 @@ achievements = [
     Achievement(
         name=names.HIBERNATION,
         title="Winterschlaf",
-        description="Nach einer Pause von mehr als 90 Tagen wieder geübt"
-
-    )
+        description="Nach einer Pause von mehr als 90 Tagen wieder geübt",
+    ),
 ]
 
 achievements_map = {achievement.name: achievement for achievement in achievements}

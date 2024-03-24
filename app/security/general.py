@@ -47,7 +47,7 @@ class ExtendedSecurityManager(SecurityManager):
             log.error(const.LOGMSG_ERR_SEC_ADD_REGISTER_USER.format(str(e)))
             self.appbuilder.get_session.rollback()
             return None
-        
+
     def add_user(
         self,
         username,

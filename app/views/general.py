@@ -252,6 +252,19 @@ class SupportView(BaseView):
         )
 
 
+class CalculatorsView(BaseView):
+    route_base = ""
+    default_view = "calculators"
+    template = "calculators.html"
+
+    @expose("/taschenrechner")
+    def calculators(self):
+        self.update_redirect()
+        return self.render_template(
+            self.template, appbuilder=self.appbuilder, title="Taschenrechner"
+        )
+
+
 class AchievementsView(BaseView):
     route_base = ""
     default_view = "achievements"

@@ -15,7 +15,8 @@ from app.views.forms import (
     QuestionSelect4FormView,
     DeleteStatsFormView,
     ImportUsersFormView,
-    AddQuestionToAssignmentFormView, DeleteAccountFormView,
+    AddQuestionToAssignmentFormView,
+    DeleteAccountFormView,
 )
 from app.views.general import (
     AchievementsView,
@@ -26,6 +27,7 @@ from app.views.general import (
     JoinLearningGroup,
     DataProtectionView,
     ImprintView,
+    CalculatorsView,
     SupportView,
 )
 from app.views.models import (
@@ -260,5 +262,6 @@ appbuilder.add_view_no_menu(ForgotPasswordFormView)
 appbuilder.add_view_no_menu(ResetForgotPasswordView)
 appbuilder.add_view_no_menu(DataProtectionView)
 appbuilder.add_view_no_menu(ImprintView)
+appbuilder.add_view_no_menu(CalculatorsView)
 appbuilder.add_view_no_menu(SupportView)
 appbuilder.add_view_no_menu(AchievementsView)
