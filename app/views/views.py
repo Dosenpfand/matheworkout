@@ -1,4 +1,5 @@
 from app import appbuilder
+from app.models.general import VideoCategory
 from app.security.views import (
     ExtendedUserDBModelTeacherView,
     ForgotPasswordFormView,
@@ -45,6 +46,9 @@ from app.views.models import (
     AssignmentModelStudentView,
     QuestionModelIncorrectAnsweredView,
     QuestionModelCorrectAnsweredView,
+    GeogebraVideoModelView,
+    ClasspadVideoModelView,
+    NspireVideoModelView,
     TopicModelView,
     LearningGroupModelView,
     CategoryModelStudentView,
@@ -105,11 +109,35 @@ appbuilder.add_view(
     category_icon="fa-book",
 )
 appbuilder.add_view(
+    GeogebraVideoModelView,
+    "video",
+    label=VideoCategory.geogebra.value,
+    icon="fa-mobile-screen",
+    category="Videos",
+    category_icon="fa-play",
+)
+appbuilder.add_view(
+    ClasspadVideoModelView,
+    "video",
+    label=VideoCategory.classpad.value,
+    icon="fa-calculator",
+    category="Videos",
+    category_icon="fa-play",
+)
+appbuilder.add_view(
+    NspireVideoModelView,
+    "video",
+    label=VideoCategory.nspire.value,
+    icon="fa-calculator",
+    category="Videos",
+    category_icon="fa-play",
+)
+appbuilder.add_view(
     TopicModelView,
     "topics",
     label="Grundkompetenzbereiche",
     icon="fa-align-justify",
-    category="Aufgaben-V",
+    category="AV",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -117,7 +145,7 @@ appbuilder.add_view(
     "categories_admin",
     label="Aufgabenkategorien",
     icon="fa-align-justify",
-    category="Aufgaben-V",
+    category="AV",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -125,7 +153,7 @@ appbuilder.add_view(
     "questions_2_of_5",
     label="2 aus 5",
     icon="fa-align-justify",
-    category="Aufgaben-V",
+    category="AV",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -133,7 +161,7 @@ appbuilder.add_view(
     "questions_1_of_6",
     label="1 aus 6",
     icon="fa-align-justify",
-    category="Aufgaben-V",
+    category="AV",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -141,7 +169,7 @@ appbuilder.add_view(
     "questions_3_to_3",
     label="Lückentext",
     icon="fa-align-justify",
-    category="Aufgaben-V",
+    category="AV",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -149,7 +177,7 @@ appbuilder.add_view(
     "questions_2_decimals",
     label="Werteingabe zwei Zahlen",
     icon="fa-align-justify",
-    category="Aufgaben-V",
+    category="AV",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -157,7 +185,7 @@ appbuilder.add_view(
     "questions_1_decimals",
     label="Werteingabe eine Zahl",
     icon="fa-align-justify",
-    category="Aufgaben-V",
+    category="AV",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -165,7 +193,7 @@ appbuilder.add_view(
     "questions_self_assessed",
     label="Selbstkontrolle",
     icon="fa-align-justify",
-    category="Aufgaben-V",
+    category="AV",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -173,7 +201,7 @@ appbuilder.add_view(
     "questions_select_4",
     label="Zuordnung 4 aus 6",
     icon="fa-align-justify",
-    category="Aufgaben-V",
+    category="AV",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -181,7 +209,7 @@ appbuilder.add_view(
     "questions_select_2",
     label="Zuordnung 2 aus 4",
     icon="fa-align-justify",
-    category="Aufgaben-V",
+    category="AV",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(

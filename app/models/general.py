@@ -59,6 +59,12 @@ class SchoolType(enum.Enum):
     bhs = "BHS"
 
 
+class VideoCategory(enum.Enum):
+    geogebra = "GeoGebra"
+    classpad = "CASIO ClassPad II"
+    nspire = "TI-Nspire™ CX CAS"
+
+
 assoc_user_learning_group = Table(
     "assoc_user_learning_group",
     Model.metadata,
@@ -77,6 +83,13 @@ assoc_assignment_question = Table(
     Column("assignment_id", ForeignKey("assignment.id"), primary_key=True),
     Column("question_id", ForeignKey("question.id"), primary_key=True),
 )
+
+
+class Video(Model):
+    id = Column(Integer, primary_key=True)
+    name = Column(String(500), nullable=False)
+    category = Column(Enum(VideoCategory), nullable=False)
+    video_url = Column(String(), nullable=False)
 
 
 class Topic(Model):

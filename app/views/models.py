@@ -16,9 +16,11 @@ from app.models.general import (
     QuestionType,
     LearningGroup,
     Assignment,
+    Video,
     Topic,
     Category,
     AssocUserQuestion,
+    VideoCategory,
 )
 from app.security.views import ExtendedUserDBModelTeacherView
 from app.utils.filters import (
@@ -482,6 +484,50 @@ class QuestionModelCorrectAnsweredView(ModelView):
         "topic": link_formatter_topic_abbr,
     }
     page_size = 100
+
+
+class VideoModelView(ModelView):
+    datamodel = SQLAInterface(Video)
+    label_columns = {"name": "Name", "category": "Kategorie", "video_url": "Video URL"}
+    list_columns = ["name"]
+    add_columns = ["name", "video_url"]
+    search_exclude_columns = ["video_url", "category"]
+
+
+class GeogebraVideoModelView(VideoModelView):
+    title = VideoCategory.geogebra.value
+    list_title = title
+    show_title = title
+    add_title = title
+    edit_title = title
+    base_filters = [["category", FilterEqual, VideoCategory.geogebra.name]]
+
+    def pre_add(self, item):
+        item.category = VideoCategory.geogebra
+
+
+class ClasspadVideoModelView(VideoModelView):
+    title = VideoCategory.classpad.value
+    list_title = title
+    show_title = title
+    add_title = title
+    edit_title = title
+    base_filters = [["category", FilterEqual, VideoCategory.classpad.name]]
+
+    def pre_add(self, item):
+        item.category = VideoCategory.classpad
+
+
+class NspireVideoModelView(VideoModelView):
+    title = VideoCategory.nspire.value
+    list_title = title
+    show_title = title
+    add_title = title
+    edit_title = title
+    base_filters = [["category", FilterEqual, VideoCategory.nspire.name]]
+
+    def pre_add(self, item):
+        item.category = VideoCategory.nspire
 
 
 class TopicModelView(ModelView):
