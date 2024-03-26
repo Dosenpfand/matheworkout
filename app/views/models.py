@@ -1,4 +1,4 @@
-from flask import g, redirect, url_for, flash, session
+from flask import g, redirect, url_for, flash, session, get_template_attribute
 from flask_appbuilder import ModelView, action
 from flask_appbuilder.fields import QuerySelectField
 from flask_appbuilder.models.sqla.filters import (
@@ -39,6 +39,7 @@ from app.utils.general import (
     date_formatter_de,
     link_formatter_learning_group_admin,
 )
+from app.utils.video import video_embed_url
 from app.views.general import ShowQuestionDetailsMixIn
 from app.views.widgets import (
     ExtendedListWidget,
@@ -486,12 +487,21 @@ class QuestionModelCorrectAnsweredView(ModelView):
     page_size = 100
 
 
+yt_embed = get_template_attribute("youtube_embed.html", "youtube_embed")
+
+
 class VideoModelView(ModelView):
     datamodel = SQLAInterface(Video)
-    label_columns = {"name": "Name", "category": "Kategorie", "video_url": "Video URL"}
+    label_columns = {"name": "Name", "category": "Kategorie", "video_url": "Video"}
     list_columns = ["name"]
     add_columns = ["name", "video_url"]
+    show_columns = ["name", "video_url"]
     search_exclude_columns = ["video_url", "category"]
+    formatters_columns = {
+        "video_url": lambda url: yt_embed(
+            url=video_embed_url(url), width="100%", height="512"
+        )
+    }
 
 
 class GeogebraVideoModelView(VideoModelView):
