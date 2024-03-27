@@ -35,6 +35,7 @@ from app.utils.general import (
     link_formatter_topic,
     link_formatter_topic_abbr,
     link_formatter_learning_group,
+    link_formatter_video,
     link_formatter_assignment_admin,
     date_formatter_de,
     link_formatter_learning_group_admin,
@@ -492,12 +493,18 @@ yt_embed = get_template_attribute("youtube_embed.html", "youtube_embed")
 
 class VideoModelView(ModelView):
     datamodel = SQLAInterface(Video)
-    label_columns = {"name": "Name", "category": "Kategorie", "video_url": "Video"}
-    list_columns = ["name"]
+    title = "Video"
+    list_title = title
+    show_title = title
+    add_title = title
+    edit_title = title
+    label_columns = {"id": "Name", "name": "Name", "category": "Kategorie", "video_url": "Video"}
+    list_columns = ["id"]
     add_columns = ["name", "video_url"]
     show_columns = ["name", "video_url"]
     search_exclude_columns = ["video_url", "category"]
     formatters_columns = {
+        "id": link_formatter_video,
         "video_url": lambda url: yt_embed(
             url=video_embed_url(url), width="100%", height="512"
         )

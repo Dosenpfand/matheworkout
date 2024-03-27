@@ -19,6 +19,7 @@ from app.models.general import (
     Assignment,
     Category,
     LearningGroup,
+    Video,
 )
 
 
@@ -90,6 +91,14 @@ def link_formatter_topic_abbr(topic, filters=None):
 def link_formatter_learning_group(learning_group_id):
     name = db.session.query(LearningGroup).filter_by(id=learning_group_id).first().name
     url = url_for("LearningGroupModelView.show", pk=learning_group_id)
+
+    return Markup(
+        f'<a class="btn btn-sm btn-primary btn-table" style="min-width: 30%" href="{url}">{name}</a>'
+    )
+
+def link_formatter_video(video_id):
+    name = db.session.query(Video).filter_by(id=video_id).first().name
+    url = url_for("VideoModelView.show", pk=video_id)
 
     return Markup(
         f'<a class="btn btn-sm btn-primary btn-table" style="min-width: 30%" href="{url}">{name}</a>'

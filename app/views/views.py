@@ -46,6 +46,7 @@ from app.views.models import (
     AssignmentModelStudentView,
     QuestionModelIncorrectAnsweredView,
     QuestionModelCorrectAnsweredView,
+    VideoModelView,
     GeogebraVideoModelView,
     ClasspadVideoModelView,
     NspireVideoModelView,
@@ -108,6 +109,7 @@ appbuilder.add_view(
     category="Verwaltung",
     category_icon="fa-book",
 )
+appbuilder.add_view_no_menu(VideoModelView)
 appbuilder.add_view(
     GeogebraVideoModelView,
     "video",
