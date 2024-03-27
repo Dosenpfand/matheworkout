@@ -109,31 +109,6 @@ appbuilder.add_view(
     category="Verwaltung",
     category_icon="fa-book",
 )
-appbuilder.add_view_no_menu(VideoModelView)
-appbuilder.add_view(
-    GeogebraVideoModelView,
-    "video",
-    label=VideoCategory.geogebra.value,
-    icon="fa-mobile-screen",
-    category="Videos",
-    category_icon="fa-play",
-)
-appbuilder.add_view(
-    ClasspadVideoModelView,
-    "video",
-    label=VideoCategory.classpad.value,
-    icon="fa-calculator",
-    category="Videos",
-    category_icon="fa-play",
-)
-appbuilder.add_view(
-    NspireVideoModelView,
-    "video",
-    label=VideoCategory.nspire.value,
-    icon="fa-calculator",
-    category="Videos",
-    category_icon="fa-play",
-)
 appbuilder.add_view(
     TopicModelView,
     "topics",
@@ -271,6 +246,31 @@ appbuilder.add_view(
 appbuilder.add_view_no_menu(QuestionRandom())
 appbuilder.add_link(
     "random_all", label="Zufallsaufgabe", href="/questionrandom/", icon="fa-question"
+)
+appbuilder.add_view_no_menu(VideoModelView)
+appbuilder.add_view(
+    GeogebraVideoModelView,
+    "geogebra_video",
+    label=VideoCategory.geogebra.value,
+    icon="fa-mobile-screen",
+    category="Videos",
+    category_icon="fa-play",
+)
+appbuilder.add_view(
+    ClasspadVideoModelView,
+    "classpad_video",
+    label=VideoCategory.classpad.value,
+    icon="fa-calculator",
+    category="Videos",
+    category_icon="fa-play",
+)
+appbuilder.add_view(
+    NspireVideoModelView,
+    "nspire_video",
+    label=VideoCategory.nspire.value,
+    icon="fa-calculator",
+    category="Videos",
+    category_icon="fa-play",
 )
 appbuilder.add_view_no_menu(Question2of5FormView)
 appbuilder.add_view_no_menu(Question1of6FormView)

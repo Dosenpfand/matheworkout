@@ -509,6 +509,7 @@ class VideoModelView(ModelView):
             url=video_embed_url(url), width="100%", height="512"
         )
     }
+    list_widget = ExtendedListNoButtonsWidget
 
 
 class GeogebraVideoModelView(VideoModelView):
