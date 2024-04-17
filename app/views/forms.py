@@ -386,7 +386,7 @@ class QuestionSelfAssessedFormView(QuestionFormView):
             answer_value = request.args.get("answer")
 
             if answer_value:
-                is_answer_correct = True if (answer_value == "CORRECT") else False
+                is_answer_correct = (answer_value == "CORRECT")
 
                 self.post_process_answer(
                     form, is_answer_correct, question, back_count=2, render=False
