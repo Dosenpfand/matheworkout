@@ -1,4 +1,3 @@
-from flask import g
 from flask_appbuilder.fieldwidgets import (
     BS3TextFieldWidget,
     BS3PasswordFieldWidget,

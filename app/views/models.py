@@ -1,12 +1,10 @@
-from flask import g, redirect, url_for, flash, session, get_template_attribute, helpers
+from flask import g, redirect, url_for, flash, session, get_template_attribute
 from flask_appbuilder import ModelView, action, urltools
-from flask_appbuilder.fields import QuerySelectField
 from flask_appbuilder.models.sqla.filters import (
     FilterEqual,
     FilterEqualFunction,
     FilterInFunction,
 )
-from flask_appbuilder.fieldwidgets import Select2Widget
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from wtforms import HiddenField, DateField
 

@@ -33,7 +33,6 @@ from app.forms.forms import (
     DeleteAccountForm,
 )
 from app.models.general import (
-    Achievement,
     QuestionType,
     Question,
     Assignment,

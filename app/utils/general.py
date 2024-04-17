@@ -43,7 +43,7 @@ def link_formatter_question(q_id, filters=None):
         topic_id = topic_filter[0] if isinstance(topic_filter, list) else topic_filter
 
     url = url_for(
-        f"IdToForm.id_to_form",
+        "IdToForm.id_to_form",
         q_id=q_id,
         assignment_id=assignment_id,
         category_id=category_id,

@@ -5,7 +5,6 @@ import re
 import secrets
 from functools import reduce
 from itertools import groupby
-from urllib.parse import urlparse, parse_qs
 
 from flask import Markup, g, url_for, request
 from flask_appbuilder import Model
