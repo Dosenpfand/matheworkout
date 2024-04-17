@@ -378,7 +378,6 @@ class Question(Model):
             return Markup("Richtig: {}".format(", ".join(correct_list)))
 
     def state_user(self, user_id):
-        tried_but_incorrect = False
 
         answers = self.answered_users.filter_by(user_id=user_id).all()
 
@@ -568,7 +567,7 @@ class LearningGroup(Model, AuditMixin):
                 AssocUserQuestion,
                 sqlalchemy.and_(
                     AssocUserQuestion.user_id == ExtendedUser.id,
-                    AssocUserQuestion.is_answer_correct == True,
+                    AssocUserQuestion.is_answer_correct is True,
                 ),
             )
             .order_by(None)

@@ -133,7 +133,7 @@ def check_for_new_achievement_name() -> Optional[str]:
         if last_answer.is_answer_correct:
             count_answered = g.user.answered_questions.filter(
                 (AssocUserQuestion.question_id == last_answer.question_id)
-                & (AssocUserQuestion.is_answer_correct == True)
+                & (AssocUserQuestion.is_answer_correct is True)
             ).count()
 
             if count_answered >= 10:
@@ -169,7 +169,7 @@ def check_for_new_achievement_name() -> Optional[str]:
             is_first_correct = (
                 db.session.query(AssocUserQuestion)
                 .filter(
-                    (AssocUserQuestion.is_answer_correct == True)
+                    (AssocUserQuestion.is_answer_correct is True)
                     & (AssocUserQuestion.question_id == last_answer.question_id)
                 )
                 .count()
@@ -183,7 +183,7 @@ def check_for_new_achievement_name() -> Optional[str]:
         one_day_ago = datetime.datetime.now() - datetime.timedelta(days=1)
         answers_count = g.user.answered_questions.filter(
             (AssocUserQuestion.created_on > one_day_ago)
-            & (AssocUserQuestion.is_answer_correct == True)
+            & (AssocUserQuestion.is_answer_correct is True)
         ).count()
 
         if answers_count >= 50:
