@@ -197,7 +197,9 @@ class JoinLearningGroup(BaseView):
     @expose("/join_learning_group/<int:group_id>/<string:join_token>")
     @has_access
     def join_learning_group(self, group_id, join_token):
-        learning_group: LearningGroup = db.session.query(LearningGroup).filter_by(id=group_id).first()
+        learning_group: LearningGroup = (
+            db.session.query(LearningGroup).filter_by(id=group_id).first()
+        )
         if learning_group:
             if g.user.id == learning_group.created_by.id:
                 flash("Als Lehrer:in bist du bereits Mitglied deiner Klasse.", "info")
@@ -319,7 +321,10 @@ class ShowQuestionDetailsMixIn:
                 item = unfiltered_item
                 flash("Dies ist eine Vorschau für Lehrer:innen.", "info")
             else:
-                flash("Du bist nicht berechtigt diese Hausübung zu sehen. Bist du der Klasse bereits beigetreten?", "danger")
+                flash(
+                    "Du bist nicht berechtigt diese Hausübung zu sehen. Bist du der Klasse bereits beigetreten?",
+                    "danger",
+                )
                 return redirect(self.appbuilder.get_url_for_index)
 
         questions = []

@@ -394,7 +394,10 @@ class AssignmentModelStudentView(ModelView, ShowQuestionDetailsMixIn):
                 item = unfiltered_item
                 flash("Dies ist eine Vorschau für Lehrer:innen.", "info")
             else:
-                flash("Du bist nicht berechtigt diese Hausübung zu sehen. Bist du der Klasse bereits beigetreten?", "danger")
+                flash(
+                    "Du bist nicht berechtigt diese Hausübung zu sehen. Bist du der Klasse bereits beigetreten?",
+                    "danger",
+                )
                 return redirect(self.appbuilder.get_url_for_index)
         widgets = self._get_show_widget(pk, item)
         self.update_redirect()
@@ -537,7 +540,12 @@ class VideoModelView(ModelView):
     show_title = title
     add_title = title
     edit_title = title
-    label_columns = {"id": "Name", "name": "Name", "category": "Kategorie", "video_url": "Video"}
+    label_columns = {
+        "id": "Name",
+        "name": "Name",
+        "category": "Kategorie",
+        "video_url": "Video",
+    }
     list_columns = ["id"]
     add_columns = ["name", "video_url"]
     show_columns = ["name", "video_url"]
@@ -546,7 +554,7 @@ class VideoModelView(ModelView):
         "id": link_formatter_video,
         "video_url": lambda url: yt_embed(
             url=video_embed_url(url), width="100%", height="512"
-        )
+        ),
     }
     list_widget = ExtendedListNoButtonsWidget
 
