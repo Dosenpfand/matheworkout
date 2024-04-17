@@ -1,5 +1,5 @@
-import sys
 import logging
+import sys
 
 # activate_this = '/var/www/FlaskApp/venv/bin/activate_this.py'
 # with open(activate_this) as file_:

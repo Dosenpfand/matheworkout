@@ -1,6 +1,6 @@
 import ast
 import logging
-from math import pi, exp, log, log10, sin, cos, tan, asin, acos, atan
+from math import acos, asin, atan, cos, exp, log, log10, pi, sin, tan
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -13,12 +13,12 @@ from markupsafe import Markup
 
 from app import db
 from app.models.general import (
-    Question,
-    Topic,
-    QuestionUserState,
     Assignment,
     Category,
     LearningGroup,
+    Question,
+    QuestionUserState,
+    Topic,
     Video,
 )
 
@@ -43,7 +43,7 @@ def link_formatter_question(q_id, filters=None):
         topic_id = topic_filter[0] if isinstance(topic_filter, list) else topic_filter
 
     url = url_for(
-        f"IdToForm.id_to_form",
+        "IdToForm.id_to_form",
         q_id=q_id,
         assignment_id=assignment_id,
         category_id=category_id,
@@ -95,6 +95,7 @@ def link_formatter_learning_group(learning_group_id):
     return Markup(
         f'<a class="btn btn-sm btn-primary btn-table" style="min-width: 30%" href="{url}">{name}</a>'
     )
+
 
 def link_formatter_video(video_id):
     name = db.session.query(Video).filter_by(id=video_id).first().name
@@ -174,7 +175,7 @@ def safe_math_eval(string):
 
     try:
         evald = s.eval(string)
-    except:
+    except:  # noqa: E722
         evald = ""
     return evald
 
@@ -197,6 +198,6 @@ def send_email(app, subject, html, recipient):
         mail.send(msg)
     except Exception as e:
         log_instance = logging.getLogger(__name__)
-        log_instance.error("Send email exception: {0}".format(str(e)))
+        log_instance.error(f"Send email exception: {str(e)}")
         return False
     return True

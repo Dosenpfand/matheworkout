@@ -5,30 +5,29 @@ import re
 import secrets
 from functools import reduce
 from itertools import groupby
-from urllib.parse import urlparse, parse_qs
 
-from flask import Markup, g, url_for, request
+import sqlalchemy
+from flask import Markup, g, request, url_for
 from flask_appbuilder import Model
 from flask_appbuilder.filemanager import ImageManager
-from flask_appbuilder.models.mixins import ImageColumn, AuditMixin
+from flask_appbuilder.models.mixins import AuditMixin, ImageColumn
 from flask_appbuilder.security.sqla.models import User
 from sqlalchemy import (
+    Boolean,
     Column,
+    DateTime,
+    Enum,
+    Float,
     ForeignKey,
     Integer,
-    String,
-    Boolean,
-    Float,
-    Enum,
-    DateTime,
     Sequence,
+    String,
     Table,
 )
-import sqlalchemy
-from sqlalchemy.orm import relationship, joinedload
+from sqlalchemy.orm import joinedload, relationship
 
-from app.utils.video import video_embed_url
 from app.utils.iter import groupby_unsorted
+from app.utils.video import video_embed_url
 
 
 class Select4Enum(enum.Enum):
@@ -379,7 +378,6 @@ class Question(Model):
             return Markup("Richtig: {}".format(", ".join(correct_list)))
 
     def state_user(self, user_id):
-        tried_but_incorrect = False
 
         answers = self.answered_users.filter_by(user_id=user_id).all()
 
@@ -569,7 +567,7 @@ class LearningGroup(Model, AuditMixin):
                 AssocUserQuestion,
                 sqlalchemy.and_(
                     AssocUserQuestion.user_id == ExtendedUser.id,
-                    AssocUserQuestion.is_answer_correct == True,
+                    AssocUserQuestion.is_answer_correct is True,
                 ),
             )
             .order_by(None)

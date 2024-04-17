@@ -2,11 +2,11 @@ from flask_appbuilder.fields import QuerySelectField
 from flask_appbuilder.forms import DynamicForm
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from flask_wtf.file import FileField
-from wtforms import BooleanField, HiddenField, FloatField, SelectField
-from wtforms.validators import NoneOf, DataRequired
+from wtforms import BooleanField, FloatField, HiddenField, SelectField
+from wtforms.validators import DataRequired, NoneOf
 
 from app import db
-from app.models.general import Select2Enum, Select4Enum, Assignment
+from app.models.general import Assignment, Select2Enum, Select4Enum
 from app.utils.general import safe_math_eval
 from app.views.queries import assignment_query
 from app.views.widgets import SelectWidgetExtended

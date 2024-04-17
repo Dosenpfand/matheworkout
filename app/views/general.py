@@ -1,5 +1,5 @@
-from flask import url_for, Response, flash, g, abort
-from flask_appbuilder import BaseView, has_access, expose, action
+from flask import Response, abort, flash, g, url_for
+from flask_appbuilder import BaseView, action, expose, has_access
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from sqlalchemy import func
 from sqlalchemy.orm import load_only
@@ -7,8 +7,14 @@ from werkzeug.utils import redirect
 
 from app import db
 from app.forms.forms import AddQuestionToAssignmentForm
-from app.models.general import Achievement
-from app.models.general import QuestionType, Question, Assignment, Topic, LearningGroup
+from app.models.general import (
+    Achievement,
+    Assignment,
+    LearningGroup,
+    Question,
+    QuestionType,
+    Topic,
+)
 from app.views.widgets import ExtendedShowWidget, FormMinimalInlineWidget
 
 
@@ -197,7 +203,9 @@ class JoinLearningGroup(BaseView):
     @expose("/join_learning_group/<int:group_id>/<string:join_token>")
     @has_access
     def join_learning_group(self, group_id, join_token):
-        learning_group: LearningGroup = db.session.query(LearningGroup).filter_by(id=group_id).first()
+        learning_group: LearningGroup = (
+            db.session.query(LearningGroup).filter_by(id=group_id).first()
+        )
         if learning_group:
             if g.user.id == learning_group.created_by.id:
                 flash("Als Lehrer:in bist du bereits Mitglied deiner Klasse.", "info")
@@ -319,7 +327,10 @@ class ShowQuestionDetailsMixIn:
                 item = unfiltered_item
                 flash("Dies ist eine Vorschau für Lehrer:innen.", "info")
             else:
-                flash("Du bist nicht berechtigt diese Hausübung zu sehen. Bist du der Klasse bereits beigetreten?", "danger")
+                flash(
+                    "Du bist nicht berechtigt diese Hausübung zu sehen. Bist du der Klasse bereits beigetreten?",
+                    "danger",
+                )
                 return redirect(self.appbuilder.get_url_for_index)
 
         questions = []

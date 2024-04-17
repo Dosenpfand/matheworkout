@@ -2,17 +2,16 @@ import datetime
 import logging
 import secrets
 
-from flask import Markup, jsonify
-from flask import g, redirect, url_for, flash, current_app, request
-from flask_appbuilder import action, expose, has_access, PublicFormView
-from flask_appbuilder.forms import DynamicForm
+from flask import Markup, current_app, flash, g, jsonify, redirect, request, url_for
+from flask_appbuilder import PublicFormView, action, expose, has_access
 from flask_appbuilder._compat import as_unicode
-from flask_appbuilder.security.forms import ResetPasswordForm, LoginForm_db
+from flask_appbuilder.forms import DynamicForm
+from flask_appbuilder.security.forms import LoginForm_db, ResetPasswordForm
 from flask_appbuilder.security.registerviews import RegisterUserDBView
 from flask_appbuilder.security.views import (
+    AuthDBView,
     UserDBModelView,
     UserInfoEditView,
-    AuthDBView,
 )
 from flask_appbuilder.utils.base import is_safe_redirect_url
 from flask_appbuilder.validators import Unique
@@ -23,9 +22,9 @@ from flask_mail import Mail, Message
 from app import db
 from app.models.general import ExtendedUser, LearningGroup
 from app.security.forms import (
+    ExtendedRegisterUserDBForm,
     ExtendedUserInfoEdit,
     ForgotPasswordForm,
-    ExtendedRegisterUserDBForm,
 )
 from app.utils.general import send_email
 from app.views.widgets import ListWithDeleteRelationshipWidget, RegisterFormWidget
@@ -546,7 +545,7 @@ class ExtendedRegisterUserDBView(RegisterUserDBView):
         try:
             mail.send(msg)
         except Exception as e:
-            log.error("Send email exception: {0}".format(str(e)))
+            log.error(f"Send email exception: {str(e)}")
             return False
         return True
 

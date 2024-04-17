@@ -1,7 +1,7 @@
 from flask_appbuilder import IndexView, expose
 
 from app import db
-from app.models.general import Question, Category, SchoolType, Topic
+from app.models.general import Category, Question, SchoolType, Topic
 
 
 class ExtendedIndexView(IndexView):

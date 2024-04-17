@@ -5,17 +5,17 @@ import logging
 import secrets
 import uuid
 
-from flask import flash, url_for, render_template, g
+from flask import flash, g, render_template, url_for
 from flask_appbuilder import const
 from flask_appbuilder.security.sqla.manager import SecurityManager
 from werkzeug.security import generate_password_hash
 
 from app.models.general import ExtendedUser, LearningGroup, SchoolType
 from app.security.views import (
+    ExtendedAuthDBView,
+    ExtendedRegisterUserDBView,
     ExtendedUserDBModelView,
     ExtendedUserInfoEditView,
-    ExtendedRegisterUserDBView,
-    ExtendedAuthDBView,
 )
 from app.utils.general import send_email
 
@@ -160,9 +160,7 @@ class ExtendedSecurityManager(SecurityManager):
                         learning_group_name = row["Klasse"]
                     except KeyError as e:
                         flash(
-                            "In der Datei konnte die erwartete Spalte {} nicht gefunden werden.".format(
-                                e
-                            ),
+                            f"In der Datei konnte die erwartete Spalte {e} nicht gefunden werden.",
                             category="danger",
                         )
                         is_fatal = True
@@ -226,7 +224,7 @@ class ExtendedSecurityManager(SecurityManager):
                                 html,
                                 user.email,
                             )
-            except:
+            except:  # noqa: E722
                 flash(
                     "Die Datei konnte nicht dekodiert werden. Ist es eine CSV-Datei?",
                     category="danger",
