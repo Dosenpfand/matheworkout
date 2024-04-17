@@ -226,7 +226,7 @@ class ExtendedSecurityManager(SecurityManager):
                                 html,
                                 user.email,
                             )
-            except:
+            except:  # noqa: E722
                 flash(
                     "Die Datei konnte nicht dekodiert werden. Ist es eine CSV-Datei?",
                     category="danger",

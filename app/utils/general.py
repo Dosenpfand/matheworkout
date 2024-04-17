@@ -175,7 +175,7 @@ def safe_math_eval(string):
 
     try:
         evald = s.eval(string)
-    except:
+    except:  # noqa: E722
         evald = ""
     return evald
 
