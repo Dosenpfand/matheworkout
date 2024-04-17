@@ -567,7 +567,7 @@ class LearningGroup(Model, AuditMixin):
                 AssocUserQuestion,
                 sqlalchemy.and_(
                     AssocUserQuestion.user_id == ExtendedUser.id,
-                    AssocUserQuestion.is_answer_correct is True,
+                    AssocUserQuestion.is_answer_correct == True,  # noqa: E712
                 ),
             )
             .order_by(None)
