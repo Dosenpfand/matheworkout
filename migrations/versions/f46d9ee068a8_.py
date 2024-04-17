@@ -7,10 +7,10 @@ Create Date: 2023-06-26 10:03:44.212737
 """
 
 import enum
-from alembic import op
-import sqlalchemy as sa
-from sqlalchemy.dialects import postgresql
 
+import sqlalchemy as sa
+from alembic import op
+from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
 revision = "f46d9ee068a8"

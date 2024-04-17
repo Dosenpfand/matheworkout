@@ -1,5 +1,5 @@
-from flask import url_for, Response, flash, g, abort
-from flask_appbuilder import BaseView, has_access, expose, action
+from flask import Response, abort, flash, g, url_for
+from flask_appbuilder import BaseView, action, expose, has_access
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from sqlalchemy import func
 from sqlalchemy.orm import load_only
@@ -7,8 +7,14 @@ from werkzeug.utils import redirect
 
 from app import db
 from app.forms.forms import AddQuestionToAssignmentForm
-from app.models.general import Achievement
-from app.models.general import QuestionType, Question, Assignment, Topic, LearningGroup
+from app.models.general import (
+    Achievement,
+    Assignment,
+    LearningGroup,
+    Question,
+    QuestionType,
+    Topic,
+)
 from app.views.widgets import ExtendedShowWidget, FormMinimalInlineWidget
 
 

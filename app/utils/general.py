@@ -1,6 +1,6 @@
 import ast
 import logging
-from math import pi, exp, log, log10, sin, cos, tan, asin, acos, atan
+from math import acos, asin, atan, cos, exp, log, log10, pi, sin, tan
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -13,12 +13,12 @@ from markupsafe import Markup
 
 from app import db
 from app.models.general import (
-    Question,
-    Topic,
-    QuestionUserState,
     Assignment,
     Category,
     LearningGroup,
+    Question,
+    QuestionUserState,
+    Topic,
     Video,
 )
 
@@ -198,6 +198,6 @@ def send_email(app, subject, html, recipient):
         mail.send(msg)
     except Exception as e:
         log_instance = logging.getLogger(__name__)
-        log_instance.error("Send email exception: {0}".format(str(e)))
+        log_instance.error(f"Send email exception: {str(e)}")
         return False
     return True

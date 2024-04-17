@@ -14,7 +14,7 @@ def send_mail():
         for row in reader:
             recipients.append(row["email"])
 
-    with open("app/tools/email_template.txt", "r") as file:
+    with open("app/tools/email_template.txt") as file:
         body = file.read()
 
     app = current_app

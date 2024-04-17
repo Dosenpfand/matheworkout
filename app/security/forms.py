@@ -1,12 +1,12 @@
 from flask_appbuilder.fieldwidgets import (
-    BS3TextFieldWidget,
     BS3PasswordFieldWidget,
+    BS3TextFieldWidget,
     Select2Widget,
 )
 from flask_appbuilder.forms import DynamicForm
 from flask_babel import lazy_gettext
 from flask_wtf import RecaptchaField
-from wtforms import StringField, PasswordField, SelectField
+from wtforms import PasswordField, SelectField, StringField
 from wtforms.validators import DataRequired, Email, EqualTo
 
 from app.models.general import SchoolType

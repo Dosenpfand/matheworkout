@@ -1,42 +1,42 @@
 import datetime
 
 from flask import (
-    request,
-    g,
-    url_for,
-    flash,
-    current_app,
-    redirect,
     abort,
-    make_response,
+    current_app,
+    flash,
+    g,
     jsonify,
+    make_response,
+    redirect,
+    request,
     session,
+    url_for,
 )
 from flask_appbuilder import SimpleFormView, expose, has_access
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from markupsafe import Markup
 from sqlalchemy import asc
 
-from app import db, appbuilder
+from app import appbuilder, db
 from app.forms.forms import (
-    QuestionSelect2Form,
-    QuestionSelfAssessedForm,
-    Question2of5Form,
-    Question1of6Form,
-    Question3to3Form,
-    Question2DecimalsForm,
-    Question1DecimalForm,
-    QuestionSelect4Form,
-    DeleteStatsForm,
-    ImportUsersForm,
     AddQuestionToAssignmentForm,
     DeleteAccountForm,
+    DeleteStatsForm,
+    ImportUsersForm,
+    Question1DecimalForm,
+    Question1of6Form,
+    Question2DecimalsForm,
+    Question2of5Form,
+    Question3to3Form,
+    QuestionSelect2Form,
+    QuestionSelect4Form,
+    QuestionSelfAssessedForm,
 )
 from app.models.general import (
-    QuestionType,
-    Question,
     Assignment,
     AssocUserQuestion,
+    Question,
+    QuestionType,
     assoc_assignment_question,
 )
 from app.utils.general import commit_safely, send_email

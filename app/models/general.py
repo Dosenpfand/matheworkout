@@ -6,28 +6,28 @@ import secrets
 from functools import reduce
 from itertools import groupby
 
-from flask import Markup, g, url_for, request
+import sqlalchemy
+from flask import Markup, g, request, url_for
 from flask_appbuilder import Model
 from flask_appbuilder.filemanager import ImageManager
-from flask_appbuilder.models.mixins import ImageColumn, AuditMixin
+from flask_appbuilder.models.mixins import AuditMixin, ImageColumn
 from flask_appbuilder.security.sqla.models import User
 from sqlalchemy import (
+    Boolean,
     Column,
+    DateTime,
+    Enum,
+    Float,
     ForeignKey,
     Integer,
-    String,
-    Boolean,
-    Float,
-    Enum,
-    DateTime,
     Sequence,
+    String,
     Table,
 )
-import sqlalchemy
-from sqlalchemy.orm import relationship, joinedload
+from sqlalchemy.orm import joinedload, relationship
 
-from app.utils.video import video_embed_url
 from app.utils.iter import groupby_unsorted
+from app.utils.video import video_embed_url
 
 
 class Select4Enum(enum.Enum):

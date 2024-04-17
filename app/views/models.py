@@ -1,23 +1,25 @@
-from flask import g, redirect, url_for, flash, session, get_template_attribute
+from flask import Response, flash, g, get_template_attribute, redirect, session, url_for
 from flask_appbuilder import ModelView, action, urltools
+from flask_appbuilder.baseviews import expose
 from flask_appbuilder.models.sqla.filters import (
     FilterEqual,
     FilterEqualFunction,
     FilterInFunction,
 )
 from flask_appbuilder.models.sqla.interface import SQLAInterface
-from wtforms import HiddenField, DateField
+from flask_appbuilder.security.decorators import has_access
+from wtforms import DateField, HiddenField
 
 from app import db
 from app.models.general import (
+    Assignment,
+    AssocUserQuestion,
+    Category,
+    LearningGroup,
     Question,
     QuestionType,
-    LearningGroup,
-    Assignment,
-    Video,
     Topic,
-    Category,
-    AssocUserQuestion,
+    Video,
     VideoCategory,
 )
 from app.security.views import ExtendedUserDBModelTeacherView
@@ -26,30 +28,26 @@ from app.utils.filters import (
     FilterQuestionByNotAnsweredCorrectness,
 )
 from app.utils.general import (
-    link_formatter_question,
-    state_to_emoji_markup,
+    date_formatter_de,
     link_formatter_assignment,
+    link_formatter_assignment_admin,
     link_formatter_category,
+    link_formatter_learning_group,
+    link_formatter_learning_group_admin,
+    link_formatter_question,
     link_formatter_topic,
     link_formatter_topic_abbr,
-    link_formatter_learning_group,
     link_formatter_video,
-    link_formatter_assignment_admin,
-    date_formatter_de,
-    link_formatter_learning_group_admin,
+    state_to_emoji_markup,
 )
 from app.utils.video import video_embed_url
 from app.views.general import ShowQuestionDetailsMixIn
 from app.views.widgets import (
-    ExtendedListWidget,
-    ExtendedListNoButtonsWidget,
     DatePickerWidgetDe,
+    ExtendedListNoButtonsWidget,
+    ExtendedListWidget,
     NoSearchWidget,
 )
-
-from flask_appbuilder.security.decorators import has_access
-from flask_appbuilder.baseviews import expose
-from flask import Response
 
 
 class QuestionBaseModelView(ModelView):

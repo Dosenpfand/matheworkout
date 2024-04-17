@@ -1,5 +1,6 @@
 import datetime
 from typing import Optional
+
 from flask import g
 from sqlalchemy import Time, cast
 
