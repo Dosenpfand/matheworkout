@@ -1,5 +1,5 @@
-from flask import g, redirect, url_for, flash, session, get_template_attribute
-from flask_appbuilder import ModelView, action
+from flask import g, redirect, url_for, flash, session, get_template_attribute, helpers
+from flask_appbuilder import ModelView, action, urltools
 from flask_appbuilder.fields import QuerySelectField
 from flask_appbuilder.models.sqla.filters import (
     FilterEqual,
@@ -48,6 +48,10 @@ from app.views.widgets import (
     DatePickerWidgetDe,
     NoSearchWidget,
 )
+
+from flask_appbuilder.security.decorators import has_access
+from flask_appbuilder.baseviews import expose
+from flask import Response
 
 
 class QuestionBaseModelView(ModelView):
@@ -377,6 +381,41 @@ class AssignmentModelStudentView(ModelView, ShowQuestionDetailsMixIn):
     }
 
     questions_col_name = "assigned_questions"
+
+    def _show(self, pk: int):
+        pages = urltools.get_page_args()
+        page_sizes = urltools.get_page_size_args()
+        orders = urltools.get_order_args()
+
+        item = self.datamodel.get(pk, self._base_filters)
+        if not item:
+            unfiltered_item: Assignment = self.datamodel.get(pk)
+            if unfiltered_item.created_by.id == g.user.id:
+                item = unfiltered_item
+                flash("Dies ist eine Vorschau für Lehrer:innen.", "info")
+            else:
+                flash("Du bist nicht berechtigt diese Hausübung zu sehen. Bist du der Klasse bereits beigetreten?", "danger")
+                return redirect(self.appbuilder.get_url_for_index)
+        widgets = self._get_show_widget(pk, item)
+        self.update_redirect()
+        return self._get_related_views_widgets(
+            item, orders=orders, pages=pages, page_sizes=page_sizes, widgets=widgets
+        )
+
+    @expose("/show/<pk>", methods=["GET"])
+    @has_access
+    def show(self, pk):
+        pk = self._deserialize_pk_if_composite(pk)
+        widgets = self._show(pk)
+        if isinstance(widgets, Response):
+            return widgets
+        return self.render_template(
+            self.show_template,
+            pk=pk,
+            title=self.show_title,
+            widgets=widgets,
+            related_views=self._related_views,
+        )
 
 
 class CategoryModelStudentView(ModelView, ShowQuestionDetailsMixIn):

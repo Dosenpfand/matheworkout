@@ -117,6 +117,7 @@ FAB_ROLES = {
         ["TopicModelView", "can_list"],
         ["QuestionRandom", "can_random_question_redirect"],
         ["ExtendedRegisterUserDBView", "can_resend_email"],
+        ["JoinLearningGroup", "can_join_learning_group"],
         ["Videos", "menu_access"],
         [".*_video", "menu_access"],
         [".*VideoModelView", "can_list"],
