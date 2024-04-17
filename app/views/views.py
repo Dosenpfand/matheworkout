@@ -1,4 +1,5 @@
 from app import appbuilder
+from app.models.general import VideoCategory
 from app.security.views import (
     ExtendedUserDBModelTeacherView,
     ForgotPasswordFormView,
@@ -15,7 +16,8 @@ from app.views.forms import (
     QuestionSelect4FormView,
     DeleteStatsFormView,
     ImportUsersFormView,
-    AddQuestionToAssignmentFormView, DeleteAccountFormView,
+    AddQuestionToAssignmentFormView,
+    DeleteAccountFormView,
 )
 from app.views.general import (
     AchievementsView,
@@ -26,6 +28,7 @@ from app.views.general import (
     JoinLearningGroup,
     DataProtectionView,
     ImprintView,
+    CalculatorsView,
     SupportView,
 )
 from app.views.models import (
@@ -43,6 +46,10 @@ from app.views.models import (
     AssignmentModelStudentView,
     QuestionModelIncorrectAnsweredView,
     QuestionModelCorrectAnsweredView,
+    VideoModelView,
+    GeogebraVideoModelView,
+    ClasspadVideoModelView,
+    NspireVideoModelView,
     TopicModelView,
     LearningGroupModelView,
     CategoryModelStudentView,
@@ -107,7 +114,7 @@ appbuilder.add_view(
     "topics",
     label="Grundkompetenzbereiche",
     icon="fa-align-justify",
-    category="Aufgaben-V",
+    category="AV",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -115,7 +122,7 @@ appbuilder.add_view(
     "categories_admin",
     label="Aufgabenkategorien",
     icon="fa-align-justify",
-    category="Aufgaben-V",
+    category="AV",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -123,7 +130,7 @@ appbuilder.add_view(
     "questions_2_of_5",
     label="2 aus 5",
     icon="fa-align-justify",
-    category="Aufgaben-V",
+    category="AV",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -131,7 +138,7 @@ appbuilder.add_view(
     "questions_1_of_6",
     label="1 aus 6",
     icon="fa-align-justify",
-    category="Aufgaben-V",
+    category="AV",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -139,7 +146,7 @@ appbuilder.add_view(
     "questions_3_to_3",
     label="Lückentext",
     icon="fa-align-justify",
-    category="Aufgaben-V",
+    category="AV",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -147,7 +154,7 @@ appbuilder.add_view(
     "questions_2_decimals",
     label="Werteingabe zwei Zahlen",
     icon="fa-align-justify",
-    category="Aufgaben-V",
+    category="AV",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -155,7 +162,7 @@ appbuilder.add_view(
     "questions_1_decimals",
     label="Werteingabe eine Zahl",
     icon="fa-align-justify",
-    category="Aufgaben-V",
+    category="AV",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -163,7 +170,7 @@ appbuilder.add_view(
     "questions_self_assessed",
     label="Selbstkontrolle",
     icon="fa-align-justify",
-    category="Aufgaben-V",
+    category="AV",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -171,7 +178,7 @@ appbuilder.add_view(
     "questions_select_4",
     label="Zuordnung 4 aus 6",
     icon="fa-align-justify",
-    category="Aufgaben-V",
+    category="AV",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -179,7 +186,7 @@ appbuilder.add_view(
     "questions_select_2",
     label="Zuordnung 2 aus 4",
     icon="fa-align-justify",
-    category="Aufgaben-V",
+    category="AV",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -240,6 +247,31 @@ appbuilder.add_view_no_menu(QuestionRandom())
 appbuilder.add_link(
     "random_all", label="Zufallsaufgabe", href="/questionrandom/", icon="fa-question"
 )
+appbuilder.add_view_no_menu(VideoModelView)
+appbuilder.add_view(
+    GeogebraVideoModelView,
+    "geogebra_video",
+    label=VideoCategory.geogebra.value,
+    icon="fa-mobile-screen",
+    category="Videos",
+    category_icon="fa-play",
+)
+appbuilder.add_view(
+    ClasspadVideoModelView,
+    "classpad_video",
+    label=VideoCategory.classpad.value,
+    icon="fa-calculator",
+    category="Videos",
+    category_icon="fa-play",
+)
+appbuilder.add_view(
+    NspireVideoModelView,
+    "nspire_video",
+    label=VideoCategory.nspire.value,
+    icon="fa-calculator",
+    category="Videos",
+    category_icon="fa-play",
+)
 appbuilder.add_view_no_menu(Question2of5FormView)
 appbuilder.add_view_no_menu(Question1of6FormView)
 appbuilder.add_view_no_menu(Question3to3FormView)
@@ -260,5 +292,6 @@ appbuilder.add_view_no_menu(ForgotPasswordFormView)
 appbuilder.add_view_no_menu(ResetForgotPasswordView)
 appbuilder.add_view_no_menu(DataProtectionView)
 appbuilder.add_view_no_menu(ImprintView)
+appbuilder.add_view_no_menu(CalculatorsView)
 appbuilder.add_view_no_menu(SupportView)
 appbuilder.add_view_no_menu(AchievementsView)

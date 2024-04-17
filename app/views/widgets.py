@@ -86,9 +86,10 @@ class SelectWidgetExtended(Select):
 class FormMinimalInlineWidget(RenderTemplateWidget):
     template = "form_minimal_inline_widget.html"
 
-class NoSearchWidget():
+
+class NoSearchWidget:
     def __init__(self, **kwargs):
         return None
-    
+
     def __call__(self, **kwargs):
         return ""

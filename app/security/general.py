@@ -47,7 +47,7 @@ class ExtendedSecurityManager(SecurityManager):
             log.error(const.LOGMSG_ERR_SEC_ADD_REGISTER_USER.format(str(e)))
             self.appbuilder.get_session.rollback()
             return None
-        
+
     def add_user(
         self,
         username,
@@ -177,6 +177,7 @@ class ExtendedSecurityManager(SecurityManager):
                             last_name,
                             email,
                             role,
+                            g.user.school_type.name,
                             hashed_password="NO_PASSWORD_IMPORTED_USER",
                             # Make it impossible to log in, without password reset
                         )

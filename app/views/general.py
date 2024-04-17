@@ -197,9 +197,13 @@ class JoinLearningGroup(BaseView):
     @expose("/join_learning_group/<int:group_id>/<string:join_token>")
     @has_access
     def join_learning_group(self, group_id, join_token):
-        learning_group = db.session.query(LearningGroup).filter_by(id=group_id).first()
+        learning_group: LearningGroup = db.session.query(LearningGroup).filter_by(id=group_id).first()
         if learning_group:
-            if g.user in learning_group.users:
+            if g.user.id == learning_group.created_by.id:
+                flash("Als Lehrer:in bist du bereits Mitglied deiner Klasse.", "info")
+                self.update_redirect()
+                return redirect(self.get_redirect())
+            elif g.user in learning_group.users:
                 flash("Du bist bereits Mitglied dieser Klasse", "danger")
             elif join_token == learning_group.join_token:
                 learning_group.users.append(g.user)
@@ -252,6 +256,19 @@ class SupportView(BaseView):
         )
 
 
+class CalculatorsView(BaseView):
+    route_base = ""
+    default_view = "calculators"
+    template = "calculators.html"
+
+    @expose("/taschenrechner")
+    def calculators(self):
+        self.update_redirect()
+        return self.render_template(
+            self.template, appbuilder=self.appbuilder, title="Taschenrechner"
+        )
+
+
 class AchievementsView(BaseView):
     route_base = ""
     default_view = "achievements"
@@ -297,7 +314,13 @@ class ShowQuestionDetailsMixIn:
 
         item = self.datamodel.get(pk, self._base_filters)
         if not item:
-            abort(404)
+            unfiltered_item: Assignment = self.datamodel.get(pk)
+            if unfiltered_item.created_by.id == g.user.id:
+                item = unfiltered_item
+                flash("Dies ist eine Vorschau für Lehrer:innen.", "info")
+            else:
+                flash("Du bist nicht berechtigt diese Hausübung zu sehen. Bist du der Klasse bereits beigetreten?", "danger")
+                return redirect(self.appbuilder.get_url_for_index)
 
         questions = []
         widgets = self._get_show_details_widget()

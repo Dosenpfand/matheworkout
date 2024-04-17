@@ -73,6 +73,10 @@ FAB_ROLES = {
         ["IdToForm", "can_id_to_form"],
         ["ExtendedRegisterUserDBView", "can_resend_email"],
         ["JoinLearningGroup", "can_join_learning_group"],
+        ["Videos", "menu_access"],
+        [".*_video", "menu_access"],
+        [".*VideoModelView", "can_list"],
+        [".*VideoModelView", "can_show"],
     ],
     TEACHER_ROLE_NAME: [
         ["Question.*", "can_list"],
@@ -113,6 +117,11 @@ FAB_ROLES = {
         ["TopicModelView", "can_list"],
         ["QuestionRandom", "can_random_question_redirect"],
         ["ExtendedRegisterUserDBView", "can_resend_email"],
+        ["JoinLearningGroup", "can_join_learning_group"],
+        ["Videos", "menu_access"],
+        [".*_video", "menu_access"],
+        [".*VideoModelView", "can_list"],
+        [".*VideoModelView", "can_show"],
     ],
 }
 

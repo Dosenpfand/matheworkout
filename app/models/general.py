@@ -27,6 +27,7 @@ from sqlalchemy import (
 import sqlalchemy
 from sqlalchemy.orm import relationship, joinedload
 
+from app.utils.video import video_embed_url
 from app.utils.iter import groupby_unsorted
 
 
@@ -59,6 +60,12 @@ class SchoolType(enum.Enum):
     bhs = "BHS"
 
 
+class VideoCategory(enum.Enum):
+    geogebra = "GeoGebra"
+    classpad = "CASIO ClassPad II"
+    nspire = "TI-Nspire™ CX CAS"
+
+
 assoc_user_learning_group = Table(
     "assoc_user_learning_group",
     Model.metadata,
@@ -77,6 +84,13 @@ assoc_assignment_question = Table(
     Column("assignment_id", ForeignKey("assignment.id"), primary_key=True),
     Column("question_id", ForeignKey("question.id"), primary_key=True),
 )
+
+
+class Video(Model):
+    id = Column(Integer, primary_key=True)
+    name = Column(String(500), nullable=False)
+    category = Column(Enum(VideoCategory), nullable=False)
+    video_url = Column(String(), nullable=False)
 
 
 class Topic(Model):
@@ -389,30 +403,7 @@ class Question(Model):
         )
 
     def video_embed_url(self):
-        if not self.video_url:
-            return None
-        url = urlparse(self.video_url.strip())
-        if url.hostname in ["www.youtube.com", "youtube.com", "youtu.be"]:
-            queries = parse_qs(url.query)
-            if url.hostname == "youtu.be":
-                video_id = url.path[1:]
-            else:
-                if queries.get("v", False):
-                    video_id = queries["v"][0]
-                else:
-                    return None
-            if queries.get("t", False):
-                start_at = queries["t"][0]
-                if start_at.endswith("s"):
-                    start_at = start_at[:-1]
-            else:
-                start_at = 0
-
-            video_embed_url = (
-                f"https://www.youtube-nocookie.com/embed/{video_id}?start={start_at}"
-            )
-            return video_embed_url
-        return None
+        return video_embed_url(self.video_url)
 
     def video_link_url(self):
         if (not self.video_url) or self.video_embed_url():
