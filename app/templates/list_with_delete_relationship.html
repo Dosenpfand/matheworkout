@@ -72,7 +72,8 @@
 {% macro btn_delete_relationship(pk, modelview_name, filters) %}
     <div class="btn-group btn-group-xs" style="display: flex;">
     {% set endpoint = modelview_name + '.delete_relationship' %}
-    {% set path = endpoint | safe_url_for(pk=pk, fk=filters.get_filter_value('learning_groups')) %}
+    {# TODO: Better way than indexing #}
+    {% set path = endpoint | safe_url_for(pk=pk, fk=filters.get_filters_values()[0][1]) %}
     {% if path %}
         {{ lnk_delete(path, modelview_name) }}
     {% endif %}
@@ -80,8 +81,8 @@
 {% endmacro %}
 
 {% macro lnk_delete(my_href, modelview_name) %}
-    <a href="javascript:void(0)" class="btn btn-sm btn-default confirm" rel="tooltip" title="Aus Klasse entfernen"
-       onclick="var a = new AdminActions('action_form_{{ modelview_name }}'); return a.execute_single_delete('{{my_href}}','Bist du sicher, dass du diese Schüler:in aus der Klasse entfernen möchtest?');">
+    <a href="javascript:void(0)" class="btn btn-sm btn-default confirm" rel="tooltip" title="Entfernen"
+       onclick="var a = new AdminActions('action_form_{{ modelview_name }}'); return a.execute_single_delete('{{my_href}}','Bist du sicher, dass du diesen Eintrag entfernen möchtest?');">
         <span class="sr-only">{{ _('Delete') }}</span>
         <i class="fa fa-trash"></i>
     </a>

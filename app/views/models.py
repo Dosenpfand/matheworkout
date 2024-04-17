@@ -46,6 +46,7 @@ from app.views.widgets import (
     DatePickerWidgetDe,
     ExtendedListNoButtonsWidget,
     ExtendedListWidget,
+    ListWithDeleteRelationshipWidget,
     NoSearchWidget,
 )
 
@@ -193,6 +194,27 @@ class QuestionModelView(ModelView):
         session["question_ids_to_add_to_assignment"] = question_ids
         return redirect(url_for("AddQuestionToAssignmentFormView.this_form_get"))
 
+class QuestionModelTeacherView(QuestionModelView):
+    list_widget = ListWithDeleteRelationshipWidget
+
+    @expose("/delete_relationship/<int:pk>/<int:fk>", methods=["POST"])
+    @has_access
+    def delete_relationship(self, pk, fk):
+        self.update_redirect()
+        assignment: Assignment = (
+            db.session.query(Assignment)
+            .filter_by(id=fk, created_by_fk=g.user.id)
+            .first()
+        )
+        question: Question = db.session.query(Question).filter_by(id=pk).first()
+        if assignment and question and (question in assignment.assigned_questions):
+            assignment.assigned_questions.remove(question)
+            db.session.commit()
+            flash("Erfolgreich entfernt", "success")
+        else:
+            flash("Entfernen fehlgeschlagen", "danger")
+        return self.post_delete_redirect()
+
 
 class AssocUserQuestionModelView(ModelView):
     datamodel = SQLAInterface(AssocUserQuestion)
@@ -265,7 +287,7 @@ class AssignmentModelTeacherView(ModelView, ShowQuestionDetailsMixIn):
     add_title = title
     edit_title = title
 
-    related_views = [QuestionModelView]
+    related_views = [QuestionModelTeacherView]
 
     show_template = "show_cascade_expanded.html"
     edit_template = "appbuilder/general/model/edit_cascade.html"

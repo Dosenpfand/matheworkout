@@ -50,6 +50,7 @@ from app.views.models import (
     QuestionModelCorrectAnsweredView,
     QuestionModelIncorrectAnsweredView,
     QuestionModelView,
+    QuestionModelTeacherView,
     QuestionSelect2ModelView,
     QuestionSelect4ModelView,
     QuestionSelfAssessedModelView,
@@ -243,6 +244,7 @@ appbuilder.add_view(
     category_label="Aufgaben",
     category_icon="fa-align-justify",
 )
+appbuilder.add_view_no_menu(QuestionModelTeacherView)
 appbuilder.add_view_no_menu(QuestionRandom())
 appbuilder.add_link(
     "random_all", label="Zufallsaufgabe", href="/questionrandom/", icon="fa-question"
