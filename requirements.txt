@@ -10,4 +10,4 @@ gunicorn~=22.0 # for deployment via nginx
 python-dotenv~=0.21
 Flask-DebugToolbar~=0.13
 simpleeval~=0.9
-sentry-sdk[flask,sqlalchemy]~=1.16 # for error collection
+sentry-sdk[flask,sqlalchemy]~=2.12 # for error collection
