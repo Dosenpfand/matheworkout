@@ -1,3 +1,4 @@
+from typing import Optional
 from flask import Response, abort, flash, g, url_for
 from flask_appbuilder import BaseView, action, expose, has_access
 from flask_appbuilder.models.sqla.interface import SQLAInterface
@@ -322,8 +323,11 @@ class ShowQuestionDetailsMixIn:
 
         item = self.datamodel.get(pk, self._base_filters)
         if not item:
-            unfiltered_item: Assignment = self.datamodel.get(pk)
-            if unfiltered_item.created_by.id == g.user.id:
+            unfiltered_item: Optional[Assignment] = self.datamodel.get(pk)
+            if not unfiltered_item:
+                flash("Hausübung konnte nicht gefunden werden.", "danger")
+                return redirect(self.appbuilder.get_url_for_index)
+            elif unfiltered_item.created_by.id == g.user.id:
                 item = unfiltered_item
                 flash("Dies ist eine Vorschau für Lehrer:innen.", "info")
             else:
