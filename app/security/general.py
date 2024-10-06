@@ -5,7 +5,7 @@ import logging
 import secrets
 import uuid
 
-from flask import flash, g, render_template, url_for
+from flask import flash, g, render_template, url_for, Markup
 from flask_appbuilder import const
 from flask_appbuilder.security.sqla.manager import SecurityManager
 from werkzeug.security import generate_password_hash
@@ -102,6 +102,15 @@ class ExtendedSecurityManager(SecurityManager):
 
     def import_users(self, csv_data):
         # TODO: support UTF-8?
+
+        csv_read_error_msg = Markup(
+            "Die hochgeladene Datei konnte verarbeitet werden. "
+            "Wahrscheinlich handelt es sich nicht um eine CSV- sondern um eine Excel-Datei? "
+            "Um eine CSV-Datei aus Excel zu exportieren befolge bitte "
+            '<a href="https://support.microsoft.com/de-de/office/speichern-einer-arbeitsmappe-im-text-format-txt-oder-csv-3e9a9d6c-70da-4255-aa28-fcacf1f081e6">folgende Anleitung</a>. '
+            "Anschließend versuch es mit der exportierten CSV-Datei erneut."
+        )
+
         if g.user.email_confirmation_token:
             flash(
                 "Um diese Funktionalität zu nutzen, musst du zuerst deine eigene E-Mail-Adresse bestätigen.",
@@ -116,7 +125,7 @@ class ExtendedSecurityManager(SecurityManager):
         except csv.Error as e:
             log.exception(f"Could not read CSV file: {e}")
             flash(
-                "Die Datei konnte nicht dekodiert werden. Ist es eine CSV-Datei?",
+                csv_read_error_msg,
                 category="danger",
             )
         else:
@@ -226,7 +235,7 @@ class ExtendedSecurityManager(SecurityManager):
                             )
             except:  # noqa: E722
                 flash(
-                    "Die Datei konnte nicht dekodiert werden. Ist es eine CSV-Datei?",
+                    csv_read_error_msg,
                     category="danger",
                 )
                 is_fatal = True
