@@ -5,28 +5,29 @@ import re
 import secrets
 from functools import reduce
 from itertools import groupby
-from urllib.parse import urlparse, parse_qs
 
-from flask import Markup, g, url_for, request
+import sqlalchemy
+from flask import Markup, g, request, url_for
 from flask_appbuilder import Model
 from flask_appbuilder.filemanager import ImageManager
-from flask_appbuilder.models.mixins import ImageColumn, AuditMixin
+from flask_appbuilder.models.mixins import AuditMixin, ImageColumn
 from flask_appbuilder.security.sqla.models import User
 from sqlalchemy import (
+    Boolean,
     Column,
+    DateTime,
+    Enum,
+    Float,
     ForeignKey,
     Integer,
-    String,
-    Boolean,
-    Float,
-    Enum,
-    DateTime,
     Sequence,
+    String,
     Table,
 )
-from sqlalchemy.orm import relationship, joinedload
+from sqlalchemy.orm import joinedload, relationship
 
 from app.utils.iter import groupby_unsorted
+from app.utils.video import video_embed_url
 
 
 class Select4Enum(enum.Enum):
@@ -58,6 +59,12 @@ class SchoolType(enum.Enum):
     bhs = "BHS"
 
 
+class VideoCategory(enum.Enum):
+    geogebra = "GeoGebra"
+    classpad = "CASIO ClassPad II"
+    nspire = "TI-Nspire™ CX CAS"
+
+
 assoc_user_learning_group = Table(
     "assoc_user_learning_group",
     Model.metadata,
@@ -76,6 +83,13 @@ assoc_assignment_question = Table(
     Column("assignment_id", ForeignKey("assignment.id"), primary_key=True),
     Column("question_id", ForeignKey("question.id"), primary_key=True),
 )
+
+
+class Video(Model):
+    id = Column(Integer, primary_key=True)
+    name = Column(String(500), nullable=False)
+    category = Column(Enum(VideoCategory), nullable=False)
+    video_url = Column(String(), nullable=False)
 
 
 class Topic(Model):
@@ -364,7 +378,6 @@ class Question(Model):
             return Markup("Richtig: {}".format(", ".join(correct_list)))
 
     def state_user(self, user_id):
-        tried_but_incorrect = False
 
         answers = self.answered_users.filter_by(user_id=user_id).all()
 
@@ -388,30 +401,7 @@ class Question(Model):
         )
 
     def video_embed_url(self):
-        if not self.video_url:
-            return None
-        url = urlparse(self.video_url.strip())
-        if url.hostname in ["www.youtube.com", "youtube.com", "youtu.be"]:
-            queries = parse_qs(url.query)
-            if url.hostname == "youtu.be":
-                video_id = url.path[1:]
-            else:
-                if queries.get("v", False):
-                    video_id = queries["v"][0]
-                else:
-                    return None
-            if queries.get("t", False):
-                start_at = queries["t"][0]
-                if start_at.endswith("s"):
-                    start_at = start_at[:-1]
-            else:
-                start_at = 0
-
-            video_embed_url = (
-                f"https://www.youtube-nocookie.com/embed/{video_id}?start={start_at}"
-            )
-            return video_embed_url
-        return None
+        return video_embed_url(self.video_url)
 
     def video_link_url(self):
         if (not self.video_url) or self.video_embed_url():
@@ -533,6 +523,7 @@ class LearningGroup(Model, AuditMixin):
     name = Column(String(150), nullable=False)
     users = relationship(
         "ExtendedUser",
+        lazy="dynamic",
         secondary=assoc_user_learning_group,
         back_populates="learning_groups",
         order_by="ExtendedUser.last_name.asc()",
@@ -570,16 +561,29 @@ class LearningGroup(Model, AuditMixin):
             Assignment.starts_on < now, Assignment.is_due_on > now
         ).all()
 
-    def position(self, user):
-        return (
-            sorted(self.users, key=lambda u: u.correct_questions(), reverse=True).index(
-                user
+    def ranking(self):
+        users_ranked = (
+            self.users.outerjoin(
+                AssocUserQuestion,
+                sqlalchemy.and_(
+                    AssocUserQuestion.user_id == ExtendedUser.id,
+                    AssocUserQuestion.is_answer_correct == True,  # noqa: E712
+                ),
             )
-            + 1
+            .order_by(None)
+            .group_by(ExtendedUser.id)
+            .order_by(sqlalchemy.func.count(AssocUserQuestion.id).desc())
+            .all()
         )
+        # NOTE: Currently does not consider tied positions
+        ranking = {user: position + 1 for position, user in enumerate(users_ranked)}
+        return ranking
+
+    def position(self, user):
+        return self.ranking()[user]
 
     def user_count(self):
-        return len(self.users)
+        return self.users.count()
 
 
 class ExtendedUser(User):
@@ -627,7 +631,7 @@ class ExtendedUser(User):
                 "first_name": self.first_name,
                 "last_name": self.last_name,
                 "username": self.username,
-                "school_type": self.school_type,
+                "school_type": self.school_type.value,
             },
             "learning_groups": [lq.as_export_dict() for lq in self.learning_groups],
             "created_learning_groups": [

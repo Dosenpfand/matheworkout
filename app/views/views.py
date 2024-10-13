@@ -1,54 +1,62 @@
 from app import appbuilder
+from app.models.general import VideoCategory
 from app.security.views import (
     ExtendedUserDBModelTeacherView,
     ForgotPasswordFormView,
     ResetForgotPasswordView,
 )
 from app.views.forms import (
-    QuestionSelect2FormView,
-    QuestionSelfAssessedFormView,
-    Question2of5FormView,
-    Question1of6FormView,
-    Question3to3FormView,
-    Question2DecimalsFormView,
-    Question1DecimalFormView,
-    QuestionSelect4FormView,
+    AddQuestionToAssignmentFormView,
+    DeleteAccountFormView,
     DeleteStatsFormView,
     ImportUsersFormView,
-    AddQuestionToAssignmentFormView, DeleteAccountFormView,
+    Question1DecimalFormView,
+    Question1of6FormView,
+    Question2DecimalsFormView,
+    Question2of5FormView,
+    Question3to3FormView,
+    QuestionSelect2FormView,
+    QuestionSelect4FormView,
+    QuestionSelfAssessedFormView,
 )
 from app.views.general import (
     AchievementsView,
-    QuestionRandom,
     AssignmentModelEvaluationView,
-    UtilExtendedView,
-    IdToForm,
-    JoinLearningGroup,
+    CalculatorsView,
     DataProtectionView,
+    IdToForm,
     ImprintView,
+    JoinLearningGroup,
+    QuestionRandom,
     SupportView,
+    UtilExtendedView,
 )
 from app.views.models import (
-    Question2of5ModelView,
-    Question1of6ModelView,
-    Question3to3ModelView,
-    Question2DecimalsModelView,
-    Question1DecimalModelView,
-    QuestionSelect2ModelView,
-    QuestionSelfAssessedModelView,
-    QuestionSelect4ModelView,
-    QuestionModelView,
-    AssocUserQuestionModelView,
-    AssignmentModelTeacherView,
     AssignmentModelStudentView,
-    QuestionModelIncorrectAnsweredView,
-    QuestionModelCorrectAnsweredView,
-    TopicModelView,
-    LearningGroupModelView,
-    CategoryModelStudentView,
+    AssignmentModelTeacherView,
+    AssocUserQuestionModelView,
     CategoryModelAdminView,
-    TopicModelStudentView,
+    CategoryModelStudentView,
+    ClasspadVideoModelView,
+    GeogebraVideoModelView,
     LearningGroupModelAdminView,
+    LearningGroupModelView,
+    NspireVideoModelView,
+    Question1DecimalModelView,
+    Question1of6ModelView,
+    Question2DecimalsModelView,
+    Question2of5ModelView,
+    Question3to3ModelView,
+    QuestionModelCorrectAnsweredView,
+    QuestionModelIncorrectAnsweredView,
+    QuestionModelView,
+    QuestionModelTeacherView,
+    QuestionSelect2ModelView,
+    QuestionSelect4ModelView,
+    QuestionSelfAssessedModelView,
+    TopicModelStudentView,
+    TopicModelView,
+    VideoModelView,
 )
 
 appbuilder.add_separator(category="Security")
@@ -107,7 +115,7 @@ appbuilder.add_view(
     "topics",
     label="Grundkompetenzbereiche",
     icon="fa-align-justify",
-    category="Aufgaben-V",
+    category="AV",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -115,7 +123,7 @@ appbuilder.add_view(
     "categories_admin",
     label="Aufgabenkategorien",
     icon="fa-align-justify",
-    category="Aufgaben-V",
+    category="AV",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -123,7 +131,7 @@ appbuilder.add_view(
     "questions_2_of_5",
     label="2 aus 5",
     icon="fa-align-justify",
-    category="Aufgaben-V",
+    category="AV",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -131,7 +139,7 @@ appbuilder.add_view(
     "questions_1_of_6",
     label="1 aus 6",
     icon="fa-align-justify",
-    category="Aufgaben-V",
+    category="AV",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -139,7 +147,7 @@ appbuilder.add_view(
     "questions_3_to_3",
     label="Lückentext",
     icon="fa-align-justify",
-    category="Aufgaben-V",
+    category="AV",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -147,7 +155,7 @@ appbuilder.add_view(
     "questions_2_decimals",
     label="Werteingabe zwei Zahlen",
     icon="fa-align-justify",
-    category="Aufgaben-V",
+    category="AV",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -155,7 +163,7 @@ appbuilder.add_view(
     "questions_1_decimals",
     label="Werteingabe eine Zahl",
     icon="fa-align-justify",
-    category="Aufgaben-V",
+    category="AV",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -163,7 +171,7 @@ appbuilder.add_view(
     "questions_self_assessed",
     label="Selbstkontrolle",
     icon="fa-align-justify",
-    category="Aufgaben-V",
+    category="AV",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -171,7 +179,7 @@ appbuilder.add_view(
     "questions_select_4",
     label="Zuordnung 4 aus 6",
     icon="fa-align-justify",
-    category="Aufgaben-V",
+    category="AV",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -179,7 +187,7 @@ appbuilder.add_view(
     "questions_select_2",
     label="Zuordnung 2 aus 4",
     icon="fa-align-justify",
-    category="Aufgaben-V",
+    category="AV",
     category_icon="fa-align-justify",
 )
 appbuilder.add_view(
@@ -236,9 +244,35 @@ appbuilder.add_view(
     category_label="Aufgaben",
     category_icon="fa-align-justify",
 )
+appbuilder.add_view_no_menu(QuestionModelTeacherView)
 appbuilder.add_view_no_menu(QuestionRandom())
 appbuilder.add_link(
     "random_all", label="Zufallsaufgabe", href="/questionrandom/", icon="fa-question"
+)
+appbuilder.add_view_no_menu(VideoModelView)
+appbuilder.add_view(
+    GeogebraVideoModelView,
+    "geogebra_video",
+    label=VideoCategory.geogebra.value,
+    icon="fa-mobile-screen",
+    category="Videos",
+    category_icon="fa-play",
+)
+appbuilder.add_view(
+    ClasspadVideoModelView,
+    "classpad_video",
+    label=VideoCategory.classpad.value,
+    icon="fa-calculator",
+    category="Videos",
+    category_icon="fa-play",
+)
+appbuilder.add_view(
+    NspireVideoModelView,
+    "nspire_video",
+    label=VideoCategory.nspire.value,
+    icon="fa-calculator",
+    category="Videos",
+    category_icon="fa-play",
 )
 appbuilder.add_view_no_menu(Question2of5FormView)
 appbuilder.add_view_no_menu(Question1of6FormView)
@@ -260,5 +294,6 @@ appbuilder.add_view_no_menu(ForgotPasswordFormView)
 appbuilder.add_view_no_menu(ResetForgotPasswordView)
 appbuilder.add_view_no_menu(DataProtectionView)
 appbuilder.add_view_no_menu(ImprintView)
+appbuilder.add_view_no_menu(CalculatorsView)
 appbuilder.add_view_no_menu(SupportView)
 appbuilder.add_view_no_menu(AchievementsView)

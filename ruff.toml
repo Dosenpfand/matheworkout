@@ -1,0 +1,56 @@
+target-version = "py37"
+
+[lint]
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+]
+
+ignore = [
+    "E501",
+    "E741",
+    "B904",
+    "B023",
+    "F821",
+    "B026",
+    "B018",
+    "B007",
+    "E722",
+    "SIM115",
+    "SIM102",
+    "SIM108",
+    "E721",
+    "SIM114",
+    "E731",
+    "B020",
+    "B008",
+    "SIM105",
+    "F811",
+    "SIM117",
+    "F405",
+    "B017",
+    "F402",
+    "F403",
+    "F601",
+    "SIM103",
+    "SIM116",
+    "E402",
+    "B005",
+    "B016",
+    "F524",
+    "F841",
+    "B012",
+    "SIM101",
+    "E743",
+    "F823",
+]

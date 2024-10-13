@@ -1,24 +1,27 @@
-from flask import g, redirect, url_for, flash, session
-from flask_appbuilder import ModelView, action
-from flask_appbuilder.fields import QuerySelectField
+from typing import Optional
+from flask import Response, flash, g, get_template_attribute, redirect, session, url_for
+from flask_appbuilder import ModelView, action, urltools
+from flask_appbuilder.baseviews import expose
 from flask_appbuilder.models.sqla.filters import (
     FilterEqual,
     FilterEqualFunction,
     FilterInFunction,
 )
-from flask_appbuilder.fieldwidgets import Select2Widget
 from flask_appbuilder.models.sqla.interface import SQLAInterface
-from wtforms import HiddenField, DateField
+from flask_appbuilder.security.decorators import has_access
+from wtforms import DateField, HiddenField
 
 from app import db
 from app.models.general import (
+    Assignment,
+    AssocUserQuestion,
+    Category,
+    LearningGroup,
     Question,
     QuestionType,
-    LearningGroup,
-    Assignment,
     Topic,
-    Category,
-    AssocUserQuestion,
+    Video,
+    VideoCategory,
 )
 from app.security.views import ExtendedUserDBModelTeacherView
 from app.utils.filters import (
@@ -26,22 +29,25 @@ from app.utils.filters import (
     FilterQuestionByNotAnsweredCorrectness,
 )
 from app.utils.general import (
-    link_formatter_question,
-    state_to_emoji_markup,
+    date_formatter_de,
     link_formatter_assignment,
+    link_formatter_assignment_admin,
     link_formatter_category,
+    link_formatter_learning_group,
+    link_formatter_learning_group_admin,
+    link_formatter_question,
     link_formatter_topic,
     link_formatter_topic_abbr,
-    link_formatter_learning_group,
-    link_formatter_assignment_admin,
-    date_formatter_de,
-    link_formatter_learning_group_admin,
+    link_formatter_video,
+    state_to_emoji_markup,
 )
+from app.utils.video import video_embed_url
 from app.views.general import ShowQuestionDetailsMixIn
 from app.views.widgets import (
-    ExtendedListWidget,
-    ExtendedListNoButtonsWidget,
     DatePickerWidgetDe,
+    ExtendedListNoButtonsWidget,
+    ExtendedListWidget,
+    ListWithDeleteRelationshipWidget,
     NoSearchWidget,
 )
 
@@ -189,6 +195,27 @@ class QuestionModelView(ModelView):
         session["question_ids_to_add_to_assignment"] = question_ids
         return redirect(url_for("AddQuestionToAssignmentFormView.this_form_get"))
 
+class QuestionModelTeacherView(QuestionModelView):
+    list_widget = ListWithDeleteRelationshipWidget
+
+    @expose("/delete_relationship/<int:pk>/<int:fk>", methods=["POST"])
+    @has_access
+    def delete_relationship(self, pk, fk):
+        self.update_redirect()
+        assignment: Assignment = (
+            db.session.query(Assignment)
+            .filter_by(id=fk, created_by_fk=g.user.id)
+            .first()
+        )
+        question: Question = db.session.query(Question).filter_by(id=pk).first()
+        if assignment and question and (question in assignment.assigned_questions):
+            assignment.assigned_questions.remove(question)
+            db.session.commit()
+            flash("Erfolgreich entfernt", "success")
+        else:
+            flash("Entfernen fehlgeschlagen", "danger")
+        return self.post_delete_redirect()
+
 
 class AssocUserQuestionModelView(ModelView):
     datamodel = SQLAInterface(AssocUserQuestion)
@@ -200,8 +227,8 @@ class AssignmentModelTeacherView(ModelView, ShowQuestionDetailsMixIn):
     datamodel = SQLAInterface(Assignment)
     base_filters = [["created_by", FilterEqualFunction, lambda: g.user]]
 
+    base_order = ("id", "desc")
     list_columns = ["id", "learning_group", "additional_links"]
-
     formatters_columns = {"id": link_formatter_assignment_admin}
 
     add_columns = [
@@ -261,7 +288,7 @@ class AssignmentModelTeacherView(ModelView, ShowQuestionDetailsMixIn):
     add_title = title
     edit_title = title
 
-    related_views = [QuestionModelView]
+    related_views = [QuestionModelTeacherView]
 
     show_template = "show_cascade_expanded.html"
     edit_template = "appbuilder/general/model/edit_cascade.html"
@@ -374,6 +401,47 @@ class AssignmentModelStudentView(ModelView, ShowQuestionDetailsMixIn):
 
     questions_col_name = "assigned_questions"
 
+    def _show(self, pk: int):
+        pages = urltools.get_page_args()
+        page_sizes = urltools.get_page_size_args()
+        orders = urltools.get_order_args()
+
+        item = self.datamodel.get(pk, self._base_filters)
+        if not item:
+            unfiltered_item: Optional[Assignment] = self.datamodel.get(pk)
+            if not unfiltered_item:
+                flash("Hausübung konnte nicht gefunden werden.", "danger")
+                return redirect(self.appbuilder.get_url_for_index)
+            elif unfiltered_item.created_by.id == g.user.id:
+                item = unfiltered_item
+                flash("Dies ist eine Vorschau für Lehrer:innen.", "info")
+            else:
+                flash(
+                    "Du bist nicht berechtigt diese Hausübung zu sehen. Bist du der Klasse bereits beigetreten?",
+                    "danger",
+                )
+                return redirect(self.appbuilder.get_url_for_index)
+        widgets = self._get_show_widget(pk, item)
+        self.update_redirect()
+        return self._get_related_views_widgets(
+            item, orders=orders, pages=pages, page_sizes=page_sizes, widgets=widgets
+        )
+
+    @expose("/show/<pk>", methods=["GET"])
+    @has_access
+    def show(self, pk):
+        pk = self._deserialize_pk_if_composite(pk)
+        widgets = self._show(pk)
+        if isinstance(widgets, Response):
+            return widgets
+        return self.render_template(
+            self.show_template,
+            pk=pk,
+            title=self.show_title,
+            widgets=widgets,
+            related_views=self._related_views,
+        )
+
 
 class CategoryModelStudentView(ModelView, ShowQuestionDetailsMixIn):
     datamodel = SQLAInterface(Category)
@@ -482,6 +550,71 @@ class QuestionModelCorrectAnsweredView(ModelView):
         "topic": link_formatter_topic_abbr,
     }
     page_size = 100
+
+
+yt_embed = get_template_attribute("youtube_embed.html", "youtube_embed")
+
+
+class VideoModelView(ModelView):
+    datamodel = SQLAInterface(Video)
+    title = "Video"
+    list_title = title
+    show_title = title
+    add_title = title
+    edit_title = title
+    label_columns = {
+        "id": "Name",
+        "name": "Name",
+        "category": "Kategorie",
+        "video_url": "Video",
+    }
+    list_columns = ["id"]
+    add_columns = ["name", "video_url"]
+    show_columns = ["name", "video_url"]
+    search_exclude_columns = ["video_url", "category"]
+    formatters_columns = {
+        "id": link_formatter_video,
+        "video_url": lambda url: yt_embed(
+            url=video_embed_url(url), width="100%", height="512"
+        ),
+    }
+    list_widget = ExtendedListNoButtonsWidget
+
+
+class GeogebraVideoModelView(VideoModelView):
+    title = VideoCategory.geogebra.value
+    list_title = title
+    show_title = title
+    add_title = title
+    edit_title = title
+    base_filters = [["category", FilterEqual, VideoCategory.geogebra.name]]
+
+    def pre_add(self, item):
+        item.category = VideoCategory.geogebra
+
+
+class ClasspadVideoModelView(VideoModelView):
+    title = VideoCategory.classpad.value
+    list_title = title
+    show_title = title
+    add_title = title
+    edit_title = title
+    base_filters = [["category", FilterEqual, VideoCategory.classpad.name]]
+
+    def pre_add(self, item):
+        item.category = VideoCategory.classpad
+
+
+class NspireVideoModelView(VideoModelView):
+    title = VideoCategory.nspire.value
+    list_title = title
+    show_title = title
+    add_title = title
+    edit_title = title
+    base_filters = [["category", FilterEqual, VideoCategory.nspire.name]]
+
+    def pre_add(self, item):
+        item.category = VideoCategory.nspire
 
 
 class TopicModelView(ModelView):

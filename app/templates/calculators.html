@@ -1,0 +1,14 @@
+{% extends "appbuilder/base.html" %}
+{% import "youtube_embed.html" as youtube %}
+
+{% block content %}
+<h1>Taschenrechner</h1>
+<h2>CASIO ClassPad II</h2>
+<div>
+    {{ youtube.youtube_embed("WyZo2g8AXUk?list=PLbNfJfpFk1bTVMkYr_P0zw8t_EnQEM5Bh", width="100%", height="512") }}
+</div>
+<h2>TI-Nspire™ CX CAS</h2>
+<div>
+    {{ youtube.youtube_embed("dlX0TCIaKPQ?list=PLbNfJfpFk1bSGTraKMmSgBhZJGGowUk5u", width="100%", height="512") }}
+</div>
+{% endblock %}

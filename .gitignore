@@ -151,6 +151,8 @@ cython_debug/
 # App database
 /app.db
 /app_remote.db
+/*.sql
+/app/tools/*.csv
 
 # Uploads
 app/static/uploads/**

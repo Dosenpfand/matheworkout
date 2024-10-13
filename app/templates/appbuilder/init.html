@@ -27,9 +27,9 @@
         <link href="{{ url_for('static',filename='css/v4-shims.min.css') }}" rel="stylesheet">
         <link href="{{ url_for('static',filename='css/bootstrap-theme.css' ) }}" rel="stylesheet">
         <link href="{{ url_for('static', filename='css/templatemo-style.css') }}" rel="stylesheet">
-        <link href="{{ url_for('appbuilder.static',filename='datepicker/bootstrap-datepicker.css') }}" rel="stylesheet">
-        <link href="{{ url_for('appbuilder.static',filename='select2/select2.css') }}" rel="stylesheet">
-        <link href="{{ url_for('appbuilder.static',filename='select2/select2-bootstrap-theme.css') }}" rel="stylesheet">
+        <link href="{{ url_for('appbuilder.static',filename='css/bootstrap-datepicker/bootstrap-datepicker3.min.css') }}" rel="stylesheet">
+        <link href="{{ url_for('appbuilder.static',filename='css/select2/select2.min.css') }}" rel="stylesheet">
+        <link href="{{ url_for('appbuilder.static',filename='css/select2/select2-bootstrap.min.css') }}" rel="stylesheet">
         <link href="{{ url_for('appbuilder.static',filename='css/ab.css') }}" rel="stylesheet">
     {% endblock %}
 
@@ -45,8 +45,8 @@
 
 {% block tail_js %}
     <script src="{{ url_for('appbuilder.static',filename='js/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('appbuilder.static',filename='datepicker/bootstrap-datepicker.js') }}"></script>
-    <script src="{{ url_for('appbuilder.static',filename='select2/select2.js') }}"></script>
+    <script src="{{ url_for('appbuilder.static',filename='js/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
+    <script src="{{ url_for('appbuilder.static',filename='js/select2/select2.min.js') }}"></script>
     <script src="{{ url_for('appbuilder.static',filename='js/ab.js') }}"></script>
     {# TODO: Only include when needed! (also others) #}
     <script src="{{ url_for('static',filename='js/confetti.browser.min.js') }}"></script>
@@ -70,8 +70,8 @@
                     <div class="modal-body">
                         <div style="text-align: center;">
                             <h2>Errungenschaft freigeschaltet</h2>
-                            <img class="spinner" src="{{ 
-                                url_for('static',filename='img/achievements/' ~ achievement.name ~ '.png') 
+                            <img class="spinner" src="{{
+                                url_for('static',filename='img/achievements/' ~ achievement.name ~ '.png')
                             }}" height="200">
                             <h3>{{ achievement.title }}</h3>
                             <div>{{ achievement.description }}</div>

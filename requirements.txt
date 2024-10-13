@@ -2,7 +2,7 @@
 # git+https://github.com/Dosenpfand/Flask-AppBuilder.git@multiple-actions-fix#egg=Flask-AppBuilder
 flask-appbuilder~=4.5
 flask-mail~=0.9
-Pillow~=9.3
+Pillow~=10.0 # For image processing in Flask-AppBuilder
 psycopg2-binary~=2.9 # for postgresql
 Flask-Migrate~=3.1
 WTForms~=2.3
@@ -11,4 +11,4 @@ alembic~=1.7
 gunicorn~=23.0
 Flask-DebugToolbar~=0.15
 simpleeval~=0.9
-sentry-sdk[flask]~=1.16 # for error collection
+sentry-sdk[flask,sqlalchemy]~=2.12 # for error collection

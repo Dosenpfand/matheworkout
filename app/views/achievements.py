@@ -1,5 +1,6 @@
 import datetime
 from typing import Optional
+
 from flask import g
 from sqlalchemy import Time, cast
 
@@ -21,37 +22,33 @@ def check_for_new_achievement_name() -> Optional[str]:
     users_achievements = [achievement.name for achievement in g.user.achievements]
     correct_question_count = g.user.correct_questions()
 
-    if not names.HIBERNATION in users_achievements:
+    if names.HIBERNATION not in users_achievements:
         answers = (
             g.user.answered_questions.order_by(None)
             .order_by(AssocUserQuestion.created_on.desc())
             .limit(2)
             .all()
         )
-        print(answers)
         if len(answers) == 2:
-            print("AAA")
             minimum_ago = datetime.datetime.now() - datetime.timedelta(days=90)
-            print(minimum_ago)
             if answers[1].created_on <= minimum_ago:
-                print("bbb")
                 return names.HIBERNATION
 
-    if not names.BEGINNER in users_achievements and correct_question_count >= 1:
+    if names.BEGINNER not in users_achievements and correct_question_count >= 1:
         return names.BEGINNER
 
-    if not names.INTERMEDIATE in users_achievements and correct_question_count >= 10:
+    if names.INTERMEDIATE not in users_achievements and correct_question_count >= 10:
         return names.INTERMEDIATE
 
-    if not names.PRO in users_achievements and correct_question_count >= 100:
+    if names.PRO not in users_achievements and correct_question_count >= 100:
         return names.PRO
 
-    if not names.STAR in users_achievements:
+    if names.STAR not in users_achievements:
         if correct_question_count > 500:
             if g.user.correct_percentage_int() >= 90:
                 return names.STAR
 
-    if not names.BAD_LUCK in users_achievements:
+    if names.BAD_LUCK not in users_achievements:
         answers = (
             g.user.answered_questions.order_by(None)
             .order_by(AssocUserQuestion.created_on.desc())
@@ -64,7 +61,7 @@ def check_for_new_achievement_name() -> Optional[str]:
         ):
             return names.BAD_LUCK
 
-    if not names.BOARD in users_achievements:
+    if names.BOARD not in users_achievements:
         last_answer = (
             g.user.answered_questions.order_by(None)
             .order_by(AssocUserQuestion.created_on.desc())
@@ -90,7 +87,7 @@ def check_for_new_achievement_name() -> Optional[str]:
             if count_answer_correct == count_questions:
                 return names.BOARD
 
-    if not names.BRAIN in users_achievements:
+    if names.BRAIN not in users_achievements:
         correct_question_count = (
             g.user.answered_questions.filter_by(is_answer_correct=True)
             .order_by(None)
@@ -103,17 +100,17 @@ def check_for_new_achievement_name() -> Optional[str]:
         if correct_question_count == question_count:
             return names.BRAIN
 
-    if not names.THIRD in users_achievements:
+    if names.THIRD not in users_achievements:
         for learning_group in g.user.learning_groups:
             if learning_group.position(g.user) <= 3:
                 return names.THIRD
 
-    if not names.FIRST in users_achievements:
+    if names.FIRST not in users_achievements:
         for learning_group in g.user.learning_groups:
             if learning_group.position(g.user) == 1:
                 return names.FIRST
 
-    if not names.NIGHT_OWL in users_achievements:
+    if names.NIGHT_OWL not in users_achievements:
         start_time = datetime.time(22, 0, 0)
         end_time = datetime.time(4, 0, 0)
         now = datetime.datetime.now().time()
@@ -127,7 +124,7 @@ def check_for_new_achievement_name() -> Optional[str]:
             if answers_count >= 10:
                 return names.NIGHT_OWL
 
-    if not names.INFINITY_RAT in users_achievements:
+    if names.INFINITY_RAT not in users_achievements:
         last_answer = (
             g.user.answered_questions.order_by(None)
             .order_by(AssocUserQuestion.created_on.desc())
@@ -137,13 +134,13 @@ def check_for_new_achievement_name() -> Optional[str]:
         if last_answer.is_answer_correct:
             count_answered = g.user.answered_questions.filter(
                 (AssocUserQuestion.question_id == last_answer.question_id)
-                & (AssocUserQuestion.is_answer_correct == True)
+                & (AssocUserQuestion.is_answer_correct == True)  # noqa: E712
             ).count()
 
             if count_answered >= 10:
                 return names.INFINITY_RAT
 
-    if not names.SEE_NO_EVIL in users_achievements:
+    if names.SEE_NO_EVIL not in users_achievements:
         last_answers = (
             g.user.answered_questions.order_by(None)
             .order_by(AssocUserQuestion.created_on.desc())
@@ -162,7 +159,7 @@ def check_for_new_achievement_name() -> Optional[str]:
         if is_overestimated:
             return names.SEE_NO_EVIL
 
-    if not names.NTH_ROOT in users_achievements:
+    if names.NTH_ROOT not in users_achievements:
         last_answer = (
             g.user.answered_questions.order_by(None)
             .order_by(AssocUserQuestion.created_on.desc())
@@ -173,7 +170,7 @@ def check_for_new_achievement_name() -> Optional[str]:
             is_first_correct = (
                 db.session.query(AssocUserQuestion)
                 .filter(
-                    (AssocUserQuestion.is_answer_correct == True)
+                    (AssocUserQuestion.is_answer_correct == True)  # noqa: E712
                     & (AssocUserQuestion.question_id == last_answer.question_id)
                 )
                 .count()
@@ -183,17 +180,17 @@ def check_for_new_achievement_name() -> Optional[str]:
             if is_first_correct:
                 return names.NTH_ROOT
 
-    if not names.SPEED in users_achievements:
+    if names.SPEED not in users_achievements:
         one_day_ago = datetime.datetime.now() - datetime.timedelta(days=1)
         answers_count = g.user.answered_questions.filter(
             (AssocUserQuestion.created_on > one_day_ago)
-            & (AssocUserQuestion.is_answer_correct == True)
+            & (AssocUserQuestion.is_answer_correct == True)  # noqa: E712
         ).count()
 
         if answers_count >= 50:
             return names.SPEED
 
-    if not names.MATH in users_achievements:
+    if names.MATH not in users_achievements:
         one_year_ago = datetime.datetime.now() - datetime.timedelta(days=365)
         if g.user.created_on < one_year_ago:
             return names.MATH

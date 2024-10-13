@@ -5,13 +5,12 @@ import click
 import sentry_sdk
 from flask import Flask
 from flask.cli import with_appcontext
-from flask_appbuilder import AppBuilder, SQLA
+from flask_appbuilder import SQLA, AppBuilder
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_migrate import Migrate
 from sentry_sdk.integrations.flask import FlaskIntegration
 from sqlalchemy import inspect
 from app.models.achievements import achievements
-
 from app.models.general import Achievement, Question
 from app.tools.mail import send_mail
 

@@ -1,7 +1,5 @@
 # MatheWorkout
 
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-
 Practice for the Austrian high school certificate exam (matura) in maths.
 
 ## Run

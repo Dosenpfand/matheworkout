@@ -1,5 +1,6 @@
-from flask import url_for, Response, flash, g, abort
-from flask_appbuilder import BaseView, has_access, expose, action
+from typing import Optional
+from flask import Response, abort, flash, g, url_for
+from flask_appbuilder import BaseView, action, expose, has_access
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from sqlalchemy import func
 from sqlalchemy.orm import load_only
@@ -7,8 +8,14 @@ from werkzeug.utils import redirect
 
 from app import db
 from app.forms.forms import AddQuestionToAssignmentForm
-from app.models.general import Achievement
-from app.models.general import QuestionType, Question, Assignment, Topic, LearningGroup
+from app.models.general import (
+    Achievement,
+    Assignment,
+    LearningGroup,
+    Question,
+    QuestionType,
+    Topic,
+)
 from app.views.widgets import ExtendedShowWidget, FormMinimalInlineWidget
 
 
@@ -165,7 +172,7 @@ class AssignmentModelEvaluationView(BaseView):
             .first()
         )
 
-        if not assignment:
+        if not assignment or not assignment.learning_group:
             return [], [], []
 
         users = assignment.learning_group.users
@@ -197,9 +204,15 @@ class JoinLearningGroup(BaseView):
     @expose("/join_learning_group/<int:group_id>/<string:join_token>")
     @has_access
     def join_learning_group(self, group_id, join_token):
-        learning_group = db.session.query(LearningGroup).filter_by(id=group_id).first()
+        learning_group: LearningGroup = (
+            db.session.query(LearningGroup).filter_by(id=group_id).first()
+        )
         if learning_group:
-            if g.user in learning_group.users:
+            if g.user.id == learning_group.created_by.id:
+                flash("Als Lehrer:in bist du bereits Mitglied deiner Klasse.", "info")
+                self.update_redirect()
+                return redirect(self.get_redirect())
+            elif g.user in learning_group.users:
                 flash("Du bist bereits Mitglied dieser Klasse", "danger")
             elif join_token == learning_group.join_token:
                 learning_group.users.append(g.user)
@@ -252,6 +265,19 @@ class SupportView(BaseView):
         )
 
 
+class CalculatorsView(BaseView):
+    route_base = ""
+    default_view = "calculators"
+    template = "calculators.html"
+
+    @expose("/taschenrechner")
+    def calculators(self):
+        self.update_redirect()
+        return self.render_template(
+            self.template, appbuilder=self.appbuilder, title="Taschenrechner"
+        )
+
+
 class AchievementsView(BaseView):
     route_base = ""
     default_view = "achievements"
@@ -297,7 +323,19 @@ class ShowQuestionDetailsMixIn:
 
         item = self.datamodel.get(pk, self._base_filters)
         if not item:
-            abort(404)
+            unfiltered_item: Optional[Assignment] = self.datamodel.get(pk)
+            if not unfiltered_item:
+                flash("Hausübung konnte nicht gefunden werden.", "danger")
+                return redirect(self.appbuilder.get_url_for_index)
+            elif unfiltered_item.created_by.id == g.user.id:
+                item = unfiltered_item
+                flash("Dies ist eine Vorschau für Lehrer:innen.", "info")
+            else:
+                flash(
+                    "Du bist nicht berechtigt diese Hausübung zu sehen. Bist du der Klasse bereits beigetreten?",
+                    "danger",
+                )
+                return redirect(self.appbuilder.get_url_for_index)
 
         questions = []
         widgets = self._get_show_details_widget()

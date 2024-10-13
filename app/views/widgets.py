@@ -3,7 +3,7 @@ import re
 from flask_appbuilder.fieldwidgets import DatePickerWidget
 from flask_appbuilder.widgets import RenderTemplateWidget
 from markupsafe import Markup
-from wtforms.widgets import html_params, Select
+from wtforms.widgets import Select, html_params
 
 
 class ExtendedEditWidget(RenderTemplateWidget):
@@ -86,9 +86,10 @@ class SelectWidgetExtended(Select):
 class FormMinimalInlineWidget(RenderTemplateWidget):
     template = "form_minimal_inline_widget.html"
 
-class NoSearchWidget():
+
+class NoSearchWidget:
     def __init__(self, **kwargs):
         return None
-    
+
     def __call__(self, **kwargs):
         return ""
