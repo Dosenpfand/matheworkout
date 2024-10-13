@@ -1,4 +1,6 @@
-git+https://github.com/Dosenpfand/Flask-AppBuilder.git@multiple-actions-fix#egg=Flask-AppBuilder
+# TODO: rebase!
+# git+https://github.com/Dosenpfand/Flask-AppBuilder.git@multiple-actions-fix#egg=Flask-AppBuilder
+flask-appbuilder~=4.5
 flask-mail~=0.9
 Pillow~=10.0 # For image processing in Flask-AppBuilder
 psycopg2-binary~=2.9 # for postgresql
@@ -6,8 +8,7 @@ Flask-Migrate~=3.1
 WTForms~=2.3
 Flask~=2.1
 alembic~=1.7
-gunicorn~=22.0 # for deployment via nginx
-python-dotenv~=0.21
-Flask-DebugToolbar~=0.13
+gunicorn~=23.0
+Flask-DebugToolbar~=0.15
 simpleeval~=0.9
 sentry-sdk[flask,sqlalchemy]~=2.12 # for error collection
