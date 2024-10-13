@@ -6,13 +6,7 @@ Flask-Migrate~=3.1
 WTForms~=2.3
 Flask~=2.1
 alembic~=1.7
-greenlet<0.5 # For meinheld deployment TODO: maybe not needed anymore?
-meinheld==1.0.2
-gunicorn==20.1.0
-python-dotenv~=0.21
-# TODO: Delete when merged upstream
-# git+https://github.com/pallets-eco/flask-debugtoolbar.git#egg=Flask-DebugToolbar
-# ../flask-debugtoolbar
-Flask-DebugToolbar~=0.13
+gunicorn~=23.0
+Flask-DebugToolbar~=0.16
 simpleeval~=0.9
 sentry-sdk[flask]~=1.16 # for error collection
