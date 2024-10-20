@@ -6,12 +6,12 @@ services:
     restart: always
     ports:
       - 5000:80
-    environment:
-      - MODULE_NAME=wsgi
     env_file:
       - app.env
     depends_on:
       - postgres
+    volumes:
+      - static:/app/app/static
 
   postgres:
     image: postgres:alpine
@@ -20,3 +20,9 @@ services:
       - POSTGRES_PASSWORD=db_password
       - POSTGRES_DB=db_database
       - POSTGRES_USER=db_user
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+volumes:
+  static:
+  postgres:

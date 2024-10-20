@@ -9,6 +9,7 @@ COPY ./ /app
 WORKDIR /app
 
 ENV PYTHONPATH=/app
+ENV MODULE_NAME=wsgi
 EXPOSE 80
 ENTRYPOINT ["./entrypoint.sh"]
 CMD ["./start.sh"]
