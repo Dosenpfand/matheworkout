@@ -280,8 +280,8 @@ class AssignmentModelTeacherView(ModelView, ShowQuestionDetailsMixIn):
         "is_due_on_de": "Fällig am",
         "assigned_questions": "Fragen",
         "additional_links": "Auswertung",
-        "student_link": "Link für Schüler",
-        "share_url": "Link für Kollegen"
+        "student_link": "Link für Schüler:innen",
+        "share_url": "Link für Kolleg:innen"
     }
 
     title = "Hausübungen"
@@ -332,7 +332,7 @@ class LearningGroupModelView(ModelView):
     label_columns = {
         "id": "Name",
         "name": "Name",
-        "users": "Schüler",
+        "users": "Schüler:innen",
         "join_url": "Link zum Beitreten",
     }
 
