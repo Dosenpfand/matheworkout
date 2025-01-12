@@ -1,6 +1,6 @@
 git+https://github.com/Dosenpfand/Flask-AppBuilder.git@multiple-actions-fix#egg=Flask-AppBuilder
 flask-mail~=0.9
-Pillow~=10.0 # For image processing in Flask-AppBuilder
+Pillow~=9.5 # For image processing in Flask-AppBuilder
 psycopg2-binary~=2.9 # for postgresql
 Flask-Migrate~=3.1
 WTForms~=2.3
