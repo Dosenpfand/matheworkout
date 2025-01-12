@@ -4,7 +4,7 @@ if flask db current | grep "(head)"; then
     echo "Running database upgrade."
     flask db upgrade
 else
-    echo "Initizalizing database."
+    echo "Initializing database."
     flask fab create-db
     flask db stamp
     # TODO: Fix! user creation functionality broken!
