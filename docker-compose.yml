@@ -6,6 +6,8 @@ services:
       - 5000:80
     env_file:
       - app.env
+    environment:
+      - GUNICORN_CONF=/app/gunicorn_conf_dev.py
     depends_on:
       postgres:
         condition: service_healthy
@@ -22,6 +24,7 @@ services:
       - POSTGRES_USER=db_user
     volumes:
       - postgres:/var/lib/postgresql/data
+      - ./:/app
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U db_user -d db_database" ]
       start_period: 10s

@@ -1,6 +1,3 @@
-from __future__ import print_function
-
-import json
 import multiprocessing
 import os
 
@@ -41,4 +38,3 @@ log_data = {
     "host": host,
     "port": port,
 }
-print(json.dumps(log_data))
