@@ -467,6 +467,7 @@ class Assignment(Model, AuditMixin):
     )
     starts_on = Column(DateTime, nullable=False)
     is_due_on = Column(DateTime, nullable=False)
+    share_token = Column(String(255), default=secrets.token_urlsafe())
 
     def __repr__(self):
         representation = f"{self.name}"
@@ -516,6 +517,28 @@ class Assignment(Model, AuditMixin):
             starts_on=self.starts_on,
             is_due_on=self.is_due_on,
         )
+
+    def copy(self):
+        # noinspection PyArgumentList
+        return self.__class__(
+            name=self.name,
+            assigned_questions=self.assigned_questions.copy(),
+            starts_on=self.starts_on,
+            is_due_on=self.is_due_on,
+        )
+
+    def share_url(self):
+        root_url = request.root_url
+        share_path = url_for(
+            "ShareAssignment.share_assignment",
+            assignment_id=self.id,
+            share_token=self.share_token,
+        )
+
+        if (root_url[-1] == "/") and (share_path[0] == "/"):
+            root_url = root_url[:-1]
+        full_url = root_url + share_path
+        return Markup(f'<a href="{full_url}">{full_url}</a>')
 
 
 class LearningGroup(Model, AuditMixin):

@@ -251,6 +251,7 @@ class AssignmentModelTeacherView(ModelView, ShowQuestionDetailsMixIn):
         "starts_on_de",
         "is_due_on_de",
         "student_link",
+        "share_url",
     ]
 
     extra_fields = {
@@ -280,6 +281,7 @@ class AssignmentModelTeacherView(ModelView, ShowQuestionDetailsMixIn):
         "assigned_questions": "Fragen",
         "additional_links": "Auswertung",
         "student_link": "Link für Schüler",
+        "share_url": "Link für Kollegen"
     }
 
     title = "Hausübungen"

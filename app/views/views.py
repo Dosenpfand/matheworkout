@@ -27,6 +27,7 @@ from app.views.general import (
     IdToForm,
     ImprintView,
     JoinLearningGroup,
+    ShareAssignment,
     QuestionRandom,
     SupportView,
     UtilExtendedView,
@@ -289,6 +290,7 @@ appbuilder.add_view_no_menu(UtilExtendedView)
 appbuilder.add_view_no_menu(DeleteStatsFormView)
 appbuilder.add_view_no_menu(DeleteAccountFormView)
 appbuilder.add_view_no_menu(JoinLearningGroup)
+appbuilder.add_view_no_menu(ShareAssignment)
 appbuilder.add_view_no_menu(ExtendedUserDBModelTeacherView)
 appbuilder.add_view_no_menu(ForgotPasswordFormView)
 appbuilder.add_view_no_menu(ResetForgotPasswordView)

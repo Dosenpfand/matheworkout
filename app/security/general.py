@@ -55,9 +55,9 @@ class ExtendedSecurityManager(SecurityManager):
         last_name,
         email,
         role,
-        school_type,
         password="",
         hashed_password="",
+        school_type="AHS",
     ):
         try:
             user = self.user_model()
@@ -184,9 +184,9 @@ class ExtendedSecurityManager(SecurityManager):
                             last_name,
                             email,
                             role,
-                            g.user.school_type.name,
                             hashed_password="NO_PASSWORD_IMPORTED_USER",
                             # Make it impossible to log in, without password reset
+                            school_type=g.user.school_type.name,
                         )
 
                         if not user:
