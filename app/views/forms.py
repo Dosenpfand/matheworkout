@@ -999,7 +999,7 @@ class DeleteAccountFormView(SimpleFormView):
 
 class ImportUsersFormView(SimpleFormView):
     form = ImportUsersForm
-    form_title = "Schüler importieren"
+    form_title = "Schüler:innen importieren"
     form_template = "edit_additional.html"
     extra_args = dict(
         question=dict(

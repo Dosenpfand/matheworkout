@@ -138,7 +138,6 @@ class QuestionSelect2ModelView(QuestionBaseModelView):
     question_type = QuestionType.select_two.value
 
 
-# TODO: Inherit from QuestionBaseModelView?
 class QuestionModelView(ModelView):
     def get_topic_ids_for_school_type():
         topics = db.session.query(Topic).filter_by(school_type=g.user.school_type).all()
@@ -194,6 +193,13 @@ class QuestionModelView(ModelView):
         question_ids = [question.id for question in items]
         session["question_ids_to_add_to_assignment"] = question_ids
         return redirect(url_for("AddQuestionToAssignmentFormView.this_form_get"))
+
+
+# Note: This class is needed and must be used in `related_views`. If `QuestionModelView` is directly
+# used there, it also inserts views that inherit from it, i.e. `QuestionModelTeacherView`.
+class QuestionModelWrappedView(QuestionModelView):
+    pass
+
 
 class QuestionModelTeacherView(QuestionModelView):
     list_widget = ListWithDeleteRelationshipWidget
@@ -280,8 +286,8 @@ class AssignmentModelTeacherView(ModelView, ShowQuestionDetailsMixIn):
         "is_due_on_de": "Fällig am",
         "assigned_questions": "Fragen",
         "additional_links": "Auswertung",
-        "student_link": "Link für Schüler",
-        "share_url": "Link für Kollegen"
+        "student_link": "Link für Schüler:innen",
+        "share_url": "Link für Kolleg:innen"
     }
 
     title = "Hausübungen"
@@ -332,7 +338,7 @@ class LearningGroupModelView(ModelView):
     label_columns = {
         "id": "Name",
         "name": "Name",
-        "users": "Schüler",
+        "users": "Schüler:innen",
         "join_url": "Link zum Beitreten",
     }
 
@@ -459,7 +465,7 @@ class CategoryModelStudentView(ModelView, ShowQuestionDetailsMixIn):
     add_title = title
     edit_title = title
 
-    related_views = [QuestionModelView]
+    related_views = [QuestionModelWrappedView]
     show_template = "show_cascade_expanded.html"
     edit_template = "appbuilder/general/model/edit_cascade.html"
     list_widget = ExtendedListNoButtonsWidget
