@@ -395,7 +395,7 @@ class AssignmentModelStudentView(ModelView, ShowQuestionDetailsMixIn):
     add_title = title
     edit_title = title
 
-    related_views = [QuestionModelView]
+    related_views = [QuestionModelWrappedView]
 
     show_template = "show_cascade_expanded.html"
     edit_template = "appbuilder/general/model/edit_cascade.html"
@@ -486,7 +486,7 @@ class TopicModelStudentView(ModelView, ShowQuestionDetailsMixIn):
     add_title = title
     edit_title = title
 
-    related_views = [QuestionModelView]
+    related_views = [QuestionModelWrappedView]
     show_template = "show_cascade_expanded.html"
     edit_template = "appbuilder/general/model/edit_cascade.html"
     list_widget = ExtendedListNoButtonsWidget
