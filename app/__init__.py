@@ -9,7 +9,7 @@ from flask_appbuilder import SQLA, AppBuilder
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_migrate import Migrate
 from sentry_sdk.integrations.flask import FlaskIntegration
-
+from sqlalchemy import inspect
 from app.models.achievements import achievements
 from app.models.general import Achievement, Question
 from app.tools.mail import send_mail
@@ -41,29 +41,31 @@ def create_app(config="config"):
         db.init_app(app)
 
         # TODO: Only necessary until SQLAlchemy 2 is used.
-        result = db.session.execute(
-            "SELECT * FROM pg_collation WHERE collname = 'numeric';"
-        )
-        if not result.first():
-            db.session.execute(
-                "CREATE COLLATION numeric (provider = icu, locale = 'de_DE@colNumeric=yes');"
+        if inspect(db.engine).has_table(Question.__tablename__):
+            result = db.session.execute(
+                "SELECT * FROM pg_collation WHERE collname = 'numeric';"
             )
-        db.session.execute(
-            f'ALTER TABLE "{Question.__tablename__}" '
-            f'ALTER COLUMN "{Question.external_id.name}" type VARCHAR COLLATE numeric;'
-        )
+            if not result.first():
+                db.session.execute(
+                    "CREATE COLLATION numeric (provider = icu, locale = 'de_DE@colNumeric=yes');"
+                )
+            db.session.execute(
+                f'ALTER TABLE "{Question.__tablename__}" '
+                f'ALTER COLUMN "{Question.external_id.name}" type VARCHAR COLLATE numeric;'
+            )
 
         # Init achievements
-        for achievement in achievements:
-            result = (
-                db.session.query(Achievement).filter_by(name=achievement.name).first()
-            )
-            if not result:
-                db.session.add(achievement)
-            else:
-                result.title = achievement.title
-                result.description = achievement.description
-            db.session.commit()
+        if inspect(db.engine).has_table(Achievement.__tablename__):
+            for achievement in achievements:
+                result = (
+                    db.session.query(Achievement).filter_by(name=achievement.name).first()
+                )
+                if not result:
+                    db.session.add(achievement)
+                else:
+                    result.title = achievement.title
+                    result.description = achievement.description
+                db.session.commit()
 
         migrate.init_app(app, db)
         appbuilder.init_app(app, db.session)

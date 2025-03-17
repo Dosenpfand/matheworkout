@@ -43,6 +43,11 @@ Import database backup:
 sudo -u postgres psql matheueben < backup.sql
 ```
 
+or in the container:
+```bash
+psql -U db_user -h postgres -p 5432 -d db_database < backup.sql
+```
+
 Clean up database:
 ```bash
 flask fab security-cleanup
