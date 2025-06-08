@@ -13,7 +13,7 @@ services:
         condition: service_healthy
     volumes:
       - ./:/app
-      - static:/app/app/static
+      - uploads:/app/app/static/uploads
 
   postgres:
     image: postgres:alpine
@@ -33,5 +33,5 @@ services:
       retries: 10
 
 volumes:
-  static:
+  uploads:
   postgres:
