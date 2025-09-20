@@ -263,12 +263,10 @@ class AssignmentModelTeacherView(ModelView, ShowQuestionDetailsMixIn):
     extra_fields = {
         "starts_on": DateField(
             "Erhalten am",
-            format="%d.%m.%Y",
             widget=DatePickerWidgetDe(),
         ),
         "is_due_on": DateField(
             "Fällig am",
-            format="%d.%m.%Y",
             widget=DatePickerWidgetDe(),
         ),
     }
