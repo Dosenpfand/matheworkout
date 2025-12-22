@@ -1,4 +1,5 @@
 from typing import Optional
+from datetime import date, datetime
 from flask import Response, flash, g, get_template_attribute, redirect, session, url_for
 from flask_appbuilder import ModelView, action, urltools
 from flask_appbuilder.baseviews import expose
@@ -50,6 +51,23 @@ from app.views.widgets import (
     ListWithDeleteRelationshipWidget,
     NoSearchWidget,
 )
+
+class DatePickerWidgetIso(DatePickerWidgetDe):
+    def __call__(self, field, **kwargs):
+        value = ""
+        data = getattr(field, "data", None)
+        if isinstance(data, datetime):
+            value = data.strftime("%Y-%m-%d")
+        elif isinstance(data, date):
+            value = data.strftime("%Y-%m-%d")
+        elif isinstance(data, str):
+            value = data  # Assume already ISO-formatted if a string
+        extra_attrs = " ".join(f'{k}="{v}"' for k, v in kwargs.items())
+        return (
+            f'<input class="form-control" type="date" '
+            f'name="{field.name}" id="{field.id}" '
+            f'value="{value}" placeholder="YYYY-MM-DD" {extra_attrs}/>'
+        )
 
 
 class QuestionBaseModelView(ModelView):
@@ -263,11 +281,13 @@ class AssignmentModelTeacherView(ModelView, ShowQuestionDetailsMixIn):
     extra_fields = {
         "starts_on": DateField(
             "Erhalten am",
-            widget=DatePickerWidgetDe(),
+            format="%Y-%m-%d",
+            widget=DatePickerWidgetIso(),
         ),
         "is_due_on": DateField(
             "Fällig am",
-            widget=DatePickerWidgetDe(),
+            format="%Y-%m-%d",
+            widget=DatePickerWidgetIso(),
         ),
     }
 
@@ -307,6 +327,21 @@ class AssignmentModelTeacherView(ModelView, ShowQuestionDetailsMixIn):
     }
 
     questions_col_name = "assigned_questions"
+
+    def form_get(self, form):
+        if getattr(form, "starts_on", None) and isinstance(form.starts_on.data, datetime):
+            form.starts_on.data = form.starts_on.data.date()
+        if getattr(form, "is_due_on", None) and isinstance(form.is_due_on.data, datetime):
+            form.is_due_on.data = form.is_due_on.data.date()
+
+    def pre_add(self, item):
+        if isinstance(item.starts_on, date) and not isinstance(item.starts_on, datetime):
+            item.starts_on = datetime.combine(item.starts_on, datetime.min.time())
+        if isinstance(item.is_due_on, date) and not isinstance(item.is_due_on, datetime):
+            item.is_due_on = datetime.combine(item.is_due_on, datetime.min.time())
+
+    def pre_update(self, item):
+        self.pre_add(item)
 
     @action(
         "duplicate_assignment",
