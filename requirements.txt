@@ -12,5 +12,5 @@ Flask~=2.1
 alembic~=1.7
 gunicorn~=23.0
 Flask-DebugToolbar~=0.15
-simpleeval~=0.9
+simpleeval~=1.0
 sentry-sdk[flask,sqlalchemy]~=2.12 # for error collection
