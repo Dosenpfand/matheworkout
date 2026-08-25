@@ -393,6 +393,9 @@ class Question(Model):
         return self.state_user(g.user.id)
 
     def description_image_img(self):
+        if not self.description_image:
+            return None
+
         im = ImageManager()
         return Markup(
             '<img src="'
