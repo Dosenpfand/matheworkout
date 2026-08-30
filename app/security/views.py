@@ -2,7 +2,7 @@ import datetime
 import logging
 import secrets
 
-from flask import Markup, current_app, flash, g, jsonify, redirect, request, url_for
+from flask import current_app, flash, g, jsonify, redirect, request, url_for
 from flask_appbuilder import PublicFormView, action, expose, has_access
 from flask_appbuilder._compat import as_unicode
 from flask_appbuilder.forms import DynamicForm
@@ -14,6 +14,7 @@ from flask_appbuilder.security.views import (
     UserInfoEditView,
 )
 from flask_appbuilder.utils.base import is_safe_redirect_url
+from markupsafe import Markup
 from flask_appbuilder.validators import Unique
 from flask_babel import lazy_gettext
 from flask_login import login_user

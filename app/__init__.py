@@ -5,16 +5,17 @@ import click
 import sentry_sdk
 from flask import Flask
 from flask.cli import with_appcontext
-from flask_appbuilder import SQLA, AppBuilder
+from flask_appbuilder import AppBuilder, Model
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
 from sentry_sdk.integrations.flask import FlaskIntegration
-from sqlalchemy import inspect
+from sqlalchemy import inspect, text
 from app.models.achievements import achievements
 from app.models.general import Achievement, Question
 from app.tools.mail import send_mail
 
-db = SQLA()
+db = SQLAlchemy(metadata=Model.metadata)
 appbuilder = AppBuilder()
 migrate = Migrate()
 toolbar = DebugToolbarExtension()
@@ -43,15 +44,21 @@ def create_app(config="config"):
         # TODO: Only necessary until SQLAlchemy 2 is used.
         if inspect(db.engine).has_table(Question.__tablename__):
             result = db.session.execute(
-                "SELECT * FROM pg_collation WHERE collname = 'numeric';"
+                text("SELECT * FROM pg_collation WHERE collname = 'numeric';")
             )
             if not result.first():
                 db.session.execute(
-                    "CREATE COLLATION numeric (provider = icu, locale = 'de_DE@colNumeric=yes');"
+                    text(
+                        "CREATE COLLATION numeric "
+                        "(provider = icu, locale = 'de_DE@colNumeric=yes');"
+                    )
                 )
             db.session.execute(
-                f'ALTER TABLE "{Question.__tablename__}" '
-                f'ALTER COLUMN "{Question.external_id.name}" type VARCHAR COLLATE numeric;'
+                text(
+                    f'ALTER TABLE "{Question.__tablename__}" '
+                    f'ALTER COLUMN "{Question.external_id.name}" '
+                    "type VARCHAR COLLATE numeric;"
+                )
             )
 
         # Init achievements

@@ -1,16 +1,16 @@
 # TODO: rebase!
 # git+https://github.com/Dosenpfand/Flask-AppBuilder.git@multiple-actions-fix#egg=Flask-AppBuilder
-flask-appbuilder~=4.5
+flask-appbuilder~=5.2
 # TODO: Temporary explicit version pinning for flask-appbuilder as hotfix
-Flask-Limiter==3.12
-flask-mail~=0.9
+Flask-Limiter~=4.1
+flask-mail~=0.10
 Pillow~=12.3 # For image processing in Flask-AppBuilder
-psycopg2-binary~=2.9 # for postgresql
-Flask-Migrate~=3.1
-WTForms~=2.3
-Flask~=2.1
-alembic~=1.7
-gunicorn~=23.0
-Flask-DebugToolbar~=0.15
+psycopg[binary]~=3.3 # for postgresql
+Flask-Migrate~=4.1
+WTForms~=3.2
+Flask~=3.1
+alembic~=1.19
+gunicorn~=26.2
+Flask-DebugToolbar~=0.16
 simpleeval~=1.0
-sentry-sdk[flask,sqlalchemy]~=2.12 # for error collection
+sentry-sdk[flask,sqlalchemy]~=2.68 # for error collection

@@ -5,9 +5,10 @@ import logging
 import secrets
 import uuid
 
-from flask import flash, g, render_template, url_for, Markup
+from flask import flash, g, render_template, url_for
 from flask_appbuilder import const
 from flask_appbuilder.security.sqla.manager import SecurityManager
+from markupsafe import Markup
 from werkzeug.security import generate_password_hash
 
 from app.models.general import ExtendedUser, LearningGroup, SchoolType
@@ -30,7 +31,7 @@ class ExtendedSecurityManager(SecurityManager):
     authdbview = ExtendedAuthDBView
 
     def load_user(self, pk):
-        user = self.get_session.query(self.user_model).get(pk)
+        user = self.appbuilder.session.query(self.user_model).get(pk)
         return user if user is not None and user.is_active else None
 
     # noinspection PyMethodOverriding
@@ -44,12 +45,12 @@ class ExtendedSecurityManager(SecurityManager):
         register_user.registration_hash = str(uuid.uuid1())
         register_user.role = role
         try:
-            self.get_session.add(register_user)
-            self.get_session.commit()
+            self.appbuilder.session.add(register_user)
+            self.appbuilder.session.commit()
             return register_user
         except Exception as e:
             log.error(const.LOGMSG_ERR_SEC_ADD_REGISTER_USER.format(str(e)))
-            self.appbuilder.get_session.rollback()
+            self.appbuilder.session.rollback()
             return None
 
     def add_user(
@@ -77,13 +78,13 @@ class ExtendedSecurityManager(SecurityManager):
                 user.password = hashed_password
             else:
                 user.password = generate_password_hash(password)
-            self.get_session.add(user)
-            self.get_session.commit()
+            self.appbuilder.session.add(user)
+            self.appbuilder.session.commit()
             log.info(const.LOGMSG_INF_SEC_ADD_USER.format(username))
             return user
         except Exception as e:
             log.error(const.LOGMSG_ERR_SEC_ADD_USER.format(str(e)))
-            self.get_session.rollback()
+            self.appbuilder.session.rollback()
             return False
 
     def set_password_reset_token(self, user: ExtendedUser):

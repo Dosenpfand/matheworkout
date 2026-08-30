@@ -7,11 +7,12 @@ from functools import reduce
 from itertools import groupby
 
 import sqlalchemy
-from flask import Markup, g, request, url_for
+from flask import g, request, url_for
 from flask_appbuilder import Model
 from flask_appbuilder.filemanager import ImageManager
 from flask_appbuilder.models.mixins import AuditMixin, ImageColumn
 from flask_appbuilder.security.sqla.models import User
+from markupsafe import Markup
 from sqlalchemy import (
     Boolean,
     Column,
@@ -86,6 +87,8 @@ assoc_assignment_question = Table(
 
 
 class Video(Model):
+    __tablename__ = "video"
+
     id = Column(Integer, primary_key=True)
     name = Column(String(500), nullable=False)
     category = Column(Enum(VideoCategory), nullable=False)
@@ -93,6 +96,8 @@ class Video(Model):
 
 
 class Topic(Model):
+    __tablename__ = "topic"
+
     id = Column(Integer, primary_key=True)
     name = Column(String(500), nullable=False)
     questions = relationship(
@@ -122,6 +127,8 @@ class Topic(Model):
 
 
 class Category(Model):
+    __tablename__ = "category"
+
     id = Column(Integer, primary_key=True)
     name = Column(String(150), nullable=False)
     questions = relationship(
@@ -155,6 +162,8 @@ class QuestionUserState(enum.Enum):
 
 
 class Question(Model):
+    __tablename__ = "question"
+
     # common
     id = Column(Integer, primary_key=True)
     external_id = Column(String, nullable=False, index=True)
@@ -458,6 +467,8 @@ class Question(Model):
 
 
 class Assignment(Model, AuditMixin):
+    __tablename__ = "assignment"
+
     id = Column(Integer, primary_key=True)
     name = Column(String(150), nullable=False)
     learning_group_id = Column(Integer, ForeignKey("learning_group.id"))
@@ -545,6 +556,8 @@ class Assignment(Model, AuditMixin):
 
 
 class LearningGroup(Model, AuditMixin):
+    __tablename__ = "learning_group"
+
     id = Column(Integer, primary_key=True)
     name = Column(String(150), nullable=False)
     users = relationship(
@@ -778,6 +791,8 @@ class ExtendedUser(User):
 
 
 class Achievement(Model):
+    __tablename__ = "achievement"
+
     id = Column(Integer, primary_key=True)
     name = Column(String(150), nullable=False, unique=True, index=True)
     title = Column(String(150), nullable=False)
@@ -798,6 +813,7 @@ class Achievement(Model):
 
 class AssocUserQuestion(Model):
     __tablename__ = "assoc_user_question"
+
     id = Column(Integer, Sequence("assoc_user_question_id_seq"), primary_key=True)
     user_id = Column(ForeignKey("ab_user.id"), nullable=False)
     user = relationship("ExtendedUser")
