@@ -4,7 +4,7 @@ flask-appbuilder~=4.5
 # TODO: Temporary explicit version pinning for flask-appbuilder as hotfix
 Flask-Limiter==3.12
 flask-mail~=0.9
-Pillow~=10.0 # For image processing in Flask-AppBuilder
+Pillow~=12.3 # For image processing in Flask-AppBuilder
 psycopg2-binary~=2.9 # for postgresql
 Flask-Migrate~=3.1
 WTForms~=2.3
