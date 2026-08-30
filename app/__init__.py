@@ -58,7 +58,9 @@ def create_app(config="config"):
         if inspect(db.engine).has_table(Achievement.__tablename__):
             for achievement in achievements:
                 result = (
-                    db.session.query(Achievement).filter_by(name=achievement.name).first()
+                    db.session.query(Achievement)
+                    .filter_by(name=achievement.name)
+                    .first()
                 )
                 if not result:
                     db.session.add(achievement)

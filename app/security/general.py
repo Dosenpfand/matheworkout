@@ -29,6 +29,10 @@ class ExtendedSecurityManager(SecurityManager):
     registeruserdbview = ExtendedRegisterUserDBView
     authdbview = ExtendedAuthDBView
 
+    def load_user(self, pk):
+        user = self.get_session.query(self.user_model).get(pk)
+        return user if user is not None and user.is_active else None
+
     # noinspection PyMethodOverriding
     def add_register_user(self, username, first_name, last_name, email, password, role):
         register_user = self.registeruser_model()

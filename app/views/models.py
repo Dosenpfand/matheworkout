@@ -52,6 +52,7 @@ from app.views.widgets import (
     NoSearchWidget,
 )
 
+
 class DatePickerWidgetIso(DatePickerWidgetDe):
     def __call__(self, field, **kwargs):
         value = ""
@@ -305,7 +306,7 @@ class AssignmentModelTeacherView(ModelView, ShowQuestionDetailsMixIn):
         "assigned_questions": "Fragen",
         "additional_links": "Auswertung",
         "student_link": "Link für Schüler:innen",
-        "share_url": "Link für Kolleg:innen"
+        "share_url": "Link für Kolleg:innen",
     }
 
     title = "Hausübungen"
@@ -329,15 +330,23 @@ class AssignmentModelTeacherView(ModelView, ShowQuestionDetailsMixIn):
     questions_col_name = "assigned_questions"
 
     def form_get(self, form):
-        if getattr(form, "starts_on", None) and isinstance(form.starts_on.data, datetime):
+        if getattr(form, "starts_on", None) and isinstance(
+            form.starts_on.data, datetime
+        ):
             form.starts_on.data = form.starts_on.data.date()
-        if getattr(form, "is_due_on", None) and isinstance(form.is_due_on.data, datetime):
+        if getattr(form, "is_due_on", None) and isinstance(
+            form.is_due_on.data, datetime
+        ):
             form.is_due_on.data = form.is_due_on.data.date()
 
     def pre_add(self, item):
-        if isinstance(item.starts_on, date) and not isinstance(item.starts_on, datetime):
+        if isinstance(item.starts_on, date) and not isinstance(
+            item.starts_on, datetime
+        ):
             item.starts_on = datetime.combine(item.starts_on, datetime.min.time())
-        if isinstance(item.is_due_on, date) and not isinstance(item.is_due_on, datetime):
+        if isinstance(item.is_due_on, date) and not isinstance(
+            item.is_due_on, datetime
+        ):
             item.is_due_on = datetime.combine(item.is_due_on, datetime.min.time())
 
     def pre_update(self, item):

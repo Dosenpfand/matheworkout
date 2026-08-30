@@ -225,6 +225,7 @@ class JoinLearningGroup(BaseView):
 
         return redirect(url_for("ExtendedIndexView.index"))
 
+
 class ShareAssignment(BaseView):
     route_base = ""
 
@@ -236,21 +237,31 @@ class ShareAssignment(BaseView):
         )
         if assignment:
             if g.user.id == assignment.created_by.id:
-                flash("Als Lehrer:in kannst du deine Hausübung nicht mit dir selbst teilen. Sende stattdessen diesen Link an eine:n Kolleg:in.", "info")
+                flash(
+                    "Als Lehrer:in kannst du deine Hausübung nicht mit dir selbst teilen. Sende stattdessen diesen Link an eine:n Kolleg:in.",
+                    "info",
+                )
                 self.update_redirect()
                 return redirect(self.get_redirect())
             elif share_token == assignment.share_token:
                 copy = assignment.copy()
                 db.session.add(copy)
                 db.session.commit()
-                flash(f'Du hast die Hausübung "{assignment.name}" erfolgreich kopiert.', "success")
+                flash(
+                    f'Du hast die Hausübung "{assignment.name}" erfolgreich kopiert.',
+                    "success",
+                )
                 return redirect(url_for("AssignmentModelTeacherView.list"))
             else:
                 flash("Kopieren der Hausübung fehlgeschlagen.", "danger")
         else:
-            flash("Hausübung nicht gefunden. Bitte kontaktiere deine:n Kolleg:in.", "danger")
+            flash(
+                "Hausübung nicht gefunden. Bitte kontaktiere deine:n Kolleg:in.",
+                "danger",
+            )
 
         return redirect(url_for("ExtendedIndexView.index"))
+
 
 class DataProtectionView(BaseView):
     route_base = ""
