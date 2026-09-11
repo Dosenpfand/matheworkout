@@ -458,6 +458,9 @@ class Question(Model):
     # select_four / select_two only
     @staticmethod
     def get_selection_image(selection):
+        if not selection:
+            return None
+
         im = ImageManager()
         return Markup(
             '<img src="'
