@@ -975,7 +975,7 @@ class DeleteAccountFormView(SimpleFormView):
             first_name=user.first_name,
             last_name=user.last_name,
         )
-        return send_email(self.appbuilder.get_app, self.email_subject, html, user.email)
+        return send_email(current_app, self.email_subject, html, user.email)
 
     def form_post(self, form):
         if g.user.email_confirmation_token:

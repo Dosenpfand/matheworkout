@@ -14,11 +14,11 @@ from flask_appbuilder.security.views import (
     UserInfoEditView,
 )
 from flask_appbuilder.utils.base import is_safe_redirect_url
-from markupsafe import Markup
 from flask_appbuilder.validators import Unique
 from flask_babel import lazy_gettext
 from flask_login import login_user
 from flask_mail import Mail, Message
+from markupsafe import Markup
 
 from app import db
 from app.models.general import ExtendedUser, LearningGroup
@@ -314,7 +314,7 @@ class ForgotPasswordFormView(PublicFormView):
             first_name=user.first_name,
             last_name=user.last_name,
         )
-        return send_email(self.appbuilder.get_app, self.email_subject, html, user.email)
+        return send_email(current_app, self.email_subject, html, user.email)
 
     @expose("/form", methods=["GET"])
     def this_form_get(self):
@@ -526,7 +526,7 @@ class ExtendedRegisterUserDBView(RegisterUserDBView):
             return redirect(self.appbuilder.get_url_for_login)
 
     def send_email(self, user: ExtendedUser):
-        mail = Mail(self.appbuilder.get_app)
+        mail = Mail(current_app)
         msg = Message()
         msg.subject = self.email_subject
         url = url_for(
