@@ -401,15 +401,21 @@ class Question(Model):
     def state(self):
         return self.state_user(g.user.id)
 
-    def description_image_img(self):
-        if not self.description_image:
-            return None
-
-        im = ImageManager()
+    @staticmethod
+    def _image_tag(filename, css_class, style=None):
+        """Return an <img> Markup for a stored image, or empty Markup if unset."""
+        if not filename:
+            return Markup("")
+        style_attr = f' style="{style}"' if style else ""
         return Markup(
             '<img src="'
-            + im.get_url(self.description_image)
-            + '" alt="Photo" class="img-rounded img-responsive question-image">'
+            + ImageManager().get_url(filename)
+            + f'" alt="Photo"{style_attr} class="{css_class}">'
+        )
+
+    def description_image_img(self):
+        return self._image_tag(
+            self.description_image, "img-rounded img-responsive question-image"
         )
 
     def video_embed_url(self):
@@ -422,50 +428,32 @@ class Question(Model):
 
     @staticmethod
     def get_option_image(option):
-        im = ImageManager()
-        return Markup(
-            '<img src="'
-            + im.get_url(option)
-            + '" alt="Photo" class="img-rounded img-responsive option-image">'
+        return Question._image_tag(
+            option, "img-rounded img-responsive option-image"
         )
 
     @staticmethod
     def get_option_small_image(option):
-        im = ImageManager()
-        return Markup(
-            '<img src="'
-            + im.get_url(option)
-            + '" alt="Photo" class="img-rounded img-responsive option-small-image">'
+        return Question._image_tag(
+            option, "img-rounded img-responsive option-small-image"
         )
 
     # self_assessed only
     def solution_image_img(self):
-        im = ImageManager()
-        return Markup(
-            '<img src="'
-            + im.get_url(self.solution_image)
-            + '" alt="Photo" class="img-rounded img-responsive">'
-        )
+        return self._image_tag(self.solution_image, "img-rounded img-responsive")
 
     def solution_image_print(self):
-        im = ImageManager()
-        return Markup(
-            '<img src="'
-            + im.get_url(self.solution_image)
-            + '" alt="Photo" style="max-height: 20em" class="img-rounded img-responsive">'
+        return self._image_tag(
+            self.solution_image,
+            "img-rounded img-responsive",
+            style="max-height: 20em",
         )
 
     # select_four / select_two only
     @staticmethod
     def get_selection_image(selection):
-        if not selection:
-            return None
-
-        im = ImageManager()
-        return Markup(
-            '<img src="'
-            + im.get_url(selection)
-            + '" alt="Photo" class="img-rounded img-responsive selection-image">'
+        return Question._image_tag(
+            selection, "img-rounded img-responsive selection-image"
         )
 
 
