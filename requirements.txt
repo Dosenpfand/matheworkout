@@ -1,6 +1,7 @@
 # TODO: rebase!
 # git+https://github.com/Dosenpfand/Flask-AppBuilder.git@multiple-actions-fix#egg=Flask-AppBuilder
 flask-appbuilder~=5.2
+SQLAlchemy<2.1 # sqlalchemy-utils incompatible with 2.1
 # TODO: Temporary explicit version pinning for flask-appbuilder as hotfix
 Flask-Limiter~=4.1
 flask-mail~=0.10
