@@ -49,7 +49,7 @@ class ExtendedSecurityManager(SecurityManager):
             self.appbuilder.session.commit()
             return register_user
         except Exception as e:
-            log.error(const.LOGMSG_ERR_SEC_ADD_REGISTER_USER.format(str(e)))
+            log.exception(const.LOGMSG_ERR_SEC_ADD_REGISTER_USER, e)
             self.appbuilder.session.rollback()
             return None
 
@@ -80,10 +80,10 @@ class ExtendedSecurityManager(SecurityManager):
                 user.password = generate_password_hash(password)
             self.appbuilder.session.add(user)
             self.appbuilder.session.commit()
-            log.info(const.LOGMSG_INF_SEC_ADD_USER.format(username))
+            log.info(const.LOGMSG_INF_SEC_ADD_USER, username)
             return user
         except Exception as e:
-            log.error(const.LOGMSG_ERR_SEC_ADD_USER.format(str(e)))
+            log.exception(const.LOGMSG_ERR_SEC_ADD_USER, e)
             self.appbuilder.session.rollback()
             return False
 

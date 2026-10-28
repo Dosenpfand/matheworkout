@@ -592,7 +592,7 @@ class ExtendedRegisterUserDBView(RegisterUserDBView):
 
     def form_post(self, form):
         self.add_form_unique_validations(form)
-        self.add_registration(
+        return self.add_registration(
             username=form.email.data,
             first_name=form.first_name.data,
             last_name=form.last_name.data,
