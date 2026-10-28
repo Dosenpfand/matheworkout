@@ -12,7 +12,7 @@ dependencies = [
     # TODO: Temporary explicit version pinning for flask-appbuilder as hotfix
     "Flask-Limiter~=4.1",
     "flask-mail~=0.10",
-    "Pillow~=12.3", # For image processing in Flask-AppBuilder
+    "Pillow~=13.0", # For image processing in Flask-AppBuilder
     "psycopg[binary]~=3.3", # for postgresql
     "Flask-Migrate~=4.1",
     "WTForms~=3.2",
