@@ -1052,6 +1052,7 @@ class AddQuestionToAssignmentFormView(SimpleFormView):
             if not question:
                 abort(404)
 
-            assignment.assigned_questions.append(question)
+            if question not in assignment.assigned_questions:
+                assignment.assigned_questions.append(question)
         if self.assignment_model.edit(assignment):
             return make_response(jsonify(""))
