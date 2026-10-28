@@ -11,6 +11,7 @@ from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from sentry_sdk.integrations.flask import FlaskIntegration
 from sqlalchemy import inspect, text
+
 from app.models.achievements import achievements
 from app.models.general import Achievement, Question
 from app.tools.mail import send_mail

@@ -340,9 +340,7 @@ class Question(Model):
                 f"4{self.selection4_solution}, "
             )
         elif self.type == QuestionType.select_two:
-            return Markup(
-                f"1{self.selection1_solution}, " f"2{self.selection2_solution}, "
-            )
+            return Markup(f"1{self.selection1_solution}, 2{self.selection2_solution}, ")
         elif self.type == QuestionType.one_decimal:
             return Markup(
                 f"<div>{self.value1_lower_limit} ≤ Ergebnis 1 ≤ {self.value1_upper_limit}</div>"
@@ -428,9 +426,7 @@ class Question(Model):
 
     @staticmethod
     def get_option_image(option):
-        return Question._image_tag(
-            option, "img-rounded img-responsive option-image"
-        )
+        return Question._image_tag(option, "img-rounded img-responsive option-image")
 
     @staticmethod
     def get_option_small_image(option):

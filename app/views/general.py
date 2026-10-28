@@ -1,4 +1,5 @@
 from typing import Optional
+
 from flask import Response, abort, flash, g, url_for
 from flask_appbuilder import BaseView, action, expose, has_access
 from flask_appbuilder.models.sqla.interface import SQLAInterface

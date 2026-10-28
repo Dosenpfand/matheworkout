@@ -28,15 +28,12 @@ class FilterQuestionByAnsweredCorrectness(BaseFilter):
     arg_name = None
 
     def apply(self, query, is_answer_correct):
-        return (
-            query.filter(
-                Question.answered_users.any(
-                    user_id=g.user.id,
-                    is_answer_correct=is_answer_correct,
-                )
+        return query.filter(
+            Question.answered_users.any(
+                user_id=g.user.id,
+                is_answer_correct=is_answer_correct,
             )
-            .filter(Question.topic.has(school_type=g.user.school_type))
-        )
+        ).filter(Question.topic.has(school_type=g.user.school_type))
 
 
 class FilterQuestionByNotAnsweredCorrectness(BaseFilter):
@@ -44,11 +41,8 @@ class FilterQuestionByNotAnsweredCorrectness(BaseFilter):
     arg_name = None
 
     def apply(self, query, is_answer_correct):
-        return (
-            query.filter(
-                ~Question.answered_users.any(
-                    user_id=g.user.id, is_answer_correct=is_answer_correct
-                )
+        return query.filter(
+            ~Question.answered_users.any(
+                user_id=g.user.id, is_answer_correct=is_answer_correct
             )
-            .filter(Question.topic.has(school_type=g.user.school_type))
-        )
+        ).filter(Question.topic.has(school_type=g.user.school_type))

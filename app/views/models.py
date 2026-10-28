@@ -1,5 +1,6 @@
-from typing import Optional
 from datetime import date, datetime
+from typing import Optional
+
 from flask import Response, flash, g, get_template_attribute, redirect, session, url_for
 from flask_appbuilder import ModelView, action, urltools
 from flask_appbuilder.baseviews import expose
