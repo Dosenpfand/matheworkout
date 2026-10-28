@@ -12,11 +12,12 @@ flask run
 ```
 
 ## Setup local development
-Install additional dependencies
+Dependencies are managed with [uv](https://docs.astral.sh/uv/) (`pyproject.toml` and `uv.lock`).
+Install all dependencies including the development ones
 ```
-pip install -r requirements-dev.txt
+uv sync
 ```
-and install the pre-commit hooks
+(add new ones with `uv add <package>`, update the lock file with `uv lock --upgrade`) and install the pre-commit hooks
 ```
 pre-commit install
 ```

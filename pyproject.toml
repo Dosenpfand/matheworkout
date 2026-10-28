@@ -1,0 +1,35 @@
+[project]
+name = "matheworkout"
+version = "0.0.0"
+description = "Practice for the Austrian high school certificate exam (matura) in maths."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    # TODO: rebase!
+    # "Flask-AppBuilder @ git+https://github.com/Dosenpfand/Flask-AppBuilder.git@multiple-actions-fix",
+    "flask-appbuilder~=5.2",
+    "SQLAlchemy<2.1", # sqlalchemy-utils incompatible with 2.1
+    # TODO: Temporary explicit version pinning for flask-appbuilder as hotfix
+    "Flask-Limiter~=4.1",
+    "flask-mail~=0.10",
+    "Pillow~=12.3", # For image processing in Flask-AppBuilder
+    "psycopg[binary]~=3.3", # for postgresql
+    "Flask-Migrate~=4.1",
+    "WTForms~=3.2",
+    "Flask~=3.1",
+    "alembic~=1.19",
+    "gunicorn~=26.2",
+    "Flask-DebugToolbar~=0.16",
+    "simpleeval~=1.0",
+    "sentry-sdk[flask,sqlalchemy]~=2.68", # for error collection
+]
+
+[dependency-groups]
+dev = [
+    "ruff~=0.16",
+    "pre-commit~=4.6",
+    "pytest~=8.4",
+]
+
+[tool.uv]
+package = false
